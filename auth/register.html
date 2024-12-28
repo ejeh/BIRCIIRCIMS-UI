@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Benue State Citizens/Residents Management Information System</title>
+
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="/assets//images/gov-logo.jpg"
+      sizes="16x16"
+    />
+    <script type="text/javascript" src="/js/index.js"></script>
+    <script src="/js/jquery.js"></script>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <div class="logo text-center">
+        <img class="img-fluid" src="/assets/images/gov-logo.jpg" alt="Logo" />
+      </div>
+      <h2 class="text-center">Register</h2>
+      <form id="signUpForm">
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="firstname">Firstname</label>
+            <input
+              type="text"
+              class="form-control"
+              id="firstname"
+              name="firstname"
+              required
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label for="lastname">Lastname</label>
+            <input
+              type="text"
+              class="form-control"
+              id="lastname"
+              name="lastname"
+              required
+            />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="email">Email</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              name="email"
+              required
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label for="phone">Phone</label>
+            <input
+              type="text"
+              class="form-control"
+              id="phone"
+              name="phone"
+              required
+            />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              name="password"
+              required
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label for="re_password">Re-type your Password</label>
+            <input
+              name="re_password"
+              id="re_password"
+              class="form-control"
+              type="password"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="d-grid">
+          <button
+            type="submit"
+            id="submitbtn"
+            class="btn btn-primary btn-block"
+            style="background-color: #4c956c"
+          >
+            Sign Up
+          </button>
+          <p class="text-center">
+            Already have an account?
+            <a href="login.html" class="text-decoration-none">Sign In</a>
+          </p>
+        </div>
+      </form>
+    </div>
+
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $("#signUpForm").on("submit", function (e) {
+          e.preventDefault();
+
+          const firstname = $("#firstname").val();
+          const phone = $("#phone").val();
+          const lastname = $("#lastname").val();
+          const email = $("#email").val();
+          const password = $("#password").val();
+          const re_password = $("#re_password").val();
+
+          if (
+            firstname != "" &&
+            phone != "" &&
+            lastname != "" &&
+            email != "" &&
+            password != "" &&
+            re_password != ""
+          ) {
+            if (password.length < 6) {
+              Swal.fire(
+                "Oops...",
+                "Passwords must be at least 6 characters",
+                "error"
+              );
+            } else if (password != re_password) {
+              Swal.fire("Oops...", "Passwords do not match", "error");
+            } else {
+              $.ajax({
+                type: "POST",
+                url: `${BACKEND_URL}/auth/signup`,
+                contentType: "application/json",
+                data: JSON.stringify({
+                  email: email,
+                  password: password,
+                  firstname: firstname,
+                  lastname: lastname,
+                  phone: phone,
+                }),
+                beforeSend: function () {
+                  $("#submitbtn").html("<i class='fa fa-spinner'></i>");
+                  $("#submitbtn").attr("onclick", "");
+                },
+                success: function (data) {
+                  console.log("data", data);
+                  // Do something on success
+                  if (data) {
+                    Swal.fire(
+                      "Welcome",
+                      "Account successfully created, click OK to continue",
+                      "success"
+                    ).then((result) => {
+                      window.location.href = "../auth/login.html";
+                    });
+                  } else {
+                    Swal.fire("Oops...", data.message, "error");
+                    $("#submitbtn").html("Create account");
+                  }
+                },
+                error: function (data) {
+                  Swal.fire("Oops...", data.responseJSON.message, "error");
+                  $("#submitbtn").html("Sign Me In");
+                },
+              });
+            }
+          } else {
+            Swal.fire("Oops...", "invalid", "error");
+          }
+        });
+      });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </body>
+</html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="keywords" content="dashboard" />
+    <meta name="robots" content="index, follow" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <meta property="og:image" content="social-image.html" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>BSCR-MIS - User Dashboard</title>
+    <!-- Favicon icon -->
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/assets/images/gov-logo.jpg"
+    />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link
+      href="vendor/bootstrap-select/dist/css/bootstrap-select.min.css"
+      rel="stylesheet"
+    />
+    <link href="css/style.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="../../cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <script src="../../unpkg.com/sweetalert%402.1.2/dist/sweetalert.min.js"></script>
+    <link href="vendor/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet" />
+    <script src="../../ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  </head>
+  <body>
+    <!--*******************
+        Preloader start
+    ********************-->
+    <div id="preloader">
+      <div class="sk-three-bounce">
+        <div class="sk-child sk-bounce1"></div>
+        <div class="sk-child sk-bounce2"></div>
+        <div class="sk-child sk-bounce3"></div>
+      </div>
+    </div>
+    <!--*******************
+        Preloader end
+    ********************-->
+
+    <!--**********************************
+        Main wrapper start
+    ***********************************-->
+    <div id="main-wrapper">
+      <!--**********************************
+            Nav header start
+        ***********************************-->
+      <div class="nav-header">
+        <a href="index-2.html" class="brand-logo">
+          <img
+            src="/assets/images/Benue-State-Footer-Logo.png"
+            width="50%"
+            height="auto"
+          />
+        </a>
+
+        <div class="nav-control">
+          <div class="hamburger">
+            <span class="line"></span><span class="line"></span
+            ><span class="line"></span>
+          </div>
+        </div>
+      </div>
+      <!--**********************************
+            Nav header end
+        ***********************************-->
+
+      <!--**********************************
+            Header start
+        ***********************************-->
+      <div class="header">
+        <div class="header-content">
+          <nav class="navbar navbar-expand">
+            <div class="collapse navbar-collapse justify-content-between">
+              <div class="header-left">
+                <div class="dashboard_bar">User Management</div>
+              </div>
+              <ul class="navbar-nav header-right">
+                <li class="nav-item dropdown notification_dropdown">
+                  <div class="input-group search-area">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Search here..."
+                    />
+                    <span class="input-group-text"
+                      ><a href="javascript:void(0)"
+                        ><i class="flaticon-381-search-2"></i></a
+                    ></span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </nav>
+        </div>
+      </div>
+      <!--**********************************
+            Header end ti-comment-alt
+        ***********************************-->
+
+      <!--**********************************
+            Sidebar start
+        ***********************************-->
+      <div class="deznav">
+        <div class="deznav-scroll">
+          <ul class="metismenu" id="menu">
+            <li>
+              <style type="text/css">
+                a.gflag {
+                  vertical-align: middle;
+                  font-size: 16px;
+                  padding: 1px 0;
+                  background-repeat: no-repeat;
+                  background-image: url(../../gtranslate.net/flags/16.png);
+                }
+                a.gflag img {
+                  border: 0;
+                }
+                a.gflag:hover {
+                  background-image: url(../../gtranslate.net/flags/16a.png);
+                }
+                #goog-gt-tt {
+                  display: none !important;
+                }
+                .goog-te-banner-frame {
+                  display: none !important;
+                }
+                .goog-te-menu-value:hover {
+                  text-decoration: none !important;
+                }
+                body {
+                  top: 0 !important;
+                }
+                #google_translate_element2 {
+                  display: none !important;
+                }
+              </style>
+            </li>
+
+            <li>
+              <a class="ai-icon" href="index-2.html" aria-expanded="false">
+                <i class="flaticon-381-networking"></i>
+                <span class="nav-text">Dashboard</span>
+              </a>
+            </li>
+            <!-- <li>
+              <a class="ai-icon" href="deposit.html" aria-expanded="false">
+                <i class="fa fa-money" aria-hidden="true"></i>
+                <span class="nav-text">Fund Account</span>
+              </a>
+            </li>
+            <li>
+              <a class="ai-icon" href="exchange.html" aria-expanded="false">
+                <i class="fa fa-exchange" aria-hidden="true"></i>
+                <span class="nav-text">Exchange</span>
+              </a>
+            </li>
+            <li>
+              <a class="ai-icon" href="withdrawal.html" aria-expanded="false">
+                <i class="fa fa-money" aria-hidden="true"></i>
+                <span class="nav-text">Withdrawal</span>
+              </a>
+            </li> -->
+            <li>
+              <a class="ai-icon" href="citizens.html" aria-expanded="false">
+                <i class="fa fa-arrows-h"></i>
+                <span class="nav-text">All Citizens</span>
+              </a>
+            </li>
+            <li>
+              <a class="ai-icon" href="certificate.html" aria-expanded="false">
+                <i class="fa fa-user-plus" aria-hidden="true"></i>
+                <span class="nav-text">Generate certificate</span>
+              </a>
+            </li>
+            <!-- 
+            <li>
+              <a class="ai-icon" href="kyc.html" aria-expanded="false">
+                <i class="fa fa-hand-o-right"></i>
+                <span class="nav-text">Account Verification</span>
+              </a>
+            </li> -->
+            <li>
+              <a class="ai-icon" href="profile.html" aria-expanded="false">
+                <i class="fa fa-user" aria-hidden="true"></i>
+                <span class="nav-text">User Account</span>
+              </a>
+            </li>
+            <li>
+              <!-- href="../auth/login.html" -->
+              <a href="/auth/login.html" class="ai-icon" aria-expanded="false">
+                <i class="fa fa-sign-out" aria-hidden="true"></i>
+                <span class="nav-text" onclick="logout(this)">Logout</span>
+              </a>
+            </li>
+          </ul>
+          <div class="copyright">
+            <p>BSCR-MIS <br />© 2024 All Rights Reserved</p>
+            <p class="op5"></p>
+          </div>
+        </div>
+      </div>
+      <!--**********************************
+            Sidebar end
+        ***********************************-->
+
+      <!--**********************************
+            Content body start
+        ***********************************-->
+      <div class="content-body">
+        <div class="container-fluid">
+          <!-- row -->
+          <div class="row">
+            <div class="col-xl-12 col-lg-12">
+              <div class="card card-bx m-b30">
+                <div class="card-header">
+                  <h4 class="card-title">User Management</h4>
+                </div>
+                <form class="profile-form" id="assignRoleForm">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">User ID</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="userId"
+                          name="userId"
+                        />
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label for="newRole">New Role</label>
+                        <select
+                          id="newRole"
+                          name="newRole"
+                          class="selectpicker nice-select default-select form-control wide mh-auto"
+                          required
+                        >
+                          <option value="user">User</option>
+                          <option value="super_admin">Super_admin</option>
+                          <option value="support_admin">Support_admin</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-footer">
+                    <!-- id="submitbtn" -->
+                    <button
+                      type="submit"
+                      name="update"
+                      class="btn"
+                      style="background-color: #2c6e49; color: #fff"
+                    >
+                      UPDATE
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <script
+          src="../../code.tidio.co_443/bpnp4xkz2axqrebqxcezgdca9yot1iyn.js"
+          async
+        ></script>
+        <script>
+          function logout() {
+            localStorage.removeItem("token");
+          }
+        </script>
+      </div>
+      <!--**********************************
+            Content body end
+        ***********************************-->
+
+      <!--**********************************
+            Footer start
+        ***********************************-->
+      <div class="footer">
+        <div class="copyright">
+          <p>Copyright © BSCR-MIS 2024</p>
+        </div>
+      </div>
+      <!--**********************************
+            Footer end
+        ***********************************-->
+
+      <!--**********************************
+           Support ticket button start
+        ***********************************-->
+
+      <!--**********************************
+           Support ticket button end
+        ***********************************-->
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <script
+      src="../../code.tidio.co_443/bpnp4xkz2axqrebqxcezgdca9yot1iyn.js"
+      async
+    ></script>
+    <!--**********************************
+        Scripts
+    ***********************************-->
+    <!-- Required vendors -->
+    <script src="vendor/sweetalert2/dist/sweetalert2.min.js"></script>
+    <script src="js/plugins-init/sweetalert.init.js"></script>
+    <script src="vendor/global/global.min.js"></script>
+    <script src="vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+    <script src="vendor/chart.js/Chart.bundle.min.js"></script>
+    <script src="vendor/bootstrap-datetimepicker/js/moment.js"></script>
+    <script src="vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+
+    <script src="js/dashboard/dashboard-1.js"></script>
+
+    <script src="js/custom.min.js"></script>
+    <script src="js/deznav-init.js"></script>
+    <script src="js/demo.js"></script>
+    <script type="text/javascript" src="/js/index.js"></script>
+  </body>
+</html>
