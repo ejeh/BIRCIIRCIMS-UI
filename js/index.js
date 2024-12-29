@@ -1,4 +1,5 @@
-const BACKEND_URL = "http://localhost:5000/api";
+// const BACKEND_URL = "http://localhost:5000/api";
+const BACKEND_URL = "https://bscr-mis.onrender.com/api";
 
 let userData = localStorage.getItem("token");
 userData = JSON.parse(userData);
