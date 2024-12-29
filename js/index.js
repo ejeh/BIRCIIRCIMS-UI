@@ -94,7 +94,7 @@ $(document).ready(function () {
         maritalStatus,
       } = data;
 
-      document.getElementById("first_name").value = `${firstname}`;
+      document.getElementById("first_name").value = firstname;
       document.getElementById("last_name").value = lastname;
       document.getElementById("middlename").value = middlename;
       document.getElementById("phone").value = phone;
