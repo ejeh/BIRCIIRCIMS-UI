@@ -17,13 +17,89 @@
     />
     <script type="text/javascript" src="/js/index.js"></script>
     <script src="/js/jquery.js"></script>
+
+    <style>
+      body {
+        background: linear-gradient(90deg, #008080 0%, #2e8b57 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: "Arial", sans-serif;
+      }
+      .container {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        padding: 30px;
+        max-width: 800px;
+        width: 100%;
+      }
+      .container h3 {
+        margin-bottom: 10px;
+        color: #b36a93;
+        text-align: center;
+      }
+      .container h4 {
+        margin-bottom: 10px;
+        color: #4c956c;
+        text-align: center;
+      }
+      .btn-login {
+        background-color: #4c956c;
+        color: #fff;
+      }
+      .btn-login:hover {
+        background-color: #2c6e49;
+        color: #fff;
+      }
+      .form-control:focus {
+        border-color: #4c956c;
+        box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+      }
+      .text-center a {
+        color: #4c956c;
+        text-decoration: none;
+      }
+      .text-center a:hover {
+        text-decoration: underline;
+      }
+      .container h6 {
+        margin-bottom: 10px;
+        color: #4c956c;
+        text-align: center;
+        font-weight: bold;
+      }
+      /* Main title styling */
+      .main-title {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+
+      /* Subtitle styling */
+      .subtitle {
+        font-size: 1rem;
+        font-weight: 400;
+        margin: 10px 0 0;
+        line-height: 1.6;
+        text-transform: capitalize;
+      }
+    </style>
   </head>
   <body>
     <div class="container mt-5">
-      <div class="logo text-center">
+      <!-- <div class="logo text-center">
         <img class="img-fluid" src="/assets/images/gov-logo.jpg" alt="Logo" />
-      </div>
-      <h2 class="text-center">Register</h2>
+      </div> -->
+      <h3 class="main-title">BSCR-MIS</h3>
+      <h6 class="subtitle">
+        Benue State Citizen Registration <br />
+        Management Information system
+      </h6>
+      <h4>Register</h4>
       <form id="signUpForm">
         <div class="form-row">
           <div class="form-group col-md-6">
@@ -60,13 +136,20 @@
           </div>
           <div class="form-group col-md-6">
             <label for="phone">Phone</label>
+
             <input
-              type="text"
               class="form-control"
+              type="tel"
               id="phone"
               name="phone"
+              maxlength="11"
+              pattern="^0[7-9][0-1]\d{8}$"
               required
+              placeholder="Enter a valid Nigerian phone number"
             />
+            <!-- <span class="error-message"
+              >Please enter a valid Nigerian phone number.</span
+            > -->
           </div>
         </div>
         <div class="form-row">
@@ -78,25 +161,27 @@
               id="password"
               name="password"
               required
+              placeholder="At least 8 chars with uppercase, lowercase, number, symbol"
             />
           </div>
           <div class="form-group col-md-6">
-            <label for="re_password">Re-type your Password</label>
+            <label for="NIN">NIN</label>
             <input
-              name="re_password"
-              id="re_password"
+              name="NIN"
+              id="NIN"
               class="form-control"
-              type="password"
+              type="text"
+              maxlength="11"
+              minlength="11"
               required
             />
           </div>
         </div>
-
         <div class="d-grid">
           <button
             type="submit"
             id="submitbtn"
-            class="btn btn-primary btn-block"
+            class="btn btn-login btn-block"
             style="background-color: #4c956c"
           >
             Sign Up
@@ -109,74 +194,103 @@
       </form>
     </div>
 
-    <script type="text/javascript">
+    <script>
       $(document).ready(function () {
+        const validateInputs = (data) => {
+          const { firstname, lastname, email, phone, password, NIN } = data;
+
+          const passwordRegex =
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+
+          if (
+            !firstname ||
+            !lastname ||
+            !email ||
+            !phone ||
+            !password ||
+            !NIN
+          ) {
+            Swal.fire("Oops...", "All fields are required.", "error");
+            return false;
+          }
+
+          if (!/^[a-zA-Z]+$/.test(firstname) || !/^[a-zA-Z]+$/.test(lastname)) {
+            Swal.fire(
+              "Oops...",
+              "Firstname and Lastname should contain only letters.",
+              "error"
+            );
+            return false;
+          }
+
+          if (!/^0[7-9][0-1]\d{8}$/.test(phone)) {
+            Swal.fire("Oops...", "Invalid phone number format.", "error");
+            return false;
+          }
+          if (!passwordRegex.test(password)) {
+            Swal.fire(
+              "Oops...",
+              "Password must be at least 8 characters long, include an uppercase letter, a lowercase letter, a number, and a special character.",
+              "error"
+            );
+            return;
+          }
+
+          if (!NIN) {
+            Swal.fire("Oops...", "Passwords do not match.", "error");
+            return false;
+          }
+
+          return true;
+        };
+
+        const submitForm = async (formData) => {
+          try {
+            $("#submitbtn")
+              .html("<i class='fa fa-spinner'></i>")
+              .attr("disabled", true);
+
+            const response = await $.ajax({
+              type: "POST",
+              url: `${BACKEND_URL}/auth/signup`,
+              contentType: "application/json",
+              data: JSON.stringify(formData),
+            });
+
+            Swal.fire(
+              "Welcome",
+              // "Account successfully created, click OK to continue",
+              "Please check your email to activate your account. click OK to continue",
+
+              "success"
+            ).then(() => {
+              window.location.href = "../auth/login.html";
+            });
+          } catch (error) {
+            Swal.fire(
+              "Oops...",
+              error.responseJSON?.message || "An error occurred.",
+              "error"
+            );
+          } finally {
+            $("#submitbtn").html("Sign Up").attr("disabled", false);
+          }
+        };
+
         $("#signUpForm").on("submit", function (e) {
           e.preventDefault();
 
-          const firstname = $("#firstname").val();
-          const phone = $("#phone").val();
-          const lastname = $("#lastname").val();
-          const email = $("#email").val();
-          const password = $("#password").val();
-          const re_password = $("#re_password").val();
+          const formData = {
+            firstname: $("#firstname").val().trim(),
+            lastname: $("#lastname").val().trim(),
+            email: $("#email").val().trim(),
+            phone: $("#phone").val().trim(),
+            password: $("#password").val().trim(),
+            NIN: $("#NIN").val().trim(),
+          };
 
-          if (
-            firstname != "" &&
-            phone != "" &&
-            lastname != "" &&
-            email != "" &&
-            password != "" &&
-            re_password != ""
-          ) {
-            if (password.length < 6) {
-              Swal.fire(
-                "Oops...",
-                "Passwords must be at least 6 characters",
-                "error"
-              );
-            } else if (password != re_password) {
-              Swal.fire("Oops...", "Passwords do not match", "error");
-            } else {
-              $.ajax({
-                type: "POST",
-                url: `${BACKEND_URL}/auth/signup`,
-                contentType: "application/json",
-                data: JSON.stringify({
-                  email: email,
-                  password: password,
-                  firstname: firstname,
-                  lastname: lastname,
-                  phone: phone,
-                }),
-                beforeSend: function () {
-                  $("#submitbtn").html("<i class='fa fa-spinner'></i>");
-                  $("#submitbtn").attr("onclick", "");
-                },
-                success: function (data) {
-                  console.log("data", data);
-                  // Do something on success
-                  if (data) {
-                    Swal.fire(
-                      "Welcome",
-                      "Account successfully created, click OK to continue",
-                      "success"
-                    ).then((result) => {
-                      window.location.href = "../auth/login.html";
-                    });
-                  } else {
-                    Swal.fire("Oops...", data.message, "error");
-                    $("#submitbtn").html("Create account");
-                  }
-                },
-                error: function (data) {
-                  Swal.fire("Oops...", data.responseJSON.message, "error");
-                  $("#submitbtn").html("Sign Me In");
-                },
-              });
-            }
-          } else {
-            Swal.fire("Oops...", "invalid", "error");
+          if (validateInputs(formData)) {
+            submitForm(formData);
           }
         });
       });

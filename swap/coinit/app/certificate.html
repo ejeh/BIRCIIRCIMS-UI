@@ -59,14 +59,20 @@
             Nav header start
         ***********************************-->
       <div class="nav-header">
-        <a href="index-2.html" class="brand-logo">
+        <!-- Logo Section -->
+        <a href="index.html" class="brand-logo">
           <img
-            src="/assets/images/Benue-State-Footer-Logo.png"
-            width="50%"
-            height="auto"
+            src="/assets/images/gov-logo.jpg"
+            alt="Government Logo"
+            class="logo-img"
           />
+          <div class="brand-text">
+            <h6>Benue State Citizen Registration</h6>
+            <p>Management Information System</p>
+          </div>
         </a>
 
+        <!-- Hamburger Menu for Navigation Control -->
         <div class="nav-control">
           <div class="hamburger">
             <span class="line"></span><span class="line"></span
@@ -219,55 +225,47 @@
               </script>
             </li> -->
             </li>
-
             <li>
-              <a class="ai-icon" href="index-2.html" aria-expanded="false">
+              <a class="ai-icon" href="index.html" aria-expanded="false">
                 <i class="flaticon-381-networking"></i>
                 <span class="nav-text">Dashboard</span>
               </a>
             </li>
-            <!-- <li>
-              <a class="ai-icon" href="deposit.html" aria-expanded="false">
-                <i class="fa fa-money" aria-hidden="true"></i>
-                <span class="nav-text">Fund Account</span>
-              </a>
-            </li>
-            <li>
-              <a class="ai-icon" href="exchange.html" aria-expanded="false">
+            <!-- Super Admin Menu -->
+            <li class="super-admin-menu">
+              <a class="ai-icon" href="approvals.html" aria-expanded="false">
                 <i class="fa fa-exchange" aria-hidden="true"></i>
-                <span class="nav-text">Exchange</span>
+                <span class="nav-text">Approvals</span>
               </a>
             </li>
-            <li>
-              <a class="ai-icon" href="withdrawal.html" aria-expanded="false">
-                <i class="fa fa-money" aria-hidden="true"></i>
-                <span class="nav-text">Withdrawal</span>
-              </a>
-            </li> -->
-            <li>
+            <li class="user-menu">
               <a class="ai-icon" href="request.html" aria-expanded="false">
                 <i class="fa fa-money" aria-hidden="true"></i>
-                <span class="nav-text">Request Certificate</span>
+                <span class="nav-text">View Request Status</span>
               </a>
             </li>
-            <li>
+
+            <li class="super-admin-menu">
+              <a class="ai-icon" href="all-request.html" aria-expanded="false">
+                <i class="fa fa-money" aria-hidden="true"></i>
+                <span class="nav-text">View All Request</span>
+              </a>
+            </li>
+            <!-- Super Admin Menu -->
+            <li class="super-admin-menu">
               <a class="ai-icon" href="citizens.html" aria-expanded="false">
                 <i class="fa fa-arrows-h"></i>
                 <span class="nav-text">All Citizens</span>
               </a>
             </li>
-            <li>
+            <!-- User-menu -->
+            <li class="user-menu">
               <a class="ai-icon" href="certificate.html" aria-expanded="false">
                 <i class="fa fa-user-plus" aria-hidden="true"></i>
-                <span class="nav-text">Indigene Certificate Form</span>
+                <span class="nav-text">Request Certificate</span>
               </a>
             </li>
-            <!-- <li>
-              <a class="ai-icon" href="kyc.html" aria-expanded="false">
-                <i class="fa fa-hand-o-right"></i>
-                <span class="nav-text">Account Verification</span>
-              </a>
-            </li> -->
+
             <li>
               <a class="ai-icon" href="profile.html" aria-expanded="false">
                 <i class="fa fa-user" aria-hidden="true"></i>
@@ -275,15 +273,14 @@
               </a>
             </li>
             <li>
-              <!-- href="../auth/login.html" -->
-              <a href="/auth/login.html" class="ai-icon" aria-expanded="false">
+              <a class="ai-icon" href="/auth/login.html" aria-expanded="false">
                 <i class="fa fa-sign-out" aria-hidden="true"></i>
                 <span class="nav-text" onclick="logout(this)">Logout</span>
               </a>
             </li>
           </ul>
           <div class="copyright">
-            <p>BSCR-MIS <br />© 2024 All Rights Reserved</p>
+            <p>Powered By BDIC <br />© 2025 All Rights Reserved</p>
             <p class="op5"></p>
           </div>
         </div>
@@ -319,8 +316,8 @@
                           name="firstname"
                           id="first_name"
                           value="firstname"
+                          readonly
                         />
-                        <!-- readonly -->
                       </div>
                       <div class="col-sm-4 m-b30">
                         <label class="form-label">middlename</label>
@@ -329,6 +326,7 @@
                           type="text"
                           class="form-control"
                           name="middlename"
+                          readonly
                         />
                       </div>
                       <div class="col-sm-4 m-b30">
@@ -339,6 +337,7 @@
                           value="lastname"
                           name="lastname"
                           class="form-control"
+                          readonly
                         />
                       </div>
                       <div class="col-sm-4 m-b30">
@@ -349,6 +348,7 @@
                           id="email"
                           name="email"
                           required
+                          readonly
                         />
                       </div>
 
@@ -360,6 +360,7 @@
                           class="form-control"
                           required
                           name="phone"
+                          readonly
                         />
                       </div>
                       <div class="col-sm-4 m-b30">
@@ -391,23 +392,23 @@
                       <div class="col-sm-4 m-b30">
                         <label class="form-label">State Of Origin</label>
                         <input
-                          id="state"
+                          id="stateOfOrigin"
                           type="text"
                           class="form-control"
                           required
                           name="stateOfOrigin"
+                          readonly
                         />
                       </div>
                       <div class="col-sm-4 m-b30">
                         <label class="form-label">Date Of Birth</label>
-                        <!-- type="date" -->
+
                         <input
                           id="dob"
                           class="form-control"
                           name="DOB"
-                          min="1900-01-01"
-                          max="2024-12-31"
                           required
+                          readonly
                         />
                       </div>
                       <div class="col-sm-4 m-b30">
@@ -418,6 +419,7 @@
                           class="form-control"
                           required
                           name="LGA"
+                          readonly
                         />
                       </div>
 
@@ -429,6 +431,7 @@
                           class="form-control"
                           required
                           name="address"
+                          readonly
                         />
                       </div>
 
@@ -475,30 +478,105 @@
                           name="guardian"
                         />
                       </div>
+
                       <div class="col-sm-4 m-b30">
                         <label class="form-label"
                           >Father’s State of Origin</label
                         >
-                        <input
+                        <!-- class="form-select" -->
+                        <select
                           id="fathersStateOfOrigin"
-                          type="text"
-                          class="form-control"
-                          required
                           name="fathersStateOfOrigin"
-                        />
+                          required
+                          class="selectpicker nice-select default-select form-control wide mh-auto"
+                        >
+                          <option value="">Select State</option>
+                          <option value="adamawa">Adamawa</option>
+                          <option value="akwa_ibom">Akwa Ibom</option>
+                          <option value="anambra">Anambra</option>
+                          <option value="abia">Abia</option>
+                          <option value="bauchi">Bauchi</option>
+                          <option value="benue">Benue</option>
+                          <option value="borno">Borno</option>
+                          <option value="bayelsa">Bayelsa</option>
+                          <option value="delta">Delta</option>
+                          <option value="ebonyi">Ebonyi</option>
+                          <option value="edo">Edo</option>
+                          <option value="enugu">Enugu</option>
+                          <option value="abuja">abuja</option>
+                          <option value="gombe">Gombe</option>
+                          <option value="jigawa">Jigawa</option>
+                          <option value="ekiti">Ekiti</option>
+                          <option value="lagos">Lagos</option>
+                          <option value="oyo">Oyo</option>
+                          <option value="imo">Imo</option>
+                          <option value="kaduna">Kaduna</option>
+                          <option value="kebbi">Kebbi</option>
+                          <option value="kano">Kano</option>
+                          <option value="kogi">Kogi</option>
+                          <option value="osun">Osun</option>
+                          <option value="sokoto">Sokoto</option>
+                          <option value="plateau">Plateau</option>
+                          <option value="taraba">Taraba</option>
+                          <option value="yobe">Yobe</option>
+                          <option value="zamfara">zamfara</option>
+                          <option value="katsina">Katsina</option>
+                          <option value="kwara">Kwara</option>
+                          <option value="nasarawa">Nasarawa</option>
+                          <option value="niger">Niger</option>
+                          <option value="rivers">Rivers</option>
+                        </select>
                       </div>
+
                       <div class="col-sm-4 m-b30">
                         <label class="form-label"
                           >Mother’s State of Origin</label
                         >
-                        <input
+                        <!-- class="form-select" -->
+                        <select
                           id="mothersStateOfOrigin"
-                          type="text"
-                          class="form-control"
-                          required
                           name="mothersStateOfOrigin"
-                        />
+                          required
+                          class="selectpicker nice-select default-select form-control wide mh-auto"
+                        >
+                          <option value="">Select State</option>
+                          <option value="adamawa">Adamawa</option>
+                          <option value="akwa_ibom">Akwa Ibom</option>
+                          <option value="anambra">Anambra</option>
+                          <option value="abia">Abia</option>
+                          <option value="bauchi">Bauchi</option>
+                          <option value="benue">Benue</option>
+                          <option value="borno">Borno</option>
+                          <option value="bayelsa">Bayelsa</option>
+                          <option value="delta">Delta</option>
+                          <option value="ebonyi">Ebonyi</option>
+                          <option value="edo">Edo</option>
+                          <option value="enugu">Enugu</option>
+                          <option value="abuja">abuja</option>
+                          <option value="gombe">Gombe</option>
+                          <option value="jigawa">Jigawa</option>
+                          <option value="ekiti">Ekiti</option>
+                          <option value="lagos">Lagos</option>
+                          <option value="oyo">Oyo</option>
+                          <option value="imo">Imo</option>
+                          <option value="kaduna">Kaduna</option>
+                          <option value="kebbi">Kebbi</option>
+                          <option value="kano">Kano</option>
+                          <option value="kogi">Kogi</option>
+                          <option value="osun">Osun</option>
+                          <option value="sokoto">Sokoto</option>
+                          <option value="plateau">Plateau</option>
+                          <option value="taraba">Taraba</option>
+                          <option value="yobe">Yobe</option>
+                          <option value="zamfara">zamfara</option>
+                          <option value="katsina">Katsina</option>
+                          <option value="kwara">Kwara</option>
+                          <option value="nasarawa">Nasarawa</option>
+                          <option value="niger">Niger</option>
+                          <option value="rivers">Rivers</option>
+                        </select>
                       </div>
+
                       <div class="col-sm-4 m-b30">
                         <label class="form-label"
                           >Relationship to Guardian</label
@@ -567,7 +645,7 @@
                       class="btn"
                       style="background-color: #2c6e49; color: #fff"
                     >
-                      Submit
+                      Request Certificate
                     </button>
                   </div>
                 </form>
@@ -588,38 +666,40 @@
         </script>
 
         <script>
-          $("#indigeneForm").on("submit", function (e) {
-            let userData = localStorage.getItem("token");
-            userData = JSON.parse(userData);
-            const { token, user } = userData;
+          $(document).ready(function () {
+            $("#indigeneForm").on("submit", function (e) {
+              let userData = localStorage.getItem("token");
+              userData = JSON.parse(userData);
+              const { token, user } = userData;
 
-            e.preventDefault();
-            const formData = new FormData(this);
+              e.preventDefault();
+              const formData = new FormData(this);
+              formData.append("userId", user.id); // Append the userId
 
-            // Log the form data
-            // for (const [key, value] of formData.entries()) {
-            //   console.log(`${key}: ${value}`);
-            // }
+              $.ajax({
+                url: `${BACKEND_URL}/indigene/certificate/create`,
+                type: "POST",
+                data: formData,
+                processData: false, // Important for FormData
+                contentType: false, // Important for FormDatas
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+                success: function (response) {
+                  // alert("Certificate generated successfully!");
+                  if (response) {
+                    Swal.fire("congratulations", "Request sent!", "success");
+                  } else {
+                    Swal.fire("Oops...", data.message, "error");
+                  }
+                },
+                error: function (error) {
+                  // console.log(error.message);
+                  // alert("An error occurred.");
 
-            $.ajax({
-              url: `${BACKEND_URL}/indigene/certificate/create`,
-              type: "POST",
-              data: formData,
-              processData: false,
-              contentType: false,
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-              success: function (response) {
-                alert("Certificate generated successfully!");
-                // const downloadUrl = `http://localhost:5000/api/indigene/certificate/download/${response._id}`;
-                // $("#response").html(
-                //   `<a href="${downloadUrl}" download>Download Certificate</a>`
-                // );
-              },
-              error: function (error) {
-                alert("An error occurred.");
-              },
+                  Swal.fire("Oops...", "An error occurred.");
+                },
+              });
             });
           });
         </script>
@@ -633,7 +713,7 @@
         ***********************************-->
       <div class="footer">
         <div class="copyright">
-          <p>Copyright © BSCR-MIS 2024</p>
+          <p>Copyright © BDIC 2025</p>
         </div>
       </div>
       <!--**********************************

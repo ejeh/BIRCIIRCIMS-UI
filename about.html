@@ -13,79 +13,7 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
     />
-    <!-- Latest compiled and minified CSS -->
     <style>
-      .hero-text .hero-header {
-        text-transform: capitalize;
-        line-height: 1.8rem;
-        font-size: 1.8rem;
-      }
-
-      .hero-text .hero-header h1 p {
-        font-size: 5rem;
-      }
-
-      .hero-header p {
-        text-transform: uppercase;
-        color: #fff;
-      }
-
-      .apply-header h1 {
-        color: #610354;
-      }
-
-      .card-section {
-        font-family: Arial, sans-serif;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-top: 40px;
-        text-align: center;
-        padding: 1rem;
-      }
-
-      .card-container {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
-        width: 90%;
-        max-width: 1200px;
-      }
-
-      .card {
-        background-color: #fff;
-        border-radius: 8px;
-        padding: 40px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        transition: box-shadow 0.3s ease-in-out;
-      }
-
-      .card h3 {
-        font-size: 1.5em;
-        margin-bottom: 10px;
-        color: #610354;
-      }
-
-      .card p {
-        font-size: 1em;
-        color: #555;
-      }
-
-      .card:hover {
-        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
-      }
-
-      .card-container .site-icon {
-        color: #610354;
-        font-size: 30px;
-      }
-
-      /* Media Queries for responsiveness */
-      @media (max-width: 768px) {
-        .card-container {
-          grid-template-columns: 1fr;
-        }
-      }
       .site-icon {
         color: white;
         font-size: 30px;
@@ -111,13 +39,13 @@
         <div class="nav-left">
           <ul class="nav-list">
             <li class="nav-list-item">
-              <a class="menu__link" href="#home">Home</a>
+              <a class="menu__link" href="./index.html">Home</a>
             </li>
             <li class="nav-list-item">
               <a class="menu__link" href="./about.html">About</a>
             </li>
             <li class="nav-list-item">
-              <a class="menu__link" href="#apply">How to Apply</a>
+              <a class="menu__link" href="index.html#apply">How to Apply</a>
             </li>
             <!-- <li class="nav-list-item">
               <a class="menu__link" href="certificate/verify.html">Verify</a>
@@ -130,7 +58,7 @@
             </li>
           </ul>
           <button class="btn-submit">
-            <a href="/auth/register.html">Apply Now</a>
+            <a href="register.html">Apply Now</a>
           </button>
         </div>
         <div class="hamburger">
@@ -139,88 +67,12 @@
       </div>
     </nav>
     <main role="main" aria-label="main">
-      <!-- Hero section -->
-      <section id="home">
-        <div class="container hero-section">
-          <div data-aos="zoom-in" data-aos-duration="1500" class="hero-text">
-            <h1 class="hero-header">
-              <p>Benue State Government</p>
-              Citizens & Residence Information Management Stystem (BSCR-MIS) &
-              <span style="color: #fff">Indigene Certificate Issuaance.</span>
-            </h1>
-            <p class="hero-paragraph">
-              Empowering your Identity. Simplifying the Process
-            </p>
-            <button class="btn-reuse" aria-label="Apply Now">
-              <a href="/auth/register.html">Apply Now</a>
-            </button>
-          </div>
-          <div data-aos-duration="1500" class="hero-image-box">
-            <img
-              class="hero-image"
-              src="assets/bg-image.png"
-              alt="background image"
-            />
-          </div>
-        </div>
-      </section>
-      <!--End Hero section -->
-
       <!-- Who we are section -->
-      <section id="apply" class="pt-5">
-        <div class="apply-header">
-          <h1 class="heading-secondary">How to apply</h1>
-          <p class="mt-1">
-            Follow these four simple steps to obtain your <br />
-            certificate of origin.
-          </p>
-        </div>
-        <div class="card-section">
-          <div class="card-container">
-            <div class="card">
-              <i class="fas fa-user-plus site-icon"></i>
-              <h3>Create an Account</h3>
-              <p>
-                Begin by creating your personalized account on our platform,
-                login in and request for certificate.
-              </p>
-            </div>
-            <div class="card">
-              <i class="fas fa-pen site-icon"></i>
-              <h3>Fill in Your Details</h3>
-              <p>
-                Provide the necessary information to complete your application.
-              </p>
-            </div>
-            <div class="card">
-              <i class="fas fa-file-upload site-icon"></i>
-              <h3>Upload Supporting Documents.</h3>
-              <p>
-                Attach your passport and Your NIN and other requested document
-                to verify your identity and establish your connection to Benue
-                state.
-              </p>
-            </div>
-            <div class="card">
-              <i class="fas fa-certificate site-icon"></i>
-              <h3>Get Certificate</h3>
-              <p>
-                After Submission, your application will be approved and your
-                certificate will be sent to your email for your use, incase if
-                you didn't get an email proceed to check your dashboard. You can
-                print at liberty.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="about-section">
+      <section class="mt-8 about-section">
         <div
           data-aos="fade-up"
           data-aos-offset="50"
           data-aos-duration="1000"
-          data-aos-easing="ease-in-sine"
           class="about-texts"
         >
           <h1 class="heading-secondary">About</h1>
@@ -236,10 +88,6 @@
               information.
             </p>
           </div>
-
-          <button class="btn-reuse" aria-label="Apply Now">
-            <a href="/auth/register.html">Get Started</a>
-          </button>
         </div>
         <div
           data-aos="fade-down"
@@ -250,6 +98,74 @@
         </div>
       </section>
       <!--End  Who we are section -->
+
+      <div class="container" style="text-align: justify">
+        <h1
+          data-aos="fade-in"
+          data-aos-duration="800"
+          class="heading-secondary"
+        >
+          History
+        </h1>
+        <div data-aos="fade-down" data-aos-duration="1000" class="mt-3">
+          <p>
+            Benue State is located in the central region of Nigeria and was
+            created on February 3, 1976, when the then Benue-Plateau State was
+            divided into two separate states: Benue and Plateau. The state is
+            named after the Benue River, which flows through the region and is a
+            major geographical feature of the area.
+          </p>
+          <p>
+            Pre-colonial History: Before the colonial era, the region that is
+            now Benue State was home to several ethnic groups, including the
+            Tiv, Idoma, and Igede peoples. The Tiv were particularly dominant,
+            with a rich history of traditional governance under the leadership
+            of the Tiv Jukun Kingdom. The Idoma and Igede were also significant
+            groups with their own distinct cultures and political systems. These
+            groups were known for their agricultural practices, trading
+            activities, and intricate cultural traditions.
+          </p>
+          <p>
+            Colonial Era: During the colonial period, the British established
+            control over the region, incorporating it into the larger northern
+            provinces of Nigeria. The region was administratively grouped under
+            the Northern Nigeria Protectorate, and later into the Benue-Plateau
+            Province. British colonial administration impacted the traditional
+            structures of governance, as well as the economy, by introducing
+            cash crops such as palm oil, cotton, and groundnuts.
+          </p>
+          <p>
+            Post-colonial Era: After Nigeria gained independence in 1960, Benue
+            was part of the larger Benue-Plateau State. In 1976, the state was
+            split to create Benue State as a separate entity. The state has
+            since experienced political and social development, though it has
+            also faced challenges such as ethnic tensions, political
+            instability, and disputes over land use between the farmers and
+            pastoralists, particularly between the Tiv and Fulani people.
+          </p>
+          <p>
+            Modern Benue: Benue State is often referred to as the "Food Basket
+            of the Nation" due to its rich agricultural resources. It is a major
+            producer of crops such as yams, cassava, maize, rice, and beans. The
+            state also has a thriving livestock industry, particularly cattle
+            farming. In addition to agriculture, the state's economy is
+            bolstered by trading, with local markets playing an essential role.
+          </p>
+          <p>
+            Benue has also gained prominence for its cultural festivals, which
+            highlight the customs and traditions of the various ethnic groups in
+            the state, including the Tiv, Idoma, and Igede. The state continues
+            to work on improving infrastructure, education, and healthcare,
+            striving to meet the needs of its growing population.
+          </p>
+          <p>
+            In summary, Benue State has a rich history shaped by its indigenous
+            peoples, colonial influences, and post-independence developments.
+            Today, it stands as a significant agricultural hub with diverse
+            cultural traditions and a strong sense of local identity.
+          </p>
+        </div>
+      </div>
 
       <!-- FAQ section -->
       <section class="faq-section" id="faq">
@@ -266,6 +182,7 @@
             data-aos-easing="linear"
             data-aos-duration="1500"
             class="faq-contents"
+            class="faq-contents"
           >
             <div class="faq-content" onclick="toggleFAQ('faq1')">
               <div class="faq__head-container">
@@ -276,9 +193,7 @@
               </div>
               <p class="faq-body" id="faq1">
                 Application can be made on the portal via
-                <a href="/auth/register.html"
-                  >https://apply.stateoforigin.benuestate.gov.ng/</a
-                >
+                <a href="register.html">register.html</a>
                 . Ensure you register or sign up to begin the process.
               </p>
             </div>
@@ -317,7 +232,69 @@
         <div class="faq-header">
           <h1 class="heading-secondary">Contact Us</h1>
         </div>
-
+        <!-- <form
+          data-aos="zoom-in-out"
+          data-aos-duration="1000"
+          class="mt-3 contact-form"
+        >
+          <div class="form__group">
+            <label class="form__label"> Full name </label>
+            <input
+              type="text"
+              class="form__input"
+              placeholder="enter yout full name"
+              required
+            />
+          </div>
+          <div class="form__group">
+            <label class="form__label"> Email </label>
+            <input
+              type="text"
+              class="form__input"
+              placeholder="enter your email"
+              required
+            />
+          </div>
+          <div class="form__group">
+            <label class="form__label"> Subject of your Message </label>
+            <input
+              type="text"
+              class="form__input"
+              placeholder="enter the subject"
+              required
+            />
+          </div>
+          <div class="form__group element-four">
+            <label class="form__label"> Your Message </label>
+            <textarea
+              name="message"
+              class="textarea"
+              id="message"
+              cols="61"
+              rows="8"
+              placeholder="Type your message"
+            ></textarea>
+          </div>
+          <div class="form__group element-five">
+            <div class="mail-us">
+              <a
+                href="https://wa.me/2347026376105"
+                class="whatsapp"
+                target="_blank"
+                >Click to chat on WhatsApp</a
+              >
+              <br />
+              <a
+                class="whatsapp"
+                href="mailto:info@register.html"
+                >Email us</a
+              >
+            </div>
+            <button class="btn-submit" onclick="submitForm()" disabled>
+              <a href="# ">Submit</a>
+            </button>
+          </div>
+        </form> -->
         <div class="contact-boxs">
           <div class="contact-box">
             <a
@@ -358,7 +335,7 @@
         <div class="footer-top">
           <div class="footer-content">
             <div class="footer-content__logo">
-              <img src="assets/benue-logo.png" alt="logo" class="" />
+              <img src="assets/benue-logo.png" alt="logo" class="icon-" />
               <div class="footer-logo__heading">
                 <h3>Benue State Citizens/Residence</h3>
                 <p>Management Information System and Certificate Issuaance</p>
@@ -376,7 +353,7 @@
               </p>
               <div class="btn-footer">
                 <button class="btn-reuse" aria-label="Apply Now">
-                  <a href="/auth/register.html">Get Started</a>
+                  <a href="register.html">Get Started</a>
                 </button>
               </div>
             </div>
@@ -391,7 +368,7 @@
                 <a href="./about.html">About</a>
               </li>
               <li class="footer-content__list-item">
-                <a href="#apply">How to apply</a>
+                <a href="index.html#apply">How to apply</a>
               </li>
               <!-- <li class="footer-content__list-item">
                 <a href="certificate/verify.html">Verify</a>

@@ -5053,3 +5053,37 @@ fieldset legend .close_fieldset {
     background-size: 22px 22px;
   }
 }
+
+/* Styling for Navigation Header */
+.nav-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #2c3e50; /* Dark background for contrast */
+  padding: 10px 20px;
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: white;
+}
+
+.logo-img {
+  width: 50px; /* Adjust size for better visibility */
+  height: auto;
+  margin-right: 10px;
+}
+
+.brand-text h6 {
+  font-size: 14px;
+  margin: 0;
+  color: #f1f1f1;
+}
+
+.brand-text p {
+  font-size: 12px;
+  margin: 0;
+  color: #f1f1f1;
+}

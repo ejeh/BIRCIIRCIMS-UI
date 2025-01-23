@@ -109,7 +109,7 @@
           <nav class="navbar navbar-expand">
             <div class="collapse navbar-collapse justify-content-between">
               <div class="header-left">
-                <div class="dashboard_bar">All Request</div>
+                <div class="dashboard_bar">All Approvals</div>
               </div>
               <ul class="navbar-nav header-right">
                 <li class="nav-item dropdown notification_dropdown">
@@ -258,78 +258,23 @@
                       >
                         <thead>
                           <tr>
+                            <th>#</th>
                             <th>Fullname</th>
                             <th>Phone</th>
                             <th>Email</th>
                             <th>Status</th>
-                            <th>Attempts</th>
-                            <th>Action</th>
                             <th>Action</th>
                           </tr>
                         </thead>
-                        <tbody id="request-table"></tbody>
+                        <tbody id="approval-table"></tbody>
                       </table>
+                      <!-- Rejection Reason Modal -->
 
-                      <!-- !-- Resubmission Modal -->
-                      <div
-                        class="modal fade"
-                        id="resubmitModal"
-                        tabindex="-1"
-                        aria-labelledby="resubmitModalLabel"
-                        aria-hidden="true"
-                      >
-                        <div class="modal-dialog">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h5 class="modal-title" id="resubmitModalLabel">
-                                Edit Request
-                                <br />
-                                Only Three Attempts Allowed
-                              </h5>
-                              <button
-                                type="button"
-                                class="btn-close"
-                                data-bs-dismiss="modal"
-                                aria-label="Close"
-                              ></button>
-                            </div>
-                            <div class="modal-body">
-                              <input type="hidden" id="resubmitRequestId" />
-                              <div class="mb-3">
-                                <label for="resubmitName" class="form-label"
-                                  >Name</label
-                                >
-                                <input
-                                  type="text"
-                                  class="form-control"
-                                  id="resubmitName"
-                                />
-                              </div>
-                            </div>
-                            <div class="modal-footer">
-                              <button
-                                type="button"
-                                class="btn btn-secondary"
-                                data-bs-dismiss="modal"
-                              >
-                                Cancel
-                              </button>
-                              <button
-                                type="button"
-                                id="submitResubmission"
-                                class="btn btn-primary"
-                              >
-                                Resubmit
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
                       <div class="d-flex justify-content-between">
-                        <button id="btn-prev" class="btn" disabled>
+                        <button id="btnPrev" class="btn" disabled>
                           Previous
                         </button>
-                        <button id="btn-next" class="btn">Next</button>
+                        <button id="btnNext" class="btn">Next</button>
                       </div>
                     </div>
                   </div>
@@ -347,7 +292,6 @@
         <script>
           function logout() {
             localStorage.removeItem("token");
-            location.reload(); // Refresh page
           }
         </script>
       </div>

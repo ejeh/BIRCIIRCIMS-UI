@@ -35,6 +35,23 @@
     <script src="../../unpkg.com/sweetalert%402.1.2/dist/sweetalert.min.js"></script>
     <link href="vendor/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet" />
     <script src="../../ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    <style>
+      .error-message {
+        color: red;
+        font-size: 0.875rem;
+        display: none;
+      }
+      .form-control.error {
+        border-color: red;
+      }
+      /* .form-section {
+        display: none;
+      } */
+      .form-section.active {
+        display: block;
+      }
+    </style>
   </head>
   <body>
     <!--*******************
@@ -58,15 +75,38 @@
       <!--**********************************
             Nav header start
         ***********************************-->
-      <div class="nav-header">
-        <a href="index-2.html" class="brand-logo">
-          <img
-            src="/assets/images/Benue-State-Footer-Logo.png"
-            width="50%"
-            height="auto"
-          />
+      <!-- <div class="nav-header">
+        <a href="index.html" class="brand-logo">
+          <img src="/assets/images/gov-logo.jpg" width="20%" height="auto" /> -->
+      <!-- <h3 style="color: white">BSCR-MIS</h3> -->
+      <!-- <h6 style="color: white">
+            Benue State Citizen Registration <br />
+            Management Information system
+          </h6>
         </a>
 
+        <div class="nav-control">
+          <div class="hamburger">
+            <span class="line"></span><span class="line"></span
+            ><span class="line"></span>
+          </div>
+        </div>
+      </div> -->
+      <div class="nav-header">
+        <!-- Logo Section -->
+        <a href="index.html" class="brand-logo">
+          <img
+            src="/assets/images/gov-logo.jpg"
+            alt="Government Logo"
+            class="logo-img"
+          />
+          <div class="brand-text">
+            <h6>Benue State Citizen Registration</h6>
+            <p>Management Information System</p>
+          </div>
+        </a>
+
+        <!-- Hamburger Menu for Navigation Control -->
         <div class="nav-control">
           <div class="hamburger">
             <span class="line"></span><span class="line"></span
@@ -88,7 +128,7 @@
               <div class="header-left">
                 <div class="dashboard_bar">Profile</div>
               </div>
-              <ul class="navbar-nav header-right">
+              <!-- <ul class="navbar-nav header-right">
                 <li class="nav-item dropdown notification_dropdown">
                   <div class="input-group search-area">
                     <input
@@ -102,7 +142,7 @@
                     ></span>
                   </div>
                 </li>
-              </ul>
+              </ul> -->
             </div>
           </nav>
         </div>
@@ -148,127 +188,48 @@
                   display: none !important;
                 }
               </style>
-
-              <!-- <br /><select onchange="doGTranslate(this);">
-                <option value="">Select Language</option>
-                <option value="en|zh-CN">Chinese (Simplified)</option>
-                <option value="en|zh-TW">Chinese (Traditional)</option>
-                <option value="en|en">English</option>
-              </select>
-              <div id="google_translate_element2"></div>
-              <script type="text/javascript">
-                function googleTranslateElementInit2() {
-                  new google.translate.TranslateElement(
-                    { pageLanguage: "en", autoDisplay: false },
-                    "google_translate_element2"
-                  );
-                }
-              </script>
-              <script
-                type="text/javascript"
-                src="//translate.google.com/translate_a/element7876.js?cb=googleTranslateElementInit2"
-              ></script>
-              <script
-                type="text/javascript"
-                src="../../translate.google.com/translate_a/element7876.js?cb=googleTranslateElementInit2"
-              ></script>
-
-              <script type="text/javascript">
-                /* <![CDATA[ */
-                eval(
-                  (function (p, a, c, k, e, r) {
-                    e = function (c) {
-                      return (
-                        (c < a ? "" : e(parseInt(c / a))) +
-                        ((c = c % a) > 35
-                          ? String.fromCharCode(c + 29)
-                          : c.toString(36))
-                      );
-                    };
-                    if (!"".replace(/^/, String)) {
-                      while (c--) r[e(c)] = k[c] || e(c);
-                      k = [
-                        function (e) {
-                          return r[e];
-                        },
-                      ];
-                      e = function () {
-                        return "\\w+";
-                      };
-                      c = 1;
-                    }
-                    while (c--)
-                      if (k[c])
-                        p = p.replace(
-                          new RegExp("\\b" + e(c) + "\\b", "g"),
-                          k[c]
-                        );
-                    return p;
-                  })(
-                    "6 7(a,b){n{4(2.9){3 c=2.9(\"o\");c.p(b,f,f);a.q(c)}g{3 c=2.r();a.s('t'+b,c)}}u(e){}}6 h(a){4(a.8)a=a.8;4(a=='')v;3 b=a.w('|')[1];3 c;3 d=2.x('y');z(3 i=0;i<d.5;i++)4(d[i].A=='B-C-D')c=d[i];4(2.j('k')==E||2.j('k').l.5==0||c.5==0||c.l.5==0){F(6(){h(a)},G)}g{c.8=b;7(c,'m');7(c,'m')}}",
-                    43,
-                    43,
-                    "||document|var|if|length|function|GTranslateFireEvent|value|createEvent||||||true|else|doGTranslate||getElementById|google_translate_element2|innerHTML|change|try|HTMLEvents|initEvent|dispatchEvent|createEventObject|fireEvent|on|catch|return|split|getElementsByTagName|select|for|className|goog|te|combo|null|setTimeout|500".split(
-                      "|"
-                    ),
-                    0,
-                    {}
-                  )
-                );
-                /* ]]> */
-              </script>
-            </li> -->
             </li>
-
             <li>
-              <a class="ai-icon" href="index-2.html" aria-expanded="false">
+              <a class="ai-icon" href="index.html" aria-expanded="false">
                 <i class="flaticon-381-networking"></i>
                 <span class="nav-text">Dashboard</span>
               </a>
             </li>
-            <!-- <li>
-              <a class="ai-icon" href="deposit.html" aria-expanded="false">
-                <i class="fa fa-money" aria-hidden="true"></i>
-                <span class="nav-text">Fund Account</span>
-              </a>
-            </li>
-            <li>
-              <a class="ai-icon" href="exchange.html" aria-expanded="false">
+            <!-- Super Admin Menu -->
+            <li class="super-admin-menu">
+              <a class="ai-icon" href="approvals.html" aria-expanded="false">
                 <i class="fa fa-exchange" aria-hidden="true"></i>
-                <span class="nav-text">Exchange</span>
+                <span class="nav-text">Approvals</span>
               </a>
             </li>
-            <li>
-              <a class="ai-icon" href="withdrawal.html" aria-expanded="false">
-                <i class="fa fa-money" aria-hidden="true"></i>
-                <span class="nav-text">Withdrawal</span>
-              </a>
-            </li> -->
-            <li>
+            <li class="user-menu">
               <a class="ai-icon" href="request.html" aria-expanded="false">
                 <i class="fa fa-money" aria-hidden="true"></i>
-                <span class="nav-text">Request Certificate</span>
+                <span class="nav-text">View Request Status</span>
               </a>
             </li>
-            <li>
+
+            <li class="super-admin-menu">
+              <a class="ai-icon" href="all-request.html" aria-expanded="false">
+                <i class="fa fa-money" aria-hidden="true"></i>
+                <span class="nav-text">View All Request</span>
+              </a>
+            </li>
+            <!-- Super Admin Menu -->
+            <li class="super-admin-menu">
               <a class="ai-icon" href="citizens.html" aria-expanded="false">
                 <i class="fa fa-arrows-h"></i>
                 <span class="nav-text">All Citizens</span>
               </a>
             </li>
-            <li>
+            <!-- User-menu -->
+            <li class="user-menu">
               <a class="ai-icon" href="certificate.html" aria-expanded="false">
                 <i class="fa fa-user-plus" aria-hidden="true"></i>
-                <span class="nav-text">Indigene Certificate Form<</span>
+                <span class="nav-text">Request Certificate</span>
               </a>
             </li>
-            <!-- 
-            <li>
-              <a class="ai-icon" href="kyc.html" aria-expanded="false">
-                <i class="fa fa-hand-o-right"></i>
-                <span class="nav-text">Account Verification</span>
-              </a>
-            </li> -->
+
             <li>
               <a class="ai-icon" href="profile.html" aria-expanded="false">
                 <i class="fa fa-user" aria-hidden="true"></i>
@@ -276,19 +237,19 @@
               </a>
             </li>
             <li>
-              <!-- href="../auth/login.html" -->
-              <a href="/auth/login.html" class="ai-icon" aria-expanded="false">
+              <a class="ai-icon" href="/auth/login.html" aria-expanded="false">
                 <i class="fa fa-sign-out" aria-hidden="true"></i>
                 <span class="nav-text" onclick="logout(this)">Logout</span>
               </a>
             </li>
           </ul>
           <div class="copyright">
-            <p>BSCR-MIS <br />© 2024 All Rights Reserved</p>
+            <p>Powered By BDIC <br />© 2025 All Rights Reserved</p>
             <p class="op5"></p>
           </div>
         </div>
       </div>
+
       <!--**********************************
             Sidebar end
         ***********************************-->
@@ -298,16 +259,17 @@
         ***********************************-->
       <div class="content-body">
         <div class="container-fluid">
-          <!-- row -->
-          <div class="row">
-            <div class="col-xl-12 col-lg-12">
-              <div class="card card-bx m-b30">
-                <div class="card-header">
-                  <h4 class="card-title">Profile Details</h4>
-                </div>
-                <form class="profile-form" id="profilefrm">
+          <form class="profile-form" id="unifiedForm">
+            <!-- Profile Details -->
+            <div class="row form-section" id="profile-details-section">
+              <div class="col-xl-12 col-lg-12">
+                <div class="card card-bx m-b30">
+                  <div class="card-header">
+                    <h4 class="card-title">Profile Details</h4>
+                  </div>
                   <div class="card-body">
                     <div class="row">
+                      <!-- Form fields for Profile Details -->
                       <div class="col-sm-6 m-b30">
                         <label class="form-label">First Name</label>
                         <input
@@ -329,8 +291,9 @@
                           class="form-control"
                         />
                       </div>
+
                       <div class="col-sm-6 m-b30">
-                        <label class="form-label">middlename</label>
+                        <label class="form-label">Middlename</label>
                         <input
                           id="middlename"
                           type="text"
@@ -338,22 +301,36 @@
                           name="middlename"
                         />
                       </div>
-                      <div class="col-sm-6 m-b30">
-                        <label class="form-label">Mobile Number</label>
+                      <!-- Additional fields for Profile Details -->
+                      <!-- <div class="col-sm-6 m-b30">
+                        <label class="form-label">Email</label>
                         <input
-                          id="phone"
+                          id="email"
                           type="text"
                           class="form-control"
-                          required
-                          name="phone"
+                          name="email"
                         />
-                      </div>
+                      </div> -->
+                      <!-- <div class="col-sm-6 m-b30">
+                        <label class="form-label">Mobile Number</label>
+                        <input
+                          class="form-control"
+                          type="tel"
+                          id="phone"
+                          name="phone"
+                          maxlength="11"
+                          pattern="^0[7-9][0-1]\d{8}$"
+                          placeholder="Enter a valid Nigerian phone number"
+                        />
+                        <span class="error-message">
+                          Please enter a valid Nigerian phone number.
+                        </span>
+                      </div> -->
                       <div class="col-sm-6 m-b30">
                         <label class="form-label">Gender</label>
                         <select
                           id="gender"
                           name="gender"
-                          required
                           class="selectpicker nice-select default-select form-control wide mh-auto"
                         >
                           <option value="Male">Male</option>
@@ -365,65 +342,99 @@
                         <select
                           id="maritalStatus"
                           name="maritalStatus"
-                          required
                           class="selectpicker nice-select default-select form-control wide mh-auto"
                         >
-                          <option value="single ">Single</option>
+                          <option value="single">Single</option>
                           <option value="married">Married</option>
                           <option value="divorced">Divorced</option>
                           <option value="widowed">Widowed</option>
                         </select>
                       </div>
+                      <!-- Remaining fields here... -->
                       <div class="col-sm-6 m-b30">
-                        <label class="form-label">State Of Origin</label>
-                        <input
+                        <label class="form-label">Select State</label>
+
+                        <select
                           id="state"
-                          type="text"
-                          class="form-control"
-                          required
-                          name="stateOfOrigin"
-                        />
+                          class="selectpicker nice-select default-select form-control wide mh-auto"
+                          onchange="updateLocalGovernments()"
+                        >
+                          <option value="">Select State</option>
+                          <option value="adamawa">Adamawa</option>
+                          <option value="akwa_ibom">Akwa Ibom</option>
+                          <option value="anambra">Anambra</option>
+                          <option value="abia">Abia</option>
+                          <option value="bauchi">Bauchi</option>
+                          <option value="benue">Benue</option>
+                          <option value="borno">Borno</option>
+                          <option value="bayelsa">Bayelsa</option>
+                          <option value="delta">Delta</option>
+                          <option value="ebonyi">Ebonyi</option>
+                          <option value="edo">Edo</option>
+                          <option value="enugu">Enugu</option>
+                          <option value="abuja">abuja</option>
+                          <option value="gombe">Gombe</option>
+                          <option value="jigawa">Jigawa</option>
+                          <option value="ekiti">Ekiti</option>
+                          <option value="lagos">Lagos</option>
+                          <option value="oyo">Oyo</option>
+                          <option value="imo">Imo</option>
+                          <option value="kaduna">Kaduna</option>
+                          <option value="kebbi">Kebbi</option>
+                          <option value="kano">Kano</option>
+                          <option value="kogi">Kogi</option>
+                          <option value="osun">Osun</option>
+                          <option value="sokoto">Sokoto</option>
+                          <option value="plateau">Plateau</option>
+                          <option value="taraba">Taraba</option>
+                          <option value="yobe">Yobe</option>
+                          <option value="zamfara">zamfara</option>
+                          <option value="katsina">Katsina</option>
+                          <option value="kwara">Kwara</option>
+                          <option value="nasarawa">Nasarawa</option>
+                          <option value="niger">Niger</option>
+                          <option value="rivers">Rivers</option>
+                        </select>
                       </div>
                       <div class="col-sm-6 m-b30">
                         <label class="form-label">Date Of Birth</label>
+
                         <input
                           id="dob"
                           type="date"
                           class="form-control"
                           name="DOB"
                           min="1900-01-01"
-                          max="2024-12-31"
-                          required
                         />
                       </div>
                       <div class="col-sm-6 m-b30">
-                        <label class="form-label">Local Government</label>
-                        <input
+                        <label class="form-label"
+                          >Select Local Government</label
+                        >
+                        <!-- class="form-select" -->
+                        <select
                           id="lga"
-                          type="text"
-                          class="form-control"
-                          required
-                          name="LGA"
-                        />
+                          class="nice-select form-control wide mh-auto"
+                        >
+                          <option value="">Select Local Government</option>
+                        </select>
                       </div>
                       <div class="col-sm-6 m-b30">
-                        <label class="form-label">Nationality</label>
-                        <input
+                        <label for="nationality">Select Nationality:</label>
+                        <select
                           id="nationality"
-                          type="text"
-                          class="form-control"
-                          required
                           name="nationality"
-                        />
+                          class="nice-select form-control wide mh-auto"
+                        >
+                          <option value="">--Select--</option>
+                        </select>
                       </div>
-
                       <div class="col-sm-6 m-b30">
                         <label class="form-label">Address</label>
                         <input
                           id="address"
                           type="text"
                           class="form-control"
-                          required
                           name="address"
                         />
                       </div>
@@ -431,119 +442,677 @@
                   </div>
                   <div class="card-footer">
                     <button
-                      type="submit"
-                      id="submitbtn"
-                      name="update"
-                      class="btn"
-                      style="background-color: #2c6e49; color: #fff"
+                      type="button"
+                      class="btn btn-primary next-btn"
+                      data-next="family-information-section"
                     >
-                      UPDATE
+                      Next
                     </button>
-                    <a href="../auth/login.html" class="text-primary btn-link"
-                      >Change Password</a
-                    >
                   </div>
-                </form>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        <div class="container-fluid">
-          <!-- row -->
-          <div class="row">
-            <div class="col-xl-12 col-lg-12">
-              <div class="card card-bx m-b30">
-                <div class="card-header">
-                  <h4 class="card-title">Family Information</h4>
-                </div>
-                <form class="profile-form" id="nextOfKinForm">
+            <!-- NOK Information -->
+            <div
+              class="row form-section"
+              id="family-information-section"
+              style="display: none"
+            >
+              <div class="col-xl-12 col-lg-12">
+                <div class="card card-bx m-b30">
+                  <div class="card-header">
+                    <h4 class="card-title">Next Of Kin Details</h4>
+                  </div>
+                  <!-- NOK section fields -->
                   <div class="card-body">
                     <div class="row">
                       <div class="col-sm-6 m-b30">
-                        <label class="form-label">Father's Name</label>
+                        <label class="form-label">Surname</label>
                         <input
                           type="text"
                           class="form-control"
-                          id="fatherName"
-                          name="fatherName"
+                          id="nok_surname"
+                          name="nok_surname"
+                        />
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">First Name</label>
+                        <input
+                          id="nok_firstname"
+                          type="text"
+                          name="nok_firstname"
+                          class="form-control"
                         />
                       </div>
 
                       <div class="col-sm-6 m-b30">
-                        <label class="form-label">Mother's Name</label>
+                        <label class="form-label">Middle Name</label>
                         <input
-                          id="motherName"
+                          id="nok_middlename"
                           type="text"
-                          name="motherName"
+                          name="nok_middlename"
                           class="form-control"
                         />
                       </div>
-
-                      <label>Next of Kin Details:</label>
-
-                      <div class="col-sm-4 m-b30">
-                        <label class="form-label">Name</label>
-                        <input
-                          id="name"
-                          type="text"
-                          class="form-control"
-                          required
-                          name="name"
-                          value=""
-                        />
-                      </div>
-                      <div class="col-sm-4 m-b30">
+                      <div class="col-sm-6 m-b30">
                         <label class="form-label">Relationship</label>
                         <input
-                          id="relationship"
+                          id="nok_relationship"
                           type="text"
                           class="form-control"
-                          required
-                          name="relationship"
+                          name="nok_relationship"
                         />
                       </div>
-
-                      <div class="col-sm-4 m-b30">
-                        <label class="form-label">Contact Number</label>
+                      <!-- <h4>Next of Kin Address:</h4> -->
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Country Of Residence</label>
                         <input
-                          id="number"
+                          id="countryOfResidence"
                           type="text"
                           class="form-control"
-                          required
-                          name="number"
+                          name="countryOfResidence?"
+                        />
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">State Of Residence</label>
+                        <input
+                          id="stateOfResidence"
+                          type="text"
+                          class="form-control"
+                          name="stateOfResidence"
+                        />
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">LGA Of Residence</label>
+                        <input
+                          id="lgaOfResidence"
+                          type="text"
+                          class="form-control"
+                          name="lgaOfResidence"
+                        />
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">City Of Residence</label>
+                        <input
+                          id="cityOfResidence"
+                          type="text"
+                          class="form-control"
+                          name="cityOfResidence"
+                        />
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Address</label>
+                        <input
+                          id="nok_address"
+                          type="text"
+                          class="form-control"
+                          name="nok_address"
                         />
                       </div>
                     </div>
                   </div>
                   <div class="card-footer">
-                    <!-- id="submitbtn" -->
                     <button
-                      type="submit"
-                      name="update"
-                      class="btn"
-                      style="background-color: #2c6e49; color: #fff"
+                      type="button"
+                      class="btn btn-secondary prev-btn"
+                      data-prev="profile-details-section"
                     >
-                      UPDATE
+                      Previous
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-primary next-btn"
+                      data-next="contact-details-section"
+                    >
+                      Next
                     </button>
                   </div>
-                </form>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        <div class="container-fluid">
-          <!-- row -->
-          <div class="row">
-            <div class="col-xl-12 col-lg-12">
-              <div class="card card-bx m-b30">
-                <div class="card-header">
-                  <h4 class="card-title">Employment/Occupation Details</h4>
-                </div>
-                <form class="profile-form" id="employmentForm">
+            <div
+              class="row form-section"
+              id="contact-details-section"
+              style="display: none"
+            >
+              <div class="col-xl-12 col-lg-12">
+                <div class="card card-bx m-b30">
+                  <div class="card-header">
+                    <h4 class="card-title">Contact Details</h4>
+                  </div>
                   <div class="card-body">
                     <div class="row">
+                      <!-- Neighbors' Contact Details -->
+                      <div class="col-12">
+                        <h5 class="section-title">
+                          Neighbors' Contact Details
+                        </h5>
+                      </div>
+                      <div class="col-12 m-b30">
+                        <label class="form-label">Neighbor 1</label>
+                        <input
+                          id="neighbor_1_name"
+                          type="text"
+                          class="form-control m-b10"
+                          name="neighbor_1_name"
+                          placeholder="Full Name"
+                        />
+                        <input
+                          id="neighbor_1_address"
+                          type="text"
+                          class="form-control m-b10"
+                          name="neighbor_1_address"
+                          placeholder="Residential Address"
+                        />
+                        <input
+                          id="neighbor_1_phone"
+                          type="tel"
+                          class="form-control"
+                          name="neighbor_1_phone"
+                          placeholder="Phone Number"
+                        />
+                      </div>
+                      <div class="col-12 m-b30">
+                        <label class="form-label">Neighbor 2</label>
+                        <input
+                          id="neighbor_2_name"
+                          type="text"
+                          class="form-control m-b10"
+                          name="neighbor_2_name"
+                          placeholder="Full Name"
+                        />
+                        <input
+                          id="neighbor_2_address"
+                          type="text"
+                          class="form-control m-b10"
+                          name="neighbor_2_address"
+                          placeholder="Residential Address"
+                        />
+                        <input
+                          id="neighbor_2_phone"
+                          type="tel"
+                          class="form-control"
+                          name="neighbor_2_phone"
+                          placeholder="Phone Number"
+                        />
+                      </div>
+
+                      <div class="col-12 m-b30">
+                        <label class="form-label">Neighbor 3</label>
+                        <input
+                          id="neighbor_3_name"
+                          type="text"
+                          class="form-control m-b10"
+                          name="neighbor_3_name"
+                          placeholder="Full Name"
+                        />
+                        <input
+                          id="neighbor_3_address"
+                          type="text"
+                          class="form-control m-b10"
+                          name="neighbor_3_address"
+                          placeholder="Residential Address"
+                        />
+                        <input
+                          id="neighbor_3_phone"
+                          type="tel"
+                          class="form-control"
+                          name="neighbor_3_phone"
+                          placeholder="Phone Number"
+                        />
+                      </div>
+                      <div class="col-12 m-b30">
+                        <label class="form-label">Neighbor 4</label>
+                        <input
+                          id="neighbor_4_name"
+                          type="text"
+                          class="form-control m-b10"
+                          name="neighbor_4_name"
+                          placeholder="Full Name"
+                        />
+                        <input
+                          id="neighbor_4_address"
+                          type="text"
+                          class="form-control m-b10"
+                          name="neighbor_4_address"
+                          placeholder="Residential Address"
+                        />
+                        <input
+                          id="neighbor_4_phone"
+                          type="tel"
+                          class="form-control"
+                          name="neighbor_4_phone"
+                          placeholder="Phone Number"
+                        />
+                      </div>
+                      <div class="col-12 m-b30">
+                        <label class="form-label">Neighbor 5</label>
+                        <input
+                          id="neighbor_5_name"
+                          type="text"
+                          class="form-control m-b10"
+                          name="neighbor_5_name"
+                          placeholder="Full Name"
+                        />
+                        <input
+                          id="neighbor_5_address"
+                          type="text"
+                          class="form-control m-b10"
+                          name="neighbor_5_address"
+                          placeholder="Residential Address"
+                        />
+                        <input
+                          id="neighbor_5_phone"
+                          type="tel"
+                          class="form-control"
+                          name="neighbor_5_phone"
+                          placeholder="Phone Number"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary prev-btn"
+                      data-prev="family-information-section"
+                    >
+                      Previous
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-primary next-btn"
+                      data-next="family-details-section"
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Family Members' Contact Details -->
+            <div
+              class="row form-section"
+              id="family-details-section"
+              style="display: none"
+            >
+              <div class="col-xl-12 col-lg-12">
+                <div class="card card-bx m-b30">
+                  <div class="card-header">
+                    <h4 class="card-title">Contact Details</h4>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <!-- Family Members' Contact Details -->
+                      <div class="col-12">
+                        <h5 class="section-title">
+                          Family Members' Contact Details
+                        </h5>
+                      </div>
+                      <div class="col-12 m-b30">
+                        <label class="form-label">Family Member 1</label>
+                        <input
+                          id="family_1_name"
+                          type="text"
+                          class="form-control m-b10"
+                          name="family_1_name"
+                          placeholder="Full Name"
+                        />
+                        <input
+                          id="family_1_relationship"
+                          type="text"
+                          class="form-control m-b10"
+                          name="family_1_relationship"
+                          placeholder="relationship"
+                        />
+                        <input
+                          id="family_1_address"
+                          type="text"
+                          class="form-control m-b10"
+                          name="family_1_address"
+                          placeholder="Residential Address"
+                        />
+                        <input
+                          id="family_1_phone"
+                          type="tel"
+                          class="form-control"
+                          name="family_1_phone"
+                          placeholder="Phone Number"
+                        />
+                      </div>
+                      <div class="col-12 m-b30">
+                        <label class="form-label">Family Member 2</label>
+                        <input
+                          id="family_2_name"
+                          type="text"
+                          class="form-control m-b10"
+                          name="family_2_name"
+                          placeholder="Full Name"
+                        />
+                        <input
+                          id="family_2_relationship"
+                          type="text"
+                          class="form-control m-b10"
+                          name="family_2_relationship"
+                          placeholder="relationship"
+                        />
+                        <input
+                          id="family_2_address"
+                          type="text"
+                          class="form-control m-b10"
+                          name="family_2_address"
+                          placeholder="Residential Address"
+                        />
+                        <input
+                          id="family_2_phone"
+                          type="tel"
+                          class="form-control"
+                          name="family_2_phone"
+                          placeholder="Phone Number"
+                        />
+                      </div>
+                      <div class="col-12 m-b30">
+                        <label class="form-label">Family Member 3</label>
+                        <input
+                          id="family_3_name"
+                          type="text"
+                          class="form-control m-b10"
+                          name="family_2_name"
+                          placeholder="Full Name"
+                        />
+                        <input
+                          id="family_3_relationship"
+                          type="text"
+                          class="form-control m-b10"
+                          name="family_3_relationship"
+                          placeholder="relationship"
+                        />
+                        <input
+                          id="family_3_address"
+                          type="text"
+                          class="form-control m-b10"
+                          name="family_2_address"
+                          placeholder="Residential Address"
+                        />
+                        <input
+                          id="family_3_phone"
+                          type="tel"
+                          class="form-control"
+                          name="family_2_phone"
+                          placeholder="Phone Number"
+                        />
+                      </div>
+                      <div class="col-12 m-b30">
+                        <label class="form-label">Family Member 4</label>
+                        <input
+                          id="family_4_name"
+                          type="text"
+                          class="form-control m-b10"
+                          name="family_2_name"
+                          placeholder="Full Name"
+                        />
+                        <input
+                          id="family_4_relationship"
+                          type="text"
+                          class="form-control m-b10"
+                          name="family_4_relationship"
+                          placeholder="relationship"
+                        />
+                        <input
+                          id="family_4_address"
+                          type="text"
+                          class="form-control m-b10"
+                          name="family_2_address"
+                          placeholder="Residential Address"
+                        />
+                        <input
+                          id="family_4_phone"
+                          type="tel"
+                          class="form-control"
+                          name="family_2_phone"
+                          placeholder="Phone Number"
+                        />
+                      </div>
+                      <div class="col-12 m-b30">
+                        <label class="form-label">Family Member 5</label>
+                        <input
+                          id="family_5_name"
+                          type="text"
+                          class="form-control m-b10"
+                          name="family_2_name"
+                          placeholder="Full Name"
+                        />
+                        <input
+                          id="family_5_relationship"
+                          type="text"
+                          class="form-control m-b10"
+                          name="family_5_relationship"
+                          placeholder="relationship"
+                        />
+                        <input
+                          id="family_5_address"
+                          type="text"
+                          class="form-control m-b10"
+                          name="family_2_address"
+                          placeholder="Residential Address"
+                        />
+                        <input
+                          id="family_5_phone"
+                          type="tel"
+                          class="form-control"
+                          name="family_2_phone"
+                          placeholder="Phone Number"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary prev-btn"
+                      data-prev="contact-details-section"
+                    >
+                      Previous
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-primary next-btn"
+                      data-next="business-details-section"
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bussiness Details -->
+            <div
+              class="row form-section"
+              id="business-details-section"
+              style="display: none"
+            >
+              <div class="col-xl-12 col-lg-12">
+                <div class="card card-bx m-b30">
+                  <div class="card-header">
+                    <h4 class="card-title">Business Details</h4>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <!-- Form fields for Profile Details -->
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Business Name</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          name="biz_name"
+                          id="biz_name"
+                        />
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Business Type </label>
+                        <select
+                          id="biz_type"
+                          name="biz_type"
+                          class="selectpicker nice-select default-select form-control wide mh-auto"
+                        >
+                          <option value="sole Proprietorship">
+                            Sole Proprietorship
+                          </option>
+                          <option value="partnership ">Partnership</option>
+                          <option value="limited liability company">
+                            Limited Liability Company
+                          </option>
+                          <option value="corporation ">Corporation</option>
+                          <option value="cooperative  ">Cooperative</option>
+                          <option value="others ">Others</option>
+                        </select>
+                      </div>
+
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label"
+                          >Business Registration Number (if applicable):</label
+                        >
+                        <input
+                          id="registration_number"
+                          type="text"
+                          class="form-control"
+                          name="registration_number"
+                        />
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Business Address</label>
+                        <input
+                          id="biz_address"
+                          type="text"
+                          class="form-control"
+                          name="biz_address"
+                        />
+                      </div>
+
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Nature Of Business</label>
+                        <select
+                          id="nature_of_bussiness"
+                          name="nature_of_bussiness"
+                          class="selectpicker nice-select default-select form-control wide mh-auto"
+                        >
+                          <option value="retail">Retail</option>
+                          <option value="manufacturing">Manufacturing</option>
+                          <option value="ICT">ICT</option>
+                          <option value="Agriculture">Agriculture</option>
+                          <option value="Others">Others</option>
+                        </select>
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Years in Operation</label>
+                        <input
+                          type="text"
+                          id="numberOfYears"
+                          class="form-control"
+                          name="numberOfYears"
+                        />
+                      </div>
+
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label"
+                          >Number of Employees (if applicable)</label
+                        >
+                        <input
+                          id="numberOfEmployees"
+                          type="text"
+                          class="form-control"
+                          name="numberOfEmployees"
+                        />
+                      </div>
+
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label"
+                          >Annual Revenue (Optional)</label
+                        >
+                        <input
+                          id="annualRevenue"
+                          type="text"
+                          class="form-control"
+                          name="annualRevenue"
+                        />
+                      </div>
+
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label"
+                          >Tax Identification Number (TIN) (if
+                          applicable)</label
+                        >
+                        <input
+                          id="TIN"
+                          type="text"
+                          class="form-control"
+                          name="TIN"
+                        />
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Mobile Number</label>
+                        <input
+                          class="form-control"
+                          type="tel"
+                          id="biz_phone"
+                          name="biz_phone"
+                          maxlength="11"
+                          pattern="^0[7-9][0-1]\d{8}$"
+                          placeholder="Enter a valid Nigerian phone number"
+                        />
+                        <span class="error-message">
+                          Please enter a valid Nigerian phone number.
+                        </span>
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Email</label>
+                        <input
+                          id="biz_email"
+                          type="text"
+                          class="form-control"
+                          name="biz_email"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary prev-btn"
+                      data-prev="family-details-section"
+                    >
+                      Previous
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-primary next-btn"
+                      data-next="employment-details-section"
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Employment/Occupation Details -->
+            <div
+              class="row form-section"
+              id="employment-details-section"
+              style="display: none"
+            >
+              <div class="col-xl-12 col-lg-12">
+                <div class="card card-bx m-b30">
+                  <div class="card-header">
+                    <h4 class="card-title">Employment/Occupation Details</h4>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <!-- Employment section fields -->
                       <div class="col-sm-6 m-b30">
                         <label class="form-label">Current Occupation</label>
                         <input
@@ -553,7 +1122,6 @@
                           name="current_occupation"
                         />
                       </div>
-
                       <div class="col-sm-6 m-b30">
                         <label class="form-label">Employer’s Name</label>
                         <input
@@ -570,7 +1138,6 @@
                           id="employer_address"
                           type="text"
                           class="form-control"
-                          required
                           name="employer_address"
                         />
                       </div>
@@ -579,7 +1146,6 @@
                         <select
                           id="employment_status"
                           name="employment_status"
-                          required
                           class="selectpicker nice-select default-select form-control wide mh-auto"
                         >
                           <option value="employed">Employed</option>
@@ -591,33 +1157,40 @@
                     </div>
                   </div>
                   <div class="card-footer">
-                    <!-- id="submitbtn" -->
                     <button
-                      type="submit"
-                      name="update"
-                      class="btn"
-                      style="background-color: #2c6e49; color: #fff"
+                      type="button"
+                      class="btn btn-secondary prev-btn"
+                      data-prev="family-information-section"
                     >
-                      UPDATE
+                      Previous
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-primary next-btn"
+                      data-next="education-details-section"
+                    >
+                      Next
                     </button>
                   </div>
-                </form>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        <div class="container-fluid">
-          <!-- row -->
-          <div class="row">
-            <div class="col-xl-12 col-lg-12">
-              <div class="card card-bx m-b30">
-                <div class="card-header">
-                  <h4 class="card-title">Education Details</h4>
-                </div>
-                <form class="profile-form" id="educationForm">
+            <!-- Education Details -->
+            <div
+              class="row form-section"
+              id="education-details-section"
+              style="display: none"
+            >
+              <div class="col-xl-12 col-lg-12">
+                <div class="card card-bx m-b30">
+                  <div class="card-header">
+                    <h4 class="card-title">Education Details</h4>
+                  </div>
                   <div class="card-body">
                     <div class="row">
+                      <!-- Education section fields -->
+
                       <div class="col-sm-6 m-b30">
                         <label class="form-label"
                           >Highest Level of Education</label
@@ -629,7 +1202,6 @@
                           name="highestEducationLevel"
                         />
                       </div>
-
                       <div class="col-sm-6 m-b30">
                         <label class="form-label">Institution Attended</label>
                         <input
@@ -645,47 +1217,52 @@
                           id="graduationYear"
                           type="text"
                           class="form-control"
-                          required
                           name="graduationYear"
                         />
                       </div>
                     </div>
                   </div>
                   <div class="card-footer">
-                    <!-- id="submitbtn" -->
                     <button
-                      type="submit"
-                      name="update"
-                      class="btn"
-                      style="background-color: #2c6e49; color: #fff"
+                      type="button"
+                      class="btn btn-secondary prev-btn"
+                      data-prev="employment-details-section"
                     >
-                      UPDATE
+                      Previous
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-primary next-btn"
+                      data-next="health-info-section"
+                    >
+                      Next
                     </button>
                   </div>
-                </form>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        <div class="container-fluid">
-          <!-- row -->
-          <div class="row">
-            <div class="col-xl-12 col-lg-12">
-              <div class="card card-bx m-b30">
-                <div class="card-header">
-                  <h4 class="card-title">Health and Physical Information</h4>
-                </div>
-                <form class="profile-form" id="healthInfoForm">
+            <!-- Health Information -->
+            <div
+              class="row form-section"
+              id="health-info-section"
+              style="display: none"
+            >
+              <div class="col-xl-12 col-lg-12">
+                <div class="card card-bx m-b30">
+                  <div class="card-header">
+                    <h4 class="card-title">Health and Physical Information</h4>
+                  </div>
                   <div class="card-body">
                     <div class="row">
+                      <!-- Health section fields -->
                       <div class="col-sm-6 m-b30">
                         <label class="form-label">Blood Group</label>
                         <select
                           id="bloodGroup"
                           name="bloodGroup"
+                          class="form-control"
                           required
-                          class="selectpicker nice-select default-select form-control wide mh-auto"
                         >
                           <option value="A+">A+</option>
                           <option value="A-">A-</option>
@@ -697,7 +1274,6 @@
                           <option value="O-">O-</option>
                         </select>
                       </div>
-
                       <div class="col-sm-6 m-b30">
                         <label class="form-label">Genotype</label>
                         <select
@@ -731,21 +1307,73 @@
                     </div>
                   </div>
                   <div class="card-footer">
-                    <!-- id="submitbtn" -->
                     <button
-                      type="submit"
-                      name="update"
-                      class="btn"
-                      style="background-color: #2c6e49; color: #fff"
+                      type="button"
+                      class="btn btn-secondary prev-btn"
+                      data-prev="education-details-section"
                     >
-                      UPDATE
+                      Previous
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                      Submit
                     </button>
                   </div>
-                </form>
+                </div>
               </div>
             </div>
-          </div>
+            <div id="autoSaveStatus"></div>
+          </form>
         </div>
+
+        <script>
+          document.querySelectorAll(".next-btn").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              const nextSection = document.getElementById(btn.dataset.next);
+              btn.closest(".form-section").style.display = "none";
+              nextSection.style.display = "block";
+            });
+          });
+
+          document.querySelectorAll(".prev-btn").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              const prevSection = document.getElementById(btn.dataset.prev);
+              btn.closest(".form-section").style.display = "none";
+              prevSection.style.display = "block";
+            });
+          });
+        </script>
+
+        <script>
+          document.querySelectorAll(".next-btn").forEach((button) => {
+            button.addEventListener("click", () => {
+              const currentSection = button.closest(".form-section");
+              const nextSectionId = button.getAttribute("data-next");
+              const nextSection = document.getElementById(nextSectionId);
+
+              // Validate the current form section
+              if (validateForm(currentSection)) {
+                currentSection.classList.remove("active");
+                nextSection.classList.add("active");
+              }
+            });
+          });
+
+          function validateForm(section) {
+            let isValid = true;
+            section.querySelectorAll("input, select").forEach((field) => {
+              const errorMessage = field.nextElementSibling;
+              if (field.hasAttribute("required") && !field.value.trim()) {
+                field.classList.add("error");
+                if (errorMessage) errorMessage.style.display = "block";
+                isValid = false;
+              } else {
+                field.classList.remove("error");
+                if (errorMessage) errorMessage.style.display = "none";
+              }
+            });
+            return isValid;
+          }
+        </script>
 
         <script
           src="../../code.tidio.co_443/bpnp4xkz2axqrebqxcezgdca9yot1iyn.js"
@@ -766,7 +1394,7 @@
         ***********************************-->
       <div class="footer">
         <div class="copyright">
-          <p>Copyright © BSCR-MIS 2024</p>
+          <p>Copyright © BDIC 2025</p>
         </div>
       </div>
       <!--**********************************
@@ -789,6 +1417,7 @@
       src="../../code.tidio.co_443/bpnp4xkz2axqrebqxcezgdca9yot1iyn.js"
       async
     ></script>
+
     <!--**********************************
         Scripts
     ***********************************-->
