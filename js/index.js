@@ -60,6 +60,19 @@ $(document).ready(function () {
       Authorization: `Bearer ${token}`,
     },
     success: function (data) {
+      // Set the value in the select field
+      $("#maritalStatus").val(data.maritalStatus).change();
+      $("#gender").val(data.gender).change();
+      $("#stateOfOrigin").val(data.stateOfOrigin).change();
+      $("#lgaOfOrigin").val(data.lgaOfOrigin).change();
+      $("#stateOfResidence").val(data.stateOfResidence).change();
+      $("#lgaOfResidence").val(data.lgaOfResidence).change();
+      $("#country").val(data.country).change();
+      $("#identification").val(data.identification).change();
+      // $("#dob").val(data.DOB).change();
+
+      $(".selectpicker").selectpicker("refresh");
+
       // Destructure the main fields
       const {
         firstname,
@@ -80,12 +93,22 @@ $(document).ready(function () {
         neighbor = [],
         business = [],
         maritalStatus,
+        house_number,
+        street_name,
+        nearest_bus_stop_landmark,
+        city_town,
+        country,
+        identification,
+        id_number,
+        issue_date,
+        expiry_date,
+        other_identification,
       } = data;
 
       // Populate main fields
       const mainFields = {
         first_name: firstname,
-        last_name: lastname,
+        lastname: lastname,
         email: email,
         middlename: middlename,
         phone: phone,
@@ -96,6 +119,16 @@ $(document).ready(function () {
         maritalStatus: maritalStatus,
         address: address,
         nationality: nationality,
+        house_number: house_number,
+        street_name: street_name,
+        nearest_bus_stop_landmark: nearest_bus_stop_landmark,
+        city_town: city_town,
+        country: country,
+        identification: identification,
+        id_number: id_number,
+        issue_date: issue_date,
+        expiry_date: expiry_date,
+        other_identification: other_identification,
       };
       Object.entries(mainFields).forEach(([id, value]) =>
         setInputValue(id, value)
@@ -107,10 +140,10 @@ $(document).ready(function () {
         nok_firstname: "nok_firstname",
         nok_middlename: "nok_middlename",
         nok_relationship: "nok_relationship",
-        countryOfResidence: "countryOfResidence",
-        stateOfResidence: "stateOfResidence",
-        lgaOfResidence: "lgaOfResidence",
-        cityOfResidence: "cityOfResidence",
+        nok_countryOfResidence: "nok_countryOfResidence",
+        nok_stateOfResidence: "nok_stateOfResidence",
+        nok_lgaOfResidence: "nok_lgaOfResidence",
+        nok_cityOfResidence: "nok_cityOfResidence",
         nok_address: "nok_address",
       });
 
@@ -164,6 +197,7 @@ $(document).ready(function () {
         TIN: "TIN",
         biz_phone: "biz_phone",
         biz_email: "biz_email",
+        annualRevenue: "annualRevenue",
       });
     },
     error: function (error) {
@@ -182,148 +216,184 @@ $(document).ready(function () {
 
   // Function to collect form data
   const collectFormData = () => {
+    const formData = new FormData();
+    // Collect input values and append them to formData
+    const fields = [
+      "middlename",
+      "lastname",
+      // "phone",
+      "nationality",
+      "gender",
+      "stateOfOrigin",
+      "DOB",
+      "country",
+      "lgaOfOrigin",
+      "maritalStatus",
+      "house_number",
+      "street_name",
+      "nearest_bus_stop_landmark",
+      "city_town",
+      "stateOfResidence",
+      "lgaOfResidence",
+      "id_number",
+      "issue_date",
+      "expiry_date",
+    ];
+
+    fields.forEach((field) => {
+      const value = $(`#${field}`).val();
+      formData.append(field, value || ""); // Fallback to empty string if value is null/undefined
+    });
+
+    // Handle file upload
+    const passportPhoto = $("#passportPhoto")[0]?.files[0];
+    if (passportPhoto) {
+      formData.append("passportPhoto", passportPhoto);
+    }
+
+    //  Next of Kin
+    const nextOfKin = {
+      nok_surname: $("#nok_surname").val().trim(),
+      nok_firstname: $("#nok_firstname").val().trim(),
+      nok_middlename: $("#nok_middlename").val().trim(),
+      nok_relationship: $("#nok_relationship").val().trim(),
+      nok_countryOfResidence: $("#nok_countryOfResidence").val().trim(),
+      nok_stateOfResidence: $("#nok_stateOfResidence").val().trim(),
+      nok_lgaOfResidence: $("#nok_lgaOfResidence").val().trim(),
+      nok_cityOfResidence: $("#nok_cityOfResidence").val().trim(),
+      nok_address: $("#nok_address").val().trim(),
+    };
+    // formData.append("nextOfKin", nextOfKin);
+
+    // Education
+    const education = {
+      highestEducationLevel: $("#highestEducationLevel").val(),
+      institutionAttended: $("#institutionAttended").val(),
+      graduationYear: $("#graduationYear").val(),
+    };
+    // formData.append("education", education);
+
+    // Occupation
+    const occupation = {
+      current_occupation: $("#current_occupation").val(),
+      employer_name: $("#employer_name").val(),
+      employer_address: $("#employer_address").val(),
+      employment_status: $("#employment_status").val(),
+    };
+    // formData.append("occupation", occupation);
+
+    // Health Information
+    const healthInfo = {
+      bloodGroup: $("#bloodGroup").val(),
+      genotype: $("#genotype").val(),
+      disabilityStatus: $("#disabilityStatus").val(),
+    };
+    // formData.append("healthInfo", healthInfo);
+
+    // Business Information
+    const business = {
+      biz_name: $("#biz_name").val().trim(),
+      biz_type: $("#biz_type").val(),
+      registration_number: $("#registration_number").val().trim(),
+      biz_address: $("#biz_address").val().trim(),
+      nature_of_bussiness: $("#nature_of_bussiness").val().trim(),
+      numberOfYears: $("#numberOfYears").val().trim(),
+      numberOfEmployees: $("#numberOfEmployees").val().trim(),
+      annualRevenue: $("#annualRevenue").val().trim(),
+      TIN: $("#TIN").val().trim(),
+      biz_phone: $("#biz_phone").val().trim(),
+      biz_email: $("#biz_email").val().trim(),
+    };
+    // formData.append("business", business);
+
+    // Neighbor;
+    const neighbor = [];
+    for (let i = 1; i <= 5; i++) {
+      neighbor.push({
+        name: $(`#neighbor_${i}_name`).val(),
+        address: $(`#neighbor_${i}_address`).val(),
+        phone: $(`#neighbor_${i}_phone`).val(),
+      });
+    }
+    // formData.append("neighbor", neighbor);
+
+    // Family;
+    const family = [];
+    for (let i = 1; i <= 5; i++) {
+      family.push({
+        name: $(`#family_${i}_name`).val(),
+        relationship: $(`#family_${i}_relationship`).val(),
+        address: $(`#family_${i}_address`).val(),
+        phone: $(`#family_${i}_phone`).val(),
+      });
+    }
+    // formData.append("family", family);
     return {
-      middlename: $("#middlename").val(),
-      lastname: $("#last_name").val(),
-      // phone: $("#phone").val(),
-      gender: $("#gender").val(),
-      stateOfOrigin: $("#state").val(),
-      DOB: $("#dob").val(),
-      LGA: $("#lga").val(),
-      nationality: $("#nationality").val(),
-      address: $("#address").val(),
-      maritalStatus: $("#maritalStatus").val(),
-      // email: $("#email").val(),
-      nextOfKin: {
-        nok_surname: $("#nok_surname").val().trim(),
-        nok_firstname: $("#nok_firstname").val().trim(),
-        nok_middlename: $("#nok_middlename").val().trim(),
-        nok_relationship: $("#nok_relationship").val().trim(),
-        countryOfResidence: $("#countryOfResidence").val().trim(),
-        stateOfResidence: $("#stateOfResidence").val().trim(),
-        lgaOfResidence: $("#lgaOfResidence").val().trim(),
-        cityOfResidence: $("#cityOfResidence").val().trim(),
-        nok_address: $("#nok_address").val().trim(),
-
-        // contactNumber: $("#contactNumber").val().trim(),
-      },
-      education: {
-        highestEducationLevel: $("#highestEducationLevel").val(),
-        institutionAttended: $("#institutionAttended").val(),
-        graduationYear: $("#graduationYear").val(),
-      },
-      occupation: {
-        current_occupation: $("#current_occupation").val(),
-        employer_name: $("#employer_name").val(),
-        employer_address: $("#employer_address").val(),
-        employment_status: $("#employment_status").val(),
-      },
-      healthInfo: {
-        bloodGroup: $("#bloodGroup").val(),
-        genotype: $("#genotype").val(),
-        disabilityStatus: $("#disabilityStatus").val(),
-      },
-
-      business: {
-        biz_name: $("#biz_name").val().trim(),
-        biz_type: $("#biz_type").val(),
-        registration_number: $("#registration_number").val().trim(),
-        biz_address: $("#biz_address").val().trim(),
-        nature_of_bussiness: $("#nature_of_bussiness").val().trim(),
-        numberOfYears: $("#numberOfYears").val().trim(),
-        numberOfEmployees: $("#numberOfEmployees").val().trim(),
-        annualRevenue: $("#annualRevenue").val().trim(),
-        nok_address: $("#nok_address").val().trim(),
-        TIN: $("#TIN").val().trim(),
-        biz_phone: $("#biz_phone").val().trim(),
-        biz_email: $("#biz_email").val().trim(),
-
-        // contactNumber: $("#contactNumber").val().trim(),
-      },
-      neighbor: [
-        {
-          name: $("#neighbor_1_name").val(),
-          address: $("#neighbor_1_address").val(),
-          phone: $("neighbor_1_phone").val(),
-        },
-        {
-          name: $("#neighbor_2_name").val(),
-          address: $("#neighbor_2_address").val(),
-          phone: $("#neighbor_2_phone").val(),
-        },
-        {
-          name: $("#neighbor_3_name").val(),
-          address: $("#neighbor_3_address").val(),
-          phone: $("#neighbor_3_phone").val(),
-        },
-        {
-          name: $("#neighbor_4_name").val(),
-          address: $("#neighbor_4_address").val(),
-          phone: $("#neighbor_4_phone").val(),
-        },
-        {
-          name: $("#neighbor_5_name").val(),
-          address: $("#neighbor_5_address").val(),
-          phone: $("#neighbor_5_phone").val(),
-        },
-      ],
-
-      family: [
-        {
-          name: $("#family_1_name").val(),
-          relationship: $("#family_1_relationship").val(),
-          address: $("#family_1_address").val(),
-          phone: $("#family_1_phone").val(),
-        },
-        {
-          name: $("#family_2_name").val(),
-          relationship: $("#family_2_relationship").val(),
-          address: $("#family_2_address").val(),
-          phone: $("#family_2_phone").val(),
-        },
-        {
-          name: $("#family_3_name").val(),
-          relationship: $("#family_3_relationship").val(),
-          address: $("#family_3_address").val(),
-          phone: $("#family_3_phone").val(),
-        },
-        {
-          name: $("#family_4_name").val(),
-          relationship: $("#family_4_relationship").val(),
-          address: $("#family_4_address").val(),
-          phone: $("#family_4_phone").val(),
-        },
-        {
-          name: $("#family_5_name").val(),
-          relationship: $("#family_5_relationship").val(),
-          address: $("#family_5_address").val(),
-          phone: $("#family_5_phone").val(),
-        },
-      ],
+      formData,
+      nextOfKin,
+      business,
+      education,
+      healthInfo,
+      occupation,
+      neighbor,
+      family,
     };
   };
 
   // Auto-save function
-  const autoSave = () => {
-    const formData = collectFormData();
-    // Send the form data to the server using AJAX or fetch API
-    $.ajax({
-      type: "PUT",
-      url: `${BACKEND_URL}/users/${user.id}`,
-      contentType: "application/json",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      data: JSON.stringify(formData),
-      success: function () {
+  const autoSave = async () => {
+    try {
+      const {
+        formData,
+        neighbor,
+        occupation,
+        education,
+        family,
+        healthInfo,
+        nextOfKin,
+        business,
+      } = collectFormData();
+
+      // Append additional JSON data
+      formData.append("nextOfKin", JSON.stringify(nextOfKin));
+      formData.append("education", JSON.stringify(education));
+      formData.append("occupation", JSON.stringify(occupation));
+      formData.append("healthInfo", JSON.stringify(healthInfo));
+      formData.append("business", JSON.stringify(business));
+      formData.append("neighbor", JSON.stringify(neighbor));
+      formData.append("family", JSON.stringify(family));
+
+      // Determine the value for identification
+      const selectedValue = $("#identification").val();
+      const otherValue = $("#other-identification").val();
+      const finalValue =
+        selectedValue === "others" ? otherValue : selectedValue;
+
+      // Append additional data for identification to FormData
+      formData.append("identification", finalValue);
+
+      // Use fetch API for cleaner request handling
+      const response = await fetch(`${BACKEND_URL}/users/${user.id}`, {
+        method: "PUT",
+        processData: false, // Do not process the data (this is for FormData)
+        contentType: false, // Let the browser set the content-type
+        headers: {
+          Authorization: `Bearer ${token}`, // Only include Authorization; fetch will auto-handle FormData headers
+        },
+        body: formData, // Pass FormData directly
+      });
+
+      if (response.ok) {
         console.log("Auto-save successful");
         $("#autoSaveStatus").text("Saved").css("color", "green");
-      },
-      error: function () {
-        console.error("Auto-save failed");
+      } else {
+        console.error("Auto-save failed", response.statusText);
         $("#autoSaveStatus").text("Failed to save").css("color", "red");
-      },
-    });
+      }
+    } catch (error) {
+      console.error("Auto-save error:", error);
+      $("#autoSaveStatus").text("Failed to save").css("color", "red");
+    }
   };
 
   // Debounced auto-save on input change
@@ -340,24 +410,54 @@ $(document).ready(function () {
   $("#unifiedForm").on("submit", function (e) {
     e.preventDefault();
 
-    const formData = collectFormData();
+    try {
+      const {
+        formData,
+        nextOfKin,
+        business,
+        education,
+        healthInfo,
+        occupation,
+        neighbor,
+        family,
+      } = collectFormData();
 
-    $.ajax({
-      type: "PUT",
-      url: `${BACKEND_URL}/users/${user.id}`,
-      contentType: "application/json",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      data: JSON.stringify(formData),
-      success: function (response) {
-        Swal.fire("Congratulations", "Account successfully updated", "success");
-      },
-      error: function (xhr) {
-        const errorMessage = xhr.responseJSON?.message || "An error occurred";
-        Swal.fire("Oops...", errorMessage, "error");
-      },
-    });
+      // Append additional JSON data
+      formData.append("nextOfKin", JSON.stringify(nextOfKin));
+      formData.append("education", JSON.stringify(education));
+      formData.append("occupation", JSON.stringify(occupation));
+      formData.append("healthInfo", JSON.stringify(healthInfo));
+      formData.append("business", JSON.stringify(business));
+      formData.append("neighbor", JSON.stringify(neighbor));
+      formData.append("family", JSON.stringify(family));
+
+      $.ajax({
+        type: "PUT",
+        url: `${BACKEND_URL}/users/${user.id}`,
+        // contentType: "application/json",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: JSON.stringify(formData),
+        success: function (response) {
+          Swal.fire(
+            "Congratulations",
+            "Account successfully updated",
+            "success"
+          );
+        },
+        error: function (xhr) {
+          const errorMessage = xhr.responseJSON?.message || "An error occurred";
+          Swal.fire("Oops...", errorMessage, "error");
+        },
+      });
+    } catch (error) {
+      Swal.fire(
+        "Oops...",
+        error.message || "An unexpected error occurred",
+        "error"
+      );
+    }
   });
 });
 
@@ -483,7 +583,37 @@ $(document).ready(function () {
     );
   };
 
-  // Fetch user details and display them
+  // // Fetch user details and display them
+  // const viewDetails = (userId) => {
+  //   const BASE_PATH = "/swap/coinit/app";
+  //   const url = `${BACKEND_URL}/users/${userId}`;
+  //   const headers = { Authorization: `Bearer ${token}` };
+
+  //   apiRequest(
+  //     url,
+  //     "GET",
+  //     headers,
+  //     null,
+  //     (response) => {
+  //       const details = `
+  //         <p><strong>Name:</strong> ${response.firstname} ${
+  //         response.lastname
+  //       }</p>
+  //         <p><strong>Email:</strong> ${response.email}</p>
+  //         <p><strong>Phone:</strong> ${response.phone}</p>
+  //         <p><strong>Role:</strong> ${response.role}</p>
+  //           <img src="${
+  //             response.passportPhoto || "/assets/images/avatar.jpeg"
+  //           }" alt="Passport Photo" class="img-fluid mt-3"  crossOrigin="anonymous">
+  //       `;
+  //       $("#details-modal .modal-body").html(details); // Populate modal with user details
+  //       $("#details-modal").modal("show"); // Show the modal
+  //     },
+  //     () => alert("Failed to fetch user details.")
+  //   );
+  // };
+
+  // Fetch and display user details in a modern profile modal
   const viewDetails = (userId) => {
     const url = `${BACKEND_URL}/users/${userId}`;
     const headers = { Authorization: `Bearer ${token}` };
@@ -494,14 +624,31 @@ $(document).ready(function () {
       headers,
       null,
       (response) => {
+        // Construct user details dynamically
         const details = `
-          <p><strong>Name:</strong> ${response.firstname} ${response.lastname}</p>
-          <p><strong>Email:</strong> ${response.email}</p>
-          <p><strong>Phone:</strong> ${response.phone}</p>
-          <p><strong>Role:</strong> ${response.role}</p>
-        `;
+        <div class="user-profile">
+          <div class="profile-header">
+            <img 
+              // src="${
+                response.passportPhoto || "/assets/images/avatar.jpeg"
+              }" 
+              alt="Passport Photo" 
+              class="profile-photo" 
+              crossOrigin="anonymous"
+            >
+            <h2 class="profile-name">${response.firstname} ${
+          response.lastname
+        }</h2>
+            <p class="profile-role">${response.role}</p>
+          </div>
+          <div class="profile-details">
+            <p><strong>Email:</strong> ${response.email}</p>
+            <p><strong>Phone:</strong> ${response.phone}</p>
+          </div>
+        </div>
+      `;
         $("#details-modal .modal-body").html(details); // Populate modal with user details
-        $("#details-modal").modal("show"); // Show the modal
+        $("#details-modal").modal("show"); // Show the
       },
       () => alert("Failed to fetch user details.")
     );
@@ -826,50 +973,86 @@ $(document).ready(function () {
         //   });
         // };
 
-        const handleDownload = (certificateId) => {
-          if (confirm("Are you sure you want to resubmit?")) {
-            $.ajax({
-              url: `${downloadUrl}${certificateId}`,
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-              xhrFields: {
-                responseType: "blob",
-              },
-              success: function (response) {
-                const url = window.URL.createObjectURL(new Blob([response]));
-                const a = document.createElement("a");
-                a.href = url;
-                a.download = "certificate.pdf";
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                window.URL.revokeObjectURL(url);
-              },
-              error: function (xhr) {
-                const response = xhr.responseJSON;
-                if (response && response.message) {
-                  alert(response.message); // Show the error message from the backend
-                } else {
-                  // alert("An unexpected error occurred. Please try again.");
-                  alert(" Certificate has already been downloaded.");
-                }
-              },
-            });
-          }
-        };
+        // const handleDownload = (certificateId) => {
+        //   if (confirm("Are you sure you want to download?")) return; // Add confirmation dialog
+        //   $.ajax({
+        //     url: `${downloadUrl}${certificateId}`,
+        //     method: "GET",
+        //     headers: {
+        //       Authorization: `Bearer ${token}`,
+        //     },
+        //     xhrFields: {
+        //       responseType: "blob",
+        //     },
+        //     success: function (response) {
+        //       const url = window.URL.createObjectURL(new Blob([response]));
+        //       const a = document.createElement("a");
+        //       a.href = url;
+        //       a.download = "certificate.pdf";
+        //       document.body.appendChild(a);
+        //       a.click();
+        //       document.body.removeChild(a);
+        //       window.URL.revokeObjectURL(url);
+        //     },
+        //     error: function (xhr) {
+        //       const response = xhr.responseJSON;
+        //       if (response && response.message) {
+        //         alert(response.message); // Show the error message from the backend
+        //       } else {
+        //         // alert("An unexpected error occurred. Please try again.");
+        //         alert(" Certificate has already been downloaded.");
+        //       }
+        //     },
+        //   });
+        // };
+
+        // Handle Certificate Download
+        function handleDownload(certificateId) {
+          if (
+            !confirm(
+              "Warning! Sure you want to download? Click ok to continue or else click cancel. You can only download once."
+            )
+          )
+            return;
+          $.ajax({
+            url: `${downloadUrl}${certificateId}`,
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            xhrFields: {
+              responseType: "blob",
+            },
+            success: function (response) {
+              const url = window.URL.createObjectURL(new Blob([response]));
+              const a = document.createElement("a");
+              a.href = url;
+              a.download = "certificate.pdf";
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              window.URL.revokeObjectURL(url);
+
+              // alert("Certificate downloaded successfully!");
+            },
+            error: function (xhr) {
+              const response = xhr.responseJSON;
+              const message =
+                response?.message || "Certificate has already been downloaded.";
+              alert(message);
+            },
+          });
+        }
 
         // Add click event listeners for download buttons
         $(".btn-download").click(function () {
           const certificateId = $(this).data("id");
-          // if (certificateId) handleDownload(certificateId);
-
           const button = $(this);
+
           if (certificateId) {
-            button.prop("disabled", true); // Disable the button
+            button.prop("disabled", true);
             handleDownload(certificateId);
-            setTimeout(() => button.prop("disabled", false), 5000); // Re-enable after 5 seconds (optional)
+            setTimeout(() => button.prop("disabled", false), 5000); // Optional: Re-enable after 5 seconds
           }
         });
       },
@@ -974,6 +1157,7 @@ $(document).ready(function () {
             },
             error: function (error) {
               console.error("Error downloading certificate:", error);
+              alert(" Certificate has already been downloaded.");
             },
           });
         });
@@ -1850,9 +2034,27 @@ const nigeriaData = {
   ],
 };
 
-function updateLocalGovernments() {
-  const stateSelect = document.getElementById("state");
-  const lgaSelect = document.getElementById("lga");
+function updateLocalGovernmentsOfOrigin() {
+  const stateSelect = document.getElementById("stateOfOrigin");
+  const lgaSelect = document.getElementById("lgaOfOrigin");
+  const selectedState = stateSelect.value;
+
+  // Clear previous options
+  lgaSelect.innerHTML = '<option value="">Select Local Government</option>';
+
+  if (nigeriaData[selectedState]) {
+    nigeriaData[selectedState].forEach((lga) => {
+      const option = document.createElement("option");
+      option.value = lga;
+      option.textContent = lga;
+      lgaSelect.appendChild(option);
+    });
+  }
+}
+
+function updateLocalGovernmentsOfResidence() {
+  const stateSelect = document.getElementById("stateOfResidence");
+  const lgaSelect = document.getElementById("lgaOfResidence");
   const selectedState = stateSelect.value;
 
   // Clear previous options
@@ -1871,7 +2073,7 @@ function updateLocalGovernments() {
 // app.js
 
 $(document).ready(function () {
-  const nationalitySelect = $("#nationality");
+  const countrySelect = $("#country");
 
   // Fetch list of countries from the REST Countries API
   $.ajax({
@@ -1882,7 +2084,7 @@ $(document).ready(function () {
       data.forEach(function (country) {
         const countryName = country.name.common;
         const countryCode = country.cca2; // You can use country codes or other properties if needed
-        nationalitySelect.append(new Option(countryName, countryCode));
+        countrySelect.append(new Option(countryName, countryCode));
       });
     },
     error: function () {
@@ -1890,3 +2092,15 @@ $(document).ready(function () {
     },
   });
 });
+
+function toggleOtherInput(selectElement) {
+  const otherContainer = document.getElementById(
+    "other-identification-container"
+  );
+  if (selectElement.value === "others") {
+    otherContainer.style.display = "block";
+  } else {
+    otherContainer.style.display = "none";
+    document.getElementById("other-identification").value = "";
+  }
+}

@@ -46,11 +46,12 @@
         color: #4c956c;
         text-align: center;
       }
-      .login-container p {
+      /* .login-container p {
         margin-bottom: 10px;
         color: #4c956c;
         text-align: center;
-      }
+      } */
+
       .btn-login {
         background-color: #4c956c;
         color: #fff;
@@ -97,6 +98,13 @@
       .top-50 {
         top: 72% !important;
       }
+
+      .copyright p {
+        text-align: center;
+        font-size: 15px;
+        color: #b36a93;
+        margin-top: 10px;
+      }
     </style>
   </head>
   <body>
@@ -106,7 +114,7 @@
         Benue State Citizen Registration <br />
         Management Information system
       </h6>
-      <h4>Login</h4>
+      <!-- <h4>Login</h4> -->
 
       <form id="signInForm">
         <div class="mb-3">
@@ -145,6 +153,10 @@
         </p>
         <div class="text-center mt-3">
           <a href="forgot-password.html">Forgot password?</a>
+        </div>
+        <div class="copyright">
+          <p>Powered By BDIC <br />© 2025 All Rights Reserved</p>
+          <p class="op5"></p>
         </div>
       </form>
     </div>
@@ -186,19 +198,19 @@
                     ).then((result) => {
                       const { role } = data.user;
                       if (result.isConfirmed == true && role === "user") {
-                        window.location.href = "../swap/coinit/app/index.html";
+                        window.location.href = "../src/bdic/app/index.html";
                       }
                       if (
                         result.isConfirmed == true &&
                         role === "super_admin"
                       ) {
-                        window.location.href = "../swap/coinit/app/index.html";
+                        window.location.href = "../src/bdic/app/index.html";
                       }
                       if (
                         result.isConfirmed == true &&
                         role === "support_admin"
                       ) {
-                        window.location.href = "../swap/coinit/app/index.html";
+                        window.location.href = "../src/bdic/app/index.html";
                       }
                     });
                   }
