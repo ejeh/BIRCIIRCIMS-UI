@@ -14,7 +14,10 @@
 
     <meta property="og:image" content="social-image.html" />
     <meta name="format-detection" content="telephone=no" />
-    <title>BICRIRMS- User Dashboard</title>
+    <title>
+      Benue State Integrated Residents/Citizens Identity/Indigeneship
+      Registration and Card Issuance Management System
+    </title>
     <!-- Favicon icon -->
     <link
       rel="icon"
@@ -50,6 +53,57 @@
       tr.no-match {
         display: none;
       }
+
+      /* Loading Indicator Styles */
+      #loadingIndicator {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(
+          255,
+          255,
+          255,
+          0.8
+        ); /* Semi-transparent white background */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000; /* Ensure it's on top of other elements */
+      }
+
+      .loader {
+        border: 8px solid #f3f3f3; /* Light grey */
+        border-top: 8px solid #3498db; /* Blue */
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        animation: spin 1s linear infinite; /* Spin animation */
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      @media only screen and (max-width: 1400px) {
+        .dropdown-menu .dropdown-item {
+          padding: 0.1rem 1rem;
+          font-size: 0.8rem;
+        }
+      }
+      .dropdown-menu .dropdown-item {
+        padding: 0.1rem 1rem;
+        font-size: 0.8rem;
+      }
+      .dropdown-menu {
+        min-width: 7rem;
+      }
     </style>
   </head>
 
@@ -79,13 +133,14 @@
         <!-- Logo Section -->
         <a href="index.html" class="brand-logo">
           <img
-            src="/assets/images/gov-logo.jpg"
+            src="/assets/images/benue-state-logo.png"
             alt="Government Logo"
             class="logo-img"
           />
           <div class="brand-text">
-            <h6>Benue State Citizen Registration</h6>
-            <p>Management Information System</p>
+            <!-- <h6>Benue State Citizen Registration</h6>
+            <p>Management Information System</p> -->
+            BIRCIIRCIMS
           </div>
         </a>
 
@@ -190,7 +245,14 @@
             <li class="user-menu">
               <a class="ai-icon" href="request.html" aria-expanded="false">
                 <i class="fa fa-money" aria-hidden="true"></i>
-                <span class="nav-text">View Request Status</span>
+                <span class="nav-text">View Certificate Status</span>
+              </a>
+            </li>
+
+            <li class="user-menu">
+              <a class="ai-icon" href="idcard.html" aria-expanded="false">
+                <i class="fa fa-money" aria-hidden="true"></i>
+                <span class="nav-text">View Card Status</span>
               </a>
             </li>
 
@@ -212,6 +274,12 @@
               <a class="ai-icon" href="certificate.html" aria-expanded="false">
                 <i class="fa fa-user-plus" aria-hidden="true"></i>
                 <span class="nav-text">Request Certificate</span>
+              </a>
+            </li>
+            <li class="user-menu">
+              <a class="ai-icon" href="card.html" aria-expanded="false">
+                <i class="fa fa-user-plus" aria-hidden="true"></i>
+                <span class="nav-text">Request Card</span>
               </a>
             </li>
 
@@ -258,12 +326,11 @@
                       >
                         <thead>
                           <tr>
-                            <th>Fullname</th>
+                            <th>Full Name</th>
                             <th>Phone</th>
                             <th>Email</th>
                             <th>Status</th>
-                            <th>Attempts</th>
-                            <th>Action</th>
+                            <th>Resubmission Attempts</th>
                             <th>Action</th>
                           </tr>
                         </thead>
@@ -360,7 +427,7 @@
         ***********************************-->
       <div class="footer">
         <div class="copyright">
-          <p>Copyright © BDIC 2025</p>
+          <p>Copyright ©Powered By BDIC 2025</p>
         </div>
       </div>
       <!--**********************************

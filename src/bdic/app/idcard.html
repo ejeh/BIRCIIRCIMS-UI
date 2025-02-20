@@ -53,6 +53,57 @@
       tr.no-match {
         display: none;
       }
+
+      /* Loading Indicator Styles */
+      #loadingIndicator {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(
+          255,
+          255,
+          255,
+          0.8
+        ); /* Semi-transparent white background */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000; /* Ensure it's on top of other elements */
+      }
+
+      .loader {
+        border: 8px solid #f3f3f3; /* Light grey */
+        border-top: 8px solid #3498db; /* Blue */
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        animation: spin 1s linear infinite; /* Spin animation */
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      @media only screen and (max-width: 1400px) {
+        .dropdown-menu .dropdown-item {
+          padding: 0.1rem 1rem;
+          font-size: 0.8rem;
+        }
+      }
+      .dropdown-menu .dropdown-item {
+        padding: 0.1rem 1rem;
+        font-size: 0.8rem;
+      }
+      .dropdown-menu {
+        min-width: 7rem;
+      }
     </style>
   </head>
 
@@ -86,7 +137,11 @@
             alt="Government Logo"
             class="logo-img"
           />
-          <div class="brand-text">BIRCIIRCIMS</div>
+          <div class="brand-text">
+            <!-- <h6>Benue State Citizen Registration</h6>
+            <p>Management Information System</p> -->
+            BIRCIIRCIMS
+          </div>
         </a>
 
         <!-- Hamburger Menu for Navigation Control -->
@@ -109,7 +164,7 @@
           <nav class="navbar navbar-expand">
             <div class="collapse navbar-collapse justify-content-between">
               <div class="header-left">
-                <div class="dashboard_bar">All Approvals</div>
+                <div class="dashboard_bar">All Request</div>
               </div>
               <ul class="navbar-nav header-right">
                 <li class="nav-item dropdown notification_dropdown">
@@ -193,6 +248,7 @@
                 <span class="nav-text">View Certificate Status</span>
               </a>
             </li>
+
             <li class="user-menu">
               <a class="ai-icon" href="idcard.html" aria-expanded="false">
                 <i class="fa fa-money" aria-hidden="true"></i>
@@ -203,14 +259,7 @@
             <li class="super-admin-menu">
               <a class="ai-icon" href="all-request.html" aria-expanded="false">
                 <i class="fa fa-money" aria-hidden="true"></i>
-                <span class="nav-text">View All Certificate Request</span>
-              </a>
-            </li>
-
-            <li class="super-admin-menu">
-              <a class="ai-icon" href="all-card.html" aria-expanded="false">
-                <i class="fa fa-money" aria-hidden="true"></i>
-                <span class="nav-text">View All Card Request</span>
+                <span class="nav-text">View All Request</span>
               </a>
             </li>
             <!-- Super Admin Menu -->
@@ -225,6 +274,12 @@
               <a class="ai-icon" href="certificate.html" aria-expanded="false">
                 <i class="fa fa-user-plus" aria-hidden="true"></i>
                 <span class="nav-text">Request Certificate</span>
+              </a>
+            </li>
+            <li class="user-menu">
+              <a class="ai-icon" href="card.html" aria-expanded="false">
+                <i class="fa fa-user-plus" aria-hidden="true"></i>
+                <span class="nav-text">Request Card</span>
               </a>
             </li>
 
@@ -271,23 +326,80 @@
                       >
                         <thead>
                           <tr>
-                            <th>#</th>
-                            <th>Fullname</th>
+                            <th>Full Name</th>
                             <th>Phone</th>
                             <th>Email</th>
                             <th>Status</th>
+                            <th>Resubmission Attempts</th>
                             <th>Action</th>
                           </tr>
                         </thead>
-                        <tbody id="approval-table"></tbody>
+                        <tbody id="card-table"></tbody>
                       </table>
-                      <!-- Rejection Reason Modal -->
 
+                      <!-- !-- Resubmission Modal -->
+                      <div
+                        class="modal fade"
+                        id="resubmitCardModal"
+                        tabindex="-1"
+                        aria-labelledby="resubmitCardModalLabel"
+                        aria-hidden="true"
+                      >
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5
+                                class="modal-title"
+                                id="resubmitCardModalLabel"
+                              >
+                                Edit Request
+                                <br />
+                                Only Three Attempts Allowed
+                              </h5>
+                              <button
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                              ></button>
+                            </div>
+                            <div class="modal-body">
+                              <input type="hidden" id="resubmitCardRequestId" />
+                              <div class="mb-3">
+                                <label for="resubmitCardName" class="form-label"
+                                  >Name</label
+                                >
+                                <input
+                                  type="text"
+                                  class="form-control"
+                                  id="resubmitCardName"
+                                />
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button
+                                type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal"
+                              >
+                                Cancel
+                              </button>
+                              <button
+                                type="button"
+                                id="submitCardResubmission"
+                                class="btn btn-primary"
+                              >
+                                Resubmit
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                       <div class="d-flex justify-content-between">
-                        <button id="btnPrev" class="btn" disabled>
+                        <button id="btn-prev" class="btn" disabled>
                           Previous
                         </button>
-                        <button id="btnNext" class="btn">Next</button>
+                        <button id="btn-next" class="btn">Next</button>
                       </div>
                     </div>
                   </div>
@@ -305,6 +417,7 @@
         <script>
           function logout() {
             localStorage.removeItem("token");
+            location.reload(); // Refresh page
           }
         </script>
       </div>

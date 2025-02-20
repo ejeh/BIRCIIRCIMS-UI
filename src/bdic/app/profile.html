@@ -10,7 +10,10 @@
 
     <meta property="og:image" content="social-image.html" />
     <meta name="format-detection" content="telephone=no" />
-    <title>BICRIRMS - User Dashboard</title>
+    <title>
+      Benue State Integrated Residents/Citizens Identity/Indigeneship
+      Registration and Card Issuance Management System
+    </title>
     <!-- Favicon icon -->
     <link
       rel="icon"
@@ -96,14 +99,11 @@
         <!-- Logo Section -->
         <a href="index.html" class="brand-logo">
           <img
-            src="/assets/images/gov-logo.jpg"
-            alt="Government Logo"
+            src="/assets/images/benue-state-logo.png"
+            alt="benueo"
             class="logo-img"
           />
-          <div class="brand-text">
-            <h6>Benue State Citizen Registration</h6>
-            <p>Management Information System</p>
-          </div>
+          <div class="brand-text">BIRCIIRCIMS</div>
         </a>
 
         <!-- Hamburger Menu for Navigation Control -->
@@ -205,14 +205,27 @@
             <li class="user-menu">
               <a class="ai-icon" href="request.html" aria-expanded="false">
                 <i class="fa fa-money" aria-hidden="true"></i>
-                <span class="nav-text">View Request Status</span>
+                <span class="nav-text">View Certificate Status</span>
+              </a>
+            </li>
+            <li class="user-menu">
+              <a class="ai-icon" href="idcard.html" aria-expanded="false">
+                <i class="fa fa-money" aria-hidden="true"></i>
+                <span class="nav-text">View Card Status</span>
               </a>
             </li>
 
             <li class="super-admin-menu">
               <a class="ai-icon" href="all-request.html" aria-expanded="false">
                 <i class="fa fa-money" aria-hidden="true"></i>
-                <span class="nav-text">View All Request</span>
+                <span class="nav-text">View All Certificate Request</span>
+              </a>
+            </li>
+
+            <li class="super-admin-menu">
+              <a class="ai-icon" href="all-card.html" aria-expanded="false">
+                <i class="fa fa-money" aria-hidden="true"></i>
+                <span class="nav-text">View All Card Request</span>
               </a>
             </li>
             <!-- Super Admin Menu -->
@@ -227,6 +240,12 @@
               <a class="ai-icon" href="certificate.html" aria-expanded="false">
                 <i class="fa fa-user-plus" aria-hidden="true"></i>
                 <span class="nav-text">Request Certificate</span>
+              </a>
+            </li>
+            <li class="user-menu">
+              <a class="ai-icon" href="card.html" aria-expanded="false">
+                <i class="fa fa-user-plus" aria-hidden="true"></i>
+                <span class="nav-text">Request Card</span>
               </a>
             </li>
 
@@ -287,12 +306,12 @@
                       </div>
                       <div class="col-sm-6 m-b30">
                         <label class="form-label">Lastname</label>
-                        <!-- value="lastname" -->
                         <input
                           id="lastname"
                           type="text"
                           name="lastname"
                           class="form-control"
+                          readonly
                         />
                       </div>
 
@@ -334,7 +353,7 @@
                       <div class="col-sm-6 m-b30">
                         <label class="form-label">Date Of Birth</label>
                         <input
-                          id="dob"
+                          id="DOB"
                           type="date"
                           class="form-control"
                           name="DOB"
@@ -389,7 +408,7 @@
                       </div>
                       <div class="col-sm-6 m-b30">
                         <label class="form-label"
-                          >Select Local Government Area</label
+                          >Select Local Government Of Origin</label
                         >
                         <!-- class="form-select" -->
                         <select
@@ -408,6 +427,28 @@
                           name="nationality"
                         />
                       </div>
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Community</label>
+                        <input
+                          id="community"
+                          type="text"
+                          class="form-control"
+                          name="community"
+                        />
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Religion</label>
+                        <select
+                          id="religion"
+                          name="religion"
+                          class="selectpicker nice-select default-select form-control wide mh-auto"
+                        >
+                          <option value="">--Select--</option>
+                          <option value="christain">Christain</option>
+                          <option value="muslim">Muslim</option>
+                          <option value="others">Others</option>
+                        </select>
+                      </div>
 
                       <div class="col-sm-4 m-b30">
                         <label class="form-label"
@@ -417,7 +458,6 @@
                           id="passportPhoto"
                           type="file"
                           class="form-control"
-                          required
                           name="passportPhoto"
                         />
                       </div>
@@ -530,7 +570,7 @@
                       </div>
                       <div class="col-sm-6 m-b30">
                         <label class="form-label"
-                          >Select Local Government</label
+                          >Select Local Government Of Residence</label
                         >
                         <!-- class="form-select" -->
                         <select
@@ -541,12 +581,12 @@
                         </select>
                       </div>
                       <div class="col-sm-6 m-b30">
-                        <label for="country"
+                        <label for="countryOfResidence"
                           >Select Country Of Residence:</label
                         >
                         <select
-                          id="country"
-                          name="country"
+                          id="countryOfResidence"
+                          name="countryOfResidence"
                           class="nice-select form-control wide mh-auto"
                         >
                           <option value="">--Select--</option>
@@ -651,18 +691,6 @@
                           name="expiry_date"
                         />
                       </div>
-
-                      <!-- <div class="col-sm-6 m-b30">
-                        <label class="form-label"
-                          >Tax Identification Number(Optional)</label
-                        >
-                        <input
-                          id="tax_ientification_number"
-                          type="text"
-                          class="form-control"
-                          name="tax_identification_number"
-                        />
-                      </div> -->
                     </div>
                   </div>
                   <div class="card-footer">
@@ -804,7 +832,7 @@
               </div>
             </div>
 
-            <div
+            <!-- <div
               class="row form-section"
               id="contact-details-section"
               style="display: none"
@@ -815,9 +843,9 @@
                     <h4 class="card-title">Contact Details</h4>
                   </div>
                   <div class="card-body">
-                    <div class="row">
-                      <!-- Neighbors' Contact Details -->
-                      <div class="col-12">
+                    <div class="row"> -->
+            <!-- Neighbors' Contact Details -->
+            <!-- <div class="col-12">
                         <h5 class="section-title">
                           Neighbors' Contact Details
                         </h5>
@@ -963,6 +991,87 @@
                   </div>
                 </div>
               </div>
+            </div> -->
+
+            <div
+              class="row form-section"
+              id="contact-details-section"
+              style="display: none"
+            >
+              <div class="col-xl-12 col-lg-12">
+                <div class="card card-bx m-b30">
+                  <div class="card-header">
+                    <h4 class="card-title">Contact Details</h4>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <!-- Neighbors' Contact Details -->
+                      <div class="col-12">
+                        <h5 class="section-title">
+                          Neighbors' Contact Details
+                        </h5>
+                      </div>
+                      <!-- Container for dynamic fields -->
+                      <div class="col-12" id="neighbors-container">
+                        <!-- Initial set of fields -->
+                        <div class="neighbor-fields m-b30">
+                          <label class="form-label">Neighbor 1</label>
+                          <input
+                            type="text"
+                            class="form-control m-b10"
+                            name="neighbor_name[]"
+                            placeholder="Full Name"
+                          />
+                          <input
+                            type="text"
+                            class="form-control m-b10"
+                            name="neighbor_address[]"
+                            placeholder="Residential Address"
+                          />
+                          <input
+                            type="tel"
+                            class="form-control"
+                            name="neighbor_phone[]"
+                            placeholder="Phone Number"
+                          />
+                        </div>
+                      </div>
+                      <!-- Button to add more neighbors -->
+                      <div class="col-12">
+                        <button
+                          type="button"
+                          class="btn btn-primary"
+                          id="add-neighbor"
+                        >
+                          Add Another Neighbor
+                        </button>
+                        <p
+                          id="max-neighbors-message"
+                          style="display: none; color: red; margin-top: 10px"
+                        >
+                          Maximum of 5 neighbors reached.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary prev-btn"
+                      data-prev="family-information-section"
+                    >
+                      Previous
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-primary next-btn"
+                      data-next="family-details-section"
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <!-- Family Members' Contact Details -->
@@ -978,166 +1087,55 @@
                   </div>
                   <div class="card-body">
                     <div class="row">
-                      <!-- Family Members' Contact Details -->
                       <div class="col-12">
-                        <h5 class="section-title">
-                          Family Members' Contact Details
-                        </h5>
+                        <h5 class="section-title">Family' Contact Details</h5>
                       </div>
-                      <div class="col-12 m-b30">
-                        <label class="form-label">Family Member 1</label>
-                        <input
-                          id="family_1_name"
-                          type="text"
-                          class="form-control m-b10"
-                          name="family_1_name"
-                          placeholder="Full Name"
-                        />
-                        <input
-                          id="family_1_relationship"
-                          type="text"
-                          class="form-control m-b10"
-                          name="family_1_relationship"
-                          placeholder="relationship"
-                        />
-                        <input
-                          id="family_1_address"
-                          type="text"
-                          class="form-control m-b10"
-                          name="family_1_address"
-                          placeholder="Residential Address"
-                        />
-                        <input
-                          id="family_1_phone"
-                          type="tel"
-                          class="form-control"
-                          name="family_1_phone"
-                          placeholder="Phone Number"
-                        />
+                      <!-- Container for dynamic fields -->
+                      <div class="col-12" id="family-container">
+                        <!-- Initial set of fields -->
+                        <div class="family-fields m-b30">
+                          <label class="form-label">Family 1</label>
+                          <input
+                            type="text"
+                            class="form-control m-b10"
+                            name="family_name[]"
+                            placeholder="Full Name"
+                          />
+                          <input
+                            type="text"
+                            class="form-control m-b10"
+                            name="family_relationship[]"
+                            placeholder="Relationship"
+                          />
+                          <input
+                            type="text"
+                            class="form-control m-b10"
+                            name="family_address[]"
+                            placeholder="Residential Address"
+                          />
+                          <input
+                            type="tel"
+                            class="form-control"
+                            name="family_phone[]"
+                            placeholder="Phone Number"
+                          />
+                        </div>
                       </div>
-                      <div class="col-12 m-b30">
-                        <label class="form-label">Family Member 2</label>
-                        <input
-                          id="family_2_name"
-                          type="text"
-                          class="form-control m-b10"
-                          name="family_2_name"
-                          placeholder="Full Name"
-                        />
-                        <input
-                          id="family_2_relationship"
-                          type="text"
-                          class="form-control m-b10"
-                          name="family_2_relationship"
-                          placeholder="relationship"
-                        />
-                        <input
-                          id="family_2_address"
-                          type="text"
-                          class="form-control m-b10"
-                          name="family_2_address"
-                          placeholder="Residential Address"
-                        />
-                        <input
-                          id="family_2_phone"
-                          type="tel"
-                          class="form-control"
-                          name="family_2_phone"
-                          placeholder="Phone Number"
-                        />
-                      </div>
-                      <div class="col-12 m-b30">
-                        <label class="form-label">Family Member 3</label>
-                        <input
-                          id="family_3_name"
-                          type="text"
-                          class="form-control m-b10"
-                          name="family_2_name"
-                          placeholder="Full Name"
-                        />
-                        <input
-                          id="family_3_relationship"
-                          type="text"
-                          class="form-control m-b10"
-                          name="family_3_relationship"
-                          placeholder="relationship"
-                        />
-                        <input
-                          id="family_3_address"
-                          type="text"
-                          class="form-control m-b10"
-                          name="family_2_address"
-                          placeholder="Residential Address"
-                        />
-                        <input
-                          id="family_3_phone"
-                          type="tel"
-                          class="form-control"
-                          name="family_2_phone"
-                          placeholder="Phone Number"
-                        />
-                      </div>
-                      <div class="col-12 m-b30">
-                        <label class="form-label">Family Member 4</label>
-                        <input
-                          id="family_4_name"
-                          type="text"
-                          class="form-control m-b10"
-                          name="family_2_name"
-                          placeholder="Full Name"
-                        />
-                        <input
-                          id="family_4_relationship"
-                          type="text"
-                          class="form-control m-b10"
-                          name="family_4_relationship"
-                          placeholder="relationship"
-                        />
-                        <input
-                          id="family_4_address"
-                          type="text"
-                          class="form-control m-b10"
-                          name="family_2_address"
-                          placeholder="Residential Address"
-                        />
-                        <input
-                          id="family_4_phone"
-                          type="tel"
-                          class="form-control"
-                          name="family_2_phone"
-                          placeholder="Phone Number"
-                        />
-                      </div>
-                      <div class="col-12 m-b30">
-                        <label class="form-label">Family Member 5</label>
-                        <input
-                          id="family_5_name"
-                          type="text"
-                          class="form-control m-b10"
-                          name="family_2_name"
-                          placeholder="Full Name"
-                        />
-                        <input
-                          id="family_5_relationship"
-                          type="text"
-                          class="form-control m-b10"
-                          name="family_5_relationship"
-                          placeholder="relationship"
-                        />
-                        <input
-                          id="family_5_address"
-                          type="text"
-                          class="form-control m-b10"
-                          name="family_2_address"
-                          placeholder="Residential Address"
-                        />
-                        <input
-                          id="family_5_phone"
-                          type="tel"
-                          class="form-control"
-                          name="family_2_phone"
-                          placeholder="Phone Number"
-                        />
+                      <!-- Button to add more neighbors -->
+                      <div class="col-12">
+                        <button
+                          type="button"
+                          class="btn btn-primary"
+                          id="add-family"
+                        >
+                          Add Another Family
+                        </button>
+                        <p
+                          id="max-family-message"
+                          style="display: none; color: red; margin-top: 10px"
+                        >
+                          Maximum of 5 family reached.
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -1283,6 +1281,8 @@
                           type="text"
                           class="form-control"
                           name="TIN"
+                          maxlength="11"
+                          minlength="11"
                         />
                       </div>
                       <div class="col-sm-6 m-b30">
@@ -1340,59 +1340,119 @@
               <div class="col-xl-12 col-lg-12">
                 <div class="card card-bx m-b30">
                   <div class="card-header">
-                    <h4 class="card-title">Employment/Occupation Details</h4>
+                    <h4 class="card-title">Employment History Details</h4>
                   </div>
                   <div class="card-body">
-                    <div class="row">
-                      <!-- Employment section fields -->
-                      <div class="col-sm-6 m-b30">
-                        <label class="form-label">Current Occupation</label>
-                        <input
-                          type="text"
-                          class="form-control"
-                          id="current_occupation"
-                          name="current_occupation"
-                        />
-                      </div>
-                      <div class="col-sm-6 m-b30">
-                        <label class="form-label">Employer’s Name</label>
-                        <input
-                          id="employer_name"
-                          type="text"
-                          name="employer_name"
-                          class="form-control"
-                        />
-                      </div>
+                    <div id="employment-history-container">
+                      <!-- Initial Employment History Fields -->
+                      <div class="employment-fields m-b30">
+                        <!-- Company Name -->
+                        <div class="form-group">
+                          <label for="companyName">Company Name</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="companyName[]"
+                            placeholder="Enter company name"
+                            required
+                          />
+                        </div>
 
-                      <div class="col-sm-6 m-b30">
-                        <label class="form-label">Employer’s Address</label>
-                        <input
-                          id="employer_address"
-                          type="text"
-                          class="form-control"
-                          name="employer_address"
-                        />
+                        <!-- Address -->
+                        <div class="form-group">
+                          <label for="address">Address</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="address[]"
+                            placeholder="Enter company address"
+                            required
+                          />
+                        </div>
+
+                        <!-- Designation -->
+                        <div class="form-group">
+                          <label for="designation">Designation</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="designation[]"
+                            placeholder="Enter your designation"
+                            required
+                          />
+                        </div>
+
+                        <!-- Employment Period -->
+                        <div class="form-row">
+                          <div class="form-group col-md-6">
+                            <label for="startYear">Start Year</label>
+                            <input
+                              type="number"
+                              class="form-control"
+                              name="startYear[]"
+                              placeholder="Enter start year"
+                              required
+                            />
+                          </div>
+                          <div class="form-group col-md-6">
+                            <label for="endYear">End Year</label>
+                            <input
+                              type="number"
+                              class="form-control"
+                              name="endYear[]"
+                              placeholder="Enter end year"
+                            />
+                            <small class="form-text text-muted"
+                              >Leave blank if this is your current
+                              employment.</small
+                            >
+                          </div>
+                        </div>
+                        <!-- Current Employment Checkbox -->
+                        <div class="form-group form-check">
+                          <input
+                            type="checkbox"
+                            class="form-check-input"
+                            name="isCurrentEmployment[]"
+                          />
+                          <label
+                            class="form-check-label"
+                            for="isCurrentEmployment"
+                            >This is my current employment</label
+                          >
+                        </div>
+
+                        <!-- Company Description -->
+                        <div class="form-group">
+                          <label for="description"
+                            >Description of Company</label
+                          >
+                          <textarea
+                            class="form-control"
+                            name="description[]"
+                            rows="3"
+                            placeholder="Describe the company"
+                          ></textarea>
+                        </div>
                       </div>
-                      <div class="col-sm-6 m-b30">
-                        <label class="form-label">Employment Status</label>
-                        <select
-                          id="employment_status"
-                          name="employment_status"
-                          class="selectpicker nice-select default-select form-control wide mh-auto"
-                        >
-                          <option value="employed">Employed</option>
-                          <option value="unemployed">Unemployed</option>
-                          <option value="self employed">Self Employed</option>
-                          <option value="retired">Retired</option>
-                        </select>
-                      </div>
+                    </div>
+
+                    <!-- Button to add more employment -->
+                    <div class="col-12">
+                      <button
+                        type="button"
+                        class="btn btn-primary"
+                        id="add-employment"
+                      >
+                        Add Another Employment
+                      </button>
                     </div>
                   </div>
                   <div class="card-footer">
                     <button
                       type="button"
                       class="btn btn-secondary prev-btn"
-                      data-prev="family-information-section"
+                      data-prev="business-details-section"
                     >
                       Previous
                     </button>
@@ -1408,6 +1468,92 @@
               </div>
             </div>
 
+            <!-- <div
+            class="row form-section"
+            id="education-details-section"
+              style="display: none"
+            >
+              <div class="col-xl-12 col-lg-12">
+                <div class="card card-bx m-b30">
+                  <div class="card-header">
+                    <h4 class="card-title">Education Details</h4>
+                  </div>
+                  <div class="card-body">
+                    <div class="row"> -->
+            <!-- Education section fields -->
+
+            <!-- <div class="col-sm-6 m-b30">
+                        <label class="form-label"
+                          >Highest Level of Education</label
+                        >
+                        <select
+                          id="highestLevel"
+                          name="highestLevel"
+                          class="selectpicker nice-select default-select form-control wide mh-auto"
+                        >
+                          <option value="PhD">PhD</option>
+                          <option value="Masters">Master's</option>
+                          <option value="Bachelors">Bachelor's</option>
+                        </select>
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <div id="institutions-list">
+                          <div class="institution-entry">
+                            <label class="form-label">Institution;</label> -->
+            <!-- id="institutionAttended" -->
+            <!-- <input
+                            type="text"
+                            name="institution"
+                            class="form-control institution"
+                            required
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Degree:</label> -->
+            <!-- id="graduationYear" -->
+            <!-- <input
+                        type="text"
+                        class="form-control degree"
+                        name="degree"
+                        required
+                        />
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Year of Graduation:</label> -->
+            <!-- id="graduationYear" -->
+            <!-- <input
+                        type="number"
+                        class="form-control graduationYear"
+                        name="graduationYear"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-footer">
+                    <button type="button" id="add-institution">
+                      Add Institution
+                    </button>
+                    <button
+                    type="button"
+                    class="btn btn-secondary prev-btn"
+                    data-prev="employment-details-section"
+                    >
+                    Previous
+                  </button>
+                  <button
+                  type="button"
+                  class="btn btn-primary next-btn"
+                  data-next="health-info-section"
+                  >
+                  Next
+                </button>
+              </div>
+            </div>
+          </div>
+        </div> -->
+
             <!-- Education Details -->
             <div
               class="row form-section"
@@ -1421,36 +1567,150 @@
                   </div>
                   <div class="card-body">
                     <div class="row">
-                      <!-- Education section fields -->
+                      <!-- Primary School Section -->
+                      <div class="col-md-12">
+                        <h5>Primary School</h5>
+                        <div class="form-group">
+                          <label for="primarySchoolName"
+                            >Name of Primary School</label
+                          >
+                          <input
+                            type="text"
+                            id="primarySchool_name"
+                            class="form-control"
+                            id="primarySchoolName"
+                            name="primarySchool.name"
+                            required
+                          />
+                        </div>
+                        <div class="form-group">
+                          <label for="primarySchoolAddress"
+                            >Address of Primary School</label
+                          >
+                          <input
+                            type="text"
+                            id="primarySchool_address"
+                            class="form-control"
+                            id="primarySchoolAddress"
+                            name="primarySchool.address"
+                            required
+                          />
+                        </div>
+                        <div class="form-group">
+                          <label for="primarySchoolYear"
+                            >Year of Attendance</label
+                          >
+                          <input
+                            type="text"
+                            id="primarySchool_yearOfAttendance"
+                            class="form-control"
+                            id="primarySchoolYear"
+                            name="primarySchool.yearOfAttendance"
+                            required
+                          />
+                        </div>
+                      </div>
 
-                      <div class="col-sm-6 m-b30">
-                        <label class="form-label"
-                          >Highest Level of Education</label
+                      <!-- Secondary School Section -->
+                      <div class="col-md-12">
+                        <h5>Secondary School</h5>
+                        <div class="form-group">
+                          <label for="secondarySchoolName"
+                            >Name of Secondary School</label
+                          >
+                          <input
+                            type="text"
+                            id="secondarySchool_name"
+                            class="form-control"
+                            id="secondarySchoolName"
+                            name="secondarySchool.name"
+                            required
+                          />
+                        </div>
+                        <div class="form-group">
+                          <label for="secondarySchoolAddress"
+                            >Address of Secondary School</label
+                          >
+                          <input
+                            type="text"
+                            id="secondarySchool_address"
+                            class="form-control"
+                            id="secondarySchoolAddress"
+                            name="secondarySchool.address"
+                            required
+                          />
+                        </div>
+                        <div class="form-group">
+                          <label for="secondarySchoolYear"
+                            >Year of Attendance</label
+                          >
+                          <input
+                            type="text"
+                            id="secondarySchool_yearOfAttendance"
+                            class="form-control"
+                            id="secondarySchoolYear"
+                            name="secondarySchool.yearOfAttendance"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <!-- Tertiary Institution Section -->
+                      <div
+                        class="col-md-12 tertiary-institution-section"
+                        id="tertiary-institution-container"
+                      >
+                        <div class="institution-fields m-b30">
+                          <label class="form-label"
+                            >Tertiary Institution 1</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="educationalHistory.tertiaryInstitutions[0].name"
+                            placeholder="Name of Tertiary Institution"
+                            required
+                          />
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="educationalHistory.tertiaryInstitutions[0].address"
+                            placeholder="Address of Tertiary Institution"
+                            required
+                          />
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="educationalHistory.tertiaryInstitutions[0].certificateObtained"
+                            placeholder="Certificate Obtained"
+                            required
+                          />
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="educationalHistory.tertiaryInstitutions[0].matricNo"
+                            placeholder="Matriculation Number"
+                            required
+                          />
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="educationalHistory.tertiaryInstitutions[0].yearOfAttendance"
+                            placeholder="Year of Attendance"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <!-- Button to add more institutions -->
+                      <div class="col-12">
+                        <button
+                          type="button"
+                          id="add-institution"
+                          class="btn btn-primary"
                         >
-                        <input
-                          type="text"
-                          class="form-control"
-                          id="highestEducationLevel"
-                          name="highestEducationLevel"
-                        />
-                      </div>
-                      <div class="col-sm-6 m-b30">
-                        <label class="form-label">Institution Attended</label>
-                        <input
-                          id="institutionAttended"
-                          type="text"
-                          name="institutionAttended"
-                          class="form-control"
-                        />
-                      </div>
-                      <div class="col-sm-4 m-b30">
-                        <label class="form-label">Year of Graduation</label>
-                        <input
-                          id="graduationYear"
-                          type="text"
-                          class="form-control"
-                          name="graduationYear"
-                        />
+                          Add another Institution
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -1493,7 +1753,7 @@
                         <select
                           id="bloodGroup"
                           name="bloodGroup"
-                          class="form-control"
+                          class="selectpicker nice-select default-select form-control wide mh-auto"
                           required
                         >
                           <option value="A+">A+</option>
@@ -1546,9 +1806,9 @@
                     >
                       Previous
                     </button>
-                    <button type="submit" class="btn btn-success">
+                    <!-- <button type="submit" class="btn btn-success">
                       Submit
-                    </button>
+                    </button> -->
                   </div>
                 </div>
               </div>
@@ -1626,7 +1886,7 @@
         ***********************************-->
       <div class="footer">
         <div class="copyright">
-          <p>Copyright © BDIC 2025</p>
+          <p>Copyright ©Powered By BDIC 2025</p>
         </div>
       </div>
       <!--**********************************

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>National ID Card</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/js/index.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        overflow: hidden; /* Prevents extra space */
+      }
+      .id-card-container {
+        width: 85.6mm; /* Standard ID card width */
+        height: 54mm; /* Standard ID card height */
+        background: #fff;
+        border: 1px solid #000;
+        border-radius: 5px;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow: hidden; /* Prevents content overflow */
+        padding: 2mm;
+      }
+      .header {
+        text-align: center;
+        border-bottom: 1px solid #000;
+        font-size: 8px;
+        padding: 1mm 0;
+        text-transform: uppercase;
+      }
+      .content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-grow: 1;
+        padding: 1mm;
+      }
+      .left-section {
+        width: 30%;
+        text-align: center;
+      }
+      .photo {
+        width: 20mm;
+        height: 25mm;
+        border: 1px solid #000;
+        border-radius: 3px;
+      }
+      .center-section {
+        width: 50%;
+        padding-left: 2mm;
+      }
+      .details p {
+        font-size: 10px;
+        margin: 1px 0;
+        padding: 3px 0 3px 0;
+      }
+      .right-section {
+        width: 20%;
+        text-align: center;
+      }
+
+      .right-section p {
+        text-align: center;
+        font-size: 10px;
+        margin: 4px 0;
+      }
+      .qr-code {
+        width: 15mm;
+        height: 15mm;
+      }
+      .footer {
+        text-align: center;
+        font-size: 5px;
+        /* color: gray; */
+        position: absolute;
+        bottom: 1mm;
+        width: 100%;
+      }
+      .footer h1 {
+        font-size: 15px;
+        bottom: 1mm;
+        width: 100%;
+      }
+
+      .footer h2 {
+        font-size: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="id-card-container">
+      <div class="header">
+        Federal Republic Of Nigeria <br />
+        <span> Digital BIN Slip </span>
+      </div>
+      <div class="content">
+        <div class="left-section">
+          <img
+            id="user-photo"
+            src="{{passportPhoto}}"
+            class="photo"
+            alt="ID Photo"
+            crossorigin="anonymous"
+          />
+        </div>
+        <div class="center-section">
+          <div class="details">
+            <p>
+              <strong>Surname:</strong>
+              <span id="surname" class="text-muted">Loading...</span>
+            </p>
+            <p>
+              <strong>Given Names:</strong>
+              <span id="name" class="text-muted">Loading...</span>
+            </p>
+            <p>
+              <strong>Gender:</strong>
+              <span id="gender" class="text-muted">Loading...</span>
+            </p>
+            <p>
+              <strong>Date of Birth:</strong>
+              <span id="dob" class="text-muted">Loading...</span>
+            </p>
+          </div>
+        </div>
+        <div class="right-section">
+          <img class="qr-code" src="{{qrCodeUrl}}" alt="QR Code" />
+          <p>
+            <strong>Issue Date</strong>
+            <span id="issueDate" class="text-muted">Loading...</span>
+          </p>
+        </div>
+      </div>
+      <div class="footer">
+        <h2>Benue State Identity Number (BIN)</h2>
+        <h1 id="bin" class="text-muted">Loading...</h1>
+      </div>
+    </div>
+
+    <script>
+      $(document).ready(function () {
+        // Retrieve the token from localStorage
+        let userData = localStorage.getItem("token");
+        userData = JSON.parse(userData);
+        const { token, user } = userData; // Destructure to get only the token
+
+        // Extract idCardId from the URL query parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const idCardId = urlParams.get("id");
+        console.log(idCardId);
+
+        if (idCardId) {
+          // Make the AJAX request
+          $.ajax({
+            url: `${BACKEND_URL}/idcard/${idCardId}/get`,
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            success: function (response) {
+              console.log("Response received:", response.lastname);
+
+              // Check if the response contains data
+              if (response && Object.keys(response).length > 0) {
+                const date = new Date();
+
+                // Format as "February 20, 1991"
+                const formattedDate = date.toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                });
+
+                const dob = new Date(user.DOB);
+                // Format as "February 20, 1991"
+                const formattedDOB = dob.toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                });
+                // Populate the certificate details
+                $("#surname").text(`${response.lastname}`);
+                $("#name").text(`${response.firstname} ${user.middlename}`);
+                $("#gender").text(user.gender);
+                $("#family").text(
+                  response.fathersName + " " + response.mothersName
+                );
+                $("#bin").text(response.bin);
+                $("#issueDate").text(formattedDate);
+                $("#kindred").text(response.kindred);
+                $("#passport").text(user.passportPhoto);
+                $("#dob").text(formattedDOB);
+              } else {
+                console.error("Empty data received from the backend.");
+                alert("No certificate data found.");
+              }
+            },
+            error: function (xhr, status, error) {
+              console.error(
+                "Error fetching certificate details:",
+                status,
+                error
+              );
+              alert(
+                "Failed to load certificate details. Please try again later."
+              );
+            },
+          });
+        } else {
+          console.error("Certificate ID not found in URL.");
+          alert("Certificate ID is missing in the URL.");
+        }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- <script type="text/javascript" src="/js/index.js"></script> -->
+  </body>
+</html>

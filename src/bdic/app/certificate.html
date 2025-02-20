@@ -10,7 +10,10 @@
 
     <meta property="og:image" content="social-image.html" />
     <meta name="format-detection" content="telephone=no" />
-    <title>BICRIRMS - User Dashboard</title>
+    <title>
+      Benue State Integrated Residents/Citizens Identity/Indigeneship
+      Registration and Card Issuance Management System
+    </title>
     <!-- Favicon icon -->
     <link
       rel="icon"
@@ -62,14 +65,11 @@
         <!-- Logo Section -->
         <a href="index.html" class="brand-logo">
           <img
-            src="/assets/images/gov-logo.jpg"
+            src="/assets/images/benue-state-logo.png"
             alt="Government Logo"
             class="logo-img"
           />
-          <div class="brand-text">
-            <h6>Benue State Citizen Registration</h6>
-            <p>Management Information System</p>
-          </div>
+          <div class="brand-text">BIRCIIRCIMS</div>
         </a>
 
         <!-- Hamburger Menu for Navigation Control -->
@@ -171,7 +171,13 @@
             <li class="user-menu">
               <a class="ai-icon" href="request.html" aria-expanded="false">
                 <i class="fa fa-money" aria-hidden="true"></i>
-                <span class="nav-text">View Request Status</span>
+                <span class="nav-text">View Certificate Status</span>
+              </a>
+            </li>
+            <li class="user-menu">
+              <a class="ai-icon" href="idcard.html" aria-expanded="false">
+                <i class="fa fa-money" aria-hidden="true"></i>
+                <span class="nav-text">View Card Status</span>
               </a>
             </li>
 
@@ -193,6 +199,13 @@
               <a class="ai-icon" href="certificate.html" aria-expanded="false">
                 <i class="fa fa-user-plus" aria-hidden="true"></i>
                 <span class="nav-text">Request Certificate</span>
+              </a>
+            </li>
+
+            <li class="user-menu">
+              <a class="ai-icon" href="card.html" aria-expanded="false">
+                <i class="fa fa-user-plus" aria-hidden="true"></i>
+                <span class="nav-text">Request Card</span>
               </a>
             </li>
 
@@ -228,7 +241,7 @@
           <div class="row">
             <div class="col-xl-12 col-lg-12">
               <div class="card card-bx m-b30">
-                <div class="card-header">
+                <div class="card-header d-flex justify-content-between">
                   <h4 class="card-title">Profile Details</h4>
                 </div>
                 <form
@@ -334,47 +347,52 @@
                         <label class="form-label">Date Of Birth</label>
 
                         <!-- readonly -->
+                        <!-- required -->
                         <input
-                          id="dob"
+                          id="DOB"
                           type="date"
                           class="form-control"
                           name="DOB"
                           min="1900-01-01"
-                          required
                         />
                       </div>
                       <div class="col-sm-4 m-b30">
                         <label class="form-label">Local Government</label>
                         <input
-                          id="lga"
+                          id="lgaOfOrigin"
                           type="text"
                           class="form-control"
                           required
-                          name="LGA"
+                          name="lgaOfOrigin"
                           readonly
                         />
                       </div>
 
                       <div class="col-sm-4 m-b30">
                         <label class="form-label">Address</label>
+                        <!-- readonly -->
                         <input
                           id="address"
                           type="text"
                           class="form-control"
                           required
                           name="address"
-                          readonly
                         />
                       </div>
 
                       <div class="col-sm-4 m-b30">
                         <label class="form-label">Community/Ward</label>
+                        <input id="community" type="text" class="form-control"
+                        required name="community"" />
+                      </div>
+                      <div class="col-sm-4 m-b30">
+                        <label class="form-label">Kindred</label>
                         <input
-                          id="ward"
+                          id="kindred"
                           type="text"
                           class="form-control"
+                          name="kindred"
                           required
-                          name="ward"
                         />
                       </div>
 
@@ -583,12 +601,10 @@
                     </button>
                   </div>
                 </form>
-                <div id="response"></div>
               </div>
             </div>
           </div>
         </div>
-
         <script
           src="../../code.tidio.co_443/bpnp4xkz2axqrebqxcezgdca9yot1iyn.js"
           async
@@ -673,7 +689,7 @@
                   );
                 }
               } catch (error) {
-                console.error("Submission Error:", error);
+                console.error("Submission Error:", error.message);
                 Swal.fire(
                   "Oops...",
                   "An error occurred. Please try again!",
@@ -683,53 +699,6 @@
             });
           });
         </script>
-
-        <!-- <script>
-          $(document).ready(function () {
-            $("#indigeneForm").on("submit", function (e) {
-              let userData = localStorage.getItem("token");
-              userData = JSON.parse(userData);
-              const { token, user } = userData;
-
-              e.preventDefault();
-              const formData = new FormData(this);
-              formData.append("userId", user.id); // Append the userId
-
-              $.ajax({
-                url: `${BACKEND_URL}/indigene/certificate/create`,
-                type: "POST",
-                data: formData,
-                processData: false, // Important for FormData
-                contentType: false, // Important for FormDatas
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-                success: function (response) {
-                  // alert("Certificate generated successfully!");
-                  if (response) {
-                    Swal.fire(
-                      "Application submitted",
-                      "Download your attestation letter",
-                      "success"
-                    );
-                    // Redirect to download page
-                    window.open(
-                      `${BACKEND_URL}/indigene/certificate/download/attestation/678947cd83a673a1b3903397`
-                    );
-                  } else {
-                    Swal.fire("Oops...", data.message, "error");
-                  }
-                },
-                error: function (error) {
-                  // console.log(error.message);
-                  // alert("An error occurred.");
-
-                  Swal.fire("Oops...", "An error occurred.");
-                },
-              });
-            });
-          });
-        </script> -->
       </div>
       <!--**********************************
             Content body end
@@ -740,7 +709,7 @@
         ***********************************-->
       <div class="footer">
         <div class="copyright">
-          <p>Copyright © BDIC 2025</p>
+          <p>Copyright ©Powered By BDIC 2025</p>
         </div>
       </div>
       <!--**********************************
