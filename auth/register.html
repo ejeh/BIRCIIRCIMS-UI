@@ -18,7 +18,10 @@
       href="/assets/images/benue-state-logo.png"
       sizes="16x16"
     />
-    <!-- <link rel="stylesheet" href="/src/bdic/app/css/style.css" /> -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
     <script type="text/javascript" src="/js/index.js"></script>
 
     <style>
@@ -450,7 +453,7 @@
           try {
             $("#submitbtn")
               .html('<i class="fa fa-spinner fa-spin"></i>')
-              .attr("disabled", true);
+              .prop("disabled", true);
 
             const response = await $.ajax({
               type: "POST",
