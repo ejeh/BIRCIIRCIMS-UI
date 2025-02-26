@@ -1,5 +1,5 @@
-// const BACKEND_URL = "http://localhost:5000/api";
-const BACKEND_URL = "https://identity-management-af43.onrender.com/api";
+const BACKEND_URL = "http://localhost:5000/api";
+// const BACKEND_URL = "https://identity-management-af43.onrender.com/api";
 
 let userData = localStorage.getItem("token");
 userData = JSON.parse(userData);
@@ -52,7 +52,6 @@ $(document).ready(function () {
       Authorization: `Bearer ${token}`,
     },
     success: function (data) {
-      console.log(data.identification);
       // Check if healthInfo exists and is an array
       if (
         data.healthInfo &&
@@ -1303,9 +1302,19 @@ $(document).ready(function () {
       headers: apiHeaders,
       success: function (response) {
         const { data, hasNextPage } = response;
+        console.log("data", data);
+
         renderTable(data);
         updatePaginationButtons(hasNextPage);
         updateRequestCount(data.length);
+        data.forEach((element) => {
+          if (element.status === "Pending") {
+            $("#pending").text(data.length);
+          }
+          if (element.status === "Rejected") {
+            $("#rejected").text(data.length);
+          }
+        });
       },
       error: function (error) {
         console.error("Error fetching data:", error);
@@ -1481,6 +1490,7 @@ $(document).ready(function () {
     </tr>
   `);
         };
+        $("#certificate-status").text(data.status);
 
         if (data.status === "Rejected" || data.status === "Pending") {
           appendRow(true);
@@ -1734,6 +1744,7 @@ $(document).ready(function () {
         // Update button states
         $("#btnPrev").prop("disabled", page === 1);
         $("#btnNext").prop("disabled", !hasNextPage);
+        $("#approvals").text(data.length);
 
         // document.getElementById("approvals").innerHTML = data.length; // Update the count of approvals
       },
@@ -2905,6 +2916,8 @@ $(document).ready(function () {
     </tr>
   `);
         };
+
+        $("#card-status").text(data.status);
 
         if (data.status === "Rejected" || data.status === "Pending") {
           appendRow(true);

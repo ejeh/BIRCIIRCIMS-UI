@@ -79,8 +79,8 @@
       }
       .password-toggle {
         position: absolute;
-        right: 10px;
-        top: 50%;
+        right: 2px;
+        top: 73%;
         transform: translateY(-50%);
         cursor: pointer;
         color: #666;
@@ -205,18 +205,19 @@
                 .prop("disabled", true);
             },
             success: function (data) {
-              Swal.fire("Welcome", "Successfully logged in!", "success").then(
-                () => {
-                  const { role } = data.user;
-                  if (
-                    role === "user" ||
-                    role === "super_admin" ||
-                    role === "support_admin"
-                  ) {
-                    window.location.href = "../src/bdic/app/index.html";
-                  }
-                }
-              );
+              // Swal.fire("Welcome", "Successfully logged in!").then(() => {
+              const { role } = data.user;
+              if (
+                // role === "user" ||
+                role === "super_admin" ||
+                role === "support_admin"
+              ) {
+                window.location.href = "../src/bdic/app/index.html";
+              }
+
+              if (role === "user") {
+                window.location.href = "../src/bdic/app/user-dasboard.html";
+              }
             },
             error: function (data) {
               Swal.fire(

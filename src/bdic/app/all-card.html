@@ -155,13 +155,24 @@
       <div class="deznav">
         <div class="deznav-scroll">
           <ul class="metismenu" id="menu">
-            <li>
+            <!-- Super Admin Menu -->
+            <li class="super-admin-menu">
               <a class="ai-icon" href="index.html" aria-expanded="false">
                 <i class="flaticon-381-networking"></i>
                 <span class="nav-text">Dashboard</span>
               </a>
             </li>
-            <!-- Super Admin Menu -->
+            <!-- user Menu -->
+            <li class="user-menu">
+              <a
+                class="ai-icon"
+                href="user-dasboard.html"
+                aria-expanded="false"
+              >
+                <i class="flaticon-381-networking"></i>
+                <span class="nav-text">Dashboard</span>
+              </a>
+            </li>
             <li class="super-admin-menu">
               <a class="ai-icon" href="approvals.html" aria-expanded="false">
                 <i class="fa fa-exchange" aria-hidden="true"></i>
@@ -185,14 +196,14 @@
             <li class="super-admin-menu">
               <a class="ai-icon" href="all-request.html" aria-expanded="false">
                 <i class="fa fa-money" aria-hidden="true"></i>
-                <span class="nav-text">View All Certificate Request</span>
+                <span class="nav-text">View Certificate Request</span>
               </a>
             </li>
 
             <li class="super-admin-menu">
               <a class="ai-icon" href="all-card.html" aria-expanded="false">
                 <i class="fa fa-money" aria-hidden="true"></i>
-                <span class="nav-text">View All Card Request</span>
+                <span class="nav-text">View Card Request</span>
               </a>
             </li>
             <li class="super-admin-menu">
@@ -257,7 +268,7 @@
                             <th>Phone</th>
                             <th>Email</th>
                             <th>Status</th>
-                            <th>Action</th>
+                            <th>Actions</th>
                           </tr>
                         </thead>
                         <tbody id="view-all-card-table"></tbody>

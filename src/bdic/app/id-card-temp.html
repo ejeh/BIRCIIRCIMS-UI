@@ -98,9 +98,28 @@
       .footer h2 {
         font-size: 10px;
       }
+      .go-back-btn {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        background-color: #ff6175;
+        border-color: #ff6175;
+        color: white;
+        padding: 8px 15px;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      .go-back-btn:hover {
+        background-color: #e55565;
+        border-color: #e55565;
+      }
     </style>
   </head>
   <body>
+    <button class="btn btn-secondary go-back-btn" onclick="history.back()">
+      ← Go Back
+    </button>
     <div class="id-card-container">
       <div class="header">
         Federal Republic Of Nigeria <br />
