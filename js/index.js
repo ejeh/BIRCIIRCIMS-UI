@@ -1,5 +1,5 @@
-const BACKEND_URL = "http://localhost:5000/api";
-// const BACKEND_URL = "https://identity-management-af43.onrender.com/api";
+// const BACKEND_URL = "http://localhost:5000/api";
+const BACKEND_URL = "https://identity-management-af43.onrender.com/api";
 
 let userData = localStorage.getItem("token");
 userData = JSON.parse(userData);
