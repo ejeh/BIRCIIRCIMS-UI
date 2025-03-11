@@ -1,5 +1,5 @@
-// const BACKEND_URL = "http://localhost:5000/api";
-const BACKEND_URL = "https://identity-management-af43.onrender.com/api";
+const BACKEND_URL = "http://localhost:5000/api";
+// const BACKEND_URL = "https://identity-management-af43.onrender.com/api";
 
 let userData = localStorage.getItem("token");
 userData = JSON.parse(userData);
@@ -15,14 +15,14 @@ $(document).ready(function () {
   // Show menus based on role
   if (userRole === "super_admin") {
     $(".super-admin-menu").show();
-    $(".dashboard_bar").text("Admin Panel");
+    // $(".dashboard_bar").text("Admin Panel");
   } else if (userRole === "support_admin") {
     $(".support-admin-menu").show();
     $('.super-admin-menu:has(a[href="approvals.html"])').show();
-    $(".dashboard_bar").text("Admin Panel");
+    // $(".dashboard_bar").text("Admin Panel");
   } else if (userRole === "user") {
     $(".user-menu").show();
-    $(".dashboard_bar").text("Dashboard");
+    // $(".dashboard_bar").text("Dashboard");
   }
 });
 
@@ -1082,7 +1082,7 @@ $(document).ready(function () {
             </button>
           </td>
            <td>
-           <button class="btn btn-sm view-details-btn" 
+           <button class="btn btn-sm view-user-btn" 
                     data-id="${item._id}" 
                     style="background-color: #007BFF; color: #fff">
               View
@@ -1144,14 +1144,9 @@ $(document).ready(function () {
     const url = `${BACKEND_URL}/users/${userId}`;
     const headers = { Authorization: `Bearer ${token}` };
 
-    apiRequest(
-      url,
-      "GET",
-      headers,
-      null,
-      (response) => {
-        // Construct user details dynamically
-        const details = `
+    apiRequest(url, "GET", headers, null, (response) => {
+      // Construct user details dynamically
+      const details = `
         <div class="user-profile">
           <div class="profile-header">
             <img 
@@ -1163,8 +1158,8 @@ $(document).ready(function () {
               crossOrigin="anonymous"
             >
             <h2 class="profile-name">${response.firstname} ${
-          response.lastname
-        }</h2>
+        response.lastname
+      }</h2>
             <p class="profile-role">${response.role}</p>
           </div>
           <div class="profile-details">
@@ -1173,11 +1168,9 @@ $(document).ready(function () {
           </div>
         </div>
       `;
-        $("#details-modal .modal-body").html(details); // Populate modal with user details
-        $("#details-modal").modal("show"); // Show the
-      },
-      () => alert("Failed to fetch user details.")
-    );
+      $("#details-modal .modal-body").html(details); // Populate modal with user details
+      $("#details-modal").modal("show"); // Show the
+    });
   };
 
   // Handle role update button clicks
@@ -1188,7 +1181,7 @@ $(document).ready(function () {
   });
 
   // Handle view details button clicks
-  $("#table-body").on("click", ".view-details-btn", function () {
+  $("#table-body").on("click", ".view-user-btn", function () {
     const userId = $(this).data("id");
     viewDetails(userId);
   });
@@ -1420,7 +1413,7 @@ $(document).ready(function () {
   fetchData(currentPage);
 });
 
-// find certificate by ID
+// // find certificate by ID
 $(document).ready(function () {
   let resubmitId = null;
   let downloadUrl = `${BACKEND_URL}/indigene/certificate/download/`;
@@ -1437,69 +1430,92 @@ $(document).ready(function () {
         tableBody.empty();
 
         // Helper function to append a row to the table
-        const appendRow = (isDisabled) => {
+        const appendRow = (isDisabled, showPayButton) => {
           tableBody.append(`
-    <tr>
-      <td>${data.firstname} ${data.lastname}</td>
-      <td>${data.phone}</td>
-      <td>${data.email}</td>
-      <td>${data.status}</td>
-      <td>${data.resubmissionAttempts || 0}</td>
-      <td>
-      <div id="loadingIndicator" style="display: none;">
-      <div class="loader"></div>
-     </div>
-        <div class="dropdown">
-          <button class="btn btn-xs btn-action dropdown-toggle" data-bs-toggle="dropdown">
-            <i class="fas fa-ellipsis-v"></i>
-          </button>
-          <ul class="dropdown-menu">
-            <li>
-              <button class="dropdown-item btn-download" data-id="${
-                data._id
-              }" ${isDisabled ? "disabled" : ""} style="color: green;">
-                Download Certificate
-              </button>
-            </li>
-            <li>
-              <button class="dropdown-item view-details-btn" data-id="${
-                data._id
-              }" style="color: blue;">
-                View Certificate
-              </button>
-            </li>
-            ${
-              data.status === "Rejected" && data.resubmissionAllowed
-                ? `<li><button class="dropdown-item resubmit-btn" data-id="${data._id}" data-name="${data.firstname}" style="color: orange;">
-                     Resubmit
-                   </button></li>`
-                : ""
-            }
-            
-             ${
-               data.status === "Rejected"
-                 ? `<li><button class="dropdown-item delete-btn" data-id="${data._id}" style="color: red;">
-                 Delete request
-               </button></li>`
-                 : ""
-             }
-            
-          </ul>
-        </div>
-      </td>
-    </tr>
-  `);
+            <tr>
+              <td>${data.firstname} ${data.lastname}</td>
+              <td>${data.phone}</td>
+              <td>${data.email}</td>
+              <td>${data.status}</td>
+              <td>${data.resubmissionAttempts || 0}</td>
+              <td>
+                <div id="loadingIndicator" style="display: none;">
+                  <div class="loader"></div>
+                </div>
+                <div class="dropdown">
+                  <button class="btn btn-xs btn-action dropdown-toggle" data-bs-toggle="dropdown">
+                    <i class="fas fa-ellipsis-v"></i>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li>
+                      <button class="dropdown-item btn-download" data-id="${
+                        data._id
+                      }" ${isDisabled ? "disabled" : ""} style="color: green;">
+                        Download Certificate
+                      </button>
+                    </li>
+                    <li>
+                      <button class="dropdown-item view-cert-btn" data-id="${
+                        data._id
+                      }" style="color: blue;">
+                        View Certificate
+                      </button>
+                    </li>
+                    ${
+                      data.status === "Rejected" && data.resubmissionAllowed
+                        ? `<li><button class="dropdown-item resubmit-btn" data-id="${data._id}" data-name="${data.firstname}" style="color: orange;">
+                           Resubmit
+                         </button></li>`
+                        : ""
+                    }
+                    ${
+                      data.status === "Rejected"
+                        ? `<li><button class="dropdown-item delete-btn" data-id="${data._id}" style="color: red;">
+                           Delete request
+                         </button></li>`
+                        : ""
+                    }
+                    ${
+                      showPayButton
+                        ? `<li><button class="dropdown-item btn-pay" data-id="${data._id}">Pay</button></li>`
+                        : ""
+                    }
+                  </ul>
+                </div>
+              </td>
+            </tr>
+          `);
         };
+
         $("#certificate-status").text(data.status);
 
         if (data.status === "Rejected" || data.status === "Pending") {
-          appendRow(true);
+          appendRow(true, false);
         } else if (data.status === "Approved") {
-          appendRow(false);
+          // Check if payment has been made
+          $.ajax({
+            url: `${BACKEND_URL}/transaction/status/${user.id}`,
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            success: function (transaction) {
+              console.log("transaction", transaction);
+              if (transaction.status === "successful") {
+                appendRow(false, false);
+              } else {
+                appendRow(true, true);
+              }
+            },
+            error: function (error) {
+              console.error("Error fetching transaction status:", error);
+              appendRow(true, true);
+            },
+          });
         }
 
-        // Attach click event to view-details-btn
-        $(".view-details-btn").on("click", function () {
+        // Attach click event to view-cert-btn
+        $(document).on("click", ".view-cert-btn", function () {
           const certificateId = $(this).data("id");
           window.location.href = `cert-temp.html?id=${certificateId}`;
         });
@@ -1515,26 +1531,17 @@ $(document).ready(function () {
           }
 
           try {
-            // Show loading indicator
             showLoadingIndicator();
-
-            // Fetch the certificate PDF
             const blob = await fetchCertificatePdf(certificateId);
-
-            // Trigger the download
             triggerDownload(blob, "certificate.pdf");
-
-            // Notify the user of success
             showSuccessMessage("Certificate downloaded successfully!");
           } catch (error) {
-            // Handle errors
             console.error(error.responseJSON?.message);
             const errorMessage =
               error.responseJSON?.message ||
-              "Failed to download the certificate.";
+              "Certificate has already been downloaded.";
             showErrorMessage(errorMessage);
           } finally {
-            // Hide loading indicator
             hideLoadingIndicator();
           }
         }
@@ -1556,7 +1563,6 @@ $(document).ready(function () {
           });
         }
 
-        // Trigger the download of the PDF file
         function triggerDownload(blob, fileName) {
           const url = window.URL.createObjectURL(new Blob([blob]));
           const a = document.createElement("a");
@@ -1568,7 +1574,6 @@ $(document).ready(function () {
           window.URL.revokeObjectURL(url);
         }
 
-        // Show the loading indicator
         function showLoadingIndicator() {
           const loadingIndicator = document.getElementById("loadingIndicator");
           if (loadingIndicator) {
@@ -1576,7 +1581,6 @@ $(document).ready(function () {
           }
         }
 
-        // Hide the loading indicator
         function hideLoadingIndicator() {
           const loadingIndicator = document.getElementById("loadingIndicator");
           if (loadingIndicator) {
@@ -1584,19 +1588,16 @@ $(document).ready(function () {
           }
         }
 
-        // Show a success message
         function showSuccessMessage(message) {
           console.log("Success:", message);
-          alert(message); // Replace with a toast notification if needed
+          alert(message);
         }
 
-        // Show an error message
         function showErrorMessage(message) {
           console.error("Error:", message);
-          alert(message); // Replace with a toast notification if needed
+          alert(message);
         }
 
-        // Add click event listeners for download buttons
         $(".btn-download").click(function () {
           const certificateId = $(this).data("id");
           const button = $(this);
@@ -1604,23 +1605,21 @@ $(document).ready(function () {
           if (certificateId) {
             button.prop("disabled", true);
             handleDownload(certificateId);
-            setTimeout(() => button.prop("disabled", false), 5000); // Optional: Re-enable after 5 seconds
+            setTimeout(() => button.prop("disabled", false), 5000);
           }
         });
       },
-
       error: function (error) {
         $("#name").text("Error loading profile");
       },
     });
 
-    // Open resubmission modal
     $(document).on("click", ".resubmit-btn", function () {
       resubmitId = $(this).data("id");
       $("#resubmitName").val($(this).data("name"));
       $("#resubmitModal").modal("show");
     });
-    // Submit resubmission
+
     $("#submitResubmission").click(function () {
       const updatedName = $("#resubmitName").val();
       if (confirm("Are you sure you want to resubmit?")) {
@@ -1638,14 +1637,12 @@ $(document).ready(function () {
           },
           error: function (xhr) {
             console.log(xhr.responseJSON);
-            // alert(xhr.responseJSON?.message || "Failed to resubmit request.");
             alert("Failed to resubmit. Maximum resubmission attempts reached");
           },
         });
       }
     });
 
-    // Handle delete certificate
     function handleDelete(certificateId) {
       if (confirm("Are you sure you want to delete this Request")) {
         $.ajax({
@@ -1670,7 +1667,47 @@ $(document).ready(function () {
       handleDelete(requestId);
     });
   }
-  // Initial fetch
+
+  function initiatePayment(certificateId) {
+    // Retrieve user authentication data
+    if (!userData?.token || !userData?.user?.id) {
+      Swal.fire("Error", "User authentication failed!", "error");
+      return;
+    }
+    const { token, user } = userData;
+    // const userId = user.id; // Replace with actual user ID
+    const email = user.email; // Replace with actual email
+    const amount = 5000; // Replace with actual amount
+    if (!token) {
+      alert("Please log in to proceed with payment");
+      return;
+    }
+    $.ajax({
+      url: `${BACKEND_URL}/transaction/pay`,
+      method: "POST",
+      contentType: "application/json",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      data: JSON.stringify({ certificateId, amount, email }),
+      success: function (response) {
+        if (response.status === 200) {
+          window.location.href = response.data.authorizationUrl;
+        } else {
+          alert("Payment initiation failed!");
+        }
+      },
+      error: function (error) {
+        console.error("Error initiating payment:", error.message);
+        alert("Failed to initiate payment. Please try again.");
+      },
+    });
+  }
+  $(document).on("click", ".btn-pay", function () {
+    const certificateId = $(this).data("id");
+    initiatePayment(certificateId);
+  });
+
   fetchData();
 });
 
@@ -1735,7 +1772,6 @@ $(document).ready(function () {
               window.URL.revokeObjectURL(url);
             },
             error: function (error) {
-              console.error("Error downloading certificate:", error);
               alert(" Certificate has already been downloaded.");
             },
           });
@@ -3099,3 +3135,140 @@ $(document).ready(function () {
   // Initial fetch
   fetchData();
 });
+
+// //Get All Transactions
+$(document).ready(function () {
+  // Track the current page and define the page size
+  const currentPage = { value: 1 };
+  const pageSize = 10;
+
+  // Utility function to make API requests
+  const apiRequest = (
+    url,
+    method,
+    headers = {},
+    data = null,
+    onSuccess,
+    onError
+  ) => {
+    $.ajax({
+      url,
+      method,
+      headers,
+      data,
+      success: onSuccess,
+      error: onError || ((error) => console.error("API Error:", error)),
+    });
+  };
+
+  // Update the table with user data
+  const updateTable = (data, page) => {
+    const tableBody = $("#transaction-table");
+    tableBody.empty(); // Clear existing table rows
+
+    // Populate table rows with user data
+    data.forEach((item, index) => {
+      const rowHtml = `
+        <tr>
+          <td>${(page - 1) * pageSize + index + 1}</td>
+          <td>${item.firstname} ${item.lastname}</td>
+          <td>${item.amount}</td>
+          <td>${item.email}</td>
+          <td>${item.status}</td>
+           <td>
+           <button class="btn btn-sm verify-btn" 
+                    data-id="${item.reference}" 
+                    style="background-color: #007BFF; color: #fff">
+              verify
+            </button>
+          </td>
+        </tr>`;
+      tableBody.append(rowHtml); // Add the row to the table
+    });
+  };
+
+  // Fetch user data for the current page
+  const fetchData = (page) => {
+    const url = `${BACKEND_URL}/transaction?page=${page}&limit=${pageSize}`;
+    const headers = { Authorization: `Bearer ${token}` };
+
+    apiRequest(url, "GET", headers, null, (response) => {
+      const { data, hasNextPage } = response;
+      updateTable(data, page);
+
+      $("#prev-btn").prop("disabled", page === 1);
+      $("#next-btn").prop("disabled", !hasNextPage);
+    });
+  };
+
+  // Fetch and display user details in a modern profile modal
+  const verifyPayment = (reference) => {
+    // Handle Verify Payment button clicks
+    const verifyUrl = `${BACKEND_URL}/transaction/verify/${reference}`;
+
+    $.ajax({
+      url: verifyUrl,
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+      success: function (response) {
+        console.log(response);
+        alert(`Payment verification result: ${response.message}`);
+        fetchData(); // Reload to update transaction status
+      },
+      error: function (error) {
+        console.error("Verification Error:", error);
+        alert("Failed to verify payment.");
+      },
+    });
+  };
+
+  // Handle view details button clicks
+  $(document).on("click", ".verify-btn", function () {
+    const reference = $(this).data("id");
+    verifyPayment(reference);
+  });
+
+  // Handle pagination
+  $("#prev-btn").click(function () {
+    if (currentPage.value > 1) {
+      currentPage.value--;
+      fetchData(currentPage.value);
+    }
+  });
+
+  $("#next-btn").click(function () {
+    currentPage.value++;
+    fetchData(currentPage.value);
+  });
+
+  // Load initial data
+  fetchData(currentPage.value);
+});
+
+// Function to update the header title based on the current page
+function updateHeaderTitle() {
+  const path = window.location.pathname;
+  const page = path.split("/").pop().replace(".html", "");
+  const titleMap = {
+    index: "Admin Panel",
+    "user-dasboard": "User Dashboard",
+    approvals: "Approvals",
+    request: "View Certificate Status",
+    idcard: "View Card Status",
+    "all-request": "View Certificate Request",
+    "all-card": "View Card Request",
+    citizens: "Citizens",
+    certificate: "Request Certificate",
+    profile: "User Account",
+    transaction: "Transactions",
+    login: "Login",
+    card: "Request Card",
+  };
+
+  const pageTitle = titleMap[page] || "Dashboard";
+  document.title = pageTitle + " | BIRCIIRCIMS";
+  document.querySelector(".dashboard_bar").textContent = pageTitle;
+}
+
+// Call the function when the page loads
+document.addEventListener("DOMContentLoaded", updateHeaderTitle);
