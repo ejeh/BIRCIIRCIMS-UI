@@ -19,7 +19,7 @@
       rel="icon"
       type="image/png"
       sizes="16x16"
-      href="/assets/images/gov-logo.jpg"
+      href="/assets/images/benue-state-logo.png"
     />
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <link
@@ -202,8 +202,16 @@
             <!-- Super Admin Menu -->
             <li class="super-admin-menu">
               <a class="ai-icon" href="citizens.html" aria-expanded="false">
-                <i class="fa fa-arrows-h"></i>
-                <span class="nav-text">All Citizens</span>
+                <i class="fa fa-user" aria-hidden="true"></i>
+
+                <span class="nav-text">Users</span>
+              </a>
+            </li>
+            <li class="super-admin-menu">
+              <a class="ai-icon" href="kindred.html" aria-expanded="false">
+                <i class="fa fa-user" aria-hidden="true"></i>
+
+                <span class="nav-text">Kindreds</span>
               </a>
             </li>
             <!-- User-menu -->
@@ -221,7 +229,7 @@
               </a>
             </li>
 
-            <li>
+            <li class="user-menu">
               <a class="ai-icon" href="profile.html" aria-expanded="false">
                 <i class="fa fa-user" aria-hidden="true"></i>
                 <span class="nav-text">User Account</span>
@@ -309,7 +317,6 @@
                           id="email"
                           name="email"
                           required
-                          readonly
                         />
                       </div>
 
@@ -321,20 +328,19 @@
                           class="form-control"
                           required
                           name="phone"
-                          readonly
                         />
                       </div>
                       <div class="col-sm-4 m-b30">
                         <label class="form-label">Gender</label>
-                        <select
+
+                        <input
                           id="gender"
-                          name="gender"
+                          type="text"
+                          class="form-control"
                           required
-                          class="selectpicker nice-select default-select form-control wide mh-auto"
-                        >
-                          <option value="Male">Male</option>
-                          <option value="Female">Female</option>
-                        </select>
+                          name="gender"
+                          readonly
+                        />
                       </div>
                       <div class="col-sm-4 m-b30">
                         <label class="form-label">Marital Status</label>
@@ -364,14 +370,14 @@
                       <div class="col-sm-4 m-b30">
                         <label class="form-label">Date Of Birth</label>
 
-                        <!-- readonly -->
-                        <!-- required -->
                         <input
                           id="DOB"
                           type="date"
                           class="form-control"
                           name="DOB"
                           min="1900-01-01"
+                          required
+                          readonly
                         />
                       </div>
                       <div class="col-sm-4 m-b30">
@@ -410,13 +416,22 @@
                       </div>
                       <div class="col-sm-4 m-b30">
                         <label class="form-label">Kindred</label>
-                        <input
+                        <!-- <input
                           id="kindred"
                           type="text"
                           class="form-control"
                           name="kindred"
                           required
-                        />
+                        /> -->
+                        <select
+                          id="kindred"
+                          class="form-control"
+                          name="kindred"
+                          required
+                          class="selectpicker nice-select default-select form-control wide mh-auto"
+                        >
+                          <option value="">Select Kindred</option>
+                        </select>
                       </div>
 
                       <h4 class="card-title">Parent/Guardian Information</h4>
@@ -572,7 +587,7 @@
                           type="file"
                           class="form-control"
                           required
-                          name="files"
+                          name="birthCertificate"
                         />
                       </div>
 
@@ -585,7 +600,7 @@
                           type="file"
                           class="form-control"
                           required
-                          name="files"
+                          name="idCard"
                         />
                       </div>
                       <div class="col-sm-4 m-b30">
@@ -596,7 +611,7 @@
                           type="file"
                           class="form-control"
                           required
-                          name="files"
+                          name="passportPhoto"
                         />
                       </div>
                       <div class="col-sm-4 m-b30">
@@ -607,7 +622,7 @@
                           type="file"
                           class="form-control"
                           required
-                          name="files"
+                          name="parentGuardianIndigeneCert"
                         />
                       </div>
 
@@ -665,57 +680,59 @@
                   headers: { Authorization: `Bearer ${token}` },
                 });
 
-                if (response && response._id) {
-                  Swal.fire(
-                    "Application Submitted",
-                    "Your attestation letter is being prepared.",
-                    "success"
-                  ).then(async () => {
-                    try {
-                      // Make a request to get the file blob
-                      const fileResponse = await fetch(
-                        `${BACKEND_URL}/indigene/certificate/download/attestation/${response._id}`,
-                        {
-                          method: "GET",
-                          headers: { Authorization: `Bearer ${token}` },
-                        }
-                      );
+                // if (response && response._id) {
+                Swal.fire(
+                  "Application Submitted",
+                  // "Your attestation letter is being prepared.",
+                  "Your request is being processed.",
+                  "success"
+                );
+                // .then(async () => {
+                //   try {
+                //     // Make a request to get the file blob
+                //     const fileResponse = await fetch(
+                //       `${BACKEND_URL}/indigene/certificate/download/attestation/${response._id}`,
+                //       {
+                //         method: "GET",
+                //         headers: { Authorization: `Bearer ${token}` },
+                //       }
+                //     );
 
-                      if (!fileResponse.ok) {
-                        throw new Error("Failed to download file");
-                      }
+                //     if (!fileResponse.ok) {
+                //       throw new Error("Failed to download file");
+                //     }
 
-                      // Create a blob and download it
-                      const blob = await fileResponse.blob();
-                      const downloadUrl = URL.createObjectURL(blob);
-                      const a = document.createElement("a");
-                      a.href = downloadUrl;
-                      a.download = "attestation_letter.pdf"; // Change filename if necessary
-                      document.body.appendChild(a);
-                      a.click();
-                      document.body.removeChild(a);
-                      URL.revokeObjectURL(downloadUrl);
-                    } catch (downloadError) {
-                      console.error("Download Error:", downloadError);
-                      Swal.fire(
-                        "Error",
-                        "Could not download the attestation letter",
-                        "error"
-                      );
-                    }
-                  });
-                } else {
-                  Swal.fire(
-                    "Oops...",
-                    response.message || "Something went wrong!",
-                    "error"
-                  );
-                }
+                //     // Create a blob and download it
+                //     const blob = await fileResponse.blob();
+                //     const downloadUrl = URL.createObjectURL(blob);
+                //     const a = document.createElement("a");
+                //     a.href = downloadUrl;
+                //     a.download = "attestation_letter.pdf"; // Change filename if necessary
+                //     document.body.appendChild(a);
+                //     a.click();
+                //     document.body.removeChild(a);
+                //     URL.revokeObjectURL(downloadUrl);
+                //   } catch (downloadError) {
+                //     console.error("Download Error:", downloadError);
+                //     Swal.fire(
+                //       "Error",
+                //       "Could not download the attestation letter",
+                //       "error"
+                //     );
+                //   }
+                // });
+                // } else {
+                //   Swal.fire(
+                //     "Oops...",
+                //     response.message || "Something went wrong!",
+                //     "error"
+                //   );
+                // }
               } catch (error) {
-                console.error("Submission Error:", error.message);
                 Swal.fire(
                   "Oops...",
-                  "An error occurred. Please try again!",
+                  error.responseJSON?.message ||
+                    "An error occurred. Please try again!",
                   "error"
                 );
               }
@@ -732,7 +749,7 @@
         ***********************************-->
       <div class="footer">
         <div class="copyright">
-          <p>Copyright ©Powered By BDIC 2025</p>
+          <p>Copyright ©BDIC Ltd 2025. All rights reserved.</p>
         </div>
       </div>
       <!--**********************************

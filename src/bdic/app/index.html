@@ -20,7 +20,7 @@
       rel="icon"
       type="image/png"
       sizes="16x16"
-      href="/assets/images/gov-logo.jpg"
+      href="/assets/images/benue-state-logo.png"
     />
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <link
@@ -117,6 +117,14 @@
         transform: translateY(-5px);
         box-shadow: 0px 6px 15px rgba(36, 35, 35, 0.3);
       }
+      .copyright a {
+        color: #666;
+        text-decoration: none;
+      }
+
+      .copyright a:hover {
+        text-decoration: underline;
+      }
     </style>
   </head>
   <body>
@@ -174,21 +182,6 @@
               <div class="header-left">
                 <div class="dashboard_bar">Dashboard</div>
               </div>
-              <!-- <ul class="navbar-nav header-right">
-                <li class="nav-item dropdown notification_dropdown">
-                  <div class="input-group search-area">
-                    <input
-                      type="text"
-                      class="form-control"
-                      placeholder="Search here..."
-                    />
-                    <span class="input-group-text"
-                      ><a href="javascript:void(0)"
-                        ><i class="flaticon-381-search-2"></i></a
-                    ></span>
-                  </div>
-                </li>
-              </ul> -->
             </div>
           </nav>
         </div>
@@ -203,38 +196,6 @@
       <div class="deznav">
         <div class="deznav-scroll">
           <ul class="metismenu" id="menu">
-            <li>
-              <style type="text/css">
-                a.gflag {
-                  vertical-align: middle;
-                  font-size: 16px;
-                  padding: 1px 0;
-                  background-repeat: no-repeat;
-                  background-image: url(../../gtranslate.net/flags/16.png);
-                }
-                a.gflag img {
-                  border: 0;
-                }
-                a.gflag:hover {
-                  background-image: url(../../gtranslate.net/flags/16a.png);
-                }
-                #goog-gt-tt {
-                  display: none !important;
-                }
-                .goog-te-banner-frame {
-                  display: none !important;
-                }
-                .goog-te-menu-value:hover {
-                  text-decoration: none !important;
-                }
-                body {
-                  top: 0 !important;
-                }
-                #google_translate_element2 {
-                  display: none !important;
-                }
-              </style>
-            </li>
             <!-- Super Admin Menu -->
             <li class="super-admin-menu">
               <a class="ai-icon" href="index.html" aria-expanded="false">
@@ -289,8 +250,32 @@
             <!-- Super Admin Menu -->
             <li class="super-admin-menu">
               <a class="ai-icon" href="citizens.html" aria-expanded="false">
-                <i class="fa fa-arrows-h"></i>
-                <span class="nav-text">Citizens</span>
+                <i class="fa fa-user" aria-hidden="true"></i>
+
+                <span class="nav-text">Users</span>
+              </a>
+            </li>
+            <li class="super-admin-menu">
+              <a class="ai-icon" href="kindred.html" aria-expanded="false">
+                <i class="fa fa-user" aria-hidden="true"></i>
+                <span class="nav-text">Kindreds</span>
+              </a>
+            </li>
+
+            <li class="support-admin-menu">
+              <a class="ai-icon" href="user-kindred.html" aria-expanded="false">
+                <i class="fa fa-user" aria-hidden="true"></i>
+                <span class="nav-text">Kindreds</span>
+              </a>
+            </li>
+            <li class="support-admin-menu">
+              <a
+                class="ai-icon"
+                href="support-admin-lga.html"
+                aria-expanded="false"
+              >
+                <i class="fa fa-user" aria-hidden="true"></i>
+                <span class="nav-text">Support Admin LGA</span>
               </a>
             </li>
             <!-- User-menu -->
@@ -307,7 +292,7 @@
               </a>
             </li>
 
-            <li>
+            <li class="user-menu">
               <a class="ai-icon" href="profile.html" aria-expanded="false">
                 <i class="fa fa-user" aria-hidden="true"></i>
                 <span class="nav-text">User Account</span>
@@ -518,7 +503,7 @@
         ***********************************-->
       <div class="footer">
         <div class="copyright">
-          <p>Copyright ©Powered By BDIC 2025</p>
+          <p>Copyright ©BDIC Ltd 2025. All rights reserved.</p>
         </div>
       </div>
       <!--**********************************
@@ -559,8 +544,4 @@
     <script src="js/demo.js"></script>
     <script src="/js/index.js"></script>
   </body>
-
-  <!-- Mirrored from tixia.dexignzone.com/xhtml/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 17 Feb 2023 03:07:43 GMT -->
-
-  <!-- Mirrored from BSCR-MIS.com/app/index.php by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 06 Jun 2023 16:53:32 GMT -->
 </html>

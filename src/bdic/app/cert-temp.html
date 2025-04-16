@@ -38,10 +38,8 @@
         width: 100vw;
         height: 100vh;
         padding: 40px;
-        background: url("http://localhost:5000/images/cert-bg.jpg") no-repeat
-          center;
+        background: url("/assets/images/cert-bg.jpg") no-repeat center;
         background-size: 100% 100%;
-
         text-align: center;
         position: relative;
         box-sizing: border-box;
@@ -214,7 +212,7 @@
         </p>
         <p>
           <strong>Kindred:</strong>
-          <span id="kindred" class="text-muted">Loading...</span>
+          <span id="kindred-name" class="text-muted">Loading...</span>
         </p>
         <p>
           <strong>Date of Birth:</strong>
@@ -278,7 +276,7 @@
               Authorization: `Bearer ${token}`,
             },
             success: function (response) {
-              console.log("Response received:", response);
+              console.log("Response received:", response.kindred);
 
               // Check if the response contains data
               if (response && Object.keys(response).length > 0) {
@@ -308,7 +306,7 @@
                 );
                 $("#ward").text(response.ward);
                 $("#date").text(formattedDate);
-                $("#kindred").text(response.kindred);
+                $("#kindred-name").text(response.kindred);
                 $("#passport").text(user.passportPhoto);
                 $("#dob").text(formattedDOB);
               } else {

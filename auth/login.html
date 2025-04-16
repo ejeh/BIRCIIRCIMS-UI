@@ -17,7 +17,7 @@
     <link
       rel="icon"
       type="image/png"
-      href="/assets/images/gov-logo.jpg"
+      href="/assets/images/benue-state-logo.png"
       sizes="16x16"
     />
 
@@ -75,7 +75,6 @@
       .copyright {
         text-align: center;
         font-size: 14px;
-        color: #666;
         margin-top: 20px;
       }
       .password-toggle {
@@ -89,10 +88,21 @@
       .mb-3 {
         margin-bottom: 0rem !important;
       }
+
+      .copyright a {
+        color: #666;
+        text-decoration: none;
+      }
+
+      .copyright a:hover {
+        text-decoration: underline;
+      }
     </style>
   </head>
   <body>
     <div id="loginSection" class="login-container">
+      <h3 style="font-weight: 700">LOGIN</h3>
+
       <div class="card-header text-center">
         <!-- <h6 class="subtitle mb-3 text-muted"> -->
         <h6 class="subtitle mb-3 font-weight-bold">
@@ -100,7 +110,7 @@
           Identity/Indigene Registration <br />
           and Card Issuance Management System
         </h6>
-        <h4 class="main-title mb-0 font-weight-bold">(BIRCIIRCIMS)</h4>
+        <!-- <h4 class="main-title mb-0 font-weight-bold">(BIRCIIRCIMS)</h4> -->
       </div>
 
       <form id="signInForm">
@@ -147,7 +157,9 @@
           <a href="forgot-password.html">Forgot password?</a>
         </div>
         <div class="copyright">
-          <p>Powered By BDIC <br />© 2025 All Rights Reserved</p>
+          <a href="https://bdic.ng" target="_blank"
+            >Powered By BDIC <br />© 2025 All Rights Reserved</a
+          >
         </div>
       </form>
     </div>
@@ -209,8 +221,8 @@
                 .prop("disabled", true);
             },
             success: function (data) {
-              // Swal.fire("Welcome", "Successfully logged in!").then(() => {
               const { role } = data.user;
+              console.log(role);
               if (
                 // role === "user" ||
                 role === "super_admin" ||
@@ -221,6 +233,10 @@
 
               if (role === "user") {
                 window.location.href = "../src/bdic/app/user-dasboard.html";
+              }
+
+              if (role === "kindred_head") {
+                window.location.href = "../src/bdic/app/kindred-dasboard.html";
               }
             },
             error: function (data) {

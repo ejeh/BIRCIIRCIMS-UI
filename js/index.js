@@ -6,6 +6,33 @@ userData = JSON.parse(userData);
 const { token, user } = userData;
 
 $(document).ready(function () {
+  const allowedState = "benue"; // Change to the allowed state
+
+  if (!user || user.stateOfOrigin !== allowedState) {
+    // Restrict access to Certificate Request Page and Request Page
+    $('a[href="certificate.html"], a[href="request.html"]').click(function (
+      event
+    ) {
+      event.preventDefault(); // Prevent navigation
+      alert(
+        "Access Denied: Only users from " +
+          allowedState +
+          " can access this page."
+      );
+    });
+
+    // Redirect if the user tries to access exactly "certificate.html" or "request.html"
+    const restrictedPages = ["certificate.html", "request.html"];
+    const currentPage = window.location.pathname.split("/").pop(); // Get the actual page name
+
+    if (restrictedPages.includes(currentPage)) {
+      alert("Access Denied: You are not authorized to view this page.");
+      window.location.href = "index.html"; // Redirect to Dashboard
+    }
+  }
+});
+
+$(document).ready(function () {
   // Assume the user role is dynamically fetched from your backend
   const userRole = user.role; // Replace with actual user role fetching logic
 
@@ -19,6 +46,8 @@ $(document).ready(function () {
   } else if (userRole === "support_admin") {
     $(".support-admin-menu").show();
     $('.super-admin-menu:has(a[href="approvals.html"])').show();
+    $('.super-admin-menu:has(a[href="index.html"])').show();
+
     // $(".dashboard_bar").text("Admin Panel");
   } else if (userRole === "user") {
     $(".user-menu").show();
@@ -334,7 +363,7 @@ $(document).ready(function () {
         name="educationalHistory.tertiaryInstitutions[${index}].name"
         placeholder="Name of Tertiary Institution"
         value="${institutionData.name || ""}"
-        required
+        
       />
       <input
         type="text"
@@ -342,7 +371,7 @@ $(document).ready(function () {
         name="educationalHistory.tertiaryInstitutions[${index}].address"
         placeholder="Address of Tertiary Institution"
         value="${institutionData.address || ""}"
-        required
+        
       />
       <input
         type="text"
@@ -350,7 +379,7 @@ $(document).ready(function () {
         name="educationalHistory.tertiaryInstitutions[${index}].certificateObtained"
         placeholder="Certificate Obtained"
         value="${institutionData.certificateObtained || ""}"
-        required
+        
       />
       <input
         type="text"
@@ -358,7 +387,7 @@ $(document).ready(function () {
         name="educationalHistory.tertiaryInstitutions[${index}].matricNo"
         placeholder="Matriculation Number"
         value="${institutionData.matricNo || ""}"
-        required
+        
       />
       <input
         type="text"
@@ -366,7 +395,7 @@ $(document).ready(function () {
         name="educationalHistory.tertiaryInstitutions[${index}].yearOfAttendance"
         placeholder="Year of Attendance"
         value="${institutionData.yearOfAttendance || ""}"
-        required
+        
       />
     </div>`;
     container.append(newInstitutionFields);
@@ -562,7 +591,7 @@ $(document).ready(function () {
           name="companyName[]"
           placeholder="Company Name"
           value="${employmentData.companyName || ""}"
-          required
+          
         />
         <input
           type="text"
@@ -570,7 +599,7 @@ $(document).ready(function () {
           name="address[]"
           placeholder="Company Address"
           value="${employmentData.address || ""}"
-          required
+          
         />
         <input
           type="text"
@@ -578,7 +607,7 @@ $(document).ready(function () {
           name="designation[]"
           placeholder="Designation"
           value="${employmentData.designation || ""}"
-          required
+          
           />
           <input
           type="number"
@@ -586,7 +615,7 @@ $(document).ready(function () {
           name="startYear[]"
           placeholder="Start Year"
           value="${employmentData.startYear || ""}"
-          required
+          
           />
           <div>
           <input
@@ -595,7 +624,7 @@ $(document).ready(function () {
           name="endYear[]"
           placeholder="End Year"
           value="${employmentData.endYear || ""}"
-          required
+          
           />
            <small class="form-text text-muted">Leave blank if this is your current employment.</small>
           </div>
@@ -616,7 +645,7 @@ $(document).ready(function () {
           name="description[]"
           placeholder="Job Description"
           value="${employmentData.description || ""}"
-          required
+          
           >
           </textarea>
          </div>
@@ -1007,10 +1036,17 @@ $(document).ready(function () {
     });
 
     // For final submission – prevent default and trigger auto-save.
-    // $("#unifiedForm").on("submit", function (e) {
-    //   e.preventDefault();
-    //   autoSave();
-    // });
+    $("#unifiedForm").on("submit", function (e) {
+      e.preventDefault();
+      // autoSave();
+      autoSave().then(() => {
+        Swal.fire({
+          title: "Success!",
+          text: "Your form has been submitted successfully.",
+          confirmButtonText: "OK",
+        });
+      });
+    });
   };
 
   // Initialize all event bindings.
@@ -1073,6 +1109,8 @@ $(document).ready(function () {
           <td>${item.phone}</td>
           <td>${item.email}</td>
           <td>${item.role}</td>
+          <td>${item.stateOfOrigin}</td>
+
           <td>
             <button class="btn btn-sm update-role-btn" 
                     data-id="${item._id}" 
@@ -1145,14 +1183,13 @@ $(document).ready(function () {
     const headers = { Authorization: `Bearer ${token}` };
 
     apiRequest(url, "GET", headers, null, (response) => {
+      console.log(response);
       // Construct user details dynamically
       const details = `
         <div class="user-profile">
           <div class="profile-header">
             <img 
-              // src="${
-                response.passportPhoto || "/assets/images/avatar.jpeg"
-              }" 
+              src="${response.passportPhoto || "/assets/images/avatar.jpeg"}" 
               alt="Passport Photo" 
               class="profile-photo" 
               crossOrigin="anonymous"
@@ -1269,15 +1306,15 @@ $(document).ready(function () {
                 <i class="fas fa-ellipsis-v"></i>
               </button>
               <ul class="dropdown-menu">
-                <li><button class="dropdown-item btn-approve" data-id="${
+                <li><button class="dropdown-item btn-cert-approve" data-id="${
                   item._id
                 }" style="color: green;">Approve</button></li>
-                <li><button class="dropdown-item btn-reject" data-id="${
+                <li><button class="dropdown-item btn-cert-reject" data-id="${
                   item._id
                 }" ${
         isRejected ? "disabled" : ""
       } style="color: red;">Reject</button></li>
-                <li><button class="dropdown-item btn-view" data-id="${
+                <li><button class="dropdown-item btn-cert-view" data-id="${
                   item._id
                 }" style="color: blue;">View</button></li>
               </ul>
@@ -1295,7 +1332,6 @@ $(document).ready(function () {
       headers: apiHeaders,
       success: function (response) {
         const { data, hasNextPage } = response;
-        console.log("data", data);
 
         renderTable(data);
         updatePaginationButtons(hasNextPage);
@@ -1358,15 +1394,26 @@ $(document).ready(function () {
       method: "GET",
       headers: apiHeaders,
       success: function (response) {
+        console.log(response);
         // Populate the view modal with the request details
         $("#viewModal .modal-body").html(`
+            <img 
+              src="${response.passportPhoto || "/assets/images/avatar.jpeg"}" 
+              alt="Passport Photo" 
+              class="profile-photo" 
+              crossOrigin="anonymous"
+            >
           <p><strong>Name:</strong> ${response.firstname} ${
           response.lastname
         }</p>
           <p><strong>Phone:</strong> ${response.phone}</p>
           <p><strong>Email:</strong> ${response.email}</p>
           <p><strong>Status:</strong> ${response.status}</p>
-          <p><strong>Details:</strong> ${response.details || "N/A"}</p>
+          <p><strong>State of Origin:</strong> ${response.stateOfOrigin}</p>
+          <p><strong>LGA:</strong> ${response.lgaOfOrigin}</p>
+          <p><strong>Kindred:</strong> ${response.kindred}</p>
+
+
         `);
         $("#viewModal").modal("show");
       },
@@ -1376,19 +1423,18 @@ $(document).ready(function () {
     });
   }
 
-  $(document).on("click", ".btn-approve", function () {
+  $(document).on("click", ".btn-cert-approve", function () {
     const requestId = $(this).data("id");
     handleApproval(requestId);
   });
 
-  $(document).on("click", ".btn-reject", function () {
+  $(document).on("click", ".btn-cert-reject", function () {
     rejectionId = $(this).data("id");
     $("#rejectionModal").modal("show");
   });
 
-  $("#dataTable").on("click", ".btn-view", function () {
+  $("#dataTable").on("click", ".btn-cert-view", function () {
     const requestId = $(this).data("id");
-
     handleView(requestId);
   });
 
@@ -1448,18 +1494,33 @@ $(document).ready(function () {
                   </button>
                   <ul class="dropdown-menu">
                     <li>
-                      <button class="dropdown-item btn-download" data-id="${
+                     <div class="tooltip-wrapper" style="position: relative; display: inline-block;">
+                      <button class="dropdown-item btn-cert-download" data-id="${
                         data._id
                       }" ${isDisabled ? "disabled" : ""} style="color: green;">
                         Download Certificate
                       </button>
-                    </li>
+                         ${
+                           isDisabled
+                             ? `<span class="custom-tooltip">Please pay before downloading</span>`
+                             : ""
+                         }
+                        </div>
+                        </li>
                     <li>
+                     <div class="tooltip-wrapper" style="position: relative; display: inline-block;">
+
                       <button class="dropdown-item view-cert-btn" data-id="${
                         data._id
-                      }" style="color: blue;">
+                      }" ${isDisabled ? "disabled" : ""}  style="color: blue;">
                         View Certificate
                       </button>
+                       ${
+                         isDisabled
+                           ? `<span class="custom-tooltip">Please pay to view certificate</span>`
+                           : ""
+                       }
+                        </div>
                     </li>
                     ${
                       data.status === "Rejected" && data.resubmissionAllowed
@@ -1477,7 +1538,7 @@ $(document).ready(function () {
                     }
                     ${
                       showPayButton
-                        ? `<li><button class="dropdown-item btn-pay" data-id="${data._id}">Pay</button></li>`
+                        ? `<li><button class="dropdown-item btn-cert-pay" data-id="${data._id}">Pay</button></li>`
                         : ""
                     }
                   </ul>
@@ -1494,16 +1555,24 @@ $(document).ready(function () {
         } else if (data.status === "Approved") {
           // Check if payment has been made
           $.ajax({
-            url: `${BACKEND_URL}/transaction/status/${user.id}`,
+            url: `${BACKEND_URL}/transaction/${user.id}`,
             method: "GET",
             headers: {
               Authorization: `Bearer ${token}`,
             },
             success: function (transaction) {
-              console.log("transaction", transaction);
-              if (transaction.status === "successful") {
-                appendRow(false, false);
+              if (transaction.length > 0) {
+                transaction.forEach((transaction) => {
+                  if (transaction.certificateId === data._id) {
+                    if (transaction.status === "success") {
+                      appendRow(false, false);
+                    } else {
+                      appendRow(true, true);
+                    }
+                  }
+                });
               } else {
+                // No transactions found, append row with pay button
                 appendRow(true, true);
               }
             },
@@ -1532,8 +1601,11 @@ $(document).ready(function () {
 
           try {
             showLoadingIndicator();
+
             const blob = await fetchCertificatePdf(certificateId);
+
             triggerDownload(blob, "certificate.pdf");
+
             showSuccessMessage("Certificate downloaded successfully!");
           } catch (error) {
             console.error(error.responseJSON?.message);
@@ -1598,14 +1670,15 @@ $(document).ready(function () {
           alert(message);
         }
 
-        $(".btn-download").click(function () {
+        // Add click event listeners for download buttons
+        $(document).on("click", ".btn-cert-download", function () {
           const certificateId = $(this).data("id");
           const button = $(this);
 
           if (certificateId) {
             button.prop("disabled", true);
             handleDownload(certificateId);
-            setTimeout(() => button.prop("disabled", false), 5000);
+            setTimeout(() => button.prop("disabled", false), 5000); // Optional: Re-enable after 5 seconds
           }
         });
       },
@@ -1668,20 +1741,73 @@ $(document).ready(function () {
     });
   }
 
+  // function initiatePayment(certificateId) {
+  //   // Retrieve user authentication data
+  //   if (!userData?.token || !userData?.user?.id) {
+  //     Swal.fire("Error", "User authentication failed!", "error");
+  //     return;
+  //   }
+  //   const { token, user } = userData;
+  //   const userId = user.id; // Replace with actual user ID
+  //   const email = user.email; // Replace with actual email
+  //   const amount = 5000; // Replace with actual amount
+  //   if (!token) {
+  //     alert("Please log in to proceed with payment");
+  //     return;
+  //   }
+  //   $.ajax({
+  //     url: `${BACKEND_URL}/transaction/pay`,
+  //     method: "POST",
+  //     contentType: "application/json",
+  //     headers: {
+  //       Authorization: `Bearer ${token}`,
+  //     },
+  //     userId,
+  //     data: JSON.stringify({
+  //       certificateId,
+  //       userId,
+  //       amount,
+  //       email,
+  //       paymentType: "certificate", // ✅ FIX: Include paymentType to match backend expectations
+  //     }),
+  //     success: function (response) {
+  //       if (response.status === 200) {
+  //         window.open(response.data.authorizationUrl, "_blank");
+  //       } else {
+  //         alert("Payment initiation failed!");
+  //       }
+  //     },
+  //     error: function (error) {
+  //       console.error("Error initiating payment:", error.message);
+  //       alert("Failed to initiate payment. Please try again.");
+  //     },
+  //   });
+  // }
+  // $(document).on("click", ".btn-cert-pay", function () {
+  //   const certificateId = $(this).data("id");
+  //   initiatePayment(certificateId);
+  // });
+
+  function generatePaymentReference() {
+    return "ref-" + Date.now() + "-" + Math.random().toString(36).substr(2, 8);
+  }
+
   function initiatePayment(certificateId) {
     // Retrieve user authentication data
     if (!userData?.token || !userData?.user?.id) {
       Swal.fire("Error", "User authentication failed!", "error");
       return;
     }
+
     const { token, user } = userData;
-    // const userId = user.id; // Replace with actual user ID
-    const email = user.email; // Replace with actual email
-    const amount = 5000; // Replace with actual amount
-    if (!token) {
-      alert("Please log in to proceed with payment");
-      return;
-    }
+    const userId = user.id;
+    const email = user.email;
+    const firstName = user.firstname || "User";
+    const lastName = user.lastname || " ";
+    const phone = user.phone || "0000000000";
+    const amount = 5000; // In kobo
+    const reference = generatePaymentReference(); // Unique for each attempt
+
     $.ajax({
       url: `${BACKEND_URL}/transaction/pay`,
       method: "POST",
@@ -1689,21 +1815,55 @@ $(document).ready(function () {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-      data: JSON.stringify({ certificateId, amount, email }),
+      data: JSON.stringify({
+        certificateId,
+        userId,
+        amount,
+        email,
+        paymentType: "certificate", // ✅ FIX: Include paymentType to match backend expectations
+        reference,
+      }),
       success: function (response) {
-        if (response.status === 200) {
-          window.location.href = response.data.authorizationUrl;
+        console.log("response", response);
+        if (response.status === 200 && response.data?.reference) {
+          const paymentRef = response.data.reference;
+          console.log("paymentRef", paymentRef);
+
+          const handler = CredoWidget.setup({
+            key: "0PUB0972HedMpDz1VtV8El1zNNC6m9Ji",
+            customerFirstName: firstName,
+            customerLastName: lastName,
+            email: email,
+            amount: amount,
+            currency: "NGN",
+            renderSize: 0,
+            channels: ["card", "bank"],
+            reference: paymentRef,
+            customerPhoneNumber: phone,
+            callbackUrl: `http://127.0.0.1:5501/src/bdic/app/success.html`,
+            onClose: function () {
+              console.log("Payment widget closed");
+            },
+            callBack: function (response) {
+              console.log("Payment successful:", response);
+              window.location.href = response.callbackUrl;
+            },
+          });
+
+          handler.openIframe();
         } else {
           alert("Payment initiation failed!");
         }
       },
       error: function (error) {
-        console.error("Error initiating payment:", error.message);
+        console.error("Error initiating payment:", error);
         alert("Failed to initiate payment. Please try again.");
       },
     });
   }
-  $(document).on("click", ".btn-pay", function () {
+
+  // Event listener for certificate payment buttons
+  $(document).on("click", ".btn-cert-pay", function () {
     const certificateId = $(this).data("id");
     initiatePayment(certificateId);
   });
@@ -2899,7 +3059,7 @@ $(document).ready(function () {
         tableBody.empty();
 
         // Helper function to append a row to the table
-        const appendRow = (isDisabled) => {
+        const appendRow = (isDisabled, showPayButton) => {
           tableBody.append(`
     <tr>
       <td>${data.firstname} ${data.lastname}</td>
@@ -2917,18 +3077,30 @@ $(document).ready(function () {
           </button>
           <ul class="dropdown-menu">
             <li>
+               <div class="tooltip-wrapper" style="position: relative; display: inline-block;">
               <button class="dropdown-item btn-card-download" data-id="${
                 data._id
               }" ${isDisabled ? "disabled" : ""} style="color: green;">
                 Download Card
               </button>
+               </button>
+                  ${
+                    isDisabled
+                      ? `<span class="custom-tooltip">Please pay before downloading</span>`
+                      : ""
+                  }
             </li>
             <li>
-              <button class="dropdown-item view-card-btn" data-id="${
-                data._id
-              }" style="color: blue;">
+               <div class="tooltip-wrapper" style="position: relative; display: inline-block;">              <button class="dropdown-item view-card-btn" data-id="${
+                 data._id
+               }"  ${isDisabled ? "disabled" : ""}  style="color: blue;">
                 View Card
               </button>
+              ${
+                isDisabled
+                  ? `<span class="custom-tooltip">Please pay to view card</span>`
+                  : ""
+              }
             </li>
             ${
               data.status === "Rejected" && data.resubmissionAllowed
@@ -2945,6 +3117,12 @@ $(document).ready(function () {
                </button></li>`
                  : ""
              }
+
+               ${
+                 showPayButton
+                   ? `<li><button class="dropdown-item btn-card-pay" data-id="${data._id}">Pay</button></li>`
+                   : ""
+               }
             
           </ul>
         </div>
@@ -2956,18 +3134,45 @@ $(document).ready(function () {
         $("#card-status").text(data.status);
 
         if (data.status === "Rejected" || data.status === "Pending") {
-          appendRow(true);
+          appendRow(true, false);
         } else if (data.status === "Approved") {
-          appendRow(false);
+          // Check if payment has been made
+          $.ajax({
+            url: `${BACKEND_URL}/transaction/${user.id}`,
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            success: function (transaction) {
+              if (transaction.length > 0) {
+                transaction.forEach((transaction) => {
+                  if (transaction.cardId === data._id) {
+                    if (transaction.status === "success") {
+                      appendRow(false, false);
+                    } else {
+                      appendRow(true, true);
+                    }
+                  }
+                });
+              } else {
+                // No transactions found, append row with pay button
+                appendRow(true, true);
+              }
+            },
+            error: function (error) {
+              console.error("Error fetching transaction status:", error);
+              appendRow(true, true);
+            },
+          });
         }
 
         // Attach click event to view-card-btn
-        $(".view-card-btn").on("click", function () {
+        $(document).on("click", ".view-card-btn", function () {
           const cardId = $(this).data("id");
           window.location.href = `id-card-temp.html?id=${cardId}`;
         });
 
-        // Handle Certificate Download
+        // Handle card Download
         async function handleDownload(cardId) {
           if (
             !confirm(
@@ -2981,8 +3186,8 @@ $(document).ready(function () {
             // Show loading indicator
             showLoadingIndicator();
 
-            // Fetch the certificate PDF
-            const blob = await fetchCertificatePdf(cardId);
+            // Fetch the caed PDF
+            const blob = await fetchCardPdf(cardId);
 
             // Trigger the download
             triggerDownload(blob, "card.pdf");
@@ -2993,7 +3198,9 @@ $(document).ready(function () {
             // Handle errors
             console.error(error.responseJSON?.message);
             const errorMessage =
-              error.responseJSON?.message || "Failed to download the card.";
+              // error.responseJSON?.message || "Failed to download the card.";
+              error.responseJSON?.message || "Card Already Downloaded";
+
             showErrorMessage(errorMessage);
           } finally {
             // Hide loading indicator
@@ -3001,7 +3208,7 @@ $(document).ready(function () {
           }
         }
 
-        function fetchCertificatePdf(cardId) {
+        function fetchCardPdf(cardId) {
           return new Promise((resolve, reject) => {
             $.ajax({
               url: `${downloadUrl}${cardId}`,
@@ -3059,7 +3266,7 @@ $(document).ready(function () {
         }
 
         // Add click event listeners for download buttons
-        $(".btn-card-download").click(function () {
+        $(document).on("click", ".btn-card-download", function () {
           const cardId = $(this).data("id");
           const button = $(this);
 
@@ -3131,6 +3338,56 @@ $(document).ready(function () {
       const requestId = $(this).data("id");
       handleDelete(requestId);
     });
+
+    //Card Payment
+    function initiateCardPayment(cardId) {
+      // Retrieve user authentication data
+      if (!userData?.token || !userData?.user?.id) {
+        Swal.fire("Error", "User authentication failed!", "error");
+        return;
+      }
+      const { token, user } = userData;
+
+      const userId = user.id; // Replace with actual user ID
+      const email = user.email; // Replace with actual email
+      const amount = 5000; // Replace with actual amount
+
+      if (!token) {
+        alert("Please log in to proceed with payment");
+        return;
+      }
+      $.ajax({
+        url: `${BACKEND_URL}/transaction/pay`,
+        method: "POST",
+        contentType: "application/json",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: JSON.stringify({
+          cardId,
+          userId,
+          amount,
+          email,
+          paymentType: "card", // ✅ FIX: Include paymentType to match backend expectations
+        }),
+        success: function (response) {
+          if (response.status === 200) {
+            window.open(response.data.authorizationUrl, "_blank");
+          } else {
+            alert("Payment initiation failed!");
+          }
+        },
+        error: function (error) {
+          console.error("Error initiating payment:", error.message);
+          alert("Failed to initiate payment. Please try again.");
+        },
+      });
+    }
+
+    $(document).on("click", ".btn-card-pay", function () {
+      const cardId = $(this).data("id");
+      initiateCardPayment(cardId);
+    });
   }
   // Initial fetch
   fetchData();
@@ -3171,10 +3428,12 @@ $(document).ready(function () {
       const rowHtml = `
         <tr>
           <td>${(page - 1) * pageSize + index + 1}</td>
-          <td>${item.firstname} ${item.lastname}</td>
+          <td>${item.paymentType}</td>
           <td>${item.amount}</td>
           <td>${item.email}</td>
           <td>${item.status}</td>
+          <td>${item.reference}</td>
+
            <td>
            <button class="btn btn-sm verify-btn" 
                     data-id="${item.reference}" 
@@ -3257,18 +3516,573 @@ function updateHeaderTitle() {
     idcard: "View Card Status",
     "all-request": "View Certificate Request",
     "all-card": "View Card Request",
-    citizens: "Citizens",
+    citizens: "Users",
     certificate: "Request Certificate",
     profile: "User Account",
     transaction: "Transactions",
     login: "Login",
     card: "Request Card",
+    "support-admin-lga": "Admin LGAs",
+    "user-kindred": "Kindreds",
+    "user-kindred": "Kindreds",
+    "kindred-dasboard": "Kindred Head Dashboard",
+    "kindred-head": "View All Request",
   };
 
   const pageTitle = titleMap[page] || "Dashboard";
-  document.title = pageTitle + " | BIRCIIRCIMS";
+  document.title =
+    pageTitle +
+    " | Benue State Integrated Residents/Citizens Identity/Indigeneship Registration and Card Issuance Management System";
   document.querySelector(".dashboard_bar").textContent = pageTitle;
 }
 
 // Call the function when the page loads
 document.addEventListener("DOMContentLoaded", updateHeaderTitle);
+
+let currentPageAll = 1;
+let currentPageUser = 1;
+const pageSize = 10;
+
+// Get All kindred
+function fetchAllKindred(page) {
+  $.ajax({
+    url: `${BACKEND_URL}/kindred?page=${page}&limit=${pageSize}`,
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    success: function (response) {
+      const { data, hasNextPage } = response;
+
+      const tableBody = $("#kindred-table");
+      tableBody.empty();
+
+      data.forEach((item, index) => {
+        tableBody.append(`
+            <tr>
+              <td>${(page - 1) * pageSize + index + 1}</td>
+              <td>${item.firstname} ${item.lastname}</td>
+              <td>${item.phone}</td>
+              <td>${item.address}</td>
+              <td>${item.kindred}</td>
+              <td>${item.lga}</td>
+
+            </tr>
+          `);
+      });
+
+      $("#btnPrevAll").prop("disabled", page === 1);
+      $("#btnNextAll").prop("disabled", !hasNextPage);
+    },
+    error: function (error) {
+      console.error("Error fetching all kindred:", error);
+    },
+  });
+}
+
+//Fetch kindred by userId
+function fetchUserKindred(page) {
+  $.ajax({
+    url: `${BACKEND_URL}/kindred/${user.id}?page=${page}&limit=${pageSize}`,
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    success: function (response) {
+      const { data, hasNextPage } = response;
+      const tableBody = $("#user-kindred-table");
+      tableBody.empty();
+
+      data.forEach((data, index) => {
+        tableBody.append(`
+          <tr>
+            <td>${(page - 1) * pageSize + index + 1}</td>
+            <td>${data.firstname} ${data.lastname}</td>
+            <td>${data.phone}</td>
+            <td>${data.address}</td>
+            <td>${data.kindred}</td>
+            <td>${data.lga}</td>
+            <td>
+              <div class="dropdown">
+                <button class="btn btn-xs btn-action dropdown-toggle" data-bs-toggle="dropdown">
+                  <i class="fas fa-ellipsis-v"></i>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <button class="dropdown-item update-user-btn" data-id="${
+                      data._id
+                    }" data-info='${JSON.stringify(data)}'>
+                      Update User
+                    </button>
+                  </li>
+                  <li>
+                    <button class="dropdown-item delete-user-btn" data-id="${
+                      data._id
+                    }" style="color: red;">
+                      Delete User
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </td>
+          </tr>
+        `);
+      });
+
+      $("#btnPrevUser").prop("disabled", page === 1);
+      $("#btnNextUser").prop("disabled", !hasNextPage);
+    },
+    error: function (error) {
+      console.error("Error fetching user kindred:", error);
+    },
+  });
+}
+
+// Handle Delete User
+function handleDelete(userId) {
+  Swal.fire({
+    title: "Are you sure?",
+    text: "This action cannot be undone!",
+    // icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "Yes, delete it!",
+  }).then((result) => {
+    if (result.value === true) {
+      $.ajax({
+        url: `${BACKEND_URL}/kindred/${userId}`,
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        success: function () {
+          Swal.fire("Deleted!", "User has been deleted.", "success");
+          fetchUserKindred(currentPageUser);
+        },
+        error: function (error) {
+          Swal.fire("Error!", "Failed to delete user.", "error");
+          console.error("Error deleting request:", error);
+        },
+      });
+    }
+  });
+}
+
+// Handle Update User
+function handleUpdate(userData) {
+  Swal.fire({
+    title: "Update User",
+    html: `
+      <input id="updateFullname" class="swal2-input" placeholder="Full Name" value="${userData.fullname}">
+      <input id="updatePhone" class="swal2-input" placeholder="Phone" value="${userData.phone}">
+      <input id="updateLga" class="swal2-input" placeholder="LGA" value="${userData.lga}">
+      <input id="updateAddress" class="swal2-input" placeholder="Address" value="${userData.address}">
+      <input id="updateKindred" class="swal2-input" placeholder="Kindred" value="${userData.kindred}">
+    `,
+    showCancelButton: true,
+    confirmButtonText: "Update",
+    preConfirm: () => {
+      return {
+        fullname: $("#updateFullname").val().trim(),
+        phone: $("#updatePhone").val().trim(),
+        lga: $("#updateLga").val().trim(),
+        address: $("#updateAddress").val().trim(),
+        kindred: $("#updateKindred").val().trim(),
+      };
+    },
+  }).then((result) => {
+    if (result.value) {
+      $.ajax({
+        url: `${BACKEND_URL}/kindred/${userData._id}`,
+        method: "PUT",
+        contentType: "application/json",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: JSON.stringify(result.value),
+        success: function () {
+          Swal.fire(
+            "Updated!",
+            "User details updated successfully.",
+            "success"
+          );
+          fetchUserKindred(currentPageUser);
+        },
+        error: function (error) {
+          Swal.fire("Error!", "Failed to update user.", "error");
+          console.error("Error updating user:", error);
+        },
+      });
+    }
+  });
+}
+
+function fetchKindredAll(page = 1, pageSize = 100) {
+  $.ajax({
+    url: `${BACKEND_URL}/kindred?page=${page}&limit=${pageSize}`,
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    success: function (response) {
+      console.log(response);
+      if (response && response.data && response.data.length) {
+        const kindredSelect = $("#kindred");
+        kindredSelect.empty(); // Clear existing options
+        kindredSelect.append('<option value="">Select Kindred</option>'); // Default option
+
+        response.data.forEach(function (kindred) {
+          kindredSelect.append(
+            `<option value="${kindred.kindred}">${kindred.kindred}</option>`
+          );
+        });
+      } else {
+        console.warn("No kindred found in response.");
+      }
+    },
+    error: function (error) {
+      console.error("Error fetching all kindred:", error);
+    },
+  });
+}
+
+$(document).ready(function () {
+  fetchKindredAll();
+});
+
+// Event Delegation for Delete & Update Buttons
+$(document).on("click", ".delete-user-btn", function () {
+  const userId = $(this).data("id");
+  handleDelete(userId);
+});
+
+$(document).on("click", ".update-user-btn", function () {
+  const userData = $(this).data("info");
+  handleUpdate(userData);
+});
+
+// Sign up kindred
+$(document).ready(function () {
+  // Initial data load
+  fetchAllKindred(currentPageAll);
+  fetchUserKindred(currentPageUser);
+
+  // Pagination handlers for All Kindred
+  $("#btnPrevAll").click(function () {
+    if (currentPageAll > 1) {
+      currentPageAll--;
+      fetchAllKindred(currentPageAll);
+    }
+  });
+
+  $("#btnNextAll").click(function () {
+    currentPageAll++;
+    fetchAllKindred(currentPageAll);
+  });
+
+  // Pagination handlers for User Kindred
+  $("#btnPrevUser").click(function () {
+    if (currentPageUser > 1) {
+      currentPageUser--;
+      fetchUserKindred(currentPageUser);
+    }
+  });
+
+  $("#btnNextUser").click(function () {
+    currentPageUser++;
+    fetchUserKindred(currentPageUser);
+  });
+
+  // // Handle form submission
+  $(document).ready(function () {
+    $("#kindredForm").on("submit", function (e) {
+      e.preventDefault();
+
+      // Collect form data
+      const formData = {
+        fullname: $("#fullname").val().trim(),
+        phone: $("#phone").val().trim(),
+        lga: $("#lga").val().trim(),
+        address: $("#address").val().trim(),
+        kindred: $("#kindred").val().trim(),
+        userId: user?.id, // Ensure user is defined
+      };
+
+      // Validate form inputs
+      for (const field in formData) {
+        if (!formData[field]) {
+          Swal.fire("Oops...", `Please fill in the ${field} field`, "error");
+          return;
+        }
+      }
+
+      // Ensure token is available
+      if (!token) {
+        Swal.fire("Unauthorized", "User authentication required!", "error");
+        return;
+      }
+
+      // Disable submit button to prevent duplicate submissions
+      const $submitButton = $("#kindredForm button[type='submit']");
+      $submitButton.prop("disabled", true).text("Processing...");
+
+      $.ajax({
+        type: "POST",
+        url: `${BACKEND_URL}/kindred/create`,
+        contentType: "application/json",
+        headers: { Authorization: `Bearer ${token}` },
+        data: JSON.stringify(formData),
+        success: function (response) {
+          Swal.fire(
+            "Success!",
+            response.message || "Kindred successfully created!",
+            "success"
+          );
+
+          // Reset the form
+          $("#kindredForm")[0].reset();
+
+          // Refresh tables
+          fetchAllKindred(currentPageAll);
+          fetchUserKindred(currentPageUser);
+        },
+        error: function (xhr) {
+          const errorMessage =
+            xhr.responseJSON?.message || "Kindred registration failed";
+          Swal.fire("Oops...", errorMessage, "error");
+        },
+        complete: function () {
+          // Re-enable the submit button
+          $submitButton.prop("disabled", false).text("Submit");
+        },
+      });
+    });
+  });
+});
+
+// Function to filter users and match LGAs for certificate requests
+function filterAndMatchLGAs() {
+  // First, fetch all users to get support admins
+  $.ajax({
+    url: `${BACKEND_URL}/users`,
+    method: "GET",
+    headers: { Authorization: `Bearer ${token}` },
+    success: function (usersResponse) {
+      // Filter support admins and get their LGAs
+      const supportAdmins = usersResponse.data.filter(
+        (user) => user.role === "support_admin"
+      );
+      const supportAdminLGAs = [
+        ...new Set(supportAdmins.map((admin) => admin.lgaOfOrigin)),
+      ];
+
+      // Now fetch certificate requests
+      $.ajax({
+        url: `${BACKEND_URL}/indigene/certificate/request?status=Pending`,
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+        success: function (certificateResponse) {
+          console.log("certificateResponse", certificateResponse);
+          // Filter requests where LGA matches support admin LGAs
+          const matchingRequests = certificateResponse.data.filter((request) =>
+            supportAdminLGAs.includes(request.lgaOfOrigin)
+          );
+
+          // Create a table with the matching requests
+          createLGAMatchTable(supportAdminLGAs, matchingRequests);
+        },
+        error: function (error) {
+          console.error("Error fetching certificate requests:", error);
+        },
+      });
+    },
+    error: function (error) {
+      console.error("Error fetching users:", error);
+    },
+  });
+}
+
+// Function to create the LGA match table
+function createLGAMatchTable(supportAdminLGAs, matchingRequests) {
+  const tableBody = $("#lga-match-table");
+  tableBody.empty();
+
+  // Add support admin LGAs section
+  tableBody.append(`
+    <tr class="table-info">
+      <td colspan="5"><strong>Support Admin LGAs</strong></td>
+    </tr>
+  `);
+
+  supportAdminLGAs.forEach((lga) => {
+    tableBody.append(`
+      <tr>
+        <td>${lga}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+
+
+      </tr>
+    `);
+  });
+
+  // Add matching requests section
+  tableBody.append(`
+    <tr class="table-info">
+      <td colspan="5"><strong>Matching Certificate Requests</strong></td>
+    </tr>
+  `);
+
+  if (matchingRequests.length === 0) {
+    tableBody.append(`
+      <tr>
+        <td colspan="5">No matching requests found</td>
+      </tr>
+    `);
+  } else {
+    matchingRequests.forEach((request, index) => {
+      tableBody.append(`
+        <tr>
+          <td>${request.lgaOfOrigin}</td>
+          <td>${request.firstname} ${request.lastname}</td>
+          <td>${request.email}</td>
+          <td>${request.phone}</td>
+          <td>${request.kindred}</td>
+
+        </tr>
+      `);
+    });
+  }
+}
+
+// Call this function when needed, for example when a button is clicked
+$(document).on("click", "#filter-lga-btn", function () {
+  filterAndMatchLGAs();
+});
+
+function filterAndMatchKindredHeadLGAs() {
+  // First, fetch all users to get support admins
+  $.ajax({
+    url: `${BACKEND_URL}/users`,
+    method: "GET",
+    headers: { Authorization: `Bearer ${token}` },
+    success: function (usersResponse) {
+      // Filter support admins and get their LGAs
+      const kindredHead = usersResponse.data.filter(
+        (user) => user.role === "kindred_head"
+      );
+      const kindredHeadLGAs = [
+        ...new Set(kindredHead.map((admin) => admin.lgaOfOrigin)),
+      ];
+
+      // Now fetch certificate requests
+      $.ajax({
+        url: `${BACKEND_URL}/indigene/certificate/request?status=Pending`,
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+        success: function (certificateResponse) {
+          // Filter requests where LGA matches support admin LGAs
+          const matchingRequests = certificateResponse.data.filter((request) =>
+            kindredHeadLGAs.includes(request.lgaOfOrigin)
+          );
+
+          // Create a table with the matching requests
+          createKindredGroupedTable(kindredHeadLGAs, matchingRequests);
+        },
+        error: function (error) {
+          console.error("Error fetching certificate requests:", error);
+        },
+      });
+    },
+    error: function (error) {
+      console.error("Error fetching users:", error);
+    },
+  });
+}
+
+// Create table grouped by kindred
+function createKindredGroupedTable(kindredHeadLGAs, matchingRequests) {
+  const tableBody = $("#kindred-match-table");
+  tableBody.empty();
+
+  // Add support admin LGAs section
+  tableBody.append(`
+    <tr class="table-info">
+      <td colspan="6"><strong>Kindred Head LGAs</strong></td>
+    </tr>
+  `);
+
+  kindredHeadLGAs.forEach((lga) => {
+    tableBody.append(`
+      <tr>
+        <td>${lga}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+
+
+
+      </tr>
+    `);
+  });
+
+  // Add matching requests section
+  tableBody.append(`
+    <tr class="table-info">
+      <td colspan="6"><strong>Matching Certificate Requests</strong></td>
+    </tr>
+  `);
+
+  if (matchingRequests.length === 0) {
+    tableBody.append(`
+      <tr>
+      <td colspan="6">No matching requests found</td>
+      </tr>
+      `);
+  } else {
+    matchingRequests.forEach((request, index) => {
+      const isRejected = request.status === "Rejected";
+
+      tableBody.append(`
+        <tr>
+          <td>${request.lgaOfOrigin}</td>
+          <td>${request.firstname} ${request.lastname}</td>
+          <td>${request.email}</td>
+          <td>${request.phone}</td>
+          <td>${request.kindred}</td>
+          <td>
+            <div class="dropdown">
+              <button class="btn btn-xs btn-action dropdown-toggle" data-bs-toggle="dropdown">
+                <i class="fas fa-ellipsis-v"></i>
+              </button>
+              <ul class="dropdown-menu">
+                <li><button class="dropdown-item btn-cert-approve" data-id="${
+                  request._id
+                }" style="color: green;">Approve</button></li>
+                <li><button class="dropdown-item btn-cert-reject" data-id="${
+                  request._id
+                }" ${
+        isRejected ? "disabled" : ""
+      } style="color: red;">Reject</button></li>
+                <li><button class="dropdown-item btn-cert-view" data-id="${
+                  request._id
+                }" style="color: blue;">View</button></li>
+              </ul>
+            </div>
+          </td>
+
+        </tr>
+      `);
+    });
+  }
+}
+
+// Trigger on button click
+$(document).on("click", "#filter-kindred-btn", function () {
+  filterAndMatchKindredHeadLGAs();
+});

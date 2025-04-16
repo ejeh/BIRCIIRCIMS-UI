@@ -19,7 +19,7 @@
       rel="icon"
       type="image/png"
       sizes="16x16"
-      href="/assets/images/gov-logo.jpg"
+      href="/assets/images/benue-state-logo.png"
     />
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <link
@@ -78,23 +78,7 @@
       <!--**********************************
             Nav header start
         ***********************************-->
-      <!-- <div class="nav-header">
-        <a href="index.html" class="brand-logo">
-          <img src="/assets/images/gov-logo.jpg" width="20%" height="auto" /> -->
-      <!-- <h3 style="color: white">BSCR-MIS</h3> -->
-      <!-- <h6 style="color: white">
-            Benue State Citizen Registration <br />
-            Management Information system
-          </h6>
-        </a>
 
-        <div class="nav-control">
-          <div class="hamburger">
-            <span class="line"></span><span class="line"></span
-            ><span class="line"></span>
-          </div>
-        </div>
-      </div> -->
       <div class="nav-header">
         <!-- Logo Section -->
         <a href="index.html" class="brand-logo">
@@ -128,21 +112,6 @@
               <div class="header-left">
                 <div class="dashboard_bar">Profile</div>
               </div>
-              <!-- <ul class="navbar-nav header-right">
-                <li class="nav-item dropdown notification_dropdown">
-                  <div class="input-group search-area">
-                    <input
-                      type="text"
-                      class="form-control"
-                      placeholder="Search here..."
-                    />
-                    <span class="input-group-text"
-                      ><a href="javascript:void(0)"
-                        ><i class="flaticon-381-search-2"></i></a
-                    ></span>
-                  </div>
-                </li>
-              </ul> -->
             </div>
           </nav>
         </div>
@@ -157,38 +126,6 @@
       <div class="deznav">
         <div class="deznav-scroll">
           <ul class="metismenu" id="menu">
-            <li>
-              <style type="text/css">
-                a.gflag {
-                  vertical-align: middle;
-                  font-size: 16px;
-                  padding: 1px 0;
-                  background-repeat: no-repeat;
-                  background-image: url(../../gtranslate.net/flags/16.png);
-                }
-                a.gflag img {
-                  border: 0;
-                }
-                a.gflag:hover {
-                  background-image: url(../../gtranslate.net/flags/16a.png);
-                }
-                #goog-gt-tt {
-                  display: none !important;
-                }
-                .goog-te-banner-frame {
-                  display: none !important;
-                }
-                .goog-te-menu-value:hover {
-                  text-decoration: none !important;
-                }
-                body {
-                  top: 0 !important;
-                }
-                #google_translate_element2 {
-                  display: none !important;
-                }
-              </style>
-            </li>
             <!-- Super Admin Menu -->
             <li class="super-admin-menu">
               <a class="ai-icon" href="index.html" aria-expanded="false">
@@ -242,8 +179,32 @@
             <!-- Super Admin Menu -->
             <li class="super-admin-menu">
               <a class="ai-icon" href="citizens.html" aria-expanded="false">
-                <i class="fa fa-arrows-h"></i>
-                <span class="nav-text">Citizens</span>
+                <i class="fa fa-user" aria-hidden="true"></i>
+
+                <span class="nav-text">Users</span>
+              </a>
+            </li>
+            <li class="super-admin-menu">
+              <a class="ai-icon" href="kindred.html" aria-expanded="false">
+                <i class="fa fa-user" aria-hidden="true"></i>
+
+                <span class="nav-text">Kindreds</span>
+              </a>
+            </li>
+            <li class="support-admin-menu">
+              <a class="ai-icon" href="user-kindred.html" aria-expanded="false">
+                <i class="fa fa-user" aria-hidden="true"></i>
+                <span class="nav-text">Kindreds</span>
+              </a>
+            </li>
+            <li class="support-admin-menu">
+              <a
+                class="ai-icon"
+                href="support-admin-lga.html"
+                aria-expanded="false"
+              >
+                <i class="fa fa-user" aria-hidden="true"></i>
+                <span class="nav-text">Support Admin LGA</span>
               </a>
             </li>
             <!-- User-menu -->
@@ -260,7 +221,7 @@
               </a>
             </li>
 
-            <li>
+            <li class="user-menu">
               <a class="ai-icon" href="profile.html" aria-expanded="false">
                 <i class="fa fa-user" aria-hidden="true"></i>
                 <span class="nav-text">User Account</span>
@@ -381,7 +342,7 @@
                       <div class="col-sm-6 m-b30">
                         <label class="form-label">Select State Of Origin</label>
 
-                        <select
+                        <!-- <select
                           id="stateOfOrigin"
                           class="selectpicker nice-select default-select form-control wide mh-auto"
                           onchange="updateLocalGovernmentsOfOrigin()"
@@ -421,7 +382,17 @@
                           <option value="nasarawa">Nasarawa</option>
                           <option value="niger">Niger</option>
                           <option value="rivers">Rivers</option>
-                        </select>
+                        </select> -->
+
+                        <input
+                          id="stateOfOrigin"
+                          type="text"
+                          class="form-control"
+                          required
+                          name="stateOfOrigin"
+                          readonly
+                          onchange="updateLocalGovernmentsOfOrigin()"
+                        />
                       </div>
                       <div class="col-sm-6 m-b30">
                         <label class="form-label"
@@ -848,168 +819,6 @@
                 </div>
               </div>
             </div>
-
-            <!-- <div
-              class="row form-section"
-              id="contact-details-section"
-              style="display: none"
-            >
-              <div class="col-xl-12 col-lg-12">
-                <div class="card card-bx m-b30">
-                  <div class="card-header">
-                    <h4 class="card-title">Contact Details</h4>
-                  </div>
-                  <div class="card-body">
-                    <div class="row"> -->
-            <!-- Neighbors' Contact Details -->
-            <!-- <div class="col-12">
-                        <h5 class="section-title">
-                          Neighbors' Contact Details
-                        </h5>
-                      </div>
-                      <div class="col-12 m-b30">
-                        <label class="form-label">Neighbor 1</label>
-                        <input
-                          id="neighbor_1_name"
-                          type="text"
-                          class="form-control m-b10"
-                          name="neighbor_1_name"
-                          placeholder="Full Name"
-                        />
-                        <input
-                          id="neighbor_1_address"
-                          type="text"
-                          class="form-control m-b10"
-                          name="neighbor_1_address"
-                          placeholder="Residential Address"
-                        />
-                        <input
-                          id="neighbor_1_phone"
-                          type="tel"
-                          class="form-control"
-                          name="neighbor_1_phone"
-                          placeholder="Phone Number"
-                        />
-                      </div>
-                      <div class="col-12 m-b30">
-                        <label class="form-label">Neighbor 2</label>
-                        <input
-                          id="neighbor_2_name"
-                          type="text"
-                          class="form-control m-b10"
-                          name="neighbor_2_name"
-                          placeholder="Full Name"
-                        />
-                        <input
-                          id="neighbor_2_address"
-                          type="text"
-                          class="form-control m-b10"
-                          name="neighbor_2_address"
-                          placeholder="Residential Address"
-                        />
-                        <input
-                          id="neighbor_2_phone"
-                          type="tel"
-                          class="form-control"
-                          name="neighbor_2_phone"
-                          placeholder="Phone Number"
-                        />
-                      </div>
-
-                      <div class="col-12 m-b30">
-                        <label class="form-label">Neighbor 3</label>
-                        <input
-                          id="neighbor_3_name"
-                          type="text"
-                          class="form-control m-b10"
-                          name="neighbor_3_name"
-                          placeholder="Full Name"
-                        />
-                        <input
-                          id="neighbor_3_address"
-                          type="text"
-                          class="form-control m-b10"
-                          name="neighbor_3_address"
-                          placeholder="Residential Address"
-                        />
-                        <input
-                          id="neighbor_3_phone"
-                          type="tel"
-                          class="form-control"
-                          name="neighbor_3_phone"
-                          placeholder="Phone Number"
-                        />
-                      </div>
-                      <div class="col-12 m-b30">
-                        <label class="form-label">Neighbor 4</label>
-                        <input
-                          id="neighbor_4_name"
-                          type="text"
-                          class="form-control m-b10"
-                          name="neighbor_4_name"
-                          placeholder="Full Name"
-                        />
-                        <input
-                          id="neighbor_4_address"
-                          type="text"
-                          class="form-control m-b10"
-                          name="neighbor_4_address"
-                          placeholder="Residential Address"
-                        />
-                        <input
-                          id="neighbor_4_phone"
-                          type="tel"
-                          class="form-control"
-                          name="neighbor_4_phone"
-                          placeholder="Phone Number"
-                        />
-                      </div>
-                      <div class="col-12 m-b30">
-                        <label class="form-label">Neighbor 5</label>
-                        <input
-                          id="neighbor_5_name"
-                          type="text"
-                          class="form-control m-b10"
-                          name="neighbor_5_name"
-                          placeholder="Full Name"
-                        />
-                        <input
-                          id="neighbor_5_address"
-                          type="text"
-                          class="form-control m-b10"
-                          name="neighbor_5_address"
-                          placeholder="Residential Address"
-                        />
-                        <input
-                          id="neighbor_5_phone"
-                          type="tel"
-                          class="form-control"
-                          name="neighbor_5_phone"
-                          placeholder="Phone Number"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div class="card-footer">
-                    <button
-                      type="button"
-                      class="btn btn-secondary prev-btn"
-                      data-prev="family-information-section"
-                    >
-                      Previous
-                    </button>
-                    <button
-                      type="button"
-                      class="btn btn-primary next-btn"
-                      data-next="family-details-section"
-                    >
-                      Next
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div> -->
-
             <div
               class="row form-section"
               id="contact-details-section"
@@ -1485,92 +1294,6 @@
               </div>
             </div>
 
-            <!-- <div
-            class="row form-section"
-            id="education-details-section"
-              style="display: none"
-            >
-              <div class="col-xl-12 col-lg-12">
-                <div class="card card-bx m-b30">
-                  <div class="card-header">
-                    <h4 class="card-title">Education Details</h4>
-                  </div>
-                  <div class="card-body">
-                    <div class="row"> -->
-            <!-- Education section fields -->
-
-            <!-- <div class="col-sm-6 m-b30">
-                        <label class="form-label"
-                          >Highest Level of Education</label
-                        >
-                        <select
-                          id="highestLevel"
-                          name="highestLevel"
-                          class="selectpicker nice-select default-select form-control wide mh-auto"
-                        >
-                          <option value="PhD">PhD</option>
-                          <option value="Masters">Master's</option>
-                          <option value="Bachelors">Bachelor's</option>
-                        </select>
-                      </div>
-                      <div class="col-sm-6 m-b30">
-                        <div id="institutions-list">
-                          <div class="institution-entry">
-                            <label class="form-label">Institution;</label> -->
-            <!-- id="institutionAttended" -->
-            <!-- <input
-                            type="text"
-                            name="institution"
-                            class="form-control institution"
-                            required
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-sm-6 m-b30">
-                        <label class="form-label">Degree:</label> -->
-            <!-- id="graduationYear" -->
-            <!-- <input
-                        type="text"
-                        class="form-control degree"
-                        name="degree"
-                        required
-                        />
-                      </div>
-                      <div class="col-sm-6 m-b30">
-                        <label class="form-label">Year of Graduation:</label> -->
-            <!-- id="graduationYear" -->
-            <!-- <input
-                        type="number"
-                        class="form-control graduationYear"
-                        name="graduationYear"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div class="card-footer">
-                    <button type="button" id="add-institution">
-                      Add Institution
-                    </button>
-                    <button
-                    type="button"
-                    class="btn btn-secondary prev-btn"
-                    data-prev="employment-details-section"
-                    >
-                    Previous
-                  </button>
-                  <button
-                  type="button"
-                  class="btn btn-primary next-btn"
-                  data-next="health-info-section"
-                  >
-                  Next
-                </button>
-              </div>
-            </div>
-          </div>
-        </div> -->
-
             <!-- Education Details -->
             <div
               class="row form-section"
@@ -1903,7 +1626,7 @@
         ***********************************-->
       <div class="footer">
         <div class="copyright">
-          <p>Copyright ©Powered By BDIC 2025</p>
+          <p>Copyright ©BDIC Ltd 2025. All rights reserved.</p>
         </div>
       </div>
       <!--**********************************

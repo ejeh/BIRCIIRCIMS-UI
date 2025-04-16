@@ -23,7 +23,7 @@
       rel="icon"
       type="image/png"
       sizes="16x16"
-      href="/assets/images/gov-logo.jpg"
+      href="/assets/images/benue-state-logo.png"
     />
 
     <link
@@ -46,6 +46,29 @@
     <script src="//code.jivosite.com/widget/y3nwyLiIJL" async></script>
 
     <style>
+      .custom-tooltip {
+        visibility: hidden;
+        background-color: #ffc107;
+        color: #000;
+        text-align: center;
+        padding: 4px 8px;
+        border-radius: 4px;
+        position: absolute;
+        z-index: 999;
+        bottom: 70%;
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
+        font-size: 12px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        opacity: 0;
+        transition: opacity 0.2s;
+      }
+
+      .tooltip-wrapper:hover .custom-tooltip {
+        visibility: visible;
+        opacity: 1;
+      }
       tr:nth-child(even) {
         background-color: #f9f9f9;
       }
@@ -93,16 +116,19 @@
 
       @media only screen and (max-width: 1400px) {
         .dropdown-menu .dropdown-item {
-          padding: 0.1rem 1rem;
+          padding: 0rem 1rem;
           font-size: 0.8rem;
         }
       }
       .dropdown-menu .dropdown-item {
-        padding: 0.1rem 1rem;
+        padding: 0rem 1rem;
         font-size: 0.8rem;
       }
       .dropdown-menu {
         min-width: 7rem;
+      }
+      .dropdown-item {
+        background-color: transparent !important;
       }
     </style>
   </head>
@@ -282,8 +308,16 @@
             <!-- Super Admin Menu -->
             <li class="super-admin-menu">
               <a class="ai-icon" href="citizens.html" aria-expanded="false">
-                <i class="fa fa-arrows-h"></i>
-                <span class="nav-text">Citizens</span>
+                <i class="fa fa-user" aria-hidden="true"></i>
+
+                <span class="nav-text">Users</span>
+              </a>
+            </li>
+            <li class="super-admin-menu">
+              <a class="ai-icon" href="kindred.html" aria-expanded="false">
+                <i class="fa fa-user" aria-hidden="true"></i>
+
+                <span class="nav-text">Kindreds</span>
               </a>
             </li>
             <!-- User-menu -->
@@ -453,7 +487,7 @@
         ***********************************-->
       <div class="footer">
         <div class="copyright">
-          <p>Copyright ©Powered By BDIC 2025</p>
+          <p>Copyright ©BDIC Ltd 2025. All rights reserved.</p>
         </div>
       </div>
       <!--**********************************

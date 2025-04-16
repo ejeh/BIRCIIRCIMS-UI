@@ -23,7 +23,7 @@
       rel="icon"
       type="image/png"
       sizes="16x16"
-      href="/assets/images/gov-logo.jpg"
+      href="/assets/images/benue-state-logo.png"
     />
 
     <link
@@ -34,6 +34,10 @@
     <link
       rel="stylesheet"
       href="../../cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
     />
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <link
@@ -51,6 +55,17 @@
 
       tr.no-match {
         display: none;
+      }
+      #addUserForm {
+        transition: display 0.3s ease;
+      }
+      .password-toggle {
+        position: absolute;
+        right: 12px;
+        top: 72%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #666;
       }
     </style>
   </head>
@@ -108,7 +123,16 @@
           <nav class="navbar navbar-expand">
             <div class="collapse navbar-collapse justify-content-between">
               <div class="header-left">
-                <div class="dashboard_bar">All Citizens</div>
+                <div class="dashboard_bar">All Users</div>
+              </div>
+              <div>
+                <button
+                  class="btn btn-primary"
+                  data-bs-toggle="modal"
+                  data-bs-target="#addUserModal"
+                >
+                  Add User
+                </button>
               </div>
               <ul class="navbar-nav header-right">
                 <li class="nav-item dropdown notification_dropdown">
@@ -131,6 +155,211 @@
           </nav>
         </div>
       </div>
+
+      <!-- Add New User Modal -->
+      <div
+        class="modal fade"
+        id="addUserModal"
+        tabindex="-1"
+        aria-labelledby="addUserModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="addUserModalLabel">
+                Register New User
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <!-- Form Structure -->
+              <form id="signUpForm" novalidate>
+                <!-- Form fields as provided -->
+                <div class="row">
+                  <div class="col-md-4 mb-3">
+                    <label for="firstname" class="form-label">First Name</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="firstname"
+                      name="firstname"
+                      required
+                      aria-describedby="firstnameHelp"
+                    />
+                    <small id="firstnameHelp" class="form-text text-muted"
+                      >Enter your first name</small
+                    >
+                  </div>
+                  <div class="col-md-4 mb-3">
+                    <label for="lastname" class="form-label">Last Name</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="lastname"
+                      name="lastname"
+                      required
+                      aria-describedby="lastnameHelp"
+                    />
+                    <small id="lastnameHelp" class="form-text text-muted"
+                      >Enter your last name</small
+                    >
+                  </div>
+                  <div class="col-md-4 mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input
+                      type="email"
+                      class="form-control"
+                      id="email"
+                      name="email"
+                      required
+                      aria-describedby="emailHelp"
+                    />
+                    <small id="emailHelp" class="form-text text-muted"
+                      >Enter a valid email address</small
+                    >
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4 mb-3">
+                    <label for="phone" class="form-label">Phone</label>
+                    <input
+                      class="form-control"
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      maxlength="11"
+                      pattern="^0[7-9][0-1]\d{8}$"
+                      required
+                      aria-describedby="phoneHelp"
+                    />
+                    <small id="phoneHelp" class="form-text text-muted"
+                      >Enter a valid Nigerian phone number</small
+                    >
+                  </div>
+                  <div class="col-md-4 mb-3">
+                    <div class="position-relative">
+                      <label for="password" class="form-label">Password</label>
+                      <input
+                        type="password"
+                        class="form-control"
+                        id="password"
+                        name="password"
+                        required
+                        aria-describedby="passwordHelp"
+                      />
+                      <span class="password-toggle" id="togglePassword">
+                        <i class="fa-solid fa-eye-slash"></i>
+                      </span>
+                    </div>
+                    <small id="passwordHelp" class="form-text text-muted">
+                      At least 8 characters with uppercase, lowercase, number,
+                      and symbol
+                    </small>
+                  </div>
+                  <div class="col-md-4 mb-3">
+                    <label for="re_password" class="form-label"
+                      >Confirm Password</label
+                    >
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="re_password"
+                      name="re_password"
+                      required
+                      aria-describedby="rePasswordHelp"
+                    />
+                    <small id="rePasswordHelp" class="form-text text-muted"
+                      >Re-type your password</small
+                    >
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label">Select State Of Origin</label>
+
+                    <select
+                      id="stateOfOrigin"
+                      class="selectpicker nice-select default-select form-control wide mh-auto"
+                      required
+                    >
+                      <option value="">Select State</option>
+                      <option value="adamawa">Adamawa</option>
+                      <option value="akwa_ibom">Akwa Ibom</option>
+                      <option value="anambra">Anambra</option>
+                      <option value="abia">Abia</option>
+                      <option value="bauchi">Bauchi</option>
+                      <option value="benue">Benue</option>
+                      <option value="borno">Borno</option>
+                      <option value="bayelsa">Bayelsa</option>
+                      <option value="delta">Delta</option>
+                      <option value="ebonyi">Ebonyi</option>
+                      <option value="edo">Edo</option>
+                      <option value="enugu">Enugu</option>
+                      <option value="abuja">abuja</option>
+                      <option value="gombe">Gombe</option>
+                      <option value="jigawa">Jigawa</option>
+                      <option value="ekiti">Ekiti</option>
+                      <option value="lagos">Lagos</option>
+                      <option value="oyo">Oyo</option>
+                      <option value="imo">Imo</option>
+                      <option value="kaduna">Kaduna</option>
+                      <option value="kebbi">Kebbi</option>
+                      <option value="kano">Kano</option>
+                      <option value="kogi">Kogi</option>
+                      <option value="osun">Osun</option>
+                      <option value="sokoto">Sokoto</option>
+                      <option value="plateau">Plateau</option>
+                      <option value="taraba">Taraba</option>
+                      <option value="yobe">Yobe</option>
+                      <option value="zamfara">zamfara</option>
+                      <option value="katsina">Katsina</option>
+                      <option value="kwara">Kwara</option>
+                      <option value="nasarawa">Nasarawa</option>
+                      <option value="niger">Niger</option>
+                      <option value="rivers">Rivers</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label for="NIN" class="form-label">NIN</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="NIN"
+                      name="NIN"
+                      maxlength="11"
+                      minlength="11"
+                      required
+                      aria-describedby="ninHelp"
+                    />
+                    <small id="ninHelp" class="form-text text-muted"
+                      >Enter your 11-digit NIN</small
+                    >
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
+                    Close
+                  </button>
+                  <button type="submit" id="submitbtn" class="btn btn-primary">
+                    Save changes
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!--**********************************
             Header end ti-comment-alt
         ***********************************-->
@@ -141,38 +370,6 @@
       <div class="deznav">
         <div class="deznav-scroll">
           <ul class="metismenu" id="menu">
-            <li>
-              <style type="text/css">
-                a.gflag {
-                  vertical-align: middle;
-                  font-size: 16px;
-                  padding: 1px 0;
-                  background-repeat: no-repeat;
-                  background-image: url(../../gtranslate.net/flags/16.png);
-                }
-                a.gflag img {
-                  border: 0;
-                }
-                a.gflag:hover {
-                  background-image: url(../../gtranslate.net/flags/16a.png);
-                }
-                #goog-gt-tt {
-                  display: none !important;
-                }
-                .goog-te-banner-frame {
-                  display: none !important;
-                }
-                .goog-te-menu-value:hover {
-                  text-decoration: none !important;
-                }
-                body {
-                  top: 0 !important;
-                }
-                #google_translate_element2 {
-                  display: none !important;
-                }
-              </style>
-            </li>
             <!-- Super Admin Menu -->
             <li class="super-admin-menu">
               <a class="ai-icon" href="index.html" aria-expanded="false">
@@ -226,8 +423,16 @@
             <!-- Super Admin Menu -->
             <li class="super-admin-menu">
               <a class="ai-icon" href="citizens.html" aria-expanded="false">
-                <i class="fa fa-arrows-h"></i>
-                <span class="nav-text">Citizens</span>
+                <i class="fa fa-user" aria-hidden="true"></i>
+
+                <span class="nav-text">Users</span>
+              </a>
+            </li>
+            <li class="super-admin-menu">
+              <a class="ai-icon" href="kindred.html" aria-expanded="false">
+                <i class="fa fa-user" aria-hidden="true"></i>
+
+                <span class="nav-text">Kindreds</span>
               </a>
             </li>
             <!-- User-menu -->
@@ -238,7 +443,7 @@
               </a>
             </li>
 
-            <li>
+            <li class="user-menu">
               <a class="ai-icon" href="profile.html" aria-expanded="false">
                 <i class="fa fa-user" aria-hidden="true"></i>
                 <span class="nav-text">User Account</span>
@@ -292,6 +497,8 @@
                             <th>Phone</th>
                             <th>Email</th>
                             <th>Role</th>
+                            <th>State Of Origin</th>
+
                             <th>Action</th>
                             <th>View</th>
                           </tr>
@@ -380,7 +587,7 @@
         ***********************************-->
       <div class="footer">
         <div class="copyright">
-          <p>Copyright ©Powered By BDIC 2025</p>
+          <p>Copyright ©BDIC Ltd 2025. All rights reserved.</p>
         </div>
       </div>
       <!--**********************************
@@ -403,6 +610,257 @@
       src="../../code.tidio.co_443/bpnp4xkz2axqrebqxcezgdca9yot1iyn.js"
       async
     ></script>
+
+    <script>
+      $(document).ready(function () {
+        // Toggle password visibility
+        $("#togglePassword").click(function () {
+          const passwordInput = $("#password");
+          const type =
+            passwordInput.attr("type") === "password" ? "text" : "password";
+          passwordInput.attr("type", type);
+          $(this).find("i").toggleClass("fa-eye fa-eye-slash");
+        });
+
+        // Helper function to display error messages
+        const showError = (input, message) => {
+          const formGroup = input.closest(".mb-3");
+          const errorElement = formGroup.querySelector(".error-message");
+
+          if (!errorElement) {
+            const errorDiv = document.createElement("div");
+            errorDiv.className = "error-message text-danger mt-1";
+            errorDiv.innerText = message;
+            formGroup.appendChild(errorDiv);
+          } else {
+            errorElement.innerText = message;
+          }
+
+          input.classList.add("is-invalid");
+        };
+
+        // Helper function to clear error messages
+        const clearError = (input) => {
+          const formGroup = input.closest(".mb-3");
+          const errorElement = formGroup.querySelector(".error-message");
+
+          if (errorElement) {
+            errorElement.remove();
+          }
+
+          input.classList.remove("is-invalid");
+        };
+
+        // Validation functions for each field
+        const validateFirstName = (input) => {
+          const value = input.value.trim();
+          if (!value) {
+            showError(input, "First name is required.");
+            return false;
+          } else if (!/^[a-zA-Z]+$/.test(value)) {
+            showError(input, "First name should contain only letters.");
+            return false;
+          } else {
+            clearError(input);
+            return true;
+          }
+        };
+
+        const validateLastName = (input) => {
+          const value = input.value.trim();
+          if (!value) {
+            showError(input, "Last name is required.");
+            return false;
+          } else if (!/^[a-zA-Z]+$/.test(value)) {
+            showError(input, "Last name should contain only letters.");
+            return false;
+          } else {
+            clearError(input);
+            return true;
+          }
+        };
+
+        const validateEmail = (input) => {
+          const value = input.value.trim();
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!value) {
+            showError(input, "Email is required.");
+            return false;
+          } else if (!emailRegex.test(value)) {
+            showError(input, "Please enter a valid email address.");
+            return false;
+          } else {
+            clearError(input);
+            return true;
+          }
+        };
+
+        const validatePhone = (input) => {
+          const value = input.value.trim();
+          const phoneRegex = /^0[7-9][0-1]\d{8}$/;
+          if (!value) {
+            showError(input, "Phone number is required.");
+            return false;
+          } else if (!phoneRegex.test(value)) {
+            showError(input, "Please enter a valid Nigerian phone number.");
+            return false;
+          } else {
+            clearError(input);
+            return true;
+          }
+        };
+
+        const validatePassword = (input) => {
+          const value = input.value.trim();
+          const passwordRegex =
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+          if (!value) {
+            showError(input, "Password is required.");
+            return false;
+          } else if (!passwordRegex.test(value)) {
+            showError(input, "Error");
+            return false;
+          } else {
+            clearError(input);
+            return true;
+          }
+        };
+
+        const validateConfirmPassword = (input) => {
+          const value = input.value.trim();
+          const password = $("#password").val().trim();
+          if (!value) {
+            showError(input, "Please confirm your password.");
+            return false;
+          } else if (value !== password) {
+            showError(input, "Passwords do not match.");
+            return false;
+          } else {
+            clearError(input);
+            return true;
+          }
+        };
+
+        const validateNIN = (input) => {
+          const value = input.value.trim();
+          if (!value) {
+            showError(input, "NIN is required.");
+            return false;
+          } else if (!/^\d{11}$/.test(value)) {
+            showError(
+              input,
+              "NIN should contain only numbers and be exactly 11 digits long."
+            );
+            return false;
+          } else {
+            clearError(input);
+            return true;
+          }
+        };
+
+        // Attach event listeners for real-time validation
+        $("#firstname").on("input blur", function () {
+          validateFirstName(this);
+        });
+
+        $("#lastname").on("input blur", function () {
+          validateLastName(this);
+        });
+
+        $("#email").on("input blur", function () {
+          validateEmail(this);
+        });
+
+        $("#phone").on("input blur", function () {
+          validatePhone(this);
+        });
+
+        $("#password").on("input blur", function () {
+          validatePassword(this);
+        });
+
+        $("#re_password").on("input blur", function () {
+          validateConfirmPassword(this);
+        });
+
+        $("#NIN").on("input blur", function () {
+          validateNIN(this);
+        });
+
+        // Form submission handler
+        $("#signUpForm").on("submit", function (e) {
+          e.preventDefault();
+
+          const isFirstNameValid = validateFirstName($("#firstname")[0]);
+          const isLastNameValid = validateLastName($("#lastname")[0]);
+          const isEmailValid = validateEmail($("#email")[0]);
+          const isPhoneValid = validatePhone($("#phone")[0]);
+          const isPasswordValid = validatePassword($("#password")[0]);
+          const isConfirmPasswordValid = validateConfirmPassword(
+            $("#re_password")[0]
+          );
+          const isNINValid = validateNIN($("#NIN")[0]);
+
+          if (
+            isFirstNameValid &&
+            isLastNameValid &&
+            isEmailValid &&
+            isPhoneValid &&
+            isPasswordValid &&
+            isConfirmPasswordValid &&
+            isNINValid
+          ) {
+            const formData = {
+              firstname: $("#firstname").val().trim(),
+              lastname: $("#lastname").val().trim(),
+              email: $("#email").val().trim(),
+              phone: $("#phone").val().trim(),
+              password: $("#password").val().trim(),
+              NIN: $("#NIN").val().trim(),
+              stateOfOrigin: $("#stateOfOrigin").val().trim(),
+            };
+
+            submitForm(formData);
+          }
+        });
+
+        // Submit form to backend
+        const submitForm = async (formData) => {
+          try {
+            $("#submitbtn")
+              .html('<i class="fa fa-spinner fa-spin"></i>')
+              .prop("disabled", true);
+
+            const response = await $.ajax({
+              type: "POST",
+              url: `${BACKEND_URL}/auth/signup`,
+              contentType: "application/json",
+              data: JSON.stringify(formData),
+            });
+
+            Swal.fire(
+              "Welcome",
+              "Please check your email to activate your account. Click OK to continue.",
+              "success"
+            );
+
+            // Reset the form
+            $("#signUpForm")[0].reset();
+            // .then(() => {
+            //   window.location.href = "/auth/login.html";
+            // });
+          } catch (error) {
+            Swal.fire(
+              "Oops...",
+              error.responseJSON?.message || "An error occurred.",
+              "error"
+            );
+          } finally {
+            $("#submitbtn").html("Sign Up").attr("disabled", false);
+          }
+        };
+      });
+    </script>
     <!--**********************************
         Scripts
     ***********************************-->

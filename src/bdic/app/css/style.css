@@ -12057,9 +12057,25 @@ a.active {
   height: 100%;
   width: 100%;
 }
-@media only screen and (max-width: 1199px) {
+/* @media only screen and (max-width: 1199px) {
   .header {
     height: 5rem;
+  }
+} */
+
+/* Collapsed state (on smaller screens) */
+@media only screen and (max-width: 1199px) {
+  /* Hide the brand text when collapsed */
+  .header {
+    height: 5rem;
+  }
+  .nav-header .brand-text {
+    display: none;
+  }
+
+  /* Ensure the logo remains visible */
+  .nav-header .brand-logo .logo-img {
+    display: block;
   }
 }
 
