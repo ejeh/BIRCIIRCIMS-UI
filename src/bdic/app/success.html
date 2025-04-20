@@ -7,5 +7,22 @@
   </head>
   <body>
     <h2>Thank you! Your payment was successful.</h2>
+
+    <p>Thank you for your purchase. Your transaction has been completed.</p>
+
+    <p>
+      If you have any questions, please contact our support team at
+      <a href="mailto:support@example.com">support@example.com</a>.
+    </p>
+
+    <p>Please wait redirecting you to download page in 5 seconds.......</p>
+
+    <script>
+      // Redirect to the previous page after 10 seconds
+      // You can adjust the timeout duration as needed
+      setTimeout(function () {
+        window.history.back();
+      }, 10000); // Redirect after 10 seconds
+    </script>
   </body>
 </html>

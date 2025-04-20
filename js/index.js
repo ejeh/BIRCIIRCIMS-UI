@@ -1,9 +1,18 @@
-const BACKEND_URL = "http://localhost:5000/api";
-// const BACKEND_URL = "https://identity-management-af43.onrender.com/api";
+const isDevelopment = window.location.hostname === "127.0.0.1";
+
+const BACKEND_URL = isDevelopment
+  ? "http://localhost:5000/api"
+  : "https://identity-management-af43.onrender.com/api";
+
+console.log("BACKEND_URL", BACKEND_URL);
 
 let userData = localStorage.getItem("token");
 userData = JSON.parse(userData);
 const { token, user } = userData;
+
+function generatePaymentReference() {
+  return "ref-" + Date.now() + "-" + Math.random().toString(36).substr(2, 8);
+}
 
 $(document).ready(function () {
   const allowedState = "benue"; // Change to the allowed state
@@ -45,7 +54,7 @@ $(document).ready(function () {
     // $(".dashboard_bar").text("Admin Panel");
   } else if (userRole === "support_admin") {
     $(".support-admin-menu").show();
-    $('.super-admin-menu:has(a[href="approvals.html"])').show();
+    // $('.super-admin-menu:has(a[href="approvals.html"])').show();
     $('.super-admin-menu:has(a[href="index.html"])').show();
 
     // $(".dashboard_bar").text("Admin Panel");
@@ -1460,6 +1469,129 @@ $(document).ready(function () {
 });
 
 // // find certificate by ID
+// $(document).ready(function () {
+//   let resubmitId = null;
+//   let downloadUrl = `${BACKEND_URL}/indigene/certificate/download/`;
+
+//   function fetchData() {
+//     $.ajax({
+//       url: `${BACKEND_URL}/indigene/certificate/${user.id}`,
+//       method: "GET",
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//       },
+//       success: function (data) {
+//         const tableBody = $("#request-table");
+//         tableBody.empty();
+
+//         // Helper function to append a row to the table
+//         const appendRow = (isDisabled, showPayButton) => {
+//           tableBody.append(`
+//             <tr>
+//               <td>${data.firstname} ${data.lastname}</td>
+//               <td>${data.phone}</td>
+//               <td>${data.email}</td>
+//               <td>${data.status}</td>
+//               <td>${data.resubmissionAttempts || 0}</td>
+//               <td>
+//                 <div id="loadingIndicator" style="display: none;">
+//                   <div class="loader"></div>
+//                 </div>
+//                 <div class="dropdown">
+//                   <button class="btn btn-xs btn-action dropdown-toggle" data-bs-toggle="dropdown">
+//                     <i class="fas fa-ellipsis-v"></i>
+//                   </button>
+//                   <ul class="dropdown-menu">
+//                     <li>
+//                      <div class="tooltip-wrapper" style="position: relative; display: inline-block;">
+//                       <button class="dropdown-item btn-cert-download" data-id="${
+//                         data._id
+//                       }" ${isDisabled ? "disabled" : ""} style="color: green;">
+//                         Download Certificate
+//                       </button>
+//                          ${
+//                            isDisabled
+//                              ? `<span class="custom-tooltip">Please pay before downloading</span>`
+//                              : ""
+//                          }
+//                         </div>
+//                         </li>
+//                     <li>
+//                      <div class="tooltip-wrapper" style="position: relative; display: inline-block;">
+
+//                       <button class="dropdown-item view-cert-btn" data-id="${
+//                         data._id
+//                       }" ${isDisabled ? "disabled" : ""}  style="color: blue;">
+//                         View Certificate
+//                       </button>
+//                        ${
+//                          isDisabled
+//                            ? `<span class="custom-tooltip">Please pay to view certificate</span>`
+//                            : ""
+//                        }
+//                         </div>
+//                     </li>
+//                     ${
+//                       data.status === "Rejected" && data.resubmissionAllowed
+//                         ? `<li><button class="dropdown-item resubmit-btn" data-id="${data._id}" data-name="${data.firstname}" style="color: orange;">
+//                            Resubmit
+//                          </button></li>`
+//                         : ""
+//                     }
+//                     ${
+//                       data.status === "Rejected"
+//                         ? `<li><button class="dropdown-item delete-btn" data-id="${data._id}" style="color: red;">
+//                            Delete request
+//                          </button></li>`
+//                         : ""
+//                     }
+//                     ${
+//                       showPayButton
+//                         ? `<li><button class="dropdown-item btn-cert-pay" data-id="${data._id}">Pay</button></li>`
+//                         : ""
+//                     }
+//                   </ul>
+//                 </div>
+//               </td>
+//             </tr>
+//           `);
+//         };
+
+//         $("#certificate-status").text(data.status);
+
+//         if (data.status === "Rejected" || data.status === "Pending") {
+//           appendRow(true, false);
+//         } else if (data.status === "Approved") {
+//           // Check if payment has been made
+//           $.ajax({
+//             url: `${BACKEND_URL}/transaction/${user.id}`,
+//             method: "GET",
+//             headers: {
+//               Authorization: `Bearer ${token}`,
+//             },
+//             success: function (transaction) {
+//               if (transaction.length > 0) {
+//                 transaction.forEach((transaction) => {
+//                   if (transaction.certificateId === data._id) {
+//                     if (transaction.status === "success") {
+//                       appendRow(false, false);
+//                     } else {
+//                       appendRow(true, true);
+//                     }
+//                   }
+//                 });
+//               } else {
+//                 // No transactions found, append row with pay button
+//                 appendRow(true, true);
+//               }
+//             },
+//             error: function (error) {
+//               console.error("Error fetching transaction status:", error);
+//               appendRow(true, true);
+//             },
+//           });
+//         }
+
 $(document).ready(function () {
   let resubmitId = null;
   let downloadUrl = `${BACKEND_URL}/indigene/certificate/download/`;
@@ -1475,7 +1607,6 @@ $(document).ready(function () {
         const tableBody = $("#request-table");
         tableBody.empty();
 
-        // Helper function to append a row to the table
         const appendRow = (isDisabled, showPayButton) => {
           tableBody.append(`
             <tr>
@@ -1494,46 +1625,47 @@ $(document).ready(function () {
                   </button>
                   <ul class="dropdown-menu">
                     <li>
-                     <div class="tooltip-wrapper" style="position: relative; display: inline-block;">
-                      <button class="dropdown-item btn-cert-download" data-id="${
-                        data._id
-                      }" ${isDisabled ? "disabled" : ""} style="color: green;">
-                        Download Certificate
-                      </button>
-                         ${
-                           isDisabled
-                             ? `<span class="custom-tooltip">Please pay before downloading</span>`
-                             : ""
-                         }
-                        </div>
-                        </li>
+                      <div class="tooltip-wrapper" style="position: relative; display: inline-block;">
+                        <button class="dropdown-item btn-cert-download" data-id="${
+                          data._id
+                        }" ${
+            isDisabled ? "disabled" : ""
+          } style="color: green;">
+                          Download Certificate
+                        </button>
+                        ${
+                          isDisabled
+                            ? `<span class="custom-tooltip">Please pay before downloading</span>`
+                            : ""
+                        }
+                      </div>
+                    </li>
                     <li>
-                     <div class="tooltip-wrapper" style="position: relative; display: inline-block;">
-
-                      <button class="dropdown-item view-cert-btn" data-id="${
-                        data._id
-                      }" ${isDisabled ? "disabled" : ""}  style="color: blue;">
-                        View Certificate
-                      </button>
-                       ${
-                         isDisabled
-                           ? `<span class="custom-tooltip">Please pay to view certificate</span>`
-                           : ""
-                       }
-                        </div>
+                      <div class="tooltip-wrapper" style="position: relative; display: inline-block;">
+                        <button class="dropdown-item view-cert-btn" data-id="${
+                          data._id
+                        }" ${isDisabled ? "disabled" : ""} style="color: blue;">
+                          View Certificate
+                        </button>
+                        ${
+                          isDisabled
+                            ? `<span class="custom-tooltip">Please pay to view certificate</span>`
+                            : ""
+                        }
+                      </div>
                     </li>
                     ${
                       data.status === "Rejected" && data.resubmissionAllowed
                         ? `<li><button class="dropdown-item resubmit-btn" data-id="${data._id}" data-name="${data.firstname}" style="color: orange;">
-                           Resubmit
-                         </button></li>`
+                            Resubmit
+                          </button></li>`
                         : ""
                     }
                     ${
                       data.status === "Rejected"
                         ? `<li><button class="dropdown-item delete-btn" data-id="${data._id}" style="color: red;">
-                           Delete request
-                         </button></li>`
+                            Delete request
+                          </button></li>`
                         : ""
                     }
                     ${
@@ -1553,32 +1685,31 @@ $(document).ready(function () {
         if (data.status === "Rejected" || data.status === "Pending") {
           appendRow(true, false);
         } else if (data.status === "Approved") {
-          // Check if payment has been made
           $.ajax({
             url: `${BACKEND_URL}/transaction/${user.id}`,
             method: "GET",
             headers: {
               Authorization: `Bearer ${token}`,
             },
-            success: function (transaction) {
-              if (transaction.length > 0) {
-                transaction.forEach((transaction) => {
-                  if (transaction.certificateId === data._id) {
-                    if (transaction.status === "success") {
-                      appendRow(false, false);
-                    } else {
-                      appendRow(true, true);
-                    }
-                  }
-                });
+            success: function (transactions) {
+              let matchingTransaction = transactions.find(
+                (t) => t.certificateId === data._id
+              );
+
+              if (matchingTransaction) {
+                if (matchingTransaction.status === "success") {
+                  appendRow(false, false);
+                } else {
+                  appendRow(true, true);
+                }
               } else {
-                // No transactions found, append row with pay button
+                // No matching transaction for this certificate
                 appendRow(true, true);
               }
             },
             error: function (error) {
               console.error("Error fetching transaction status:", error);
-              appendRow(true, true);
+              appendRow(true, true); // Fallback to safe state
             },
           });
         }
@@ -1741,57 +1872,6 @@ $(document).ready(function () {
     });
   }
 
-  // function initiatePayment(certificateId) {
-  //   // Retrieve user authentication data
-  //   if (!userData?.token || !userData?.user?.id) {
-  //     Swal.fire("Error", "User authentication failed!", "error");
-  //     return;
-  //   }
-  //   const { token, user } = userData;
-  //   const userId = user.id; // Replace with actual user ID
-  //   const email = user.email; // Replace with actual email
-  //   const amount = 5000; // Replace with actual amount
-  //   if (!token) {
-  //     alert("Please log in to proceed with payment");
-  //     return;
-  //   }
-  //   $.ajax({
-  //     url: `${BACKEND_URL}/transaction/pay`,
-  //     method: "POST",
-  //     contentType: "application/json",
-  //     headers: {
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //     userId,
-  //     data: JSON.stringify({
-  //       certificateId,
-  //       userId,
-  //       amount,
-  //       email,
-  //       paymentType: "certificate", // ✅ FIX: Include paymentType to match backend expectations
-  //     }),
-  //     success: function (response) {
-  //       if (response.status === 200) {
-  //         window.open(response.data.authorizationUrl, "_blank");
-  //       } else {
-  //         alert("Payment initiation failed!");
-  //       }
-  //     },
-  //     error: function (error) {
-  //       console.error("Error initiating payment:", error.message);
-  //       alert("Failed to initiate payment. Please try again.");
-  //     },
-  //   });
-  // }
-  // $(document).on("click", ".btn-cert-pay", function () {
-  //   const certificateId = $(this).data("id");
-  //   initiatePayment(certificateId);
-  // });
-
-  function generatePaymentReference() {
-    return "ref-" + Date.now() + "-" + Math.random().toString(36).substr(2, 8);
-  }
-
   function initiatePayment(certificateId) {
     // Retrieve user authentication data
     if (!userData?.token || !userData?.user?.id) {
@@ -1805,8 +1885,13 @@ $(document).ready(function () {
     const firstName = user.firstname || "User";
     const lastName = user.lastname || " ";
     const phone = user.phone || "0000000000";
-    const amount = 5000; // In kobo
+    const amount = 500000; // In kobo
     const reference = generatePaymentReference(); // Unique for each attempt
+
+    if (!token) {
+      alert("Please log in to proceed with payment");
+      return;
+    }
 
     $.ajax({
       url: `${BACKEND_URL}/transaction/pay`,
@@ -1827,7 +1912,6 @@ $(document).ready(function () {
         console.log("response", response);
         if (response.status === 200 && response.data?.reference) {
           const paymentRef = response.data.reference;
-          console.log("paymentRef", paymentRef);
 
           const handler = CredoWidget.setup({
             key: "0PUB0972HedMpDz1VtV8El1zNNC6m9Ji",
@@ -1846,7 +1930,8 @@ $(document).ready(function () {
             },
             callBack: function (response) {
               console.log("Payment successful:", response);
-              window.location.href = response.callbackUrl;
+              window.location.href =
+                "http://127.0.0.1:5501/src/bdic/app/success.html";
             },
           });
 
@@ -3055,6 +3140,7 @@ $(document).ready(function () {
         Authorization: `Bearer ${token}`,
       },
       success: function (data) {
+        console.log(data);
         const tableBody = $("#card-table");
         tableBody.empty();
 
@@ -3136,6 +3222,7 @@ $(document).ready(function () {
         if (data.status === "Rejected" || data.status === "Pending") {
           appendRow(true, false);
         } else if (data.status === "Approved") {
+          // appendRow(true, true);
           // Check if payment has been made
           $.ajax({
             url: `${BACKEND_URL}/transaction/${user.id}`,
@@ -3143,17 +3230,16 @@ $(document).ready(function () {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-            success: function (transaction) {
-              if (transaction.length > 0) {
-                transaction.forEach((transaction) => {
-                  if (transaction.cardId === data._id) {
-                    if (transaction.status === "success") {
-                      appendRow(false, false);
-                    } else {
-                      appendRow(true, true);
-                    }
-                  }
-                });
+            success: function (transactions) {
+              let matchingTransaction = transactions.find(
+                (t) => t.cardId === data._id
+              );
+              if (matchingTransaction) {
+                if (matchingTransaction.status === "success") {
+                  appendRow(false, false);
+                } else {
+                  appendRow(true, true);
+                }
               } else {
                 // No transactions found, append row with pay button
                 appendRow(true, true);
@@ -3348,9 +3434,13 @@ $(document).ready(function () {
       }
       const { token, user } = userData;
 
-      const userId = user.id; // Replace with actual user ID
-      const email = user.email; // Replace with actual email
-      const amount = 5000; // Replace with actual amount
+      const email = user.email;
+      const userId = user.id;
+      const firstName = user.firstname || "User";
+      const lastName = user.lastname || " ";
+      const phone = user.phone || "0000000000";
+      const amount = 500000; // In kobo
+      const reference = generatePaymentReference(); // Unique for each attempt
 
       if (!token) {
         alert("Please log in to proceed with payment");
@@ -3369,10 +3459,36 @@ $(document).ready(function () {
           amount,
           email,
           paymentType: "card", // ✅ FIX: Include paymentType to match backend expectations
+          reference,
         }),
         success: function (response) {
-          if (response.status === 200) {
-            window.open(response.data.authorizationUrl, "_blank");
+          console.log("response", response);
+          if (response.status === 200 && response.data?.reference) {
+            const paymentRef = response.data.reference;
+
+            const handler = CredoWidget.setup({
+              key: "0PUB0972HedMpDz1VtV8El1zNNC6m9Ji",
+              customerFirstName: firstName,
+              customerLastName: lastName,
+              email: email,
+              amount: amount,
+              currency: "NGN",
+              renderSize: 0,
+              channels: ["card", "bank"],
+              reference: paymentRef,
+              customerPhoneNumber: phone,
+              callbackUrl: `http://127.0.0.1:5501/src/bdic/app/success.html`,
+              onClose: function () {
+                console.log("Payment widget closed");
+              },
+              callBack: function (response) {
+                console.log("Payment successful:", response);
+                window.location.href =
+                  "http://127.0.0.1:5501/src/bdic/app/success.html";
+              },
+            });
+
+            handler.openIframe();
           } else {
             alert("Payment initiation failed!");
           }
@@ -3726,7 +3842,6 @@ function fetchKindredAll(page = 1, pageSize = 100) {
       Authorization: `Bearer ${token}`,
     },
     success: function (response) {
-      console.log(response);
       if (response && response.data && response.data.length) {
         const kindredSelect = $("#kindred");
         kindredSelect.empty(); // Clear existing options
