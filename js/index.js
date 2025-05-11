@@ -2,9 +2,8 @@ const isDevelopment = window.location.hostname === "127.0.0.1";
 
 const BACKEND_URL = isDevelopment
   ? "http://localhost:5000/api"
-  : "http://api.citizenship.benuestate.gov.ng/";
+  : "http://api.citizenship.benuestate.gov.ng/api";
 
-console.log("BACKEND_URL", BACKEND_URL);
 
 let userData = localStorage.getItem("token");
 userData = JSON.parse(userData);
