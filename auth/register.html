@@ -3,443 +3,339 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BIRCIIRCIMS - Signup</title>
-    <!-- Bootstrap 5.3.0 CSS -->
+    <title>Benue State Integrated System</title>
+    <!-- Bootstrap CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css" />
+    <!-- Font Awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
     <link
       rel="icon"
       type="image/png"
       href="/assets/images/benue-state-logo.png"
       sizes="16x16"
     />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    />
+
     <script type="text/javascript" src="/js/index.js"></script>
-
-    <style>
-      body {
-        background: linear-gradient(90deg, #008080 0%, #2e8b57 100%);
-        min-height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-family: "Arial", sans-serif;
-        padding: 20px; /* Add padding for smaller screens */
-      }
-
-      .container {
-        /* background: #fff; */
-        /* border-radius: 10px; */
-        /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
-        padding: 20px;
-        /* max-width: 1000px;s */
-        width: 100%;
-        height: auto; /* Change height to auto for responsiveness */
-        display: flex;
-        flex-direction: column; /* Stack sections vertically on small screens */
-        align-items: center;
-      }
-      .header-section {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        /* align-items: center; */
-        justify-content: center;
-        padding: 67px 20px 20px 20px;
-        border-right: none; /* Remove border for small screens */
-        border-bottom: 2px solid #eee; /* Add bottom border for separation */
-        /* background: beige; */
-        /* border-radius: 1em; */
-        background: #00ad6a;
-        text-align: center; /* Center text for small screens */
-        color: #fff;
-      }
-
-      .header-section h2 {
-        text-align: center;
-        font-size: 30px;
-      }
-      .content-section {
-        flex: 2;
-        padding: 20px;
-        width: 100%; /* Ensure full width on small screens */
-        background-color: #fff;
-      }
-
-      .container h3,
-      .container h4 {
-        text-align: center;
-        color: #333;
-      }
-
-      .btn-login {
-        background-color: #4c956c;
-        color: #fff;
-      }
-
-      .btn-login:hover {
-        background-color: #2c6e49;
-        color: #fff;
-      }
-
-      .form-control:focus {
-        border-color: #4c956c;
-        box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
-      }
-
-      .text-center a {
-        color: #4c956c;
-        text-decoration: none;
-      }
-
-      .text-center a:hover {
-        text-decoration: underline;
-      }
-
-      .main-title {
-        font-weight: 700;
-        margin: 0;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-      }
-
-      .copyright {
-        text-align: center;
-        font-size: 14px;
-        margin-top: 20px;
-      }
-      .copyright a {
-        color: #fff;
-        text-decoration: none;
-      }
-
-      .copyright a:hover {
-        text-decoration: underline;
-      }
-
-      .password-toggle {
-        position: absolute;
-        right: 12px;
-        top: 72%;
-        transform: translateY(-50%);
-        cursor: pointer;
-        color: #666;
-      }
-
-      .mb-3 {
-        margin-bottom: 1rem !important;
-      }
-
-      .text-danger {
-        --bs-text-opacity: 1;
-        color: rgba(var(--bs-danger-rgb), var(--bs-text-opacity)) !important;
-        font-size: 15px;
-      }
-      .text-muted {
-        --bs-text-opacity: 1;
-        color: var(--bs-secondary-color) !important;
-        font-size: 0.8rem;
-      }
-
-      .form-label {
-        font-size: 16px;
-      }
-      .w-50 {
-        width: 35% !important;
-      }
-
-      .password-requirements {
-        font-size: 0.8rem;
-        color: #6c757d;
-        margin-top: 5px;
-      }
-
-      .password-requirements ul {
-        padding-left: 20px;
-        margin-bottom: 15px;
-      }
-
-      /* Media Queries for Responsiveness */
-      @media (min-width: 768px) {
-        .container {
-          flex-direction: row; /* Restore side-by-side layout on larger screens */
-          height: auto; /* Set height for larger screens */
-        }
-
-        .header-section {
-          border-right: 2px solid #eee; /* Restore right border */
-          border-bottom: none; /* Remove bottom border */
-          text-align: left; /* Align text to the left */
-        }
-
-        .content-section {
-          width: auto; /* Reset width for larger screens */
-        }
-      }
-    </style>
   </head>
   <body>
-    <div class="container">
-      <div class="header-section">
-        <h2 style="color: #fff; font-weight: bold">REGISTER</h2>
-
-        <img
-          class="img-fluid w-50"
-          src="/assets/images/benue-state-logo.png"
-          alt="Benue State Logo"
-        />
-        <div class="text-white mt-4">
-          <h6 class="subtitle mb-3 font-weight-bold">
-            Benue State Integrated Residents/Citizens <br />
-            Identity/Indigene Registration <br />
-            and Card Issuance Management System
-          </h6>
-          <!-- <h4 class="main-title mb-0 font-weight-bold text-muted">
-            (BIRCIIRCIMS)
-          </h4> -->
-          <img
-            class="img-fluid"
-            src="/assets/images/23.Model-with-Certificate.png"
-            alt="Benue State Logo"
-          />
-        </div>
-        <div class="copyright">
-          <a href="https://bdic.ng/" target="_blank">
-            Powered By BDIC <br />© 2025 All Rights Reserved
-          </a>
-        </div>
-      </div>
-
-      <div class="content-section">
-        <form id="signUpForm" novalidate>
-          <div class="row">
-            <!-- First Name -->
-            <div class="col-md-4 mb-3">
-              <label for="firstname" class="form-label">First Name</label>
-              <input
-                type="text"
-                class="form-control"
-                id="firstname"
-                name="firstname"
-                required
-                autocomplete="given-name"
-                aria-describedby="firstnameHelp"
-              />
-              <small id="firstnameHelp" class="form-text text-muted">
-                Enter your first name
-              </small>
-            </div>
-
-            <!-- Last Name -->
-            <div class="col-md-4 mb-3">
-              <label for="lastname" class="form-label">Last Name</label>
-              <input
-                type="text"
-                class="form-control"
-                id="lastname"
-                name="lastname"
-                required
-                autocomplete="family-name"
-                aria-describedby="lastnameHelp"
-              />
-              <small id="lastnameHelp" class="form-text text-muted">
-                Enter your last name
-              </small>
-            </div>
-
-            <!-- Email -->
-            <div class="col-md-4 mb-3">
-              <label for="email" class="form-label">Email</label>
-              <input
-                type="email"
-                class="form-control"
-                id="email"
-                name="email"
-                required
-                autocomplete="email"
-                aria-describedby="emailHelp"
-              />
-              <small id="emailHelp" class="form-text text-muted">
-                Enter a valid email address
-              </small>
-            </div>
+    <div class="container-fluid p-0">
+      <div class="row g-0">
+        <!-- Green sidebar -->
+        <div class="col-md-5 green-sidebar p-4 text-white d-flex flex-column">
+          <div class="d-flex align-items-center mb-4">
+            <div class="benue-logo me-3"></div>
           </div>
 
-          <div class="row">
-            <!-- Phone -->
-            <div class="col-md-4 mb-3">
-              <label for="phone" class="form-label">Phone</label>
-              <input
-                type="tel"
-                class="form-control"
-                id="phone"
-                name="phone"
-                maxlength="11"
-                pattern="^0[7-9][0-1]\d{8}$"
-                required
-                autocomplete="tel-national"
-                aria-describedby="phoneHelp"
-              />
-              <small id="phoneHelp" class="form-text text-muted">
-                Enter a valid Nigerian phone number
-              </small>
-            </div>
-            <!-- State of Origin -->
-            <div class="col-md-4 mb-3">
-              <label for="stateOfOrigin" class="form-label"
-                >State of Origin</label
-              >
-              <!-- onchange="updateLocalGovernmentsOfOrigin()" -->
-              <select
-                id="stateOfOrigin"
-                name="stateOfOrigin"
-                class="form-control"
-                required
-                aria-describedby="stateHelp"
-                onchange="updateLocalGovernmentsOfOrigin()"
-              >
-                <option value="">Select State</option>
-                <option value="abia">Abia</option>
-                <option value="adamawa">Adamawa</option>
-                <option value="akwa_ibom">Akwa Ibom</option>
-                <option value="anambra">Anambra</option>
-                <option value="bauchi">Bauchi</option>
-                <option value="bayelsa">Bayelsa</option>
-                <option value="benue">Benue</option>
-                <option value="borno">Borno</option>
-                <option value="cross_river">Cross River</option>
-                <option value="delta">Delta</option>
-                <option value="ebonyi">Ebonyi</option>
-                <option value="edo">Edo</option>
-                <option value="ekiti">Ekiti</option>
-                <option value="enugu">Enugu</option>
-                <option value="gombe">Gombe</option>
-                <option value="imo">Imo</option>
-                <option value="jigawa">Jigawa</option>
-                <option value="kaduna">Kaduna</option>
-                <option value="kano">Kano</option>
-                <option value="katsina">Katsina</option>
-                <option value="kebbi">Kebbi</option>
-                <option value="kogi">Kogi</option>
-                <option value="kwara">Kwara</option>
-                <option value="lagos">Lagos</option>
-                <option value="nasarawa">Nasarawa</option>
-                <option value="niger">Niger</option>
-                <option value="ogun">Ogun</option>
-                <option value="ondo">Ondo</option>
-                <option value="osun">Osun</option>
-                <option value="oyo">Oyo</option>
-                <option value="plateau">Plateau</option>
-                <option value="rivers">Rivers</option>
-                <option value="sokoto">Sokoto</option>
-                <option value="taraba">Taraba</option>
-                <option value="yobe">Yobe</option>
-                <option value="zamfara">Zamfara</option>
-                <option value="abuja">Abuja (FCT)</option>
-              </select>
-            </div>
-            <div class="col-md-4 mb-3">
-              <label class="form-label">LGA Of Origin</label>
-              <!-- class="form-select" -->
-              <select id="lgaOfOrigin" name="lgaOfOrigin" class="form-control">
-                <option value="">Select Local Government</option>
-              </select>
-            </div>
+          <h1 class="fs-2 fw-bold mb-2">Benue State Integrated</h1>
+          <h2 class="fs-3 fw-bold mb-1">Residents/Citizens Identity/</h2>
+          <h2 class="fs-3 fw-bold mb-1">Indigene Registration and Card</h2>
+          <h2 class="fs-3 fw-bold mb-4">Issuance Management System</h2>
+
+          <!-- Mobile buttons -->
+          <div class="d-flex d-md-none gap-3 mb-4 w-100">
+            <a
+              href="register.html"
+              class="btn btn-light text-success flex-grow-1"
+              >Register</a
+            >
+            <a href="login.html" class="btn btn-outline-light flex-grow-1"
+              >Log in</a
+            >
           </div>
 
-          <div class="row">
-            <!-- Password -->
-            <div class="col-md-4 mb-3">
-              <div class="position-relative">
-                <label for="password" class="form-label">Password</label>
+          <!-- Certificate image -->
+          <div class="mt-3 mb-4 rounded overflow-hidden">
+            <img
+              src="/assets/images/man-holding-a-cert.png"
+              alt="Person holding certificate"
+              class="img-fluid rounded"
+            />
+          </div>
+
+          <!-- Desktop login button -->
+          <div class="d-none d-md-block mt-auto">
+            <a href="login.html" class="btn btn-outline-light">Log in</a>
+          </div>
+        </div>
+
+        <!-- Registration form -->
+        <div class="col-md-7 p-4 p-md-5">
+          <div class="d-none d-md-flex justify-content-end mb-4">
+            <a href="register.html" class="btn btn-success">Register</a>
+          </div>
+
+          <h2 class="fs-4 fw-bold mb-4">
+            Hello there! Please enter your details to get started
+          </h2>
+
+          <form id="signUpForm">
+            <div class="row g-3">
+              <!-- First name -->
+              <div class="col-md-4">
+                <label for="firstname" class="form-label">First name</label>
                 <input
-                  type="password"
+                  type="text"
                   class="form-control"
-                  id="password"
-                  name="password"
-                  autocomplete="new-password"
+                  id="firstname"
                   required
-                  aria-describedby="passwordHelp"
+                  name="firstname"
+                  aria-describedby="firstnameHelp"
                 />
-                <span
-                  class="password-toggle"
-                  id="togglePassword"
-                  role="button"
-                  tabindex="0"
-                >
-                  <i class="fa-solid fa-eye-slash"></i>
-                </span>
+                <small id="firstnameHelp" class="form-text text-muted">
+                  Enter your first name
+                </small>
               </div>
-              <small id="passwordHelp" class="form-text text-muted">
-                At least 8 characters with uppercase, lowercase, number, and
-                symbol
-              </small>
+
+              <!-- Last name -->
+              <div class="col-md-4">
+                <label for="lastname" class="form-label">Last name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="lastname"
+                  required
+                  aria-describedby="lastnameHelp"
+                />
+                <small id="lastnameHelp" class="form-text text-muted">
+                  Enter your last name
+                </small>
+              </div>
+
+              <!-- Email -->
+              <div class="col-md-4">
+                <label for="email" class="form-label">Email</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="email"
+                  required
+                  aria-describedby="emailHelp"
+                />
+                <small id="emailHelp" class="form-text text-muted">
+                  Enter a valid email address
+                </small>
+              </div>
+
+              <!-- Phone number -->
+              <div class="col-md-4">
+                <label for="phone" class="form-label">Phone number</label>
+                <input
+                  type="tel"
+                  class="form-control"
+                  id="phone"
+                  maxlength="11"
+                  pattern="^0[7-9][0-1]\d{8}$"
+                  required
+                  autocomplete="tel-national"
+                  aria-describedby="phoneHelp"
+                />
+                <small id="phoneHelp" class="form-text text-muted">
+                  Enter a valid Nigerian phone number
+                </small>
+              </div>
+
+              <!-- State -->
+              <div class="col-md-4">
+                <label for="stateOfOrigin" class="form-label">State</label>
+                <!-- onchange="updateLocalGovernmentsOfOrigin()" -->
+                <select
+                  id="stateOfOrigin"
+                  name="stateOfOrigin"
+                  class="form-control"
+                  required
+                  aria-describedby="stateHelp"
+                  onchange="updateLocalGovernmentsOfOrigin()"
+                >
+                  <option value="">Select State</option>
+                  <option value="abia">Abia</option>
+                  <option value="adamawa">Adamawa</option>
+                  <option value="akwa_ibom">Akwa Ibom</option>
+                  <option value="anambra">Anambra</option>
+                  <option value="bauchi">Bauchi</option>
+                  <option value="bayelsa">Bayelsa</option>
+                  <option value="benue">Benue</option>
+                  <option value="borno">Borno</option>
+                  <option value="cross_river">Cross River</option>
+                  <option value="delta">Delta</option>
+                  <option value="ebonyi">Ebonyi</option>
+                  <option value="edo">Edo</option>
+                  <option value="ekiti">Ekiti</option>
+                  <option value="enugu">Enugu</option>
+                  <option value="gombe">Gombe</option>
+                  <option value="imo">Imo</option>
+                  <option value="jigawa">Jigawa</option>
+                  <option value="kaduna">Kaduna</option>
+                  <option value="kano">Kano</option>
+                  <option value="katsina">Katsina</option>
+                  <option value="kebbi">Kebbi</option>
+                  <option value="kogi">Kogi</option>
+                  <option value="kwara">Kwara</option>
+                  <option value="lagos">Lagos</option>
+                  <option value="nasarawa">Nasarawa</option>
+                  <option value="niger">Niger</option>
+                  <option value="ogun">Ogun</option>
+                  <option value="ondo">Ondo</option>
+                  <option value="osun">Osun</option>
+                  <option value="oyo">Oyo</option>
+                  <option value="plateau">Plateau</option>
+                  <option value="rivers">Rivers</option>
+                  <option value="sokoto">Sokoto</option>
+                  <option value="taraba">Taraba</option>
+                  <option value="yobe">Yobe</option>
+                  <option value="zamfara">Zamfara</option>
+                  <option value="abuja">Abuja (FCT)</option>
+                </select>
+              </div>
+
+              <!-- LGA -->
+              <div class="col-md-4">
+                <label for="state" class="form-label">LGA</label>
+                <select
+                  id="lgaOfOrigin"
+                  name="lgaOfOrigin"
+                  class="form-control"
+                >
+                  <option value="">Select Local Government</option>
+                </select>
+              </div>
+
+              <!-- Password -->
+              <div class="col-md-4">
+                <label for="password" class="form-label">Password</label>
+                <div class="input-group">
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="password"
+                    required
+                    aria-describedby="passwordHelp"
+                  />
+                  <button
+                    class="btn btn-outline-secondary password-toggle"
+                    type="button"
+                    data-target="#password"
+                  >
+                    <i class="fa fa-eye-slash"></i>
+                  </button>
+                  <small id="passwordHelp" class="form-text text-muted">
+                    Enter a strong password
+                  </small>
+                </div>
+              </div>
+
+              <!-- Confirm Password -->
+              <div class="col-md-4">
+                <label for="re_password" class="form-label"
+                  >Confirm password</label
+                >
+                <div class="input-group">
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="re_password"
+                    name="re_password"
+                    required
+                    autocomplete="new-password"
+                    aria-describedby="rePasswordHelp"
+                  />
+                  <button
+                    class="btn btn-outline-secondary password-toggle"
+                    type="button"
+                    data-target="#re_password"
+                  >
+                    <i class="fa fa-eye-slash"></i>
+                  </button>
+                  <small id="rePasswordHelp" class="form-text text-muted">
+                    Re-type your password
+                  </small>
+                </div>
+              </div>
+              <!-- NIN -->
+              <div class="col-md-4">
+                <label for="nin" class="form-label">NIN</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="NIN"
+                  name="NIN"
+                  maxlength="11"
+                  minlength="11"
+                  required
+                  inputmode="numeric"
+                  pattern="\d{11}"
+                  aria-describedby="ninHelp"
+                  autocomplete="off"
+                />
+                <small id="ninHelp" class="form-text text-muted">
+                  Enter your 11-digit NIN
+                </small>
+                <div id="ninStatus" class="mt-1 text-sm text-info"></div>
+              </div>
+
+              <!-- {/* Password requirements as a list item */} -->
+              <div className="col-span-full">
+                <ul className="list-disc pl-5 space-y-2 mt-2">
+                  <li className="flex items-center gap-2 text-sm">
+                    <Checkbox id="chars" checked="{hasMinChars}" />
+                    <label htmlFor="chars" className="text-gray-600">
+                      At least 8 Characters
+                    </label>
+                  </li>
+                  <li className="flex items-center gap-2 text-sm">
+                    <Checkbox id="special" checked="{hasSpecialChar}" />
+                    <label htmlFor="special" className="text-gray-600">
+                      Should contain at least one symbol
+                    </label>
+                  </li>
+                  <li className="flex items-center gap-2 text-sm">
+                    <Checkbox id="capital" checked="{hasCapitalLetter}" />
+                    <label htmlFor="capital" className="text-gray-600">
+                      Should contain at least one capital letter
+                    </label>
+                  </li>
+                  <li className="flex items-center gap-2 text-sm">
+                    <Checkbox id="number" checked="{hasNumber}" />
+                    <label htmlFor="number" className="text-gray-600">
+                      Should contain at least one number
+                    </label>
+                  </li>
+                </ul>
+              </div>
             </div>
 
-            <!-- Confirm Password -->
-            <div class="col-md-4 mb-3">
-              <label for="re_password" class="form-label"
-                >Confirm Password</label
-              >
-              <input
-                type="password"
-                class="form-control"
-                id="re_password"
-                name="re_password"
-                required
-                autocomplete="new-password"
-                aria-describedby="rePasswordHelp"
-              />
-              <small id="rePasswordHelp" class="form-text text-muted">
-                Re-type your password
-              </small>
-            </div>
-            <!-- NIN -->
-            <div class="col-md-4 mb-3">
-              <label for="NIN" class="form-label">NIN</label>
-              <input
-                type="text"
-                class="form-control"
-                id="NIN"
-                name="NIN"
-                maxlength="11"
-                minlength="11"
-                required
-                inputmode="numeric"
-                pattern="\d{11}"
-                aria-describedby="ninHelp"
-                autocomplete="off"
-              />
-              <small id="ninHelp" class="form-text text-muted">
-                Enter your 11-digit NIN
-              </small>
-              <div id="ninStatus" class="mt-1 text-sm text-info"></div>
-            </div>
-          </div>
-
-          <!-- Submit Button -->
-          <div class="d-grid mt-4">
+            <!-- Sign up button -->
             <button
               type="submit"
               id="submitbtn"
-              class="btn btn-login btn-block"
+              class="btn btn-success w-100 mt-4"
             >
-              Sign Up
+              Sign up
             </button>
-            <p class="text-center mt-3">
-              Already have an account?
-              <a href="login.html" class="text-decoration-none">Sign In</a>
-            </p>
+          </form>
+
+          <!-- Login link -->
+          <div class="text-center mt-4">
+            Already have an account?
+            <a href="login.html" class="text-success fw-medium">Login</a>
           </div>
-        </form>
+
+          <div class="copyright">
+            <a href="https://bdic.ng/" target="_blank">
+              Powered By BDIC <br />© 2025 All Rights Reserved
+            </a>
+          </div>
+        </div>
       </div>
     </div>
-
     <!-- Bootstrap 5.3.0 JS and dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
@@ -450,17 +346,24 @@
     <script>
       $(document).ready(function () {
         // Toggle password visibility
-        $("#togglePassword").click(function () {
-          const passwordInput = $("#password");
-          const type =
-            passwordInput.attr("type") === "password" ? "text" : "password";
-          passwordInput.attr("type", type);
+        // $("#togglePassword").click(function () {
+        //   const passwordInput = $("#password");
+        //   const type =
+        //     passwordInput.attr("type") === "password" ? "text" : "password";
+        //   passwordInput.attr("type", type);
+        //   $(this).find("i").toggleClass("fa-eye fa-eye-slash");
+        // });
+        $(".password-toggle").click(function () {
+          const targetSelector = $(this).data("target");
+          const input = $(targetSelector);
+          const type = input.attr("type") === "password" ? "text" : "password";
+          input.attr("type", type);
           $(this).find("i").toggleClass("fa-eye fa-eye-slash");
         });
 
         // Helper function to display error messages
         const showError = (input, message) => {
-          const formGroup = input.closest(".mb-3");
+          const formGroup = input.closest(".col-md-4");
           const errorElement = formGroup.querySelector(".error-message");
 
           if (!errorElement) {
@@ -477,7 +380,7 @@
 
         // Helper function to clear error messages
         const clearError = (input) => {
-          const formGroup = input.closest(".mb-3");
+          const formGroup = input.closest(".col-md-4");
           const errorElement = formGroup.querySelector(".error-message");
 
           if (errorElement) {
@@ -546,15 +449,50 @@
           }
         };
 
+        // const validatePassword = (input) => {
+        //   const value = input.value.trim();
+        //   const passwordRegex =
+        //     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+        //   if (!value) {
+        //     showError(input, "Password is required.");
+        //     return false;
+        //   } else if (!passwordRegex.test(value)) {
+        //     showError(input, "Error");
+        //     return false;
+        //   } else {
+        //     clearError(input);
+        //     return true;
+        //   }
+        // };
+
+        // const validateConfirmPassword = (input) => {
+        //   const value = input.value.trim();
+        //   const password = $("#password").val().trim();
+        //   if (!value) {
+        //     showError(input, "Please confirm your password.");
+        //     return false;
+        //   } else if (value !== password) {
+        //     showError(input, "Passwords do not match.");
+        //     return false;
+        //   } else {
+        //     clearError(input);
+        //     return true;
+        //   }
+        // };
+
         const validatePassword = (input) => {
           const value = input.value.trim();
           const passwordRegex =
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+
           if (!value) {
             showError(input, "Password is required.");
             return false;
           } else if (!passwordRegex.test(value)) {
-            showError(input, "Error");
+            showError(
+              input,
+              "Password must include uppercase, lowercase, number, and special character."
+            );
             return false;
           } else {
             clearError(input);
@@ -565,6 +503,7 @@
         const validateConfirmPassword = (input) => {
           const value = input.value.trim();
           const password = $("#password").val().trim();
+
           if (!value) {
             showError(input, "Please confirm your password.");
             return false;
@@ -1601,5 +1540,11 @@
         }
       }
     </script>
+
+    <!-- jQuery and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="scripts.js"></script>
   </body>
 </html>

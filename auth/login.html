@@ -3,171 +3,146 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BIRCIIRCIMS - Login</title>
+    <title>Login - Benue State Integrated System</title>
     <!-- Bootstrap CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <!-- Font Awesome -->
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css" />
+    <!-- Font Awesome for icons -->
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
+    <script type="text/javascript" src="/js/index.js"></script>
+
     <link
       rel="icon"
       type="image/png"
       href="/assets/images/benue-state-logo.png"
       sizes="16x16"
     />
-
-    <script type="text/javascript" src="/js/index.js"></script>
-    <!-- Custom CSS -->
-    <style>
-      body {
-        background: linear-gradient(90deg, #008080 0%, #2e8b57 100%);
-        min-height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-family: "Arial", sans-serif;
-        margin: 0;
-        /* overflow-y: hidden; */
-      }
-      .login-container {
-        background: #fff;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        padding: 30px;
-        max-width: 400px;
-        width: 100%;
-      }
-      .login-container h3,
-      .login-container h4 {
-        text-align: center;
-        color: #333;
-      }
-      .btn-login {
-        background-color: #4c956c;
-        color: #fff;
-        border: none;
-        padding: 10px;
-        font-size: 16px;
-        border-radius: 5px;
-        width: 100%;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-      }
-      .btn-login:hover {
-        background-color: #2c6e49;
-      }
-      .form-control:focus {
-        border-color: #4c956c;
-        box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
-      }
-      .text-center a {
-        color: #4c956c;
-        text-decoration: none;
-      }
-      .text-center a:hover {
-        text-decoration: underline;
-      }
-      .copyright {
-        text-align: center;
-        font-size: 14px;
-        margin-top: 20px;
-      }
-      .password-toggle {
-        position: absolute;
-        right: 2px;
-        top: 73%;
-        transform: translateY(-50%);
-        cursor: pointer;
-        color: #666;
-      }
-      .mb-3 {
-        margin-bottom: 0rem !important;
-      }
-
-      .copyright a {
-        color: #666;
-        text-decoration: none;
-      }
-
-      .copyright a:hover {
-        text-decoration: underline;
-      }
-
-      .form-label {
-        font-size: 16px;
-      }
-    </style>
   </head>
   <body>
-    <div id="loginSection" class="login-container">
-      <h3 style="font-weight: 700">LOGIN</h3>
+    <div class="container-fluid p-0">
+      <div class="row g-0">
+        <!-- Green sidebar -->
+        <div class="col-md-5 green-sidebar p-4 text-white d-flex flex-column">
+          <div class="d-flex align-items-center mb-4">
+            <div class="benue-logo me-3"></div>
+          </div>
 
-      <div class="card-header text-center">
-        <!-- <h6 class="subtitle mb-3 text-muted"> -->
-        <h6 class="subtitle mb-3 font-weight-bold">
-          Benue State Integrated Residents/Citizens <br />
-          Identity/Indigene Registration <br />
-          and Card Issuance Management System
-        </h6>
-        <!-- <h4 class="main-title mb-0 font-weight-bold">(BIRCIIRCIMS)</h4> -->
+          <h1 class="fs-2 fw-bold mb-2">Benue State Integrated</h1>
+          <h2 class="fs-3 fw-bold mb-1">Residents/Citizens Identity/</h2>
+          <h2 class="fs-3 fw-bold mb-1">Indigene Registration and Card</h2>
+          <h2 class="fs-3 fw-bold mb-4">Issuance Management System</h2>
+
+          <!-- Mobile buttons -->
+          <div class="d-flex d-md-none gap-3 mb-4 w-100">
+            <a href="register.html" class="btn btn-outline-light flex-grow-1"
+              >Register</a
+            >
+            <a href="login.html" class="btn btn-light text-success flex-grow-1"
+              >Log in</a
+            >
+          </div>
+
+          <!-- Certificate image -->
+          <div class="mt-3 mb-4 rounded overflow-hidden">
+            <img
+              src="/assets/images/man-holding-a-cert.png"
+              alt="Person holding certificate"
+              class="img-fluid rounded"
+            />
+          </div>
+
+          <!-- Desktop register button -->
+          <div class="d-none d-md-block mt-auto">
+            <a href="register.html" class="btn btn-outline-light">Register</a>
+          </div>
+        </div>
+
+        <!-- Login form -->
+        <div class="col-md-7 p-4 p-md-5">
+          <div class="d-none d-md-flex justify-content-end mb-4">
+            <a href="login.html" class="btn btn-success">Login</a>
+          </div>
+
+          <h2 class="fs-4 fw-bold mb-4">
+            Welcome Back! Please log in to your account
+          </h2>
+
+          <form id="signInForm">
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                placeholder="Enter your email"
+                required
+              />
+            </div>
+
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <div class="input-group">
+                <input
+                  type="password"
+                  class="form-control"
+                  id="password"
+                  placeholder="Enter your password"
+                  required
+                />
+                <button
+                  class="btn btn-outline-secondary toggle-password"
+                  id="togglePassword"
+                  type="button"
+                >
+                  <i class="fa fa-eye-slash"></i>
+                </button>
+              </div>
+            </div>
+            <div class="mb-3 form-check">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="rememberMe"
+                name="rememberMe"
+              />
+              <label class="form-check-label" for="rememberMe"
+                >Remember Me</label
+              >
+            </div>
+
+            <div class="text-end mb-4">
+              <a href="forgot-password.html" class="text-success"
+                >Forgot password?</a
+              >
+            </div>
+
+            <!-- Login button -->
+            <button type="submit" class="btn btn-success w-100 mt-2">
+              Log in
+            </button>
+          </form>
+
+          <!-- Register link -->
+          <div class="text-center mt-4">
+            Don't have an account?
+            <a href="register.html" class="text-success fw-medium">Register</a>
+          </div>
+
+          <div class="copyright">
+            <a href="https://bdic.ng/" target="_blank">
+              Powered By BDIC <br />© 2025 All Rights Reserved
+            </a>
+          </div>
+        </div>
       </div>
-
-      <form id="signInForm">
-        <div class="mb-3">
-          <label for="email" class="form-label">Email</label>
-          <input
-            type="email"
-            class="form-control"
-            id="email"
-            name="email"
-            placeholder="Enter your email"
-            required
-          />
-        </div>
-        <div class="mb-3 position-relative">
-          <label for="password" class="form-label">Password</label>
-          <input
-            type="password"
-            class="form-control"
-            id="password"
-            name="password"
-            placeholder="Enter your password"
-            required
-          />
-          <span class="password-toggle" id="togglePassword">
-            <i class="fa-solid fa-eye-slash"></i>
-          </span>
-        </div>
-        <div class="mb-3 form-check">
-          <input
-            type="checkbox"
-            class="form-check-input"
-            id="rememberMe"
-            name="rememberMe"
-          />
-          <label class="form-check-label" for="rememberMe">Remember Me</label>
-        </div>
-        <button type="submit" class="btn btn-login">Login</button>
-        <p class="text-center mt-3">
-          Don't have an account?
-          <a href="register.html" class="text-decoration-none">Sign Up</a>
-        </p>
-        <div class="text-center mt-2">
-          <a href="forgot-password.html">Forgot password?</a>
-        </div>
-        <div class="copyright">
-          <a href="https://bdic.ng" target="_blank"
-            >Powered By BDIC <br />© 2025 All Rights Reserved</a
-          >
-        </div>
-      </form>
     </div>
-
     <!-- Bootstrap JS and dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.0/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
@@ -176,6 +151,7 @@
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Custom Script -->
+
     <script>
       $(document).ready(function () {
         // Check if there's a saved email in localStorage
@@ -260,5 +236,11 @@
         });
       });
     </script>
+
+    <!-- jQuery and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="scripts.js"></script>
   </body>
 </html>

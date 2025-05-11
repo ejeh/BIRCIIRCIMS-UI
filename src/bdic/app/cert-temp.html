@@ -34,7 +34,7 @@
         background: #f9f9f9;
         font-family: "Times New Roman", serif;
       }
-      .certificate {
+      /* .certificate {
         width: 100vw;
         height: 100vh;
         padding: 40px;
@@ -47,26 +47,45 @@
         flex-direction: column;
         justify-content: space-between;
         text-transform: capitalize;
+      } */
+
+      .certificate {
+        width: 148mm; /* A5 width */
+        height: 210mm; /* A5 height */
+        margin: auto;
+        padding: 20mm;
+        background: url("/assets/images/cert-bg.jpg") no-repeat center center;
+        background-size: cover;
+        position: relative;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        text-align: center;
+        text-transform: capitalize;
+        page-break-inside: avoid;
       }
 
       .logo {
-        width: 90px;
-        margin-bottom: 10px;
-        position: relative;
-        left: 103px;
-        top: -17px;
+        position: absolute;
+        top: 20mm;
+        left: 20mm;
+        width: 60px;
+        height: auto;
+        z-index: 2;
       }
+
       .passport-photo {
         position: absolute;
-        /* top: 20px;
-        right: 20px; */
-        top: 25px;
-        right: 146px;
+        top: 20mm;
+        right: 20mm;
         width: 80px;
         height: 100px;
-        border: 1px solid #4b4a4a;
+        border: 2px solid #4b4a4a;
         object-fit: cover;
+        z-index: 2;
       }
+
       h1 {
         font-size: 30px;
         color: #28a745;
@@ -164,13 +183,6 @@
     </style>
   </head>
   <body>
-    <!-- <form id="upload-form" enctype="multipart/form-data">
-      <input type="file" id="file" required />
-      <button type="submit" class="btn btn-secondary">
-        Upload Attestation
-      </button>
-    </form> -->
-
     <!-- Go Back Button -->
     <div class="certificate">
       <button class="btn btn-secondary go-back-btn" onclick="history.back()">
@@ -178,19 +190,20 @@
       </button>
       <img
         class="logo"
-        src="/assets//images/benue-state-logo.png"
+        src="/assets/images/benue-state-logo.png"
         alt="State Logo"
       />
       <img
-        id="passport"
+        id="user-photo"
         class="passport-photo"
         src="{{passportPhoto}}"
         alt="Passport Photo"
         crossorigin="anonymous"
       />
+
       <h1>
-        CERTIFICATE <br /><span style="color: rgb(83, 83, 83); font-size: 28px">
-          OF INDIGENE
+        BENUE STATE <br /><span style="color: rgb(83, 83, 83); font-size: 24px">
+          CERTIFICATE OF ORIGIN
         </span>
       </h1>
       <p>This is to certify that</p>
@@ -277,6 +290,7 @@
             },
             success: function (response) {
               console.log("Response received:", response.kindred);
+              console.log("response", response.userId.passportPhoto);
 
               // Check if the response contains data
               if (response && Object.keys(response).length > 0) {
@@ -307,7 +321,10 @@
                 $("#ward").text(response.ward);
                 $("#date").text(formattedDate);
                 $("#kindred-name").text(response.kindred);
-                $("#passport").text(user.passportPhoto);
+                $("#user-photo").attr(
+                  "src",
+                  response.userId.passportPhoto || "/assets/images/avatar.jpeg"
+                );
                 $("#dob").text(formattedDOB);
               } else {
                 console.error("Empty data received from the backend.");

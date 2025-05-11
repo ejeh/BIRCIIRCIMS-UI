@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Benue State ID Card</title>
+    <style>
+      :root {
+        --benue-navy: #000080;
+        --benue-blue: #0000cd;
+        --watermark-red: rgba(255, 0, 0, 0.25);
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #f1f5f9;
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        perspective: 1000px;
+      }
+
+      .id-card-container {
+        width: 85.6mm;
+        height: 54mm;
+        position: relative;
+        transform-style: preserve-3d;
+        transition: transform 0.8s;
+      }
+
+      .id-card-container:hover {
+        transform: rotateY(180deg);
+      }
+
+      .id-card {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        backface-visibility: hidden;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+      }
+
+      .front {
+        background-color: white;
+        z-index: 2;
+      }
+
+      .back {
+        background-color: white;
+        transform: rotateY(180deg);
+      }
+
+      .id-card-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: repeating-linear-gradient(
+          45deg,
+          rgba(245, 245, 255, 0.9),
+          rgba(245, 245, 255, 0.9) 10px,
+          rgba(240, 240, 255, 0.9) 10px,
+          rgba(240, 240, 255, 0.9) 20px
+        );
+        z-index: 0;
+      }
+
+      .id-card-watermark {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-30deg);
+        font-size: 3.5rem;
+        font-weight: bold;
+        color: var(--watermark-red);
+        z-index: 1;
+        opacity: 0.9;
+      }
+
+      .card-content {
+        position: relative;
+        z-index: 2;
+        padding: 8px;
+        height: calc(100% - 16px);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+      }
+
+      .logo-placeholder {
+        width: 40px;
+        height: 40px;
+        background-color: #f0f0f0;
+      }
+
+      .title {
+        text-align: right;
+      }
+
+      .title h1 {
+        font-weight: bold;
+        color: var(--benue-navy);
+        font-size: 14px;
+        margin: 0;
+        line-height: 1.2;
+      }
+
+      .title h2 {
+        font-weight: bold;
+        color: var(--benue-blue);
+        font-size: 12px;
+        margin: 0;
+      }
+
+      .main-content {
+        display: flex;
+        gap: 8px;
+        margin-top: 5px;
+        flex: 1;
+      }
+
+      .photo-section {
+        width: 25mm;
+        height: 30mm;
+      }
+
+      .photo-placeholder {
+        width: 100%;
+        height: 100%;
+        background-color: #e0e0e0;
+        border: 1px solid #d1d5db;
+      }
+
+      .details-section {
+        flex: 1;
+        font-size: 9px;
+      }
+
+      .details-section p {
+        margin: 3px 0;
+      }
+
+      .label {
+        font-weight: bold;
+      }
+
+      .value {
+        text-transform: uppercase;
+      }
+
+      .row {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .bin-section {
+        margin-top: auto;
+        text-align: center;
+        padding: 5px 0;
+      }
+
+      .bin-label {
+        color: var(--benue-blue);
+        font-size: 10px;
+        font-weight: bold;
+        margin: 0;
+      }
+
+      .bin-number {
+        color: var(--benue-blue);
+        font-size: 20px;
+        font-weight: bold;
+        margin: 0;
+        letter-spacing: 1px;
+      }
+
+      .footer {
+        background-color: #f8f8f8;
+        padding: 8px;
+        height: calc(100% - 16px);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .footer-logo {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 8px;
+      }
+
+      .footer-logo-placeholder {
+        width: 24px;
+        height: 24px;
+        background-color: #f0f0f0;
+      }
+
+      .footer-text {
+        text-align: center;
+        font-size: 6px;
+        line-height: 1.3;
+      }
+
+      .property {
+        font-weight: bold;
+      }
+
+      .contact {
+        font-style: italic;
+      }
+
+      .powered-by {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 3px;
+        margin-top: 8px;
+      }
+
+      .bdicl {
+        font-weight: bold;
+        color: var(--benue-blue);
+      }
+
+      .flip-instruction {
+        position: absolute;
+        bottom: 10px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 10px;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="id-card-container">
+      <!-- Front Side -->
+      <div class="id-card front">
+        <div class="id-card-background"></div>
+        <div class="id-card-watermark">SAMPLE</div>
+
+        <div class="card-content">
+          <div class="header">
+            <div class="logo-placeholder"></div>
+            <div class="title">
+              <h1>CITIZEN/RESIDENT IDENTITY CARD</h1>
+              <h2>BENUE STATE GOVERNMENT</h2>
+            </div>
+          </div>
+
+          <div class="main-content">
+            <div class="photo-section">
+              <div class="photo-placeholder"></div>
+            </div>
+
+            <div class="details-section">
+              <p>
+                <span class="label">SURNAME/NOM</span><br />
+                <span class="value">TERMASE</span>
+              </p>
+              <p>
+                <span class="label">GIVEN NAMES/PRENDMS</span><br />
+                <span class="value">GEANDE HEMBAOR</span>
+              </p>
+              <div class="row">
+                <p>
+                  <span class="label">DATE OF BIRTH</span><br />
+                  <span class="value">23SEP1982</span>
+                </p>
+                <p>
+                  <span class="label">SEX/SEXE</span><br />
+                  <span class="value">MALE</span>
+                </p>
+              </div>
+              <p>
+                <span class="label">DATE ISSUED</span><br />
+                <span class="value">11MAR2025</span>
+              </p>
+            </div>
+          </div>
+
+          <div class="bin-section">
+            <p class="bin-label">Benue State Identification Number</p>
+            <p class="bin-number">BIN-4565-309-6589</p>
+          </div>
+        </div>
+        <div class="flip-instruction">Hover to flip card</div>
+      </div>
+
+      <!-- Back Side -->
+      <div class="id-card back">
+        <div class="footer">
+          <div class="footer-logo">
+            <div class="footer-logo-placeholder"></div>
+          </div>
+          <div class="footer-text">
+            <p class="property">
+              This card is the property of<br />
+              Benue state Citizen/Resident Identity Management System<br />
+              (Ministry of Communications and Digital Economy, Makurdi)
+            </p>
+            <p class="contact">
+              If found please contact:<br />
+              Kashim Ibrahim Way,Old GRA,Government House,<br />
+              Makurdi, Benue State
+            </p>
+            <div class="powered-by">
+              <span>Powered by:</span>
+              <span class="bdicl">BDiCL</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

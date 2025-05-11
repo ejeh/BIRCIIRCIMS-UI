@@ -1,0 +1,254 @@
+:root {
+  --primary: #008751;
+  --primary-dark: #006a3e;
+  --primary-light: #00a867;
+  --gold: #ffc72c;
+  --white: #ffffff;
+  --gray-100: #f8f9fa;
+  --gray-300: #dee2e6;
+  --gray-600: #6c757d;
+
+  /* Typography scale */
+  --text-xs: 0.75rem; /* 12px */
+  --text-sm: 0.875rem; /* 14px */
+  --text-base: 1rem; /* 16px - base size */
+  --text-lg: 1.125rem; /* 18px */
+  --text-xl: 1.25rem; /* 20px */
+  --text-2xl: 1.5rem; /* 24px */
+  --text-3xl: 1.875rem; /* 30px */
+  --text-4xl: 2.25rem; /* 36px */
+  --text-5xl: 3rem; /* 48px */
+}
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+html {
+  font-size: 16px; /* Base font size */
+}
+
+body {
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  color: #333;
+  font-size: var(--text-base);
+  line-height: 1.5;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.container-fluid {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0; /* Allows children to determine height */
+}
+
+.row {
+  margin: 0;
+  flex: 1;
+  min-height: 0;
+}
+
+.green-sidebar,
+.col-md-7 {
+  overflow-y: auto; /* Add scroll if content overflows */
+  height: 100%; /* Fill available height */
+}
+
+/* Adjust padding for smaller screens */
+@media (max-width: 767.98px) {
+  .green-sidebar,
+  .col-md-7 {
+    padding: 1.5rem !important;
+    overflow-y: hidden;
+  }
+}
+
+/* Headings */
+h1 {
+  font-size: var(--text-4xl);
+  line-height: 1.2;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+h2 {
+  font-size: var(--text-3xl);
+  line-height: 1.25;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+h3 {
+  font-size: var(--text-2xl);
+  line-height: 1.3;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+h4 {
+  font-size: var(--text-xl);
+  line-height: 1.4;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+/* Text elements */
+p {
+  font-size: var(--text-base);
+  margin-bottom: 1rem;
+}
+
+small,
+.text-small {
+  font-size: var(--text-sm);
+}
+
+.text-large {
+  font-size: var(--text-lg);
+}
+
+/* Form elements */
+label {
+  font-size: var(--text-base);
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.form-control {
+  font-size: var(--text-base);
+  border: 1px solid var(--gray-300);
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+}
+
+.form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 0.25rem rgba(0, 135, 81, 0.25);
+}
+
+/* Button styling */
+.btn-success {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+.btn-success:hover,
+.btn-success:active,
+.btn-success:focus {
+  background-color: var(--primary-dark) !important;
+  border-color: var(--primary-dark) !important;
+}
+
+.form-text {
+  font-size: var(--text-sm);
+}
+
+/* Buttons */
+.btn {
+  font-size: var(--text-base);
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+}
+
+/* Links */
+a {
+  font-size: inherit;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--primary-dark);
+}
+
+/* Custom checkboxes */
+.form-check-input:checked {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+/* Read-only field */
+input[readonly] {
+  background-color: var(--gray-100);
+}
+/* Copyright text */
+.copyright {
+  font-size: var(--text-sm);
+  text-align: center;
+  margin-top: 20px;
+}
+
+.copyright a {
+  /* color: #fff; */
+  text-decoration: none;
+}
+
+.copyright a:hover {
+  text-decoration: underline;
+}
+
+/* Error messages */
+.text-danger {
+  --bs-text-opacity: 1;
+  color: rgba(var(--bs-danger-rgb), var(--bs-text-opacity)) !important;
+  font-size: var(--text-sm);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  :root {
+    --text-4xl: 1.75rem; /* 28px */
+    --text-3xl: 1.5rem; /* 24px */
+    --text-2xl: 1.25rem; /* 20px */
+  }
+  .green-sidebar {
+    min-height: auto;
+    padding: 2rem 1rem !important;
+  }
+
+  h1 {
+    margin-bottom: 0.75rem;
+  }
+
+  h2 {
+    margin-bottom: 0.5rem;
+  }
+
+  .btn {
+    font-size: var(--text-base);
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+/* The rest of your existing styles... */
+.green-sidebar {
+  background-color: var(--primary);
+  min-height: 100vh;
+  color: white;
+}
+
+.benue-logo {
+  width: 70px;
+  height: 70px;
+  background-image: url("/assets/images/benue-state-logo.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+/* Password toggle cursor */
+.toggle-password {
+  cursor: pointer;
+}
+
+/* Password toggle button position */
+.input-group .toggle-password {
+  z-index: 10;
+}
+
+/* ... (keep all your other existing styles) ... */

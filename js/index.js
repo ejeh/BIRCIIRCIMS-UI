@@ -1104,39 +1104,73 @@ $(document).ready(function () {
     });
   };
 
-  // Update the table with user data
+  // // Update the table with user data
+  // const updateTable = (data, page) => {
+  //   const tableBody = $("#table-body");
+  //   tableBody.empty(); // Clear existing table rows
+
+  //   // Populate table rows with user data
+  //   data.forEach((item, index) => {
+
+  //     const rowHtml = `
+  //       <tr>
+  //         <td>${(page - 1) * pageSize + index + 1}</td>
+  //         <td>${item.firstname} ${item.lastname}</td>
+  //         <td>${item.phone}</td>
+  //         <td>${item.email}</td>
+  //         <td>${item.role}</td>
+  //         <td>${item.stateOfOrigin}</td>
+
+  //         <td>
+  //           <button class="btn btn-sm update-role-btn"
+  //                   data-id="${item._id}"
+  //                   data-role="${item.role}"
+  //                   style="background-color: #4C956C; color: #fff">
+  //             Update Role
+  //           </button>
+  //         </td>
+  //          <td>
+  //          <button class="btn btn-sm view-user-btn"
+  //                   data-id="${item._id}"
+  //                   style="background-color: #007BFF; color: #fff">
+  //             View
+  //           </button>
+  //         </td>
+  //       </tr>`;
+  //     tableBody.append(rowHtml); // Add the row to the table
+  //   });
+  // };
+
   const updateTable = (data, page) => {
     const tableBody = $("#table-body");
     tableBody.empty(); // Clear existing table rows
 
-    // Populate table rows with user data
     data.forEach((item, index) => {
       const rowHtml = `
-        <tr>
-          <td>${(page - 1) * pageSize + index + 1}</td>
+        <tr class="align-middle">
+          <td class="fw-semibold">${(page - 1) * pageSize + index + 1}</td>
           <td>${item.firstname} ${item.lastname}</td>
           <td>${item.phone}</td>
           <td>${item.email}</td>
-          <td>${item.role}</td>
-          <td>${item.stateOfOrigin}</td>
-
           <td>
-            <button class="btn btn-sm update-role-btn" 
-                    data-id="${item._id}" 
-                    data-role="${item.role}" 
-                    style="background-color: #4C956C; color: #fff">
-              Update Role
+            <span class="badge bg-secondary text-capitalize">${item.role}</span>
+          </td>
+          <td>${item.stateOfOrigin}</td>
+          <td>
+            <button class="btn btn-sm btn-success update-role-btn" 
+                    data-id="${item._id}" title="Update Role"
+                    data-role="${item.role}">
+              <i class="fas fa-user-edit me-1"></i> 
             </button>
           </td>
-           <td>
-           <button class="btn btn-sm view-user-btn" 
-                    data-id="${item._id}" 
-                    style="background-color: #007BFF; color: #fff">
-              View
+          <td>
+            <button class="btn btn-sm btn-primary view-user-btn" 
+                    data-id="${item._id}" title="View User">
+              <i class="fas fa-eye me-1"></i>
             </button>
           </td>
         </tr>`;
-      tableBody.append(rowHtml); // Add the row to the table
+      tableBody.append(rowHtml);
     });
   };
 
@@ -1277,6 +1311,105 @@ function closeModal(modalId) {
   }
 }
 
+// PDF.js Loader
+function loadPDFJS(pdfUrl, container) {
+  const loader = document.getElementById("pdf-loader");
+  if (!window["pdfjsLib"]) {
+    console.error("PDF.js not loaded");
+    container.innerHTML = `<iframe src="${pdfUrl}" width="100%" height="100%"></iframe>`;
+    return;
+  }
+
+  const pdfjsLib = window["pdfjsLib"];
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js";
+
+  let pdfDoc = null;
+  let pageNum = 1;
+  let scale = 1.2;
+
+  const renderPage = (num) => {
+    loader.style.display = "block";
+
+    pdfDoc.getPage(num).then((page) => {
+      const viewport = page.getViewport({ scale });
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+
+      const renderContext = {
+        canvasContext: context,
+        viewport: viewport,
+      };
+
+      container.innerHTML = "";
+      container.appendChild(canvas);
+
+      page.render(renderContext).promise.finally(() => {
+        loader.style.display = "none";
+      });
+    });
+  };
+
+  const createControls = () => {
+    const controls = document.createElement("div");
+    controls.className =
+      "d-flex justify-content-between align-items-center mb-2";
+
+    controls.innerHTML = `
+        <div>
+          <button class="btn btn-sm btn-outline-primary me-2" id="prevPage">Prev</button>
+          <button class="btn btn-sm btn-outline-primary" id="nextPage">Next</button>
+        </div>
+        <div>
+          <button class="btn btn-sm btn-outline-secondary me-2" id="zoomOut">-</button>
+          <button class="btn btn-sm btn-outline-secondary" id="zoomIn">+</button>
+        </div>
+      `;
+
+    container.before(controls);
+
+    controls.querySelector("#prevPage").addEventListener("click", () => {
+      if (pageNum <= 1) return;
+      pageNum--;
+      renderPage(pageNum);
+    });
+
+    controls.querySelector("#nextPage").addEventListener("click", () => {
+      if (pageNum >= pdfDoc.numPages) return;
+      pageNum++;
+      renderPage(pageNum);
+    });
+
+    controls.querySelector("#zoomOut").addEventListener("click", () => {
+      scale = Math.max(scale - 0.2, 0.5);
+      renderPage(pageNum);
+    });
+
+    controls.querySelector("#zoomIn").addEventListener("click", () => {
+      scale = Math.min(scale + 0.2, 3);
+      renderPage(pageNum);
+    });
+  };
+
+  loader.style.display = "block";
+
+  const loadingTask = pdfjsLib.getDocument(pdfUrl);
+  loadingTask.promise
+    .then((pdf) => {
+      pdfDoc = pdf;
+      createControls();
+      renderPage(pageNum);
+    })
+    .catch((error) => {
+      loader.style.display = "none";
+      console.error("Error rendering PDF:", error);
+      container.innerHTML = `<iframe src="${pdfUrl}" width="100%" height="100%"></iframe>`;
+    });
+}
+
 // // Indigene Certificate
 $(document).ready(function () {
   const pageSize = 10;
@@ -1298,36 +1431,74 @@ $(document).ready(function () {
     $("#request").text(count);
   }
 
+  // function renderTable(data) {
+  //   tableBody.empty();
+  //   data.forEach((item, index) => {
+  //     const isRejected = item.status === "Rejected";
+  //     tableBody.append(`
+  //       <tr data-id="${item._id}">
+  //         <td>${(currentPage - 1) * pageSize + index + 1}</td>
+  //         <td>${item.firstname} ${item.lastname}</td>
+  //         <td>${item.phone}</td>
+  //         <td>${item.email}</td>
+  //         <td>${item.status}</td>
+  //         <td>
+  //           <div class="dropdown">
+  //             <button class="btn btn-xs btn-action dropdown-toggle" data-bs-toggle="dropdown">
+  //               <i class="fas fa-ellipsis-v"></i>
+  //             </button>
+  //             <ul class="dropdown-menu">
+  //               <li><button class="dropdown-item btn-cert-approve" data-id="${
+  //                 item._id
+  //               }" style="color: green;">Approve</button></li>
+  //               <li><button class="dropdown-item btn-cert-reject" data-id="${
+  //                 item._id
+  //               }" ${
+  //       isRejected ? "disabled" : ""
+  //     } style="color: red;">Reject</button></li>
+  //               <li><button class="dropdown-item btn-cert-view" data-id="${
+  //                 item._id
+  //               }" style="color: blue;">View</button></li>
+  //             </ul>
+  //           </div>
+  //         </td>
+  //       </tr>
+  //     `);
+  //   });
+  // }
+
   function renderTable(data) {
     tableBody.empty();
     data.forEach((item, index) => {
-      const isRejected = item.status === "Rejected";
+      const statusBadge = {
+        Approved: `<span class="badge rounded-pill bg-success">Approved</span>`,
+        Pending: `<span class="badge rounded-pill bg-warning text-dark">Pending</span>`,
+        Rejected: `<span class="badge rounded-pill bg-danger">Rejected</span>`,
+      };
+
       tableBody.append(`
         <tr data-id="${item._id}">
-          <td>${(currentPage - 1) * pageSize + index + 1}</td>
+         <td>${(currentPage - 1) * pageSize + index + 1}</td>
           <td>${item.firstname} ${item.lastname}</td>
           <td>${item.phone}</td>
           <td>${item.email}</td>
-          <td>${item.status}</td>
+          <td>${statusBadge[item.status] || item.status}</td>
           <td>
-            <div class="dropdown">
-              <button class="btn btn-xs btn-action dropdown-toggle" data-bs-toggle="dropdown">
-                <i class="fas fa-ellipsis-v"></i>
-              </button>
-              <ul class="dropdown-menu">
-                <li><button class="dropdown-item btn-cert-approve" data-id="${
-                  item._id
-                }" style="color: green;">Approve</button></li>
-                <li><button class="dropdown-item btn-cert-reject" data-id="${
-                  item._id
-                }" ${
-        isRejected ? "disabled" : ""
-      } style="color: red;">Reject</button></li>
-                <li><button class="dropdown-item btn-cert-view" data-id="${
-                  item._id
-                }" style="color: blue;">View</button></li>
-              </ul>
-            </div>
+            <button class="btn btn-sm btn-success btn-cert-approve" data-id="${
+              item._id
+            }" title="Approve">
+              <i class="fas fa-check"></i>
+            </button>
+            <button class="btn btn-sm btn-warning btn-cert-view" data-id="${
+              item._id
+            }" title="View">
+              <i class="fas fa-eye"></i>
+            </button>
+            <button class="btn btn-sm btn-danger btn-cert-reject" data-id="${
+              item._id
+            }" title="Reject" ${item.status === "Rejected" ? "disabled" : ""}>
+              <i class="fas fa-times"></i>
+            </button>
           </td>
         </tr>
       `);
@@ -1397,34 +1568,110 @@ $(document).ready(function () {
     });
   }
 
+  // Handle cert view
   function handleView(requestId) {
     $.ajax({
       url: `${BACKEND_URL}/indigene/certificate/${requestId}/request`,
       method: "GET",
       headers: apiHeaders,
       success: function (response) {
-        console.log(response);
-        // Populate the view modal with the request details
-        $("#viewModal .modal-body").html(`
-            <img 
-              src="${response.passportPhoto || "/assets/images/avatar.jpeg"}" 
-              alt="Passport Photo" 
-              class="profile-photo" 
-              crossOrigin="anonymous"
-            >
-          <p><strong>Name:</strong> ${response.firstname} ${
+        const documentPaths = [
+          response.birthCertificate,
+          response.idCard,
+        ].filter(Boolean);
+        const documentTitles = ["Identity Card", "Birth Certificate"];
+
+        let modalContent = `
+          <div class="container-fluid">
+            <div class="row mb-3">
+              <div class="col-md-3 text-center">
+                <img 
+                  src="${
+                    response.passportPhoto || "/assets/images/avatar.jpeg"
+                  }" 
+                  alt="Passport Photo" 
+                  class="img-fluid rounded shadow-sm profile-photo""
+                  style="max-height: 150px;"
+                  crossOrigin="anonymous"
+                >
+              </div>
+              <div class="col-md-9">
+                <h5 class="fw-bold mb-2">${response.firstname} ${
           response.lastname
-        }</p>
-          <p><strong>Phone:</strong> ${response.phone}</p>
-          <p><strong>Email:</strong> ${response.email}</p>
-          <p><strong>Status:</strong> ${response.status}</p>
-          <p><strong>State of Origin:</strong> ${response.stateOfOrigin}</p>
-          <p><strong>LGA:</strong> ${response.lgaOfOrigin}</p>
-          <p><strong>Kindred:</strong> ${response.kindred}</p>
+        }</h5>
+                <p class="mb-1"><strong>Phone:</strong> ${response.phone}</p>
+                <p class="mb-1"><strong>Email:</strong> ${response.email}</p>
+                <p class="mb-1"><strong>Status:</strong> <span class="badge bg-info">${
+                  response.status
+                }</span></p>
+                <p><strong>State:</strong> ${response.stateOfOrigin}</p>
+                <p><strong>LGA:</strong> ${response.lgaOfOrigin}</p>
+                <p><strong>Kindred:</strong> ${response.kindred}</p>
 
+              </div>
+            </div>
+  
+            <hr class="my-3">
+            <h6 class="text-primary">Uploaded Documents</h6>
+        `;
 
-        `);
+        if (documentPaths.length === 0) {
+          modalContent += `<p class="text-muted">No documents uploaded.</p>`;
+        }
+
+        documentPaths.forEach((doc, index) => {
+          const filename = doc?.split("/").pop();
+          const fileUrl = `${BACKEND_URL}/indigene/certificate/pdf/${filename}`;
+
+          modalContent += `
+            <div class="card my-3 shadow-sm">
+              <div class="card-header bg-light fw-semibold">
+                ${documentTitles[index] || `Document ${index + 1}`}
+              </div>
+              <div class="card-body">
+                <div id="pdf-viewer-container-${index}" style="width:100%; height:400px;" class="border rounded bg-white"></div>
+                <div class="text-end mt-2">
+                  <a href="${fileUrl}" target="_blank" class="btn btn-sm btn-outline-primary me-2">Open in New Tab</a>
+                  <a href="${fileUrl}" download class="btn btn-sm btn-outline-secondary">Download</a>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+
+        modalContent += `</div>`;
+
+        $("#viewModal .modal-body").html(modalContent);
         $("#viewModal").modal("show");
+
+        // Load PDFs securely
+        documentPaths.forEach((doc, index) => {
+          const filename = doc?.split("/").pop();
+          const fileUrl = `${BACKEND_URL}/indigene/certificate/pdf/${filename}`;
+
+          fetch(fileUrl, {
+            headers: {
+              Authorization: apiHeaders.Authorization,
+            },
+          })
+            .then((res) => {
+              if (!res.ok) throw new Error("Failed to fetch PDF");
+              return res.blob();
+            })
+            .then((blob) => {
+              const blobUrl = URL.createObjectURL(blob);
+              loadPDFJS(
+                blobUrl,
+                document.getElementById(`pdf-viewer-container-${index}`)
+              );
+            })
+            .catch((err) => {
+              console.error("Error loading secure PDF:", err.message);
+              $(`#pdf-viewer-container-${index}`).html(
+                "<p class='text-danger'>Failed to load document.</p>"
+              );
+            });
+        });
       },
       error: function (error) {
         console.error("Error fetching request details:", error);
@@ -1468,130 +1715,6 @@ $(document).ready(function () {
   fetchData(currentPage);
 });
 
-// // find certificate by ID
-// $(document).ready(function () {
-//   let resubmitId = null;
-//   let downloadUrl = `${BACKEND_URL}/indigene/certificate/download/`;
-
-//   function fetchData() {
-//     $.ajax({
-//       url: `${BACKEND_URL}/indigene/certificate/${user.id}`,
-//       method: "GET",
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//       },
-//       success: function (data) {
-//         const tableBody = $("#request-table");
-//         tableBody.empty();
-
-//         // Helper function to append a row to the table
-//         const appendRow = (isDisabled, showPayButton) => {
-//           tableBody.append(`
-//             <tr>
-//               <td>${data.firstname} ${data.lastname}</td>
-//               <td>${data.phone}</td>
-//               <td>${data.email}</td>
-//               <td>${data.status}</td>
-//               <td>${data.resubmissionAttempts || 0}</td>
-//               <td>
-//                 <div id="loadingIndicator" style="display: none;">
-//                   <div class="loader"></div>
-//                 </div>
-//                 <div class="dropdown">
-//                   <button class="btn btn-xs btn-action dropdown-toggle" data-bs-toggle="dropdown">
-//                     <i class="fas fa-ellipsis-v"></i>
-//                   </button>
-//                   <ul class="dropdown-menu">
-//                     <li>
-//                      <div class="tooltip-wrapper" style="position: relative; display: inline-block;">
-//                       <button class="dropdown-item btn-cert-download" data-id="${
-//                         data._id
-//                       }" ${isDisabled ? "disabled" : ""} style="color: green;">
-//                         Download Certificate
-//                       </button>
-//                          ${
-//                            isDisabled
-//                              ? `<span class="custom-tooltip">Please pay before downloading</span>`
-//                              : ""
-//                          }
-//                         </div>
-//                         </li>
-//                     <li>
-//                      <div class="tooltip-wrapper" style="position: relative; display: inline-block;">
-
-//                       <button class="dropdown-item view-cert-btn" data-id="${
-//                         data._id
-//                       }" ${isDisabled ? "disabled" : ""}  style="color: blue;">
-//                         View Certificate
-//                       </button>
-//                        ${
-//                          isDisabled
-//                            ? `<span class="custom-tooltip">Please pay to view certificate</span>`
-//                            : ""
-//                        }
-//                         </div>
-//                     </li>
-//                     ${
-//                       data.status === "Rejected" && data.resubmissionAllowed
-//                         ? `<li><button class="dropdown-item resubmit-btn" data-id="${data._id}" data-name="${data.firstname}" style="color: orange;">
-//                            Resubmit
-//                          </button></li>`
-//                         : ""
-//                     }
-//                     ${
-//                       data.status === "Rejected"
-//                         ? `<li><button class="dropdown-item delete-btn" data-id="${data._id}" style="color: red;">
-//                            Delete request
-//                          </button></li>`
-//                         : ""
-//                     }
-//                     ${
-//                       showPayButton
-//                         ? `<li><button class="dropdown-item btn-cert-pay" data-id="${data._id}">Pay</button></li>`
-//                         : ""
-//                     }
-//                   </ul>
-//                 </div>
-//               </td>
-//             </tr>
-//           `);
-//         };
-
-//         $("#certificate-status").text(data.status);
-
-//         if (data.status === "Rejected" || data.status === "Pending") {
-//           appendRow(true, false);
-//         } else if (data.status === "Approved") {
-//           // Check if payment has been made
-//           $.ajax({
-//             url: `${BACKEND_URL}/transaction/${user.id}`,
-//             method: "GET",
-//             headers: {
-//               Authorization: `Bearer ${token}`,
-//             },
-//             success: function (transaction) {
-//               if (transaction.length > 0) {
-//                 transaction.forEach((transaction) => {
-//                   if (transaction.certificateId === data._id) {
-//                     if (transaction.status === "success") {
-//                       appendRow(false, false);
-//                     } else {
-//                       appendRow(true, true);
-//                     }
-//                   }
-//                 });
-//               } else {
-//                 // No transactions found, append row with pay button
-//                 appendRow(true, true);
-//               }
-//             },
-//             error: function (error) {
-//               console.error("Error fetching transaction status:", error);
-//               appendRow(true, true);
-//             },
-//           });
-//         }
-
 $(document).ready(function () {
   let resubmitId = null;
   let downloadUrl = `${BACKEND_URL}/indigene/certificate/download/`;
@@ -1607,70 +1730,154 @@ $(document).ready(function () {
         const tableBody = $("#request-table");
         tableBody.empty();
 
+        const resubmissionAttempts = data.resubmissionAttempts || 0;
+        // const appendRow = (isDisabled, showPayButton) => {
+        //   tableBody.append(`
+        //     <tr>
+        //       <td>${data.firstname} ${data.lastname}</td>
+        //       <td>${data.phone}</td>
+        //       <td>${data.email}</td>
+        //       <td>${data.status}</td>
+        //       <td>${resubmissionAttempts}</td>
+        //       <td>
+        //         <div id="loadingIndicator" style="display: none;">
+        //           <div class="loader"></div>
+        //         </div>
+        //         <div class="dropdown">
+        //           <button class="btn btn-xs btn-action dropdown-toggle" data-bs-toggle="dropdown">
+        //             <i class="fas fa-ellipsis-v"></i>
+        //           </button>
+        //           <ul class="dropdown-menu">
+        //             <li>
+        //               <div class="tooltip-wrapper" style="position: relative; display: inline-block;">
+        //                 <button class="dropdown-item btn-cert-download" data-id="${
+        //                   data._id
+        //                 }" ${
+        //     isDisabled ? "disabled" : ""
+        //   } style="color: green;">
+        //                   Download Certificate
+        //                 </button>
+        //                 ${
+        //                   isDisabled
+        //                     ? `<span class="custom-tooltip">Please pay before downloading</span>`
+        //                     : ""
+        //                 }
+        //               </div>
+        //             </li>
+        //             <li>
+        //               <div class="tooltip-wrapper" style="position: relative; display: inline-block;">
+        //                 <button class="dropdown-item view-cert-btn" data-id="${
+        //                   data._id
+        //                 }" ${isDisabled ? "disabled" : ""} style="color: blue;">
+        //                   View Certificate
+        //                 </button>
+        //                 ${
+        //                   isDisabled
+        //                     ? `<span class="custom-tooltip">Please pay to view certificate</span>`
+        //                     : ""
+        //                 }
+        //               </div>
+        //             </li>
+        //             ${
+        //               data.status === "Rejected" && data.resubmissionAllowed
+        //                 ? `<li><button class="dropdown-item resubmit-btn" data-id="${data._id}" data-name="${data.firstname}" style="color: orange;">
+        //                     Resubmit
+        //                   </button></li>`
+        //                 : ""
+        //             }
+        //             ${
+        //               data.status === "Rejected"
+        //                 ? `<li><button class="dropdown-item delete-btn" data-id="${data._id}" style="color: red;">
+        //                     Delete request
+        //                   </button></li>`
+        //                 : ""
+        //             }
+        //             ${
+        //               showPayButton
+        //                 ? `<li><button class="dropdown-item btn-cert-pay" data-id="${data._id}">Pay</button></li>`
+        //                 : ""
+        //             }
+        //           </ul>
+        //         </div>
+        //       </td>
+        //     </tr>
+        //   `);
+        // };
         const appendRow = (isDisabled, showPayButton) => {
+          // Initialize tooltips immediately after appending
+          var tooltipTriggerList = [].slice.call(
+            document.querySelectorAll('[data-bs-toggle="tooltip"]')
+          );
+          tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+          });
           tableBody.append(`
             <tr>
               <td>${data.firstname} ${data.lastname}</td>
               <td>${data.phone}</td>
               <td>${data.email}</td>
-              <td>${data.status}</td>
-              <td>${data.resubmissionAttempts || 0}</td>
+              <td><span class="badge bg-${
+                data.status === "Approved"
+                  ? "success"
+                  : data.status === "Rejected"
+                  ? "danger"
+                  : "warning"
+              }">${data.status}</span></td>
+              <td>${resubmissionAttempts}</td>
               <td>
                 <div id="loadingIndicator" style="display: none;">
                   <div class="loader"></div>
                 </div>
                 <div class="dropdown">
-                  <button class="btn btn-xs btn-action dropdown-toggle" data-bs-toggle="dropdown">
-                    <i class="fas fa-ellipsis-v"></i>
+                  <button class="btn btn-sm btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-bars"></i> Options
                   </button>
                   <ul class="dropdown-menu">
                     <li>
-                      <div class="tooltip-wrapper" style="position: relative; display: inline-block;">
-                        <button class="dropdown-item btn-cert-download" data-id="${
-                          data._id
-                        }" ${
-            isDisabled ? "disabled" : ""
-          } style="color: green;">
-                          Download Certificate
-                        </button>
-                        ${
-                          isDisabled
-                            ? `<span class="custom-tooltip">Please pay before downloading</span>`
-                            : ""
-                        }
-                      </div>
+                    <div class="tooltip-wrapper" style="position: relative; display: inline-block;">
+                      <button class="dropdown-item btn-cert-download" data-id="${
+                        data._id
+                      }" ${isDisabled ? "disabled" : ""}>
+                        <i class="fas fa-download text-success"></i> Download Certificate
+                      </button>
+                       ${
+                         isDisabled
+                           ? `<span class="custom-tooltip">Please pay before downloading</span>`
+                           : ""
+                       }
                     </li>
                     <li>
-                      <div class="tooltip-wrapper" style="position: relative; display: inline-block;">
-                        <button class="dropdown-item view-cert-btn" data-id="${
-                          data._id
-                        }" ${isDisabled ? "disabled" : ""} style="color: blue;">
-                          View Certificate
-                        </button>
+                    <div class="tooltip-wrapper" style="position: relative; display: inline-block;">
+                      <button class="dropdown-item view-cert-btn" data-id="${
+                        data._id
+                      }" ${isDisabled ? "disabled" : ""}>
+                        <i class="fas fa-eye text-primary"></i> View Certificate
+                      </button>
                         ${
                           isDisabled
                             ? `<span class="custom-tooltip">Please pay to view certificate</span>`
                             : ""
                         }
-                      </div>
                     </li>
                     ${
                       data.status === "Rejected" && data.resubmissionAllowed
-                        ? `<li><button class="dropdown-item resubmit-btn" data-id="${data._id}" data-name="${data.firstname}" style="color: orange;">
-                            Resubmit
+                        ? `<li><button class="dropdown-item resubmit-btn" data-id="${data._id}" data-name="${data.firstname}">
+                            <i class="fas fa-sync-alt text-warning"></i> Resubmit
                           </button></li>`
                         : ""
                     }
                     ${
                       data.status === "Rejected"
-                        ? `<li><button class="dropdown-item delete-btn" data-id="${data._id}" style="color: red;">
-                            Delete request
+                        ? `<li><button class="dropdown-item delete-btn" data-id="${data._id}">
+                            <i class="fas fa-trash-alt text-danger"></i> Delete Request
                           </button></li>`
                         : ""
                     }
                     ${
                       showPayButton
-                        ? `<li><button class="dropdown-item btn-cert-pay" data-id="${data._id}">Pay</button></li>`
+                        ? `<li><button class="dropdown-item btn-cert-pay" data-id="${data._id}">
+                            <i class="fas fa-credit-card text-info"></i> Pay
+                          </button></li>`
                         : ""
                     }
                   </ul>
@@ -1873,6 +2080,17 @@ $(document).ready(function () {
   }
 
   function initiatePayment(certificateId) {
+    // Define the amount clearly (5000 Naira in this case)
+    const amountInNaira = 5000; // Display value
+
+    // Show confirmation with amount before proceeding
+    if (
+      !confirm(
+        `You are about to pay ₦${amountInNaira} for your ID card. Proceed to payment?`
+      )
+    ) {
+      return;
+    }
     // Retrieve user authentication data
     if (!userData?.token || !userData?.user?.id) {
       Swal.fire("Error", "User authentication failed!", "error");
@@ -1954,6 +2172,16 @@ $(document).ready(function () {
   });
 
   fetchData();
+
+  // Initialize tooltips after content is rendered
+  $(document).ajaxStop(function () {
+    var tooltipTriggerList = [].slice.call(
+      document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    );
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+  });
 });
 
 // Download Cert
@@ -2075,6 +2303,11 @@ $(document).ready(function () {
   function renderTable(data) {
     tableBody.empty();
     data.forEach((item, index) => {
+      const statusBadge = {
+        Approved: `<span class="badge rounded-pill bg-success">Approved</span>`,
+        Pending: `<span class="badge rounded-pill bg-warning text-dark">Pending</span>`,
+        Rejected: `<span class="badge rounded-pill bg-danger">Rejected</span>`,
+      };
       const isRejected = item.status === "Rejected";
       tableBody.append(`
         <tr data-id="${item._id}">
@@ -2082,26 +2315,23 @@ $(document).ready(function () {
           <td>${item.firstname} ${item.lastname}</td>
           <td>${item.phone}</td>
           <td>${item.email}</td>
-          <td>${item.status}</td>
+           <td>${statusBadge[item.status] || item.status}</td>
           <td>
-            <div class="dropdown">
-              <button class="btn btn-xs btn-action dropdown-toggle" data-bs-toggle="dropdown">
-                <i class="fas fa-ellipsis-v"></i>
-              </button>
-              <ul class="dropdown-menu">
-                <li><button class="dropdown-item btn-approve" data-id="${
-                  item._id
-                }" style="color: green;">Approve</button></li>
-                <li><button class="dropdown-item btn-reject" data-id="${
-                  item._id
-                }" ${
-        isRejected ? "disabled" : ""
-      } style="color: red;">Reject</button></li>
-                <li><button class="dropdown-item btn-view" data-id="${
-                  item._id
-                }" style="color: blue;">View</button></li>
-              </ul>
-            </div>
+            <button class="btn btn-sm btn-success btn-approve" data-id="${
+              item._id
+            }" title="Approve">
+              <i class="fas fa-check"></i>
+            </button>
+            <button class="btn btn-sm btn-warning btn-view" data-id="${
+              item._id
+            }" title="View">
+              <i class="fas fa-eye"></i>
+            </button>
+            <button class="btn btn-sm btn-danger btn-reject" data-id="${
+              item._id
+            }" title="Reject" ${item.status === "Rejected" ? "disabled" : ""}>
+              <i class="fas fa-times"></i>
+            </button>
           </td>
         </tr>
       `);
@@ -2171,17 +2401,99 @@ $(document).ready(function () {
       method: "GET",
       headers: apiHeaders,
       success: function (response) {
-        // Populate the view modal with the request details
-        $("#viewModal .modal-body").html(`
-          <p><strong>Name:</strong> ${response.firstname} ${
+        const documentPaths = [
+          response.utilityBill,
+          response.ref_letter,
+        ].filter(Boolean);
+        const documentTitles = ["Utility Bill", "Reference Letter"];
+
+        let modalContent = `
+          <div class="container-fluid">
+            <div class="row mb-3">
+              <div class="col-md-3 text-center">
+                <img 
+                  src="${
+                    response.passportPhoto || "/assets/images/avatar.jpeg"
+                  }" 
+                  alt="Passport Photo" 
+                  class="img-fluid rounded shadow-sm"
+                  style="max-height: 150px;"
+                >
+              </div>
+              <div class="col-md-9">
+                <h5 class="fw-bold mb-2">${response.firstname} ${
           response.lastname
-        }</p>
-          <p><strong>Phone:</strong> ${response.phone}</p>
-          <p><strong>Email:</strong> ${response.email}</p>
-          <p><strong>Status:</strong> ${response.status}</p>
-          <p><strong>Details:</strong> ${response.details || "N/A"}</p>
-        `);
+        }</h5>
+                <p class="mb-1"><strong>Phone:</strong> ${response.phone}</p>
+                <p class="mb-1"><strong>Email:</strong> ${response.email}</p>
+                <p class="mb-1"><strong>Status:</strong> <span class="badge bg-info">${
+                  response.status
+                }</span></p>
+                <p><strong>Details:</strong> ${response.details || "N/A"}</p>
+              </div>
+            </div>
+  
+            <hr class="my-3">
+            <h6 class="text-primary">Uploaded Documents</h6>
+        `;
+
+        if (documentPaths.length === 0) {
+          modalContent += `<p class="text-muted">No documents uploaded.</p>`;
+        }
+
+        documentPaths.forEach((doc, index) => {
+          const filename = doc?.split("/").pop();
+          const fileUrl = `${BACKEND_URL}/idcard/pdf/${filename}`;
+
+          modalContent += `
+            <div class="card my-3 shadow-sm">
+              <div class="card-header bg-light fw-semibold">
+                ${documentTitles[index] || `Document ${index + 1}`}
+              </div>
+              <div class="card-body">
+                <div id="pdf-viewer-container-${index}" style="width:100%; height:400px;" class="border rounded bg-white"></div>
+                <div class="text-end mt-2">
+                  <a href="${fileUrl}" target="_blank" class="btn btn-sm btn-outline-primary me-2">Open in New Tab</a>
+                  <a href="${fileUrl}" download class="btn btn-sm btn-outline-secondary">Download</a>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+
+        modalContent += `</div>`;
+
+        $("#viewModal .modal-body").html(modalContent);
         $("#viewModal").modal("show");
+
+        // Load PDFs securely
+        documentPaths.forEach((doc, index) => {
+          const filename = doc?.split("/").pop();
+          const fileUrl = `${BACKEND_URL}/idcard/pdf/${filename}`;
+
+          fetch(fileUrl, {
+            headers: {
+              Authorization: apiHeaders.Authorization,
+            },
+          })
+            .then((res) => {
+              if (!res.ok) throw new Error("Failed to fetch PDF");
+              return res.blob();
+            })
+            .then((blob) => {
+              const blobUrl = URL.createObjectURL(blob);
+              loadPDFJS(
+                blobUrl,
+                document.getElementById(`pdf-viewer-container-${index}`)
+              );
+            })
+            .catch((err) => {
+              console.error("Error loading secure PDF:", err.message);
+              $(`#pdf-viewer-container-${index}`).html(
+                "<p class='text-danger'>Failed to load document.</p>"
+              );
+            });
+        });
       },
       error: function (error) {
         console.error("Error fetching request details:", error);
@@ -3140,36 +3452,51 @@ $(document).ready(function () {
         Authorization: `Bearer ${token}`,
       },
       success: function (data) {
-        console.log(data);
         const tableBody = $("#card-table");
         tableBody.empty();
 
+        const resubmissionAttempts = data.resubmissionAttempts || 0;
+
         // Helper function to append a row to the table
         const appendRow = (isDisabled, showPayButton) => {
+          // Initialize tooltips immediately after appending
+          var tooltipTriggerList = [].slice.call(
+            document.querySelectorAll('[data-bs-toggle="tooltip"]')
+          );
+          tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+          });
           tableBody.append(`
     <tr>
       <td>${data.firstname} ${data.lastname}</td>
       <td>${data.phone}</td>
       <td>${data.email}</td>
-      <td>${data.status}</td>
-      <td>${data.resubmissionAttempts || 0}</td>
+      <td><span class="badge bg-${
+        data.status === "Approved"
+          ? "success"
+          : data.status === "Rejected"
+          ? "danger"
+          : "warning"
+      }">${data.status}</span></td>
+      <td>${resubmissionAttempts}</td>
+
       <td>
       <div id="loadingIndicator" style="display: none;">
       <div class="loader"></div>
      </div>
         <div class="dropdown">
-          <button class="btn btn-xs btn-action dropdown-toggle" data-bs-toggle="dropdown">
-            <i class="fas fa-ellipsis-v"></i>
-          </button>
+           <button class="btn btn-sm btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-bars"></i> Options
+           </button>
           <ul class="dropdown-menu">
             <li>
                <div class="tooltip-wrapper" style="position: relative; display: inline-block;">
               <button class="dropdown-item btn-card-download" data-id="${
                 data._id
-              }" ${isDisabled ? "disabled" : ""} style="color: green;">
+              }" ${isDisabled ? "disabled" : ""}>
+                 <i class="fas fa-download text-success"></i>
                 Download Card
               </button>
-               </button>
                   ${
                     isDisabled
                       ? `<span class="custom-tooltip">Please pay before downloading</span>`
@@ -3177,36 +3504,41 @@ $(document).ready(function () {
                   }
             </li>
             <li>
-               <div class="tooltip-wrapper" style="position: relative; display: inline-block;">              <button class="dropdown-item view-card-btn" data-id="${
+               <div class="tooltip-wrapper" style="position: relative; display: inline-block;">              
+               <button class="dropdown-item view-card-btn" data-id="${
                  data._id
-               }"  ${isDisabled ? "disabled" : ""}  style="color: blue;">
-                View Card
+               }"  ${isDisabled ? "disabled" : ""}>
+               <i class="fas fa-eye text-primary"></i>  View Card
               </button>
               ${
                 isDisabled
                   ? `<span class="custom-tooltip">Please pay to view card</span>`
                   : ""
               }
+        
             </li>
             ${
               data.status === "Rejected" && data.resubmissionAllowed
-                ? `<li><button class="dropdown-item resubmit-card-btn" data-id="${data._id}" data-name="${data.firstname}" style="color: orange;">
-                     Resubmit
+                ? `<li><button class="dropdown-item resubmit-card-btn" data-id="${data._id}" data-name="${data.firstname}">
+                    <i class="fas fa-sync-alt text-warning"></i>   Resubmit
                    </button></li>`
                 : ""
             }
             
              ${
                data.status === "Rejected"
-                 ? `<li><button class="dropdown-item delete-card-btn" data-id="${data._id}" style="color: red;">
-                 Delete request
+                 ? `<li><button class="dropdown-item delete-card-btn" data-id="${data._id}">
+                <i class="fas fa-trash-alt text-danger"></i>  Delete request
                </button></li>`
                  : ""
              }
 
                ${
                  showPayButton
-                   ? `<li><button class="dropdown-item btn-card-pay" data-id="${data._id}">Pay</button></li>`
+                   ? `<li> <button class="dropdown-item btn-card-pay" data-id="${data._id}">
+                     <i class="fas fa-credit-card text-info"></i> Pay
+                   </button>
+                   </li>`
                    : ""
                }
             
@@ -3222,7 +3554,6 @@ $(document).ready(function () {
         if (data.status === "Rejected" || data.status === "Pending") {
           appendRow(true, false);
         } else if (data.status === "Approved") {
-          // appendRow(true, true);
           // Check if payment has been made
           $.ajax({
             url: `${BACKEND_URL}/transaction/${user.id}`,
@@ -3427,6 +3758,17 @@ $(document).ready(function () {
 
     //Card Payment
     function initiateCardPayment(cardId) {
+      // Define the amount clearly (5000 Naira in this case)
+      const amountInNaira = 5000; // Display value
+
+      // Show confirmation with amount before proceeding
+      if (
+        !confirm(
+          `You are about to pay ₦${amountInNaira} for your ID card. Proceed to payment?`
+        )
+      ) {
+        return;
+      }
       // Retrieve user authentication data
       if (!userData?.token || !userData?.user?.id) {
         Swal.fire("Error", "User authentication failed!", "error");
@@ -3462,7 +3804,6 @@ $(document).ready(function () {
           reference,
         }),
         success: function (response) {
-          console.log("response", response);
           if (response.status === 200 && response.data?.reference) {
             const paymentRef = response.data.reference;
 
