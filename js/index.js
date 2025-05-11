@@ -2,7 +2,7 @@ const isDevelopment = window.location.hostname === "127.0.0.1";
 
 const BACKEND_URL = isDevelopment
   ? "http://localhost:5000/api"
-  : "https://identity-management-af43.onrender.com/api";
+  : "http://api.citizenship.benuestate.gov.ng/";
 
 console.log("BACKEND_URL", BACKEND_URL);
 

@@ -1,0 +1,1672 @@
+<!DOCTYPE html>
+<html lang="en">
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="keywords" content="dashboard" />
+    <meta name="robots" content="index, follow" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <meta property="og:image" content="social-image.html" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>
+      Benue State Integrated Residents/Citizens Identity/Indigeneship
+      Registration and Card Issuance Management System
+    </title>
+    <!-- Favicon icon -->
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/assets/images/benue-state-logo.png"
+    />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link
+      href="vendor/bootstrap-select/dist/css/bootstrap-select.min.css"
+      rel="stylesheet"
+    />
+    <link href="css/style.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="../../cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <script src="../../unpkg.com/sweetalert%402.1.2/dist/sweetalert.min.js"></script>
+    <link href="vendor/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet" />
+    <script src="../../ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    <style>
+      .error-message {
+        color: red;
+        font-size: 0.875rem;
+        display: none;
+      }
+      .form-control.error {
+        border-color: red;
+      }
+      /* .form-section {
+        display: none;
+      } */
+      .form-section.active {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <!--*******************
+        Preloader start
+    ********************-->
+    <div id="preloader">
+      <div class="sk-three-bounce">
+        <div class="sk-child sk-bounce1"></div>
+        <div class="sk-child sk-bounce2"></div>
+        <div class="sk-child sk-bounce3"></div>
+      </div>
+    </div>
+    <!--*******************
+        Preloader end
+    ********************-->
+
+    <!--**********************************
+        Main wrapper start
+    ***********************************-->
+    <div id="main-wrapper">
+      <!--**********************************
+            Nav header start
+        ***********************************-->
+
+      <div class="nav-header">
+        <!-- Logo Section -->
+        <a href="index.html" class="brand-logo">
+          <img
+            src="/assets/images/benue-state-logo.png"
+            alt="benueo"
+            class="logo-img"
+          />
+          <div class="brand-text">BIRCIIRCIMS</div>
+        </a>
+
+        <!-- Hamburger Menu for Navigation Control -->
+        <div class="nav-control">
+          <div class="hamburger">
+            <span class="line"></span><span class="line"></span
+            ><span class="line"></span>
+          </div>
+        </div>
+      </div>
+      <!--**********************************
+            Nav header end
+        ***********************************-->
+
+      <!--**********************************
+            Header start
+        ***********************************-->
+      <div class="header">
+        <div class="header-content">
+          <nav class="navbar navbar-expand">
+            <div class="collapse navbar-collapse justify-content-between">
+              <div class="header-left">
+                <div class="dashboard_bar">Profile</div>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </div>
+      <!--**********************************
+            Header end ti-comment-alt
+        ***********************************-->
+
+      <!--**********************************
+            Sidebar start
+        ***********************************-->
+      <div class="deznav">
+        <div class="deznav-scroll">
+          <ul class="metismenu" id="menu">
+            <!-- Super Admin Menu -->
+            <li class="super-admin-menu">
+              <a class="ai-icon" href="index.html" aria-expanded="false">
+                <i class="flaticon-381-networking"></i>
+                <span class="nav-text">Dashboard</span>
+              </a>
+            </li>
+            <!-- user Menu -->
+            <li class="user-menu">
+              <a
+                class="ai-icon"
+                href="user-dasboard.html"
+                aria-expanded="false"
+              >
+                <i class="flaticon-381-networking"></i>
+                <span class="nav-text">Dashboard</span>
+              </a>
+            </li>
+            <li class="super-admin-menu">
+              <a class="ai-icon" href="approvals.html" aria-expanded="false">
+                <i class="fa fa-exchange" aria-hidden="true"></i>
+                <span class="nav-text">Approvals</span>
+              </a>
+            </li>
+            <li class="user-menu">
+              <a class="ai-icon" href="request.html" aria-expanded="false">
+                <i class="fa fa-money" aria-hidden="true"></i>
+                <span class="nav-text">View Certificate Status</span>
+              </a>
+            </li>
+            <li class="user-menu">
+              <a class="ai-icon" href="idcard.html" aria-expanded="false">
+                <i class="fa fa-money" aria-hidden="true"></i>
+                <span class="nav-text">View Card Status</span>
+              </a>
+            </li>
+
+            <li class="super-admin-menu">
+              <a class="ai-icon" href="all-request.html" aria-expanded="false">
+                <i class="fa fa-money" aria-hidden="true"></i>
+                <span class="nav-text">View Certificate Request</span>
+              </a>
+            </li>
+
+            <li class="super-admin-menu">
+              <a class="ai-icon" href="all-card.html" aria-expanded="false">
+                <i class="fa fa-money" aria-hidden="true"></i>
+                <span class="nav-text">View Card Request</span>
+              </a>
+            </li>
+            <!-- Super Admin Menu -->
+            <li class="super-admin-menu">
+              <a class="ai-icon" href="citizens.html" aria-expanded="false">
+                <i class="fa fa-user" aria-hidden="true"></i>
+
+                <span class="nav-text">Users</span>
+              </a>
+            </li>
+            <li class="super-admin-menu">
+              <a class="ai-icon" href="kindred.html" aria-expanded="false">
+                <i class="fa fa-user" aria-hidden="true"></i>
+
+                <span class="nav-text">Kindreds</span>
+              </a>
+            </li>
+            <li class="support-admin-menu">
+              <a class="ai-icon" href="user-kindred.html" aria-expanded="false">
+                <i class="fa fa-user" aria-hidden="true"></i>
+                <span class="nav-text">Kindreds</span>
+              </a>
+            </li>
+            <li class="support-admin-menu">
+              <a
+                class="ai-icon"
+                href="support-admin-lga.html"
+                aria-expanded="false"
+              >
+                <i class="fa fa-user" aria-hidden="true"></i>
+                <span class="nav-text">Support Admin LGA</span>
+              </a>
+            </li>
+            <!-- User-menu -->
+            <li class="user-menu">
+              <a class="ai-icon" href="certificate.html" aria-expanded="false">
+                <i class="fa fa-user-plus" aria-hidden="true"></i>
+                <span class="nav-text">Request Certificate</span>
+              </a>
+            </li>
+            <li class="user-menu">
+              <a class="ai-icon" href="card.html" aria-expanded="false">
+                <i class="fa fa-user-plus" aria-hidden="true"></i>
+                <span class="nav-text">Request Card</span>
+              </a>
+            </li>
+
+            <li class="user-menu">
+              <a class="ai-icon" href="profile.html" aria-expanded="false">
+                <i class="fa fa-user" aria-hidden="true"></i>
+                <span class="nav-text">User Account</span>
+              </a>
+            </li>
+            <li class="super-admin-menu">
+              <a class="ai-icon" href="transaction.html" aria-expanded="false">
+                <i class="flaticon-381-networking"></i>
+                <span class="nav-text">transactions</span>
+              </a>
+            </li>
+            <li>
+              <a class="ai-icon" href="/source/auth/login.html" aria-expanded="false">
+                <i class="fa fa-sign-out" aria-hidden="true"></i>
+                <span class="nav-text" onclick="logout(this)">Logout</span>
+              </a>
+            </li>
+          </ul>
+          <div class="copyright">
+            <p>Powered By BDIC <br />© 2025 All Rights Reserved</p>
+            <p class="op5"></p>
+          </div>
+        </div>
+      </div>
+
+      <!--**********************************
+            Sidebar end
+        ***********************************-->
+
+      <!--**********************************
+            Content body start
+        ***********************************-->
+      <div class="content-body">
+        <div class="container-fluid">
+          <form
+            class="profile-form"
+            id="unifiedForm"
+            enctype="multipart/form-data"
+          >
+            <!-- Profile Details -->
+            <div class="row form-section" id="profile-details-section">
+              <div class="col-xl-12 col-lg-12">
+                <div class="card card-bx m-b30">
+                  <div class="card-header">
+                    <h4 class="card-title">Profile Details</h4>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <!-- Form fields for Profile Details -->
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">First Name</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          name="firstname"
+                          id="first_name"
+                          value="firstname"
+                          readonly
+                        />
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Lastname</label>
+                        <input
+                          id="lastname"
+                          type="text"
+                          name="lastname"
+                          class="form-control"
+                          readonly
+                        />
+                      </div>
+
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Middlename</label>
+                        <input
+                          id="middlename"
+                          type="text"
+                          class="form-control"
+                          name="middlename"
+                        />
+                      </div>
+
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Gender</label>
+                        <select
+                          id="gender"
+                          name="gender"
+                          class="selectpicker nice-select default-select form-control wide mh-auto"
+                        >
+                          <option value="Male">Male</option>
+                          <option value="Female">Female</option>
+                        </select>
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Marital Status</label>
+                        <select
+                          id="maritalStatus"
+                          name="maritalStatus"
+                          class="selectpicker nice-select default-select form-control wide mh-auto"
+                        >
+                          <option value="single">Single</option>
+                          <option value="married">Married</option>
+                          <option value="divorced">Divorced</option>
+                          <option value="widowed">Widowed</option>
+                        </select>
+                      </div>
+
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Date Of Birth</label>
+                        <input
+                          id="DOB"
+                          type="date"
+                          class="form-control"
+                          name="DOB"
+                          min="1900-01-01"
+                        />
+                      </div>
+
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Select State Of Origin</label>
+
+                        <!-- <select
+                          id="stateOfOrigin"
+                          class="selectpicker nice-select default-select form-control wide mh-auto"
+                          onchange="updateLocalGovernmentsOfOrigin()"
+                        >
+                          <option value="">Select State</option>
+                          <option value="adamawa">Adamawa</option>
+                          <option value="akwa_ibom">Akwa Ibom</option>
+                          <option value="anambra">Anambra</option>
+                          <option value="abia">Abia</option>
+                          <option value="bauchi">Bauchi</option>
+                          <option value="benue">Benue</option>
+                          <option value="borno">Borno</option>
+                          <option value="bayelsa">Bayelsa</option>
+                          <option value="delta">Delta</option>
+                          <option value="ebonyi">Ebonyi</option>
+                          <option value="edo">Edo</option>
+                          <option value="enugu">Enugu</option>
+                          <option value="abuja">abuja</option>
+                          <option value="gombe">Gombe</option>
+                          <option value="jigawa">Jigawa</option>
+                          <option value="ekiti">Ekiti</option>
+                          <option value="lagos">Lagos</option>
+                          <option value="oyo">Oyo</option>
+                          <option value="imo">Imo</option>
+                          <option value="kaduna">Kaduna</option>
+                          <option value="kebbi">Kebbi</option>
+                          <option value="kano">Kano</option>
+                          <option value="kogi">Kogi</option>
+                          <option value="osun">Osun</option>
+                          <option value="sokoto">Sokoto</option>
+                          <option value="plateau">Plateau</option>
+                          <option value="taraba">Taraba</option>
+                          <option value="yobe">Yobe</option>
+                          <option value="zamfara">zamfara</option>
+                          <option value="katsina">Katsina</option>
+                          <option value="kwara">Kwara</option>
+                          <option value="nasarawa">Nasarawa</option>
+                          <option value="niger">Niger</option>
+                          <option value="rivers">Rivers</option>
+                        </select> -->
+
+                        <input
+                          id="stateOfOrigin"
+                          type="text"
+                          class="form-control"
+                          required
+                          name="stateOfOrigin"
+                          readonly
+                          onchange="updateLocalGovernmentsOfOrigin()"
+                        />
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label"
+                          >Select Local Government Of Origin</label
+                        >
+                        <!-- class="form-select" -->
+                        <select
+                          id="lgaOfOrigin"
+                          class="nice-select form-control wide mh-auto"
+                        >
+                          <option value="">Select Local Government</option>
+                        </select>
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Nationality</label>
+                        <input
+                          id="nationality"
+                          type="text"
+                          class="form-control"
+                          name="nationality"
+                        />
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Community</label>
+                        <input
+                          id="community"
+                          type="text"
+                          class="form-control"
+                          name="community"
+                        />
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Religion</label>
+                        <select
+                          id="religion"
+                          name="religion"
+                          class="selectpicker nice-select default-select form-control wide mh-auto"
+                        >
+                          <option value="">--Select--</option>
+                          <option value="christain">Christain</option>
+                          <option value="muslim">Muslim</option>
+                          <option value="others">Others</option>
+                        </select>
+                      </div>
+
+                      <div class="col-sm-4 m-b30">
+                        <label class="form-label"
+                          >Recent Passport Photograph
+                        </label>
+                        <input
+                          id="passportPhoto"
+                          type="file"
+                          class="form-control"
+                          name="passportPhoto"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-footer">
+                    <button
+                      type="button"
+                      class="btn btn-primary next-btn"
+                      data-next="Residential-Address-section"
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Residential Address -->
+
+            <div
+              class="row form-section"
+              id="Residential-Address-section"
+              style="display: none"
+            >
+              <div class="col-xl-12 col-lg-12">
+                <div class="card card-bx m-b30">
+                  <div class="card-header">
+                    <h4 class="card-title">Residential Address</h4>
+                  </div>
+
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">House Number</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="house_number"
+                          name="house_number"
+                        />
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Street Name</label>
+                        <input
+                          id="street_name"
+                          type="text"
+                          name="street_name"
+                          class="form-control"
+                        />
+                      </div>
+
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label"
+                          >Nearest Bus-Stop/Landmark</label
+                        >
+                        <input
+                          id="nearest_bus_stop_landmark"
+                          type="text"
+                          name="nearest_bus_stop_landmark"
+                          class="form-control"
+                        />
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label"
+                          >Select State Of Residence</label
+                        >
+
+                        <select
+                          id="stateOfResidence"
+                          class="selectpicker nice-select default-select form-control wide mh-auto"
+                          onchange="updateLocalGovernmentsOfResidence()"
+                        >
+                          <option value="">Select State</option>
+                          <option value="adamawa">Adamawa</option>
+                          <option value="akwa_ibom">Akwa Ibom</option>
+                          <option value="anambra">Anambra</option>
+                          <option value="abia">Abia</option>
+                          <option value="bauchi">Bauchi</option>
+                          <option value="benue">Benue</option>
+                          <option value="borno">Borno</option>
+                          <option value="bayelsa">Bayelsa</option>
+                          <option value="delta">Delta</option>
+                          <option value="ebonyi">Ebonyi</option>
+                          <option value="edo">Edo</option>
+                          <option value="enugu">Enugu</option>
+                          <option value="abuja">abuja</option>
+                          <option value="gombe">Gombe</option>
+                          <option value="jigawa">Jigawa</option>
+                          <option value="ekiti">Ekiti</option>
+                          <option value="lagos">Lagos</option>
+                          <option value="oyo">Oyo</option>
+                          <option value="imo">Imo</option>
+                          <option value="kaduna">Kaduna</option>
+                          <option value="kebbi">Kebbi</option>
+                          <option value="kano">Kano</option>
+                          <option value="kogi">Kogi</option>
+                          <option value="osun">Osun</option>
+                          <option value="sokoto">Sokoto</option>
+                          <option value="plateau">Plateau</option>
+                          <option value="taraba">Taraba</option>
+                          <option value="yobe">Yobe</option>
+                          <option value="zamfara">zamfara</option>
+                          <option value="katsina">Katsina</option>
+                          <option value="kwara">Kwara</option>
+                          <option value="nasarawa">Nasarawa</option>
+                          <option value="niger">Niger</option>
+                          <option value="rivers">Rivers</option>
+                        </select>
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label"
+                          >Select Local Government Of Residence</label
+                        >
+                        <!-- class="form-select" -->
+                        <select
+                          id="lgaOfResidence"
+                          class="nice-select form-control wide mh-auto"
+                        >
+                          <option value="">Select Local Government</option>
+                        </select>
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label for="countryOfResidence"
+                          >Select Country Of Residence:</label
+                        >
+                        <select
+                          id="countryOfResidence"
+                          name="countryOfResidence"
+                          class="nice-select form-control wide mh-auto"
+                        >
+                          <option value="">--Select--</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary prev-btn"
+                      data-prev="profile-details-section"
+                    >
+                      Previous
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-primary next-btn"
+                      data-next="Identity-information-section"
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Identification -->
+
+            <div
+              class="row form-section"
+              id="Identity-information-section"
+              style="display: none"
+            >
+              <div class="col-xl-12 col-lg-12">
+                <div class="card card-bx m-b30">
+                  <div class="card-header">
+                    <h4 class="card-title">Identification</h4>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Identification</label>
+                        <select
+                          id="identification"
+                          name="identification"
+                          class="selectpicker nice-select default-select form-control wide mh-auto"
+                          onchange="toggleOtherInput(this)"
+                        >
+                          <option value="national Id">National ID</option>
+                          <option value="driver licence">Driver Licence</option>
+                          <option value="international passport">
+                            INT'L Passport
+                          </option>
+                          <option value="voter's card">Voter's Card</option>
+                          <option value="others">Others</option>
+                        </select>
+                        <!-- Container for 'Others' input -->
+                        <div
+                          id="other-identification-container"
+                          style="display: none; margin-top: 10px"
+                        >
+                          <label for="other-identification" class="form-label"
+                            >Specify Other Identification</label
+                          >
+                          <input
+                            type="text"
+                            id="other-identification"
+                            name="other-identification"
+                            class="form-control"
+                            placeholder="Please specify"
+                          />
+                        </div>
+                      </div>
+
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">ID Number</label>
+                        <input
+                          id="id_number"
+                          type="text"
+                          class="form-control"
+                          name="id_number"
+                        />
+                      </div>
+
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Issue Date</label>
+                        <input
+                          id="issue_date"
+                          type="text"
+                          class="form-control"
+                          name="issue_date"
+                        />
+                      </div>
+
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Expiry Date</label>
+                        <input
+                          id="expiry_date"
+                          type="text"
+                          class="form-control"
+                          name="expiry_date"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary prev-btn"
+                      data-prev="Residential-Address-section"
+                    >
+                      Previous
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-primary next-btn"
+                      data-next="family-information-section"
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- NOK Information -->
+            <div
+              class="row form-section"
+              id="family-information-section"
+              style="display: none"
+            >
+              <div class="col-xl-12 col-lg-12">
+                <div class="card card-bx m-b30">
+                  <div class="card-header">
+                    <h4 class="card-title">Next Of Kin Details</h4>
+                  </div>
+                  <!-- NOK section fields -->
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Surname</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="nok_surname"
+                          name="nok_surname"
+                        />
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">First Name</label>
+                        <input
+                          id="nok_firstname"
+                          type="text"
+                          name="nok_firstname"
+                          class="form-control"
+                        />
+                      </div>
+
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Middle Name</label>
+                        <input
+                          id="nok_middlename"
+                          type="text"
+                          name="nok_middlename"
+                          class="form-control"
+                        />
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Relationship</label>
+                        <input
+                          id="nok_relationship"
+                          type="text"
+                          class="form-control"
+                          name="nok_relationship"
+                        />
+                      </div>
+                      <!-- <h4>Next of Kin Address:</h4> -->
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Country Of Residence</label>
+                        <input
+                          id="nok_countryOfResidence"
+                          type="text"
+                          class="form-control"
+                          name="nok_countryOfResidence?"
+                        />
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">State Of Residence</label>
+                        <input
+                          id="nok_stateOfResidence"
+                          type="text"
+                          class="form-control"
+                          name="nok_stateOfResidence"
+                        />
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">LGA Of Residence</label>
+                        <input
+                          id="nok_lgaOfResidence"
+                          type="text"
+                          class="form-control"
+                          name="nok_lgaOfResidence"
+                        />
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">City/Town Of Residence</label>
+                        <input
+                          id="nok_cityOfResidence"
+                          type="text"
+                          class="form-control"
+                          name="nok_cityOfResidence"
+                        />
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Address</label>
+                        <input
+                          id="nok_address"
+                          type="text"
+                          class="form-control"
+                          name="nok_address"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary prev-btn"
+                      data-prev="profile-details-section"
+                    >
+                      Previous
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-primary next-btn"
+                      data-next="contact-details-section"
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="row form-section"
+              id="contact-details-section"
+              style="display: none"
+            >
+              <div class="col-xl-12 col-lg-12">
+                <div class="card card-bx m-b30">
+                  <div class="card-header">
+                    <h4 class="card-title">Contact Details</h4>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <!-- Neighbors' Contact Details -->
+                      <div class="col-12">
+                        <h5 class="section-title">
+                          Neighbors' Contact Details
+                        </h5>
+                      </div>
+                      <!-- Container for dynamic fields -->
+                      <div class="col-12" id="neighbors-container">
+                        <!-- Initial set of fields -->
+                        <div class="neighbor-fields m-b30">
+                          <label class="form-label">Neighbor 1</label>
+                          <input
+                            type="text"
+                            class="form-control m-b10"
+                            name="neighbor_name[]"
+                            placeholder="Full Name"
+                          />
+                          <input
+                            type="text"
+                            class="form-control m-b10"
+                            name="neighbor_address[]"
+                            placeholder="Residential Address"
+                          />
+                          <input
+                            type="tel"
+                            class="form-control"
+                            name="neighbor_phone[]"
+                            placeholder="Phone Number"
+                          />
+                        </div>
+                      </div>
+                      <!-- Button to add more neighbors -->
+                      <div class="col-12">
+                        <button
+                          type="button"
+                          class="btn btn-primary"
+                          id="add-neighbor"
+                        >
+                          Add Another Neighbor
+                        </button>
+                        <p
+                          id="max-neighbors-message"
+                          style="display: none; color: red; margin-top: 10px"
+                        >
+                          Maximum of 5 neighbors reached.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary prev-btn"
+                      data-prev="family-information-section"
+                    >
+                      Previous
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-primary next-btn"
+                      data-next="family-details-section"
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Family Members' Contact Details -->
+            <div
+              class="row form-section"
+              id="family-details-section"
+              style="display: none"
+            >
+              <div class="col-xl-12 col-lg-12">
+                <div class="card card-bx m-b30">
+                  <div class="card-header">
+                    <h4 class="card-title">Contact Details</h4>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-12">
+                        <h5 class="section-title">Family' Contact Details</h5>
+                      </div>
+                      <!-- Container for dynamic fields -->
+                      <div class="col-12" id="family-container">
+                        <!-- Initial set of fields -->
+                        <div class="family-fields m-b30">
+                          <label class="form-label">Family 1</label>
+                          <input
+                            type="text"
+                            class="form-control m-b10"
+                            name="family_name[]"
+                            placeholder="Full Name"
+                          />
+                          <input
+                            type="text"
+                            class="form-control m-b10"
+                            name="family_relationship[]"
+                            placeholder="Relationship"
+                          />
+                          <input
+                            type="text"
+                            class="form-control m-b10"
+                            name="family_address[]"
+                            placeholder="Residential Address"
+                          />
+                          <input
+                            type="tel"
+                            class="form-control"
+                            name="family_phone[]"
+                            placeholder="Phone Number"
+                          />
+                        </div>
+                      </div>
+                      <!-- Button to add more neighbors -->
+                      <div class="col-12">
+                        <button
+                          type="button"
+                          class="btn btn-primary"
+                          id="add-family"
+                        >
+                          Add Another Family
+                        </button>
+                        <p
+                          id="max-family-message"
+                          style="display: none; color: red; margin-top: 10px"
+                        >
+                          Maximum of 5 family reached.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary prev-btn"
+                      data-prev="contact-details-section"
+                    >
+                      Previous
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-primary next-btn"
+                      data-next="business-details-section"
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bussiness Details -->
+            <div
+              class="row form-section"
+              id="business-details-section"
+              style="display: none"
+            >
+              <div class="col-xl-12 col-lg-12">
+                <div class="card card-bx m-b30">
+                  <div class="card-header">
+                    <h4 class="card-title">Business Details</h4>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <!-- Form fields for Profile Details -->
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Business Name</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          name="biz_name"
+                          id="biz_name"
+                        />
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Business Type </label>
+                        <select
+                          id="biz_type"
+                          name="biz_type"
+                          class="selectpicker nice-select default-select form-control wide mh-auto"
+                        >
+                          <option value="sole Proprietorship">
+                            Sole Proprietorship
+                          </option>
+                          <option value="partnership ">Partnership</option>
+                          <option value="limited liability company">
+                            Limited Liability Company
+                          </option>
+                          <option value="corporation ">Corporation</option>
+                          <option value="cooperative  ">Cooperative</option>
+                          <option value="others ">Others</option>
+                        </select>
+                      </div>
+
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label"
+                          >Business Registration Number (if applicable):</label
+                        >
+                        <input
+                          id="registration_number"
+                          type="text"
+                          class="form-control"
+                          name="registration_number"
+                        />
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Business Address</label>
+                        <input
+                          id="biz_address"
+                          type="text"
+                          class="form-control"
+                          name="biz_address"
+                        />
+                      </div>
+
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Nature Of Business</label>
+                        <select
+                          id="nature_of_bussiness"
+                          name="nature_of_bussiness"
+                          class="selectpicker nice-select default-select form-control wide mh-auto"
+                        >
+                          <option value="retail">Retail</option>
+                          <option value="manufacturing">Manufacturing</option>
+                          <option value="ICT">ICT</option>
+                          <option value="Agriculture">Agriculture</option>
+                          <option value="Others">Others</option>
+                        </select>
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Years in Operation</label>
+                        <input
+                          type="text"
+                          id="numberOfYears"
+                          class="form-control"
+                          name="numberOfYears"
+                        />
+                      </div>
+
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label"
+                          >Number of Employees (if applicable)</label
+                        >
+                        <input
+                          id="numberOfEmployees"
+                          type="text"
+                          class="form-control"
+                          name="numberOfEmployees"
+                        />
+                      </div>
+
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label"
+                          >Annual Revenue (Optional)</label
+                        >
+                        <input
+                          id="annualRevenue"
+                          type="text"
+                          class="form-control"
+                          name="annualRevenue"
+                        />
+                      </div>
+
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label"
+                          >Tax Identification Number (TIN) (if
+                          applicable)</label
+                        >
+                        <input
+                          id="TIN"
+                          type="text"
+                          class="form-control"
+                          name="TIN"
+                          maxlength="11"
+                          minlength="11"
+                        />
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Mobile Number</label>
+                        <input
+                          class="form-control"
+                          type="tel"
+                          id="biz_phone"
+                          name="biz_phone"
+                          maxlength="11"
+                          pattern="^0[7-9][0-1]\d{8}$"
+                          placeholder="Enter a valid Nigerian phone number"
+                        />
+                        <span class="error-message">
+                          Please enter a valid Nigerian phone number.
+                        </span>
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Email</label>
+                        <input
+                          id="biz_email"
+                          type="text"
+                          class="form-control"
+                          name="biz_email"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary prev-btn"
+                      data-prev="family-details-section"
+                    >
+                      Previous
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-primary next-btn"
+                      data-next="employment-details-section"
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Employment/Occupation Details -->
+            <div
+              class="row form-section"
+              id="employment-details-section"
+              style="display: none"
+            >
+              <div class="col-xl-12 col-lg-12">
+                <div class="card card-bx m-b30">
+                  <div class="card-header">
+                    <h4 class="card-title">Employment History Details</h4>
+                  </div>
+                  <div class="card-body">
+                    <div id="employment-history-container">
+                      <!-- Initial Employment History Fields -->
+                      <div class="employment-fields m-b30">
+                        <!-- Company Name -->
+                        <div class="form-group">
+                          <label for="companyName">Company Name</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="companyName[]"
+                            placeholder="Enter company name"
+                            required
+                          />
+                        </div>
+
+                        <!-- Address -->
+                        <div class="form-group">
+                          <label for="address">Address</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="address[]"
+                            placeholder="Enter company address"
+                            required
+                          />
+                        </div>
+
+                        <!-- Designation -->
+                        <div class="form-group">
+                          <label for="designation">Designation</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="designation[]"
+                            placeholder="Enter your designation"
+                            required
+                          />
+                        </div>
+
+                        <!-- Employment Period -->
+                        <div class="form-row">
+                          <div class="form-group col-md-6">
+                            <label for="startYear">Start Year</label>
+                            <input
+                              type="number"
+                              class="form-control"
+                              name="startYear[]"
+                              placeholder="Enter start year"
+                              required
+                            />
+                          </div>
+                          <div class="form-group col-md-6">
+                            <label for="endYear">End Year</label>
+                            <input
+                              type="number"
+                              class="form-control"
+                              name="endYear[]"
+                              placeholder="Enter end year"
+                            />
+                            <small class="form-text text-muted"
+                              >Leave blank if this is your current
+                              employment.</small
+                            >
+                          </div>
+                        </div>
+                        <!-- Current Employment Checkbox -->
+                        <div class="form-group form-check">
+                          <input
+                            type="checkbox"
+                            class="form-check-input"
+                            name="isCurrentEmployment[]"
+                          />
+                          <label
+                            class="form-check-label"
+                            for="isCurrentEmployment"
+                            >This is my current employment</label
+                          >
+                        </div>
+
+                        <!-- Company Description -->
+                        <div class="form-group">
+                          <label for="description"
+                            >Description of Company</label
+                          >
+                          <textarea
+                            class="form-control"
+                            name="description[]"
+                            rows="3"
+                            placeholder="Describe the company"
+                          ></textarea>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Button to add more employment -->
+                    <div class="col-12">
+                      <button
+                        type="button"
+                        class="btn btn-primary"
+                        id="add-employment"
+                      >
+                        Add Another Employment
+                      </button>
+                    </div>
+                  </div>
+                  <div class="card-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary prev-btn"
+                      data-prev="business-details-section"
+                    >
+                      Previous
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-primary next-btn"
+                      data-next="education-details-section"
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Education Details -->
+            <div
+              class="row form-section"
+              id="education-details-section"
+              style="display: none"
+            >
+              <div class="col-xl-12 col-lg-12">
+                <div class="card card-bx m-b30">
+                  <div class="card-header">
+                    <h4 class="card-title">Education Details</h4>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <!-- Primary School Section -->
+                      <div class="col-md-12">
+                        <h5>Primary School</h5>
+                        <div class="form-group">
+                          <label for="primarySchoolName"
+                            >Name of Primary School</label
+                          >
+                          <input
+                            type="text"
+                            id="primarySchool_name"
+                            class="form-control"
+                            id="primarySchoolName"
+                            name="primarySchool.name"
+                            required
+                          />
+                        </div>
+                        <div class="form-group">
+                          <label for="primarySchoolAddress"
+                            >Address of Primary School</label
+                          >
+                          <input
+                            type="text"
+                            id="primarySchool_address"
+                            class="form-control"
+                            id="primarySchoolAddress"
+                            name="primarySchool.address"
+                            required
+                          />
+                        </div>
+                        <div class="form-group">
+                          <label for="primarySchoolYear"
+                            >Year of Attendance</label
+                          >
+                          <input
+                            type="text"
+                            id="primarySchool_yearOfAttendance"
+                            class="form-control"
+                            id="primarySchoolYear"
+                            name="primarySchool.yearOfAttendance"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <!-- Secondary School Section -->
+                      <div class="col-md-12">
+                        <h5>Secondary School</h5>
+                        <div class="form-group">
+                          <label for="secondarySchoolName"
+                            >Name of Secondary School</label
+                          >
+                          <input
+                            type="text"
+                            id="secondarySchool_name"
+                            class="form-control"
+                            id="secondarySchoolName"
+                            name="secondarySchool.name"
+                            required
+                          />
+                        </div>
+                        <div class="form-group">
+                          <label for="secondarySchoolAddress"
+                            >Address of Secondary School</label
+                          >
+                          <input
+                            type="text"
+                            id="secondarySchool_address"
+                            class="form-control"
+                            id="secondarySchoolAddress"
+                            name="secondarySchool.address"
+                            required
+                          />
+                        </div>
+                        <div class="form-group">
+                          <label for="secondarySchoolYear"
+                            >Year of Attendance</label
+                          >
+                          <input
+                            type="text"
+                            id="secondarySchool_yearOfAttendance"
+                            class="form-control"
+                            id="secondarySchoolYear"
+                            name="secondarySchool.yearOfAttendance"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <!-- Tertiary Institution Section -->
+                      <div
+                        class="col-md-12 tertiary-institution-section"
+                        id="tertiary-institution-container"
+                      >
+                        <div class="institution-fields m-b30">
+                          <label class="form-label"
+                            >Tertiary Institution 1</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="educationalHistory.tertiaryInstitutions[0].name"
+                            placeholder="Name of Tertiary Institution"
+                            required
+                          />
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="educationalHistory.tertiaryInstitutions[0].address"
+                            placeholder="Address of Tertiary Institution"
+                            required
+                          />
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="educationalHistory.tertiaryInstitutions[0].certificateObtained"
+                            placeholder="Certificate Obtained"
+                            required
+                          />
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="educationalHistory.tertiaryInstitutions[0].matricNo"
+                            placeholder="Matriculation Number"
+                            required
+                          />
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="educationalHistory.tertiaryInstitutions[0].yearOfAttendance"
+                            placeholder="Year of Attendance"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <!-- Button to add more institutions -->
+                      <div class="col-12">
+                        <button
+                          type="button"
+                          id="add-institution"
+                          class="btn btn-primary"
+                        >
+                          Add another Institution
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary prev-btn"
+                      data-prev="employment-details-section"
+                    >
+                      Previous
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-primary next-btn"
+                      data-next="health-info-section"
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Health Information -->
+            <div
+              class="row form-section"
+              id="health-info-section"
+              style="display: none"
+            >
+              <div class="col-xl-12 col-lg-12">
+                <div class="card card-bx m-b30">
+                  <div class="card-header">
+                    <h4 class="card-title">Health and Physical Information</h4>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <!-- Health section fields -->
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Blood Group</label>
+                        <select
+                          id="bloodGroup"
+                          name="bloodGroup"
+                          class="selectpicker nice-select default-select form-control wide mh-auto"
+                          required
+                        >
+                          <option value="A+">A+</option>
+                          <option value="A-">A-</option>
+                          <option value="B+">B+</option>
+                          <option value="B-">B-</option>
+                          <option value="AB+">AB+</option>
+                          <option value="AB-">AB-</option>
+                          <option value="O+">O+</option>
+                          <option value="O-">O-</option>
+                        </select>
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label class="form-label">Genotype</label>
+                        <select
+                          id="genotype"
+                          name="genotype"
+                          required
+                          class="selectpicker nice-select default-select form-control wide mh-auto"
+                        >
+                          <option value="AA">AA</option>
+                          <option value="AS">AS</option>
+                          <option value="SS">SS</option>
+                          <option value="AC">AC</option>
+                          <option value="SC">SC</option>
+                        </select>
+                      </div>
+                      <div class="col-sm-6 m-b30">
+                        <label for="disabilityStatus">Disability Status:</label>
+                        <select
+                          id="disabilityStatus"
+                          name="disabilityStatus"
+                          class="selectpicker nice-select default-select form-control wide mh-auto"
+                          required
+                        >
+                          <option value="None">None</option>
+                          <option value="Physical">Physical</option>
+                          <option value="Visual">Visual</option>
+                          <option value="Hearing">Hearing</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary prev-btn"
+                      data-prev="education-details-section"
+                    >
+                      Previous
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                      Submit
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="autoSaveStatus"></div>
+          </form>
+        </div>
+
+        <script>
+          document.querySelectorAll(".next-btn").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              const nextSection = document.getElementById(btn.dataset.next);
+              btn.closest(".form-section").style.display = "none";
+              nextSection.style.display = "block";
+            });
+          });
+
+          document.querySelectorAll(".prev-btn").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              const prevSection = document.getElementById(btn.dataset.prev);
+              btn.closest(".form-section").style.display = "none";
+              prevSection.style.display = "block";
+            });
+          });
+        </script>
+
+        <script>
+          document.querySelectorAll(".next-btn").forEach((button) => {
+            button.addEventListener("click", () => {
+              const currentSection = button.closest(".form-section");
+              const nextSectionId = button.getAttribute("data-next");
+              const nextSection = document.getElementById(nextSectionId);
+
+              // Validate the current form section
+              if (validateForm(currentSection)) {
+                currentSection.classList.remove("active");
+                nextSection.classList.add("active");
+              }
+            });
+          });
+
+          function validateForm(section) {
+            let isValid = true;
+            section.querySelectorAll("input, select").forEach((field) => {
+              const errorMessage = field.nextElementSibling;
+              if (field.hasAttribute("required") && !field.value.trim()) {
+                field.classList.add("error");
+                if (errorMessage) errorMessage.style.display = "block";
+                isValid = false;
+              } else {
+                field.classList.remove("error");
+                if (errorMessage) errorMessage.style.display = "none";
+              }
+            });
+            return isValid;
+          }
+        </script>
+
+        <script
+          src="../../code.tidio.co_443/bpnp4xkz2axqrebqxcezgdca9yot1iyn.js"
+          async
+        ></script>
+        <script>
+          function logout() {
+            localStorage.removeItem("token");
+          }
+        </script>
+      </div>
+      <!--**********************************
+            Content body end
+        ***********************************-->
+
+      <!--**********************************
+            Footer start
+        ***********************************-->
+      <div class="footer">
+        <div class="copyright">
+          <p>Copyright ©BDIC Ltd 2025. All rights reserved.</p>
+        </div>
+      </div>
+      <!--**********************************
+            Footer end
+        ***********************************-->
+
+      <!--**********************************
+           Support ticket button start
+        ***********************************-->
+
+      <!--**********************************
+           Support ticket button end
+        ***********************************-->
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <script
+      src="../../code.tidio.co_443/bpnp4xkz2axqrebqxcezgdca9yot1iyn.js"
+      async
+    ></script>
+
+    <!--**********************************
+        Scripts
+    ***********************************-->
+    <!-- Required vendors -->
+    <script src="vendor/sweetalert2/dist/sweetalert2.min.js"></script>
+    <script src="js/plugins-init/sweetalert.init.js"></script>
+    <script src="vendor/global/global.min.js"></script>
+    <script src="vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+    <script src="vendor/chart.js/Chart.bundle.min.js"></script>
+    <script src="vendor/bootstrap-datetimepicker/js/moment.js"></script>
+    <script src="vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+
+    <script src="js/dashboard/dashboard-1.js"></script>
+
+    <script src="js/custom.min.js"></script>
+    <script src="js/deznav-init.js"></script>
+    <script src="js/demo.js"></script>
+    <script type="text/javascript" src="/js/index.js"></script>
+  </body>
+</html>

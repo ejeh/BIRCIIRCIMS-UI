@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="keywords" content="dashboard" />
+    <meta name="author" content="BSCR-MIS" />
+    <meta name="robots" content="index, follow" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <meta property="og:image" content="social-image.html" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>
+      Benue State Integrated Residents/Citizens Identity/Indigeneship
+      Registration and Card Issuance Management System
+    </title>
+    <!-- Favicon icon -->
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/assets/images/benue-state-logo.png"
+    />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link
+      href="vendor/bootstrap-select/dist/css/bootstrap-select.min.css"
+      rel="stylesheet"
+    />
+    <link href="css/style.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="../../cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
+      integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q="
+      crossorigin="anonymous"
+    />
+    <!--end::Fonts-->
+    <!--begin::Third Party Plugin(OverlayScrollbars)-->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css"
+      integrity="sha256-tZHrRjVqNSRyWg2wbppGnT833E/Ys0DHWGwT04GiqQg="
+      crossorigin="anonymous"
+    />
+    <!--end::Third Party Plugin(OverlayScrollbars)-->
+    <!--begin::Third Party Plugin(Bootstrap Icons)-->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI="
+      crossorigin="anonymous"
+    />
+    <!--end::Third Party Plugin(Bootstrap Icons)-->
+    <!--begin::Required Plugin(AdminLTE)-->
+    <link rel="stylesheet" href="../app/css/adminlte.css" />
+
+    <!--end::Required Plugin(AdminLTE)-->
+    <!-- apexcharts -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
+      integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
+      crossorigin="anonymous"
+    />
+    <!-- jsvectormap -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css"
+      integrity="sha256-+uGLJmmTKOqBr+2E6KDYs/NRsHxSkONXFHUL0fy2O/4="
+      crossorigin="anonymous"
+    />
+    <script src="../../unpkg.com/sweetalert%402.1.2/dist/sweetalert.min.js"></script>
+    <link href="vendor/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet" />
+    <script src="../../ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <style>
+      .card-v1 {
+        color: #fff !important;
+        background-color: #198754 !important;
+        border: none;
+        transition: transform 0.3s, box-shadow 0.3s;
+        border-radius: 10px;
+      }
+
+      .card-v2 {
+        color: #fff !important;
+        background-color: #0d6efd !important;
+        border: none;
+        transition: transform 0.3s, box-shadow 0.3s;
+        border-radius: 10px;
+      }
+
+      .card-v3 {
+        color: #fff !important;
+        background-color: #ffc107 !important;
+        border: none;
+        transition: transform 0.3s, box-shadow 0.3s;
+        border-radius: 10px;
+      }
+
+      .card-v4 {
+        color: #fff !important;
+        background-color: #dc3545 !important;
+        border: none;
+        transition: transform 0.3s, box-shadow 0.3s;
+        border-radius: 10px;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0px 6px 15px rgba(36, 35, 35, 0.3);
+      }
+      .copyright a {
+        color: #666;
+        text-decoration: none;
+      }
+
+      .copyright a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <!--*******************
+        Preloader start
+    ********************-->
+    <div id="preloader">
+      <div class="sk-three-bounce">
+        <div class="sk-child sk-bounce1"></div>
+        <div class="sk-child sk-bounce2"></div>
+        <div class="sk-child sk-bounce3"></div>
+      </div>
+    </div>
+    <!--*******************
+        Preloader end
+    ********************-->
+
+    <!--**********************************
+        Main wrapper start
+    ***********************************-->
+    <div id="main-wrapper">
+      <!--**********************************
+            Nav header start
+        ***********************************-->
+      <div class="nav-header">
+        <!-- Logo Section -->
+        <a href="index.html" class="brand-logo">
+          <img
+            src="/assets/images/benue-state-logo.png"
+            alt="Government Logo"
+            class="logo-img"
+          />
+          <div class="brand-text">BIRCIIRCIMS</div>
+        </a>
+
+        <!-- Hamburger Menu for Navigation Control -->
+        <div class="nav-control">
+          <div class="hamburger">
+            <span class="line"></span><span class="line"></span
+            ><span class="line"></span>
+          </div>
+        </div>
+      </div>
+      <!--**********************************
+            Nav header end
+        ***********************************-->
+
+      <!--**********************************
+            Header start
+        ***********************************-->
+      <div class="header">
+        <div class="header-content">
+          <nav class="navbar navbar-expand">
+            <div class="collapse navbar-collapse justify-content-between">
+              <div class="header-left">
+                <div class="dashboard_bar">Dashboard</div>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </div>
+      <!--**********************************
+            Header end ti-comment-alt
+        ***********************************-->
+
+      <!--**********************************
+            Sidebar start
+        ***********************************-->
+      <div class="deznav">
+        <div class="deznav-scroll">
+          <ul class="metismenu" id="menu">
+            <!-- Super Admin Menu -->
+            <li class="super-admin-menu">
+              <a class="ai-icon" href="index.html" aria-expanded="false">
+                <i class="flaticon-381-networking"></i>
+                <span class="nav-text">Dashboard</span>
+              </a>
+            </li>
+            <!-- user Menu -->
+            <li class="user-menu">
+              <a
+                class="ai-icon"
+                href="user-dasboard.html"
+                aria-expanded="false"
+              >
+                <i class="flaticon-381-networking"></i>
+                <span class="nav-text">Dashboard</span>
+              </a>
+            </li>
+            <li class="super-admin-menu">
+              <a class="ai-icon" href="approvals.html" aria-expanded="false">
+                <i class="fa fa-exchange" aria-hidden="true"></i>
+                <span class="nav-text">Approvals</span>
+              </a>
+            </li>
+            <li class="user-menu">
+              <a class="ai-icon" href="request.html" aria-expanded="false">
+                <i class="fa fa-money" aria-hidden="true"></i>
+                <span class="nav-text">View Certificate Status</span>
+              </a>
+            </li>
+
+            <li class="user-menu">
+              <a class="ai-icon" href="idcard.html" aria-expanded="false">
+                <i class="fa fa-money" aria-hidden="true"></i>
+                <span class="nav-text">View Card Status</span>
+              </a>
+            </li>
+
+            <li class="super-admin-menu">
+              <a class="ai-icon" href="all-request.html" aria-expanded="false">
+                <i class="fa fa-money" aria-hidden="true"></i>
+                <span class="nav-text">View Certificate Request</span>
+              </a>
+            </li>
+
+            <li class="super-admin-menu">
+              <a class="ai-icon" href="all-card.html" aria-expanded="false">
+                <i class="fa fa-money" aria-hidden="true"></i>
+                <span class="nav-text">View Card Request</span>
+              </a>
+            </li>
+            <!-- Super Admin Menu -->
+            <li class="super-admin-menu">
+              <a class="ai-icon" href="citizens.html" aria-expanded="false">
+                <i class="fa fa-user" aria-hidden="true"></i>
+
+                <span class="nav-text">Users</span>
+              </a>
+            </li>
+            <li class="super-admin-menu">
+              <a class="ai-icon" href="kindred.html" aria-expanded="false">
+                <i class="fa fa-user" aria-hidden="true"></i>
+                <span class="nav-text">Kindreds</span>
+              </a>
+            </li>
+
+            <li class="support-admin-menu">
+              <a class="ai-icon" href="user-kindred.html" aria-expanded="false">
+                <i class="fa fa-user" aria-hidden="true"></i>
+                <span class="nav-text">Kindreds</span>
+              </a>
+            </li>
+            <li class="support-admin-menu">
+              <a
+                class="ai-icon"
+                href="support-admin-lga.html"
+                aria-expanded="false"
+              >
+                <i class="fa fa-user" aria-hidden="true"></i>
+                <span class="nav-text">Support Admin LGA</span>
+              </a>
+            </li>
+            <!-- User-menu -->
+            <li class="user-menu">
+              <a class="ai-icon" href="certificate.html" aria-expanded="false">
+                <i class="fa fa-user-plus" aria-hidden="true"></i>
+                <span class="nav-text">Request Certificate</span>
+              </a>
+            </li>
+            <li class="user-menu">
+              <a class="ai-icon" href="card.html" aria-expanded="false">
+                <i class="fa fa-user-plus" aria-hidden="true"></i>
+                <span class="nav-text">Request Card</span>
+              </a>
+            </li>
+
+            <li class="user-menu">
+              <a class="ai-icon" href="profile.html" aria-expanded="false">
+                <i class="fa fa-user" aria-hidden="true"></i>
+                <span class="nav-text">User Account</span>
+              </a>
+            </li>
+            <li class="super-admin-menu">
+              <a class="ai-icon" href="transaction.html" aria-expanded="false">
+                <i class="flaticon-381-networking"></i>
+                <span class="nav-text">transactions</span>
+              </a>
+            </li>
+            <li>
+              <a class="ai-icon" href="/source/auth/login.html" aria-expanded="false">
+                <i class="fa fa-sign-out" aria-hidden="true"></i>
+                <span class="nav-text" onclick="logout(this)">Logout</span>
+              </a>
+            </li>
+          </ul>
+          <div class="copyright">
+            <p>Powered By BDIC<br />© 2025 All Rights Reserved</p>
+            <p class="op5"></p>
+          </div>
+        </div>
+      </div>
+      <!--**********************************
+            Sidebar end
+        ***********************************-->
+
+      <!--**********************************
+            Content body start
+        ***********************************-->
+      <div id="dashboard" class="content-body">
+        <div class="container-fluid">
+          <!--begin::App Main-->
+          <main class="app-main">
+            <!--begin::App Content Header-->
+            <div class="app-content-header">
+              <!--begin::Container-->
+              <div class="container-fluid">
+                <!--begin::Row-->
+                <!-- <div class="row">
+                  <div class="col-sm-6"><h3 class="mb-0">Dashboard</h3></div>
+                  <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-end">
+                      <li class="breadcrumb-item"><a href="#">Home</a></li>
+                      <li class="breadcrumb-item active" aria-current="page">
+                        Dashboard
+                      </li>
+                    </ol>
+                  </div>
+                </div> -->
+                <!--end::Row-->
+              </div>
+              <!--end::Container-->
+            </div>
+            <!--end::App Content Header-->
+            <!--begin::App Content-->
+            <div class="app-content">
+              <!--begin::Container-->
+              <div class="container-fluid">
+                <!--begin::Row-->
+                <div class="row mt-3">
+                  <div class="col-md-4">
+                    <div class="card-v1 card p-3">
+                      <h5>Total Users</h5>
+                      <p id="usercount">0</p>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="card-v2 card p-3">
+                      <h5>New Request</h5>
+                      <p id="request">0</p>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="card-v3 card p-3">
+                      <h5>Revenue</h5>
+                      <p>$0</p>
+                    </div>
+                  </div>
+                </div>
+                <!--end::Row-->
+
+                <!--begin::Row-->
+                <div class="row mt-3">
+                  <div class="col-md-4">
+                    <div class="card-v4 card p-3">
+                      <h5>Approvals</h5>
+                      <p id="approvals">0</p>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="card-v5 card p-3">
+                      <h5>Pending Request</h5>
+                      <p id="pending">0</p>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="card-v6 card p-3">
+                      <h5>Rejected Request</h5>
+                      <p id="rejected">0</p>
+                    </div>
+                  </div>
+                </div>
+                <!--end::Row-->
+
+                <!-- /.row (main row) -->
+              </div>
+              <!--end::Container-->
+            </div>
+            <!--end::App Content-->
+          </main>
+        </div>
+      </div>
+      <!--begin::Script-->
+
+      <script>
+        function logout() {
+          localStorage.removeItem("token");
+          location.reload(); // Refresh page
+        }
+      </script>
+      <!--begin::Third Party Plugin(OverlayScrollbars)-->
+      <script
+        src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
+        integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
+        crossorigin="anonymous"
+      ></script>
+      <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
+      <script
+        src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"
+      ></script>
+      <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
+      <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+        crossorigin="anonymous"
+      ></script>
+      <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
+      <script src="../../dist/js/adminlte.js"></script>
+      <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
+      <script>
+        const SELECTOR_SIDEBAR_WRAPPER = ".sidebar-wrapper";
+        const Default = {
+          scrollbarTheme: "os-theme-light",
+          scrollbarAutoHide: "leave",
+          scrollbarClickScroll: true,
+        };
+        document.addEventListener("DOMContentLoaded", function () {
+          const sidebarWrapper = document.querySelector(
+            SELECTOR_SIDEBAR_WRAPPER
+          );
+          if (
+            sidebarWrapper &&
+            typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== "undefined"
+          ) {
+            OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
+              scrollbars: {
+                theme: Default.scrollbarTheme,
+                autoHide: Default.scrollbarAutoHide,
+                clickScroll: Default.scrollbarClickScroll,
+              },
+            });
+          }
+        });
+      </script>
+      <!--end::OverlayScrollbars Configure-->
+      <!-- OPTIONAL SCRIPTS -->
+      <!-- sortablejs -->
+      <script
+        src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"
+        integrity="sha256-ipiJrswvAR4VAx/th+6zWsdeYmVae0iJuiR+6OqHJHQ="
+        crossorigin="anonymous"
+      ></script>
+      <!-- sortablejs -->
+      <script>
+        const connectedSortables =
+          document.querySelectorAll(".connectedSortable");
+        connectedSortables.forEach((connectedSortable) => {
+          let sortable = new Sortable(connectedSortable, {
+            group: "shared",
+            handle: ".card-header",
+          });
+        });
+
+        const cardHeaders = document.querySelectorAll(
+          ".connectedSortable .card-header"
+        );
+        cardHeaders.forEach((cardHeader) => {
+          cardHeader.style.cursor = "move";
+        });
+      </script>
+      <!-- apexcharts -->
+      <script
+        src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
+        integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
+        crossorigin="anonymous"
+      ></script>
+
+      <!--**********************************
+            Content body end
+        ***********************************-->
+
+      <!--**********************************
+            Footer start
+        ***********************************-->
+      <div class="footer">
+        <div class="copyright">
+          <p>Copyright ©BDIC Ltd 2025. All rights reserved.</p>
+        </div>
+      </div>
+      <!--**********************************
+            Footer end
+        ***********************************-->
+
+      <!--**********************************
+           Support ticket button start
+        ***********************************-->
+
+      <!--**********************************
+           Support ticket button end
+        ***********************************-->
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+    <!-- <script
+      src="../../code.tidio.co_443/bpnp4xkz2axqrebqxcezgdca9yot1iyn.js"
+      async
+    ></script> -->
+    <!--**********************************
+        Scripts
+    ***********************************-->
+    <!-- Required vendors -->
+    <script src="vendor/sweetalert2/dist/sweetalert2.min.js"></script>
+    <script src="js/plugins-init/sweetalert.init.js"></script>
+    <script src="vendor/global/global.min.js"></script>
+    <script src="vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+    <script src="vendor/chart.js/Chart.bundle.min.js"></script>
+    <script src="vendor/bootstrap-datetimepicker/js/moment.js"></script>
+    <script src="vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+
+    <script src="js/dashboard/dashboard-1.js"></script>
+
+    <script src="js/custom.min.js"></script>
+    <script src="js/deznav-init.js"></script>
+    <script src="js/demo.js"></script>
+    <script src="/js/index.js"></script>
+  </body>
+</html>
