@@ -4,7 +4,6 @@ const BACKEND_URL = isDevelopment
   ? "http://localhost:5000/api"
   : "http://api.citizenship.benuestate.gov.ng/api";
 
-
 let userData = localStorage.getItem("token");
 userData = JSON.parse(userData);
 const { token, user } = userData;
@@ -1826,6 +1825,7 @@ $(document).ready(function () {
               <td>
                 <div id="loadingIndicator" style="display: none;">
                   <div class="loader"></div>
+                    <div class="loading-message">Loading...</div>
                 </div>
                 <div class="dropdown">
                   <button class="btn btn-sm btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -1937,7 +1937,8 @@ $(document).ready(function () {
           }
 
           try {
-            showLoadingIndicator();
+            // Show loading indicator with download text
+            showLoadingIndicator(" Downloading document, please wait,...");
 
             const blob = await fetchCertificatePdf(certificateId);
 
@@ -1983,9 +1984,15 @@ $(document).ready(function () {
           window.URL.revokeObjectURL(url);
         }
 
-        function showLoadingIndicator() {
+        function showLoadingIndicator(message = "Loading...") {
           const loadingIndicator = document.getElementById("loadingIndicator");
           if (loadingIndicator) {
+            // Update the loading text if there's a message element
+            const messageElement =
+              loadingIndicator.querySelector(".loading-message");
+            if (messageElement) {
+              messageElement.textContent = message;
+            }
             loadingIndicator.style.display = "flex";
           }
         }
@@ -3482,6 +3489,7 @@ $(document).ready(function () {
       <td>
       <div id="loadingIndicator" style="display: none;">
       <div class="loader"></div>
+        <div class="loading-message">Loading...</div>
      </div>
         <div class="dropdown">
            <button class="btn btn-sm btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -3599,8 +3607,8 @@ $(document).ready(function () {
           }
 
           try {
-            // Show loading indicator
-            showLoadingIndicator();
+            // Show loading indicator with download text
+            showLoadingIndicator(" Downloading document, please wait,...");
 
             // Fetch the caed PDF
             const blob = await fetchCardPdf(cardId);
@@ -3654,9 +3662,15 @@ $(document).ready(function () {
         }
 
         // Show the loading indicator
-        function showLoadingIndicator() {
+        function showLoadingIndicator(message = "Loading...") {
           const loadingIndicator = document.getElementById("loadingIndicator");
           if (loadingIndicator) {
+            // Update the loading text if there's a message element
+            const messageElement =
+              loadingIndicator.querySelector(".loading-message");
+            if (messageElement) {
+              messageElement.textContent = message;
+            }
             loadingIndicator.style.display = "flex";
           }
         }
