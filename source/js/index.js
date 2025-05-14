@@ -41,7 +41,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
   // Assume the user role is dynamically fetched from your backend
-  const userRole = user.role; // Replace with actual user role fetching logic
+  const userRole = user.role;
 
   // Hide all menus initially
   $(".super-admin-menu, .support-admin-menu, .user-menu").hide();
@@ -59,6 +59,7 @@ $(document).ready(function () {
   } else if (userRole === "user") {
     $(".user-menu").show();
     // $(".dashboard_bar").text("Dashboard");
+    $('.user:has(a[href="certificate.html"])').show();
   }
 });
 
