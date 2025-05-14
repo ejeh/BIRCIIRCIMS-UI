@@ -345,14 +345,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
       $(document).ready(function () {
-        // Toggle password visibility
-        // $("#togglePassword").click(function () {
-        //   const passwordInput = $("#password");
-        //   const type =
-        //     passwordInput.attr("type") === "password" ? "text" : "password";
-        //   passwordInput.attr("type", type);
-        //   $(this).find("i").toggleClass("fa-eye fa-eye-slash");
-        // });
         $(".password-toggle").click(function () {
           const targetSelector = $(this).data("target");
           const input = $(targetSelector);
@@ -448,37 +440,6 @@
             return true;
           }
         };
-
-        // const validatePassword = (input) => {
-        //   const value = input.value.trim();
-        //   const passwordRegex =
-        //     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
-        //   if (!value) {
-        //     showError(input, "Password is required.");
-        //     return false;
-        //   } else if (!passwordRegex.test(value)) {
-        //     showError(input, "Error");
-        //     return false;
-        //   } else {
-        //     clearError(input);
-        //     return true;
-        //   }
-        // };
-
-        // const validateConfirmPassword = (input) => {
-        //   const value = input.value.trim();
-        //   const password = $("#password").val().trim();
-        //   if (!value) {
-        //     showError(input, "Please confirm your password.");
-        //     return false;
-        //   } else if (value !== password) {
-        //     showError(input, "Passwords do not match.");
-        //     return false;
-        //   } else {
-        //     clearError(input);
-        //     return true;
-        //   }
-        // };
 
         const validatePassword = (input) => {
           const value = input.value.trim();
@@ -1544,7 +1505,7 @@
     <!-- jQuery and Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Custom JS -->
+    Custom JS
     <script src="scripts.js"></script>
   </body>
 </html>

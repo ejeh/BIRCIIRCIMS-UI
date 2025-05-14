@@ -4064,6 +4064,7 @@ function fetchUserKindred(page) {
       tableBody.empty();
 
       data.forEach((data, index) => {
+        console.log("data", data);
         tableBody.append(`
           <tr>
             <td>${(page - 1) * pageSize + index + 1}</td>
@@ -4144,9 +4145,8 @@ function handleUpdate(userData) {
   Swal.fire({
     title: "Update User",
     html: `
-      <input id="updateFullname" class="swal2-input" placeholder="Full Name" value="${userData.fullname}">
+      <input id="updateMiddlename" class="swal2-input" placeholder="Middlename" value=${userData.middlename}>
       <input id="updatePhone" class="swal2-input" placeholder="Phone" value="${userData.phone}">
-      <input id="updateLga" class="swal2-input" placeholder="LGA" value="${userData.lga}">
       <input id="updateAddress" class="swal2-input" placeholder="Address" value="${userData.address}">
       <input id="updateKindred" class="swal2-input" placeholder="Kindred" value="${userData.kindred}">
     `,
@@ -4154,9 +4154,8 @@ function handleUpdate(userData) {
     confirmButtonText: "Update",
     preConfirm: () => {
       return {
-        fullname: $("#updateFullname").val().trim(),
+        middlename: $("#updateMiddlename").val().trim(),
         phone: $("#updatePhone").val().trim(),
-        lga: $("#updateLga").val().trim(),
         address: $("#updateAddress").val().trim(),
         kindred: $("#updateKindred").val().trim(),
       };
