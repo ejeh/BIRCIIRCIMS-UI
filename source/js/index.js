@@ -59,7 +59,6 @@ $(document).ready(function () {
   } else if (userRole === "user") {
     $(".user-menu").show();
     // $(".dashboard_bar").text("Dashboard");
-    $('.user:has(a[href="certificate.html"])').show();
   }
 });
 
@@ -1102,43 +1101,6 @@ $(document).ready(function () {
       error: onError || ((error) => console.error("API Error:", error)),
     });
   };
-
-  // // Update the table with user data
-  // const updateTable = (data, page) => {
-  //   const tableBody = $("#table-body");
-  //   tableBody.empty(); // Clear existing table rows
-
-  //   // Populate table rows with user data
-  //   data.forEach((item, index) => {
-
-  //     const rowHtml = `
-  //       <tr>
-  //         <td>${(page - 1) * pageSize + index + 1}</td>
-  //         <td>${item.firstname} ${item.lastname}</td>
-  //         <td>${item.phone}</td>
-  //         <td>${item.email}</td>
-  //         <td>${item.role}</td>
-  //         <td>${item.stateOfOrigin}</td>
-
-  //         <td>
-  //           <button class="btn btn-sm update-role-btn"
-  //                   data-id="${item._id}"
-  //                   data-role="${item.role}"
-  //                   style="background-color: #4C956C; color: #fff">
-  //             Update Role
-  //           </button>
-  //         </td>
-  //          <td>
-  //          <button class="btn btn-sm view-user-btn"
-  //                   data-id="${item._id}"
-  //                   style="background-color: #007BFF; color: #fff">
-  //             View
-  //           </button>
-  //         </td>
-  //       </tr>`;
-  //     tableBody.append(rowHtml); // Add the row to the table
-  //   });
-  // };
 
   const updateTable = (data, page) => {
     const tableBody = $("#table-body");
