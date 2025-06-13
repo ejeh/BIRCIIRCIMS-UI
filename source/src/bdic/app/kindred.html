@@ -31,6 +31,8 @@
       rel="stylesheet"
     />
     <link href="css/style.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/source/auth/styles.css" />
+
     <link
       rel="stylesheet"
       href="../../cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
@@ -43,7 +45,6 @@
     <script src="../../unpkg.com/sweetalert%402.1.2/dist/sweetalert.min.js"></script>
     <link href="vendor/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet" />
     <script src="../../ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-    <script src="//code.jivosite.com/widget/y3nwyLiIJL" async></script>
 
     <style>
       tr:nth-child(even) {
@@ -251,7 +252,11 @@
               </a>
             </li>
             <li>
-              <a class="ai-icon" href="../../../auth/login.html" aria-expanded="false">
+              <a
+                class="ai-icon"
+                href="../../../auth/login.html"
+                aria-expanded="false"
+              >
                 <i class="fa fa-sign-out" aria-hidden="true"></i>
                 <span class="nav-text" onclick="logout(this)">Logout</span>
               </a>
@@ -298,10 +303,10 @@
                         <tbody id="kindred-table"></tbody>
                       </table>
                       <div class="d-flex justify-content-between">
-                        <button id="btn-prev" class="btn" disabled>
+                        <button id="kindred-btn-prev" class="btn" disabled>
                           Previous
                         </button>
-                        <button id="btn-next" class="btn">Next</button>
+                        <button id="kindred-btn-next" class="btn">Next</button>
                       </div>
                     </div>
                   </div>

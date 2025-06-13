@@ -19,13 +19,6 @@
   --text-4xl: 2.25rem; /* 36px */
   --text-5xl: 3rem; /* 48px */
 }
-html,
-body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-}
 
 html {
   font-size: 16px; /* Base font size */
@@ -232,6 +225,7 @@ input[readonly] {
   background-color: var(--primary);
   min-height: 100vh;
   color: white;
+  opacity: 1;
 }
 
 .benue-logo {

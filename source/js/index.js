@@ -4,6 +4,10 @@ const BACKEND_URL = isDevelopment
   ? "http://localhost:5000/api"
   : "http://api.citizenship.benuestate.gov.ng/api";
 
+const FRONTEND_URL = isDevelopment
+  ? "http://127.0.0.1:5501"
+  : "http://citizenship.benuestate.gov.ng";
+
 let userData = localStorage.getItem("token");
 userData = JSON.parse(userData);
 const { token, user } = userData;
@@ -335,731 +339,6 @@ $(document).ready(function () {
   });
 });
 
-$(document).ready(function () {
-  // Hold state for counts and the auto-save timer.
-  const state = {
-    autoSaveTimer: null,
-    institutionCount: 0,
-    neighborCount: 0,
-    familyCount: 0,
-    employmentCount: 0,
-  };
-
-  // Utility function to set input values
-  const setInputValue = (id, value) => {
-    const element = document.getElementById(id);
-    if (element) element.value = value || "";
-  };
-
-  /* ===================================================
-   * Field Addition Functions
-   * =================================================== */
-
-  // Add a new tertiary institution section.
-  const addInstitution = (institutionData = {}) => {
-    const container = $("#tertiary-institution-container");
-    // Calculate the index from the number of current institutions.
-    const index = container.find(".institution-fields").length;
-
-    const newInstitutionFields = `
-    <div class="institution-fields m-b30">
-      <label class="form-label">Tertiary Institution ${index + 1}</label>
-      <input
-        type="text"
-        class="form-control"
-        name="educationalHistory.tertiaryInstitutions[${index}].name"
-        placeholder="Name of Tertiary Institution"
-        value="${institutionData.name || ""}"
-        
-      />
-      <input
-        type="text"
-        class="form-control"
-        name="educationalHistory.tertiaryInstitutions[${index}].address"
-        placeholder="Address of Tertiary Institution"
-        value="${institutionData.address || ""}"
-        
-      />
-      <input
-        type="text"
-        class="form-control"
-        name="educationalHistory.tertiaryInstitutions[${index}].certificateObtained"
-        placeholder="Certificate Obtained"
-        value="${institutionData.certificateObtained || ""}"
-        
-      />
-      <input
-        type="text"
-        class="form-control"
-        name="educationalHistory.tertiaryInstitutions[${index}].matricNo"
-        placeholder="Matriculation Number"
-        value="${institutionData.matricNo || ""}"
-        
-      />
-      <input
-        type="text"
-        class="form-control"
-        name="educationalHistory.tertiaryInstitutions[${index}].yearOfAttendance"
-        placeholder="Year of Attendance"
-        value="${institutionData.yearOfAttendance || ""}"
-        
-      />
-    </div>`;
-    container.append(newInstitutionFields);
-    state.institutionCount++;
-
-    // Validate the newly added fields before auto-saving
-    validateAndAutoSaveIntitution(container, index);
-  };
-
-  // Function to validate the newly added institution fields and trigger auto-save if valid
-  const validateAndAutoSaveIntitution = (container, index) => {
-    const fields = container
-      .find(`.institution-fields:nth-child(${index + 1})`)
-      .find("input");
-    let isValid = true;
-
-    fields.each(function () {
-      if (!$(this).val().trim()) {
-        isValid = false;
-        return false; // Exit the loop early if any field is empty
-      }
-    });
-
-    if (isValid) {
-      autoSave();
-    } else {
-      console.log("Please fill out all required fields before saving.");
-    }
-  };
-
-  // Add a new family section.
-  const addFamily = (familyData = {}) => {
-    const container = $("#family-container");
-    // Calculate the index from the number of current institutions.
-    const index = container.find(".family-fields").length;
-
-    const newFamilyFields = `
-    <div class="family-fields m-b30">
-      <label class="form-label">Family ${index + 1}</label>
-      <input 
-        type="text" 
-        class="form-control m-b10 family-name" 
-        name="family_name[]" 
-        placeholder="Full Name" 
-        value="${familyData.name || ""}"
-        required />
-
-      <input
-        type="text" 
-        class="form-control m-b10 family-relationship" 
-        name="family_relationship[]" 
-        placeholder="Relationship" 
-        value="${familyData.relationship || ""}"
-        required />
-
-      <input 
-        type="tel" 
-        class="form-control family-phone" 
-        name="family_phone[]" 
-        placeholder="Phone Number" 
-        value="${familyData.phone || ""}"
-        required />
-
-      <input 
-        type="text" 
-        class="form-control family-address" 
-        name="family_address[]" 
-        placeholder="Residential Address" 
-        value="${familyData.address || ""}"
-        required />
-    </div>`;
-
-    container.append(newFamilyFields);
-    state.familyCount++;
-
-    if (state.familyCount === 5) {
-      $("#add-family")
-        .prop("disabled", true)
-        .text("Maximum family reached")
-        .removeClass("btn-primary")
-        .addClass("btn-secondary");
-    }
-
-    // Trigger auto-save after adding new fields
-    autoSaveFamily();
-  };
-
-  // Existing auto-save function (modified to validate family data)
-  const autoSaveFamily = () => {
-    // Validate family data before saving
-    if (validateFamilyData()) {
-      console.log("All family fields are valid. Proceeding with auto-save...");
-      autoSave();
-    } else {
-      console.log("Some family fields are incomplete. Auto-save skipped.");
-    }
-  };
-
-  // Helper function to validate family data
-  const validateFamilyData = () => {
-    const familyContainer = $("#family-container");
-    const familyFields = familyContainer.find(".family-fields");
-    let allFieldsValid = true;
-
-    familyFields.each((index, field) => {
-      const name = $(field).find(".family-name").val().trim();
-      const relationship = $(field).find(".family-relationship").val().trim();
-      const phone = $(field).find(".family-phone").val().trim();
-      const address = $(field).find(".family-address").val().trim();
-
-      if (!name || !relationship || !phone || !address) {
-        allFieldsValid = false;
-        return false; // Exit the loop early if any field is invalid
-      }
-    });
-
-    return allFieldsValid;
-  };
-
-  // // Add a new neighbor section.
-  const addNeighbor = (neighborData = {}) => {
-    const container = $("#neighbors-container");
-    const index = container.find(".neighbor-fields").length;
-
-    const newNeighborFields = `
-      <div class="neighbor-fields m-b30">
-        <label class="form-label">Neighbor ${index + 1}</label>
-        <input 
-          type="text" 
-          class="form-control m-b10 neighbor-name" 
-          name="neighbor_name[]" 
-          placeholder="Full Name" 
-          value="${neighborData.name || ""}"
-          required />
-  
-        <input 
-          type="text" 
-          class="form-control m-b10 neighbor-address" 
-          name="neighbor_address[]" 
-          placeholder="Residential Address" 
-          value="${neighborData.address || ""}"
-          required />
-  
-        <input 
-          type="tel" 
-          class="form-control neighbor-phone" 
-          name="neighbor_phone[]" 
-          placeholder="Phone Number" 
-          value="${neighborData.phone || ""}"
-          required />
-      </div>`;
-
-    container.append(newNeighborFields);
-    state.neighborCount++;
-
-    if (state.neighborCount === 5) {
-      $("#add-neighbor")
-        .prop("disabled", true)
-        .text("Maximum neighbors reached")
-        .removeClass("btn-primary")
-        .addClass("btn-secondary");
-    }
-
-    // Attach event listeners to the new fields for auto-save validation
-    const newFields = container.find(".neighbor-fields").last();
-    newFields.find("input").on("input", function () {
-      validateAndAutoSave(newFields);
-    });
-  };
-
-  // Function to validate and auto-save only if all fields are filled
-  const validateAndAutoSave = (neighborFields) => {
-    const name = neighborFields.find(".neighbor-name").val().trim();
-    const address = neighborFields.find(".neighbor-address").val().trim();
-    const phone = neighborFields.find(".neighbor-phone").val().trim();
-
-    if (name && address && phone) {
-      autoSave(); // Trigger auto-save only if all fields are complete
-    }
-  };
-
-  // Add a new employment section.
-  const addEmployment = (employmentData = {}) => {
-    const container = $("#employment-history-container");
-    // Calculate the index from the number of current employment.
-    const index = container.find(".employment-fields").length;
-    const newEmploymentFields = `
-      <div class="employment-fields m-b30">
-        <label class="form-label">Employment ${index + 1}</label> 
-        <input
-          type="text"
-          class="form-control"
-          name="companyName[]"
-          placeholder="Company Name"
-          value="${employmentData.companyName || ""}"
-          
-        />
-        <input
-          type="text"
-          class="form-control"
-          name="address[]"
-          placeholder="Company Address"
-          value="${employmentData.address || ""}"
-          
-        />
-        <input
-          type="text"
-          class="form-control"  
-          name="designation[]"
-          placeholder="Designation"
-          value="${employmentData.designation || ""}"
-          
-          />
-          <input
-          type="number"
-          class="form-control"
-          name="startYear[]"
-          placeholder="Start Year"
-          value="${employmentData.startYear || ""}"
-          
-          />
-          <div>
-          <input
-          type="number"
-          class="form-control"
-          name="endYear[]"
-          placeholder="End Year"
-          value="${employmentData.endYear || ""}"
-          
-          />
-           <small class="form-text text-muted">Leave blank if this is your current employment.</small>
-          </div>
-          
-          <div class="form-check">
-          <input
-          type="checkbox"
-          class="form-check-input"
-          name="isCurrentEmployment[]"
-          value="${employmentData.isCurrentEmployment || ""}"
-          />
-             <label class="form-check-label"for="isCurrentEmployment">This is my current employment</label>
-          </div>
-           <div>
-            <label for="description">Description of Company</label>
-          <textarea
-          class="form-control"
-          name="description[]"
-          placeholder="Job Description"
-          value="${employmentData.description || ""}"
-          
-          >
-          </textarea>
-         </div>
-      </div>`;
-    container.append(newEmploymentFields);
-    state.employmentCount++;
-
-    // Validate and auto-save only if all required fields are filled
-    validateAndAutoSaveEmployment();
-  };
-
-  const validateAndAutoSaveEmployment = () => {
-    const container = $("#employment-history-container");
-    const employmentFields = container.find(".employment-fields");
-
-    let isComplete = true;
-
-    employmentFields.each(function () {
-      const fields = $(this).find("input[required], textarea[required]");
-      fields.each(function () {
-        if (!$(this).val()) {
-          isComplete = false;
-          return false; // Exit the loop early if any field is empty
-        }
-      });
-
-      if (!isComplete) {
-        return false; // Exit the outer loop early if any field is empty
-      }
-    });
-
-    if (isComplete) {
-      autoSave();
-    }
-  };
-
-  /* ===================================================
-   * Data Population Logic (Updated)
-   * =================================================== */
-
-  const populateTertiaryInstitutions = (institutions) => {
-    const container = $("#tertiary-institution-container");
-    container.empty(); // Clear existing fields
-
-    if (institutions && institutions.length > 0) {
-      institutions.forEach((institution) => addInstitution(institution));
-    } else {
-      // Add at least one empty institution field
-      addInstitution();
-    }
-  };
-
-  const populateFamily = (family) => {
-    const container = $("#family-container");
-    container.empty(); // Clear existing fields
-
-    if (family && family.length > 0) {
-      family.forEach((fam) => addFamily(fam));
-    } else {
-      // Add at least one empty family field
-      addFamily();
-    }
-  };
-
-  const populateNeighbors = (neighbors) => {
-    const container = $("#neighbors-container");
-    container.empty(); // Clear existing fields
-
-    if (neighbors && neighbors.length > 0) {
-      neighbors.forEach((neighbor) => addNeighbor(neighbor));
-    } else {
-      // Add at least one empty family field
-      addNeighbor();
-    }
-  };
-
-  const populateEmploymentHistory = (employments) => {
-    const container = $("#employment-history-container");
-    container.empty(); // Clear existing fields
-
-    if (employments && employments.length > 0) {
-      employments.forEach((employment) => addEmployment(employment));
-    } else {
-      // Add at least one empty employment field
-      addEmployment();
-    }
-  };
-
-  // Modified AJAX success handler
-  const handleProfileDataSuccess = (data) => {
-    // ... existing population code for other fields ...
-
-    // Handle educational history
-    if (data.educationalHistory) {
-      // Primary and secondary school population (keep existing code)
-
-      // Tertiary institutions - use our new method
-      populateTertiaryInstitutions(
-        data.educationalHistory.tertiaryInstitutions
-      );
-    }
-
-    // Update institution count state
-    state.institutionCount = $(
-      "#tertiary-institution-container .institution-fields"
-    ).length;
-
-    if (data.family) {
-      populateFamily(data.family);
-      // ... rest of existing population code ...
-    }
-    state.familyCount = $("#neighbors-container .neighbor-fields").length;
-
-    if (data.neighbor) {
-      populateNeighbors(data.neighbor);
-      // ... rest of existing population code ...
-    }
-    state.neighborCount = $("#neighbors-container .neighbor-fields").length;
-
-    if (data.employmentHistory) {
-      populateEmploymentHistory(data.employmentHistory);
-      // ... rest of existing population code ...
-    }
-    state.employmentCount = $(
-      "#employment-history-container .employment-fields"
-    ).length;
-  };
-
-  // Modified AJAX call
-  $.ajax({
-    url: `${BACKEND_URL}/users/${user.id}`,
-    method: "GET",
-    headers: { Authorization: `Bearer ${token}` },
-    success: handleProfileDataSuccess,
-    error: function (error) {
-      // ... existing error handling ...
-    },
-  });
-
-  /* ===================================================
-   * Data Collection
-   * =================================================== */
-
-  const collectFormData = () => {
-    // Initialize FormData (this will also capture file uploads)
-    const formData = new FormData();
-
-    // List of simple fields by their IDs.
-    const fields = [
-      "middlename",
-      "lastname",
-      "nationality",
-      "community",
-      "religion",
-      "gender",
-      "stateOfOrigin",
-      "DOB",
-      "countryOfResidence",
-      "lgaOfOrigin",
-      "maritalStatus",
-      "house_number",
-      "street_name",
-      "nearest_bus_stop_landmark",
-      "city_town",
-      "stateOfResidence",
-      "lgaOfResidence",
-      "id_number",
-      "issue_date",
-      "expiry_date",
-    ];
-    fields.forEach((field) => {
-      const value = $(`#${field}`).val() || "";
-      formData.append(field, value);
-    });
-
-    // Handle file upload (e.g. passport photo)
-    const passportPhoto = $("#passportPhoto")[0]?.files[0];
-    if (passportPhoto) {
-      formData.append("passportPhoto", passportPhoto);
-    }
-
-    // Build the next-of-kin object.
-    const nextOfKin = {
-      nok_surname: $("#nok_surname").val().trim(),
-      nok_firstname: $("#nok_firstname").val().trim(),
-      nok_middlename: $("#nok_middlename").val().trim(),
-      nok_relationship: $("#nok_relationship").val().trim(),
-      nok_countryOfResidence: $("#nok_countryOfResidence").val().trim(),
-      nok_stateOfResidence: $("#nok_stateOfResidence").val().trim(),
-      nok_lgaOfResidence: $("#nok_lgaOfResidence").val().trim(),
-      nok_cityOfResidence: $("#nok_cityOfResidence").val().trim(),
-      nok_address: $("#nok_address").val().trim(),
-    };
-
-    // Build the health info object.
-    const healthInfo = {
-      bloodGroup: $("#bloodGroup").val(),
-      genotype: $("#genotype").val(),
-      disabilityStatus: $("#disabilityStatus").val(),
-    };
-
-    // Build the business object.
-    const business = {
-      biz_name: $("#biz_name").val().trim(),
-      biz_type: $("#biz_type").val(),
-      registration_number: $("#registration_number").val().trim(),
-      biz_address: $("#biz_address").val().trim(),
-      nature_of_bussiness: $("#nature_of_bussiness").val().trim(),
-      numberOfYears: $("#numberOfYears").val().trim(),
-      numberOfEmployees: $("#numberOfEmployees").val().trim(),
-      annualRevenue: $("#annualRevenue").val().trim(),
-      TIN: $("#TIN").val().trim(),
-      biz_phone: $("#biz_phone").val().trim(),
-      biz_email: $("#biz_email").val().trim(),
-    };
-
-    // Collect neighbor entries.
-    const neighbor = [];
-    $(".neighbor-fields").each(function () {
-      neighbor.push({
-        name: $(this).find('input[name="neighbor_name[]"]').val(),
-        address: $(this).find('input[name="neighbor_address[]"]').val(),
-        phone: $(this).find('input[name="neighbor_phone[]"]').val(),
-      });
-    });
-
-    // Collect family entries.
-    const family = [];
-    $(".family-fields").each(function () {
-      family.push({
-        name: $(this).find('input[name="family_name[]"]').val(),
-        relationship: $(this).find('input[name="family_relationship[]"]').val(),
-        phone: $(this).find('input[name="family_phone[]"]').val(),
-        address: $(this).find('input[name="family_address[]"]').val(),
-      });
-    });
-
-    // Build educational history.
-    const educationalHistory = {
-      primarySchool: {
-        name: $('input[name="primarySchool.name"]').val(),
-        address: $('input[name="primarySchool.address"]').val(),
-        yearOfAttendance: $(
-          'input[name="primarySchool.yearOfAttendance"]'
-        ).val(),
-      },
-      secondarySchool: {
-        name: $('input[name="secondarySchool.name"]').val(),
-        address: $('input[name="secondarySchool.address"]').val(),
-        yearOfAttendance: $(
-          'input[name="secondarySchool.yearOfAttendance"]'
-        ).val(),
-      },
-      tertiaryInstitutions: [],
-    };
-
-    $(".institution-fields").each(function (index) {
-      const institution = {
-        name: $(this)
-          .find(
-            `input[name="educationalHistory.tertiaryInstitutions[${index}].name"]`
-          )
-          .val(),
-        address: $(this)
-          .find(
-            `input[name="educationalHistory.tertiaryInstitutions[${index}].address"]`
-          )
-          .val(),
-        certificateObtained: $(this)
-          .find(
-            `input[name="educationalHistory.tertiaryInstitutions[${index}].certificateObtained"]`
-          )
-          .val(),
-        matricNo: $(this)
-          .find(
-            `input[name="educationalHistory.tertiaryInstitutions[${index}].matricNo"]`
-          )
-          .val(),
-        yearOfAttendance: $(this)
-          .find(
-            `input[name="educationalHistory.tertiaryInstitutions[${index}].yearOfAttendance"]`
-          )
-          .val(),
-      };
-      educationalHistory.tertiaryInstitutions.push(institution);
-    });
-
-    // Employment History
-    const employmentHistory = [];
-    $(".employment-fields").each(function () {
-      employmentHistory.push({
-        companyName: $(this).find('input[name="companyName[]"]').val(),
-        address: $(this).find('input[name="address[]"]').val(),
-        designation: $(this).find('input[name="designation[]"]').val(),
-        startYear: $(this).find('input[name="startYear[]"]').val(),
-        endYear: $(this).find('input[name="endYear[]"]').val(),
-        isCurrentEmployment: $(this)
-          .find('input[name="isCurrentEmployment[]"]')
-          .is(":checked"),
-        description: $(this).find('textarea[name="description[]"]').val(),
-      });
-    });
-
-    // Return both the FormData (with file uploads) and our JSON–ready objects.
-    return {
-      formData,
-      nextOfKin,
-      healthInfo,
-      business,
-      educationalHistory,
-      employmentHistory,
-      neighbor,
-      family,
-    };
-  };
-
-  /* ===================================================
-   * Auto-Save / Update Handling
-   * =================================================== */
-
-  const autoSave = async () => {
-    try {
-      // Collect all the form data.
-      const {
-        formData,
-        nextOfKin,
-        healthInfo,
-        business,
-        educationalHistory,
-        employmentHistory,
-        neighbor,
-        family,
-      } = collectFormData();
-
-      // Append the JSON–structured data.
-      formData.append("nextOfKin", JSON.stringify(nextOfKin));
-      formData.append("healthInfo", JSON.stringify(healthInfo));
-      formData.append("business", JSON.stringify(business));
-      formData.append("educationalHistory", JSON.stringify(educationalHistory));
-      formData.append("employmentHistory", JSON.stringify(employmentHistory));
-      formData.append("neighbor", JSON.stringify(neighbor));
-      formData.append("family", JSON.stringify(family));
-
-      // Handle identification – use the alternative input if "others" is selected.
-      const selectedValue = $("#identification").val();
-      const otherValue = $("#other-identification").val();
-      const finalIdentification =
-        selectedValue === "others" ? otherValue : selectedValue;
-      formData.append("identification", finalIdentification);
-
-      // Send the PUT request to update the user.
-      const response = await fetch(`${BACKEND_URL}/users/${user.id}`, {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      });
-
-      if (response.ok) {
-        console.log("Auto-save successful");
-        $("#autoSaveStatus").text("Saved").css("color", "green");
-      } else {
-        console.error("Auto-save failed", response.statusText);
-        $("#autoSaveStatus").text("Failed to save").css("color", "red");
-      }
-    } catch (error) {
-      console.error("Auto-save error:", error);
-      $("#autoSaveStatus").text("Failed to save").css("color", "red");
-    }
-  };
-
-  /* ===================================================
-   * Event Bindings
-   * =================================================== */
-
-  const bindEvents = () => {
-    // Bind the click events to add new sections.
-    $("#add-institution").on("click", addInstitution);
-    $("#add-neighbor").on("click", addNeighbor);
-    $("#add-family").on("click", addFamily);
-    $("#add-employment").on("click", addEmployment);
-
-    $(document).on("input change", "input, select, textarea", function () {
-      clearTimeout(state.autoSaveTimer);
-      $("#autoSaveStatus").text("Saving...").css("color", "blue");
-      state.autoSaveTimer = setTimeout(autoSave, 1000); // 1-second debounce
-    });
-
-    // For final submission – prevent default and trigger auto-save.
-    $("#unifiedForm").on("submit", function (e) {
-      e.preventDefault();
-      // autoSave();
-      autoSave().then(() => {
-        Swal.fire({
-          title: "Success!",
-          text: "Your form has been submitted successfully.",
-          confirmButtonText: "OK",
-        });
-      });
-    });
-  };
-
-  // Initialize all event bindings.
-  bindEvents();
-});
-
 function searchTable() {
   const input = document.getElementById("searchInput").value.toLowerCase();
   const table = document.getElementById("dataTable");
@@ -1081,7 +360,8 @@ function searchTable() {
 $(document).ready(function () {
   // Track the current page and define the page size
   const currentPage = { value: 1 };
-  const pageSize = 10;
+
+  const pageSize = 10; // Number of users per page
 
   // Utility function to make API requests
   const apiRequest = (
@@ -1142,10 +422,11 @@ $(document).ready(function () {
 
     apiRequest(url, "GET", headers, null, (response) => {
       const { data, hasNextPage } = response;
+
       updateTable(data, page);
 
-      $("#prev-btn").prop("disabled", page === 1);
-      $("#next-btn").prop("disabled", !hasNextPage);
+      $("#prev-btn-users").prop("disabled", page <= 1);
+      $("#next-btn-users").prop("disabled", !hasNextPage);
       $("#usercount").text(data.length);
     });
   };
@@ -1155,7 +436,6 @@ $(document).ready(function () {
     const roleMap = {
       user: "support_admin",
       support_admin: "super_admin",
-      super_admin: "user",
     };
     const newRole = roleMap[currentRole];
 
@@ -1163,6 +443,7 @@ $(document).ready(function () {
 
     const url = `${BACKEND_URL}/users/${userId}/role`;
     const headers = {
+      super_admin: "user",
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     };
@@ -1228,14 +509,14 @@ $(document).ready(function () {
   });
 
   // Handle pagination
-  $("#prev-btn").click(function () {
+  $("#prev-btn-users").on("click", function () {
     if (currentPage.value > 1) {
       currentPage.value--;
       fetchData(currentPage.value);
     }
   });
 
-  $("#next-btn").click(function () {
+  $("#next-btn-users").on("click", function () {
     currentPage.value++;
     fetchData(currentPage.value);
   });
@@ -1392,42 +673,6 @@ $(document).ready(function () {
     $("#request").text(count);
   }
 
-  // function renderTable(data) {
-  //   tableBody.empty();
-  //   data.forEach((item, index) => {
-  //     const isRejected = item.status === "Rejected";
-  //     tableBody.append(`
-  //       <tr data-id="${item._id}">
-  //         <td>${(currentPage - 1) * pageSize + index + 1}</td>
-  //         <td>${item.firstname} ${item.lastname}</td>
-  //         <td>${item.phone}</td>
-  //         <td>${item.email}</td>
-  //         <td>${item.status}</td>
-  //         <td>
-  //           <div class="dropdown">
-  //             <button class="btn btn-xs btn-action dropdown-toggle" data-bs-toggle="dropdown">
-  //               <i class="fas fa-ellipsis-v"></i>
-  //             </button>
-  //             <ul class="dropdown-menu">
-  //               <li><button class="dropdown-item btn-cert-approve" data-id="${
-  //                 item._id
-  //               }" style="color: green;">Approve</button></li>
-  //               <li><button class="dropdown-item btn-cert-reject" data-id="${
-  //                 item._id
-  //               }" ${
-  //       isRejected ? "disabled" : ""
-  //     } style="color: red;">Reject</button></li>
-  //               <li><button class="dropdown-item btn-cert-view" data-id="${
-  //                 item._id
-  //               }" style="color: blue;">View</button></li>
-  //             </ul>
-  //           </div>
-  //         </td>
-  //       </tr>
-  //     `);
-  //   });
-  // }
-
   function renderTable(data) {
     tableBody.empty();
     data.forEach((item, index) => {
@@ -1473,18 +718,26 @@ $(document).ready(function () {
       headers: apiHeaders,
       success: function (response) {
         const { data, hasNextPage } = response;
+        $("#cert-request").text(data.length);
 
         renderTable(data);
         updatePaginationButtons(hasNextPage);
         updateRequestCount(data.length);
+
+        let pendingCount = 0;
+        let rejectedCount = 0;
+
         data.forEach((element) => {
           if (element.status === "Pending") {
-            $("#pending").text(data.length);
+            pendingCount++;
           }
           if (element.status === "Rejected") {
-            $("#rejected").text(data.length);
+            rejectedCount++;
           }
         });
+
+        $("#pending").text(pendingCount);
+        $("#rejected").text(rejectedCount);
       },
       error: function (error) {
         console.error("Error fetching data:", error);
@@ -1692,78 +945,7 @@ $(document).ready(function () {
         tableBody.empty();
 
         const resubmissionAttempts = data.resubmissionAttempts || 0;
-        // const appendRow = (isDisabled, showPayButton) => {
-        //   tableBody.append(`
-        //     <tr>
-        //       <td>${data.firstname} ${data.lastname}</td>
-        //       <td>${data.phone}</td>
-        //       <td>${data.email}</td>
-        //       <td>${data.status}</td>
-        //       <td>${resubmissionAttempts}</td>
-        //       <td>
-        //         <div id="loadingIndicator" style="display: none;">
-        //           <div class="loader"></div>
-        //         </div>
-        //         <div class="dropdown">
-        //           <button class="btn btn-xs btn-action dropdown-toggle" data-bs-toggle="dropdown">
-        //             <i class="fas fa-ellipsis-v"></i>
-        //           </button>
-        //           <ul class="dropdown-menu">
-        //             <li>
-        //               <div class="tooltip-wrapper" style="position: relative; display: inline-block;">
-        //                 <button class="dropdown-item btn-cert-download" data-id="${
-        //                   data._id
-        //                 }" ${
-        //     isDisabled ? "disabled" : ""
-        //   } style="color: green;">
-        //                   Download Certificate
-        //                 </button>
-        //                 ${
-        //                   isDisabled
-        //                     ? `<span class="custom-tooltip">Please pay before downloading</span>`
-        //                     : ""
-        //                 }
-        //               </div>
-        //             </li>
-        //             <li>
-        //               <div class="tooltip-wrapper" style="position: relative; display: inline-block;">
-        //                 <button class="dropdown-item view-cert-btn" data-id="${
-        //                   data._id
-        //                 }" ${isDisabled ? "disabled" : ""} style="color: blue;">
-        //                   View Certificate
-        //                 </button>
-        //                 ${
-        //                   isDisabled
-        //                     ? `<span class="custom-tooltip">Please pay to view certificate</span>`
-        //                     : ""
-        //                 }
-        //               </div>
-        //             </li>
-        //             ${
-        //               data.status === "Rejected" && data.resubmissionAllowed
-        //                 ? `<li><button class="dropdown-item resubmit-btn" data-id="${data._id}" data-name="${data.firstname}" style="color: orange;">
-        //                     Resubmit
-        //                   </button></li>`
-        //                 : ""
-        //             }
-        //             ${
-        //               data.status === "Rejected"
-        //                 ? `<li><button class="dropdown-item delete-btn" data-id="${data._id}" style="color: red;">
-        //                     Delete request
-        //                   </button></li>`
-        //                 : ""
-        //             }
-        //             ${
-        //               showPayButton
-        //                 ? `<li><button class="dropdown-item btn-cert-pay" data-id="${data._id}">Pay</button></li>`
-        //                 : ""
-        //             }
-        //           </ul>
-        //         </div>
-        //       </td>
-        //     </tr>
-        //   `);
-        // };
+
         const appendRow = (isDisabled, showPayButton) => {
           // Initialize tooltips immediately after appending
           var tooltipTriggerList = [].slice.call(
@@ -2111,14 +1293,13 @@ $(document).ready(function () {
             channels: ["card", "bank"],
             reference: paymentRef,
             customerPhoneNumber: phone,
-            callbackUrl: `http://127.0.0.1:5501/src/bdic/app/success.html`,
+            callbackUrl: `${FRONTEND_URL}/source/src/bdic/app/success.html`,
             onClose: function () {
               console.log("Payment widget closed");
             },
             callBack: function (response) {
               console.log("Payment successful:", response);
-              window.location.href =
-                "http://127.0.0.1:5501/src/bdic/app/success.html";
+              window.location.href = `${FRONTEND_URL}/source/src/bdic/app/success.html`;
             },
           });
 
@@ -2223,8 +1404,6 @@ $(document).ready(function () {
         $("#btnPrev").prop("disabled", page === 1);
         $("#btnNext").prop("disabled", !hasNextPage);
         $("#approvals").text(data.length);
-
-        // document.getElementById("approvals").innerHTML = data.length; // Update the count of approvals
       },
       error: function (error) {
         console.error("Error fetching data:", error);
@@ -3367,7 +2546,7 @@ $(document).ready(function () {
 
       // Fetch list of countries from the REST Countries API
       $.ajax({
-        url: "https://restcountries.com/v3.1/all",
+        url: "https://restcountries.com/v3.1/all?fields=name,countries",
         method: "GET",
         success: function (countries) {
           countries.forEach(function (country) {
@@ -3390,7 +2569,6 @@ $(document).ready(function () {
       const errorMessage =
         error.responseJSON?.message || "Failed to load user profile.";
       Swal.fire("Oops...", errorMessage, "error");
-      console.error("Error fetching profile:", error);
       $("#name").text("Error loading profile");
     },
   });
@@ -3887,9 +3065,25 @@ $(document).ready(function () {
     apiRequest(url, "GET", headers, null, (response) => {
       const { data, hasNextPage } = response;
       updateTable(data, page);
+      // Calculate the total amount
+      // Sum all amounts (in kobo) and convert to Naira
+      let totalAmountKobo = 0;
+      data.forEach((item) => {
+        totalAmountKobo += item.amount; // Assuming `amount` is in kobo
+      });
 
-      $("#prev-btn").prop("disabled", page === 1);
-      $("#next-btn").prop("disabled", !hasNextPage);
+      const totalAmountNaira = totalAmountKobo / 100; // Convert to Naira
+
+      // Format as ₦ with commas (e.g., ₦500,000.00)
+      const formattedAmount = new Intl.NumberFormat("en-NG", {
+        style: "currency",
+        currency: "NGN",
+      }).format(totalAmountNaira);
+      console.log(formattedAmount);
+
+      $("#btnPrevTran").prop("disabled", page === 1);
+      $("#btnNextTran").prop("disabled", !hasNextPage);
+      $("#trans").text(formattedAmount); // Display as ₦500,000.00
     });
   };
 
@@ -3921,14 +3115,14 @@ $(document).ready(function () {
   });
 
   // Handle pagination
-  $("#prev-btn").click(function () {
+  $("#btnPrevTran").click(function () {
     if (currentPage.value > 1) {
       currentPage.value--;
       fetchData(currentPage.value);
     }
   });
 
-  $("#next-btn").click(function () {
+  $("#btnNextTran").click(function () {
     currentPage.value++;
     fetchData(currentPage.value);
   });
@@ -4004,8 +3198,8 @@ function fetchAllKindred(page) {
           `);
       });
 
-      $("#btnPrevAll").prop("disabled", page === 1);
-      $("#btnNextAll").prop("disabled", !hasNextPage);
+      $("#kindred-btn-prev").prop("disabled", page === 1);
+      $("#kindred-btn-next").prop("disabled", !hasNextPage);
     },
     error: function (error) {
       console.error("Error fetching all kindred:", error);

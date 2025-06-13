@@ -289,9 +289,6 @@
               Authorization: `Bearer ${token}`,
             },
             success: function (response) {
-              console.log("Response received:", response.kindred);
-              console.log("response", response.userId.passportPhoto);
-
               // Check if the response contains data
               if (response && Object.keys(response).length > 0) {
                 const date = new Date();
@@ -323,7 +320,7 @@
                 $("#kindred-name").text(response.kindred);
                 $("#user-photo").attr(
                   "src",
-                  response.userId.passportPhoto || "/assets/images/avatar.jpeg"
+                  response.passportPhoto || "/assets/images/avatar.jpeg"
                 );
                 $("#dob").text(formattedDOB);
               } else {

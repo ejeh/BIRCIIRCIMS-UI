@@ -38,6 +38,15 @@
     <script src="../../unpkg.com/sweetalert%402.1.2/dist/sweetalert.min.js"></script>
     <link href="vendor/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet" />
     <script src="../../ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    <style>
+      .camera-upload-box video,
+      .camera-upload-box canvas,
+      .camera-upload-box img {
+        border-radius: 8px;
+        margin-bottom: 10px;
+      }
+    </style>
   </head>
   <body>
     <!--*******************
@@ -379,7 +388,7 @@
                       <div class="col-sm-4 m-b30">
                         <label class="form-label">Community/Ward</label>
                         <input
-                          id="community"
+                          id="ward"
                           type="text"
                           class="form-control"
                           required
@@ -388,13 +397,6 @@
                       </div>
                       <div class="col-sm-4 m-b30">
                         <label class="form-label">Kindred</label>
-                        <!-- <input
-                          id="kindred"
-                          type="text"
-                          class="form-control"
-                          name="kindred"
-                          required
-                        /> -->
                         <select
                           id="kindred"
                           class="form-control"
@@ -575,7 +577,7 @@
                           name="idCard"
                         />
                       </div>
-                      <div class="col-sm-4 m-b30">
+                      <!-- <div class="col-sm-4 m-b30">
                         <label class="form-label"
                           >Recent Passport Photograph
                         </label>
@@ -585,8 +587,90 @@
                           required
                           name="passportPhoto"
                         />
-                      </div>
+                      </div> -->
                       <div class="col-sm-4 m-b30">
+                        <label class="form-label"
+                          >Recent Passport Photograph</label
+                        >
+                        <div
+                          class="camera-upload-box text-center border rounded p-3"
+                        >
+                          <video
+                            id="camera-stream"
+                            width="100%"
+                            height="200"
+                            autoplay
+                            playsinline
+                            style="display: none; border-radius: 8px"
+                          ></video>
+                          <canvas
+                            id="snapshot"
+                            width="300"
+                            height="200"
+                            style="display: none"
+                          ></canvas>
+                          <img
+                            id="photo-preview"
+                            src=""
+                            alt="Passport Preview"
+                            class="img-thumbnail mb-2"
+                            style="display: none; max-width: 100%; height: auto"
+                          />
+
+                          <div class="btn-group mb-2">
+                            <button
+                              type="button"
+                              class="btn btn-outline-primary"
+                              id="start-camera"
+                            >
+                              Open Camera
+                            </button>
+                            <button
+                              type="button"
+                              class="btn btn-outline-success"
+                              id="capture-photo"
+                              style="display: none"
+                            >
+                              Capture
+                            </button>
+                            <button
+                              type="button"
+                              class="btn btn-outline-danger"
+                              id="close-camera"
+                              style="display: none"
+                            >
+                              Close Camera
+                            </button>
+                          </div>
+
+                          <input
+                            type="file"
+                            id="passportPhoto"
+                            name="passportPhoto"
+                            class="form-control"
+                            accept="image/*"
+                            style="display: none"
+                          />
+                          <small class="text-muted d-block"
+                            >Or
+                            <button
+                              type="button"
+                              class="btn btn-link p-0"
+                              id="upload-photo-btn"
+                            >
+                              Upload Photo
+                            </button>
+                            instead.</small
+                          >
+
+                          <input
+                            type="hidden"
+                            name="passportPhotoData"
+                            id="passportPhotoData"
+                          />
+                        </div>
+                      </div>
+                      <!-- <div class="col-sm-4 m-b30">
                         <label class="form-label">
                           Parent/Guardian’s Indigene Certificate
                         </label>
@@ -596,7 +680,7 @@
                           required
                           name="parentGuardianIndigeneCert"
                         />
-                      </div>
+                      </div> -->
 
                       <!-- <h4 class="card-title">Certificate Purpose:</h4> -->
                     </div>
@@ -626,6 +710,21 @@
         </script>
 
         <script>
+          let cameraStream = null;
+          let photoCaptured = false;
+
+          // Utility: Convert dataURL to File
+          function dataURLtoFile(dataurl, filename) {
+            const arr = dataurl.split(",");
+            const mime = arr[0].match(/:(.*?);/)[1];
+            const bstr = atob(arr[1]);
+            let n = bstr.length;
+            const u8arr = new Uint8Array(n);
+            while (n--) {
+              u8arr[n] = bstr.charCodeAt(n);
+            }
+            return new File([u8arr], filename, { type: mime });
+          }
           $(document).ready(function () {
             $("#indigeneForm").on("submit", async function (e) {
               e.preventDefault();
@@ -639,7 +738,64 @@
                 }
 
                 const { token, user } = userData;
-                const formData = new FormData(this);
+                // const formData = new FormData(this);
+
+                const formData = new FormData();
+                formData.append("firstname", $("#first_name").val());
+                formData.append("middlename", $("#middlename").val());
+                formData.append("lastname", $("#lastname").val());
+                formData.append("email", $("#email").val());
+                formData.append("phone", $("#phone").val());
+                formData.append("gender", $("#gender").val());
+                formData.append("maritalStatus", $("#maritalStatus").val());
+                formData.append("stateOfOrigin", $("#stateOfOrigin").val());
+                formData.append("DOB", $("#DOB").val());
+                formData.append("lgaOfOrigin", $("#lgaOfOrigin").val());
+                formData.append("address", $("#address").val());
+                formData.append("ward", $("#ward").val());
+                formData.append("kindred", $("#kindred").val());
+                formData.append("fathersName", $("#fathersName").val());
+                formData.append("mothersName", $("#mothersName").val());
+                formData.append("guardian", $("#guardian").val());
+                formData.append(
+                  "relationshionToguardian",
+                  $("#relationshionToguardian").val()
+                );
+                formData.append(
+                  "fathersStateOfOrigin",
+                  $("#fathersStateOfOrigin").val()
+                );
+                formData.append(
+                  "mothersStateOfOrigin",
+                  $("#mothersStateOfOrigin").val()
+                );
+                formData.append(
+                  "birthCertificate",
+                  $("#indigeneForm")[0].birthCertificate.files[0]
+                );
+                formData.append(
+                  "idCard",
+                  $("#indigeneForm")[0].idCard.files[0]
+                );
+                // Append passport photo data
+
+                const canvas = $("#snapshot").get(0);
+                const dataURL = canvas.toDataURL("image/jpeg", 0.9);
+                const passportPhotoFile = $("#passportPhoto")[0]?.files[0];
+
+                console.log("photoCaptured:", photoCaptured);
+                console.log("passportPhotoFile:", passportPhotoFile);
+                console.log("dataURL from canvas:", dataURL);
+
+                if (photoCaptured && dataURL) {
+                  formData.append(
+                    "passportPhoto",
+                    dataURLtoFile(dataURL, "captured-passport.jpg")
+                  );
+                } else if (passportPhotoFile) {
+                  formData.append("passportPhoto", passportPhotoFile);
+                }
+
                 formData.append("userId", user.id);
 
                 // Submit form data
@@ -659,48 +815,8 @@
                   "Your request is being processed.",
                   "success"
                 );
-                // .then(async () => {
-                //   try {
-                //     // Make a request to get the file blob
-                //     const fileResponse = await fetch(
-                //       `${BACKEND_URL}/indigene/certificate/download/attestation/${response._id}`,
-                //       {
-                //         method: "GET",
-                //         headers: { Authorization: `Bearer ${token}` },
-                //       }
-                //     );
-
-                //     if (!fileResponse.ok) {
-                //       throw new Error("Failed to download file");
-                //     }
-
-                //     // Create a blob and download it
-                //     const blob = await fileResponse.blob();
-                //     const downloadUrl = URL.createObjectURL(blob);
-                //     const a = document.createElement("a");
-                //     a.href = downloadUrl;
-                //     a.download = "attestation_letter.pdf"; // Change filename if necessary
-                //     document.body.appendChild(a);
-                //     a.click();
-                //     document.body.removeChild(a);
-                //     URL.revokeObjectURL(downloadUrl);
-                //   } catch (downloadError) {
-                //     console.error("Download Error:", downloadError);
-                //     Swal.fire(
-                //       "Error",
-                //       "Could not download the attestation letter",
-                //       "error"
-                //     );
-                //   }
-                // });
-                // } else {
-                //   Swal.fire(
-                //     "Oops...",
-                //     response.message || "Something went wrong!",
-                //     "error"
-                //   );
-                // }
               } catch (error) {
+                console.error("Error submitting form:", error);
                 Swal.fire(
                   "Oops...",
                   error.responseJSON?.message ||
@@ -709,6 +825,79 @@
                 );
               }
             });
+          });
+          // ✅ Camera Start
+          $("#start-camera").click(function () {
+            navigator.mediaDevices
+              .getUserMedia({ video: true })
+              .then(function (stream) {
+                cameraStream = stream;
+                $("#camera-stream").get(0).srcObject = stream;
+                $("#camera-stream").show();
+                $("#capture-photo, #close-camera").show();
+                $("#start-camera").hide();
+                $("#photo-preview").hide();
+              })
+              .catch(function (err) {
+                alert("Unable to access camera: " + err);
+              });
+          });
+          // ✅ Close Camera Manually
+          $("#close-camera").click(function () {
+            if (cameraStream) {
+              cameraStream.getTracks().forEach((track) => track.stop());
+              cameraStream = null;
+            }
+            $("#camera-stream, #capture-photo, #close-camera").hide();
+            $("#start-camera").show();
+          });
+
+          // ✅ Upload Photo from File
+          $("#upload-photo-btn").click(function () {
+            $("#passportPhoto").click();
+          });
+
+          // ✅ Capture Photo & Trigger AutoSave
+          $("#capture-photo").click(function () {
+            const video = $("#camera-stream").get(0);
+            const canvas = $("#snapshot").get(0);
+            const context = canvas.getContext("2d");
+
+            canvas.width = video.videoWidth || 640;
+            canvas.height = video.videoHeight || 480;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            const dataUrl = canvas.toDataURL("image/jpeg", 0.9);
+            $("#photo-preview").attr("src", dataUrl).show();
+            $("#passportPhotoData").val(dataUrl);
+
+            if (cameraStream) {
+              cameraStream.getTracks().forEach((track) => track.stop());
+              cameraStream = null;
+            }
+
+            $("#camera-stream, #capture-photo, #close-camera").hide();
+            $("#start-camera").show();
+            photoCaptured = true;
+          });
+          $("#passportPhoto").change(function (e) {
+            const file = e.target.files[0];
+            if (file) {
+              const reader = new FileReader();
+              reader.onload = function (event) {
+                $("#photo-preview").attr("src", event.target.result).show();
+                $("#passportPhotoData").val(event.target.result);
+
+                if (cameraStream) {
+                  cameraStream.getTracks().forEach((track) => track.stop());
+                  cameraStream = null;
+                  $("#camera-stream, #capture-photo, #close-camera").hide();
+                  $("#start-camera").show();
+                }
+                photoCaptured = false; // File upload is NOT photoCaptured
+              };
+              reader.readAsDataURL(file);
+            }
           });
         </script>
       </div>

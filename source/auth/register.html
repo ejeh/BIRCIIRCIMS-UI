@@ -23,8 +23,27 @@
       href="/assets/images/benue-state-logo.png"
       sizes="16x16"
     />
+    <!-- <script src="../src/ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script> -->
 
     <script type="text/javascript" src="../js/index.js"></script>
+    <style>
+      .progress-indicator {
+        width: 3px;
+        height: 1px;
+      }
+      .progress-indicator.active {
+        background-color: #198754;
+      }
+      .progress-indicator.inactive {
+        background-color: #dee2e6;
+      }
+      .password-validation .valid {
+        color: #198754;
+      }
+      .password-validation .invalid {
+        color: #6c757d;
+      }
+    </style>
   </head>
   <body>
     <div class="container-fluid p-0">
@@ -32,10 +51,12 @@
         <!-- Green sidebar -->
         <div class="col-md-5 green-sidebar p-4 text-white d-flex flex-column">
           <div class="d-flex align-items-center mb-4">
-            <div class="benue-logo me-3"></div>
+            <a href="../index.html">
+              <div class="benue-logo me-3"></div>
+            </a>
           </div>
 
-          <h1 class="fs-2 fw-bold mb-2">Benue State Integrated</h1>
+          <h2 class="fs-3 fw-bold mb-2">Benue State Integrated</h2>
           <h2 class="fs-3 fw-bold mb-1">Residents/Citizens Identity/</h2>
           <h2 class="fs-3 fw-bold mb-1">Indigene Registration and Card</h2>
           <h2 class="fs-3 fw-bold mb-4">Issuance Management System</h2>
@@ -62,9 +83,9 @@
           </div>
 
           <!-- Desktop login button -->
-          <div class="d-none d-md-block mt-auto">
+          <!-- <div class="d-none d-md-block mt-auto">
             <a href="login.html" class="btn btn-outline-light">Log in</a>
-          </div>
+          </div> -->
         </div>
 
         <!-- Registration form -->
@@ -76,250 +97,324 @@
           <h2 class="fs-4 fw-bold mb-4">
             Hello there! Please enter your details to get started
           </h2>
+          <div class="d-flex justify-content-center gap-3 mt-4">
+            <div class="d-flex align-items-center">
+              <div
+                class="progress-indicator rounded me-2 active"
+                id="step1-indicator"
+              ></div>
+              <span class="small text-success" id="step1-text"
+                >Personal info.</span
+              >
+            </div>
+            <div class="d-flex align-items-center">
+              <div
+                class="progress-indicator rounded me-2 inactive"
+                id="step2-indicator"
+              ></div>
+              <span class="small text-muted" id="step2-text"
+                >Personal info</span
+              >
+            </div>
+          </div>
 
           <form id="signUpForm">
-            <div class="row g-3">
-              <!-- First name -->
-              <div class="col-md-4">
-                <label for="firstname" class="form-label">First name</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="firstname"
-                  required
-                  name="firstname"
-                  aria-describedby="firstnameHelp"
-                />
-                <small id="firstnameHelp" class="form-text text-muted">
-                  Enter your first name
-                </small>
-              </div>
-
-              <!-- Last name -->
-              <div class="col-md-4">
-                <label for="lastname" class="form-label">Last name</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="lastname"
-                  required
-                  aria-describedby="lastnameHelp"
-                />
-                <small id="lastnameHelp" class="form-text text-muted">
-                  Enter your last name
-                </small>
-              </div>
-
-              <!-- Email -->
-              <div class="col-md-4">
-                <label for="email" class="form-label">Email</label>
-                <input
-                  type="email"
-                  class="form-control"
-                  id="email"
-                  required
-                  aria-describedby="emailHelp"
-                />
-                <small id="emailHelp" class="form-text text-muted">
-                  Enter a valid email address
-                </small>
-              </div>
-
-              <!-- Phone number -->
-              <div class="col-md-4">
-                <label for="phone" class="form-label">Phone number</label>
-                <input
-                  type="tel"
-                  class="form-control"
-                  id="phone"
-                  maxlength="11"
-                  pattern="^0[7-9][0-1]\d{8}$"
-                  required
-                  autocomplete="tel-national"
-                  aria-describedby="phoneHelp"
-                />
-                <small id="phoneHelp" class="form-text text-muted">
-                  Enter a valid Nigerian phone number
-                </small>
-              </div>
-
-              <!-- State -->
-              <div class="col-md-4">
-                <label for="stateOfOrigin" class="form-label">State</label>
-                <!-- onchange="updateLocalGovernmentsOfOrigin()" -->
-                <select
-                  id="stateOfOrigin"
-                  name="stateOfOrigin"
-                  class="form-control"
-                  required
-                  aria-describedby="stateHelp"
-                  onchange="updateLocalGovernmentsOfOrigin()"
-                >
-                  <option value="">Select State</option>
-                  <option value="abia">Abia</option>
-                  <option value="adamawa">Adamawa</option>
-                  <option value="akwa_ibom">Akwa Ibom</option>
-                  <option value="anambra">Anambra</option>
-                  <option value="bauchi">Bauchi</option>
-                  <option value="bayelsa">Bayelsa</option>
-                  <option value="benue">Benue</option>
-                  <option value="borno">Borno</option>
-                  <option value="cross_river">Cross River</option>
-                  <option value="delta">Delta</option>
-                  <option value="ebonyi">Ebonyi</option>
-                  <option value="edo">Edo</option>
-                  <option value="ekiti">Ekiti</option>
-                  <option value="enugu">Enugu</option>
-                  <option value="gombe">Gombe</option>
-                  <option value="imo">Imo</option>
-                  <option value="jigawa">Jigawa</option>
-                  <option value="kaduna">Kaduna</option>
-                  <option value="kano">Kano</option>
-                  <option value="katsina">Katsina</option>
-                  <option value="kebbi">Kebbi</option>
-                  <option value="kogi">Kogi</option>
-                  <option value="kwara">Kwara</option>
-                  <option value="lagos">Lagos</option>
-                  <option value="nasarawa">Nasarawa</option>
-                  <option value="niger">Niger</option>
-                  <option value="ogun">Ogun</option>
-                  <option value="ondo">Ondo</option>
-                  <option value="osun">Osun</option>
-                  <option value="oyo">Oyo</option>
-                  <option value="plateau">Plateau</option>
-                  <option value="rivers">Rivers</option>
-                  <option value="sokoto">Sokoto</option>
-                  <option value="taraba">Taraba</option>
-                  <option value="yobe">Yobe</option>
-                  <option value="zamfara">Zamfara</option>
-                  <option value="abuja">Abuja (FCT)</option>
-                </select>
-              </div>
-
-              <!-- LGA -->
-              <div class="col-md-4">
-                <label for="state" class="form-label">LGA</label>
-                <select
-                  id="lgaOfOrigin"
-                  name="lgaOfOrigin"
-                  class="form-control"
-                >
-                  <option value="">Select Local Government</option>
-                </select>
-              </div>
-
-              <!-- Password -->
-              <div class="col-md-4">
-                <label for="password" class="form-label">Password</label>
-                <div class="input-group">
+            <div id="step1" class="step-content">
+              <div class="row g-3">
+                <!-- NIN -->
+                <div class="col-md-4">
+                  <label for="nin" class="form-label">NIN</label>
                   <input
-                    type="password"
+                    type="text"
                     class="form-control"
-                    id="password"
+                    id="NIN"
+                    name="NIN"
+                    maxlength="11"
+                    minlength="11"
                     required
-                    aria-describedby="passwordHelp"
+                    inputmode="numeric"
+                    pattern="\d{11}"
+                    aria-describedby="ninHelp"
+                    autocomplete="off"
                   />
-                  <button
-                    class="btn btn-outline-secondary password-toggle"
-                    type="button"
-                    data-target="#password"
+                  <small id="ninHelp" class="form-text text-muted">
+                    Enter your 11-digit NIN
+                  </small>
+                  <div id="ninStatus" class="mt-1 text-sm text-info"></div>
+                </div>
+                <!-- First name -->
+                <div class="col-md-4">
+                  <label for="firstname" class="form-label">First name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="firstname"
+                    required
+                    name="firstname"
+                    aria-describedby="firstnameHelp"
+                  />
+                  <small id="firstnameHelp" class="form-text text-muted">
+                    Enter your first name
+                  </small>
+                </div>
+
+                <!-- Last name -->
+                <div class="col-md-4">
+                  <label for="lastname" class="form-label">Last name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="lastname"
+                    required
+                    aria-describedby="lastnameHelp"
+                  />
+                  <small id="lastnameHelp" class="form-text text-muted">
+                    Enter your last name
+                  </small>
+                </div>
+
+                <!-- Email -->
+                <div class="col-md-6">
+                  <label for="email" class="form-label">Email</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    required
+                    aria-describedby="emailHelp"
+                  />
+                  <small id="emailHelp" class="form-text text-muted">
+                    Enter a valid email address
+                  </small>
+                </div>
+                <div class="col-md-6">
+                  <label for="phone" class="form-label">Phone number</label>
+                  <input
+                    type="tel"
+                    class="form-control"
+                    id="phone"
+                    maxlength="11"
+                    pattern="^0[7-9][0-1]\d{8}$"
+                    required
+                    autocomplete="tel-national"
+                    aria-describedby="phoneHelp"
+                  />
+                  <small id="phoneHelp" class="form-text text-muted">
+                    Enter a valid Nigerian phone number
+                  </small>
+                </div>
+                <button
+                  type="button"
+                  class="btn btn-success w-100 mb-3"
+                  id="nextButton"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+
+            <!-- Phone number -->
+
+            <div id="step2" class="step-content d-none">
+              <div class="row g-3">
+                <!-- State -->
+                <div class="col-md-6">
+                  <label for="stateOfOrigin" class="form-label">State</label>
+                  <!-- onchange="updateLocalGovernmentsOfOrigin()" -->
+                  <select
+                    id="stateOfOrigin"
+                    name="stateOfOrigin"
+                    class="form-control"
+                    required
+                    aria-describedby="stateHelp"
+                    onchange="updateLocalGovernmentsOfOrigin()"
                   >
-                    <i class="fa fa-eye-slash"></i>
-                  </button>
+                    <option value="">Select State</option>
+                    <option value="abia">Abia</option>
+                    <option value="adamawa">Adamawa</option>
+                    <option value="akwa_ibom">Akwa Ibom</option>
+                    <option value="anambra">Anambra</option>
+                    <option value="bauchi">Bauchi</option>
+                    <option value="bayelsa">Bayelsa</option>
+                    <option value="benue">Benue</option>
+                    <option value="borno">Borno</option>
+                    <option value="cross_river">Cross River</option>
+                    <option value="delta">Delta</option>
+                    <option value="ebonyi">Ebonyi</option>
+                    <option value="edo">Edo</option>
+                    <option value="ekiti">Ekiti</option>
+                    <option value="enugu">Enugu</option>
+                    <option value="gombe">Gombe</option>
+                    <option value="imo">Imo</option>
+                    <option value="jigawa">Jigawa</option>
+                    <option value="kaduna">Kaduna</option>
+                    <option value="kano">Kano</option>
+                    <option value="katsina">Katsina</option>
+                    <option value="kebbi">Kebbi</option>
+                    <option value="kogi">Kogi</option>
+                    <option value="kwara">Kwara</option>
+                    <option value="lagos">Lagos</option>
+                    <option value="nasarawa">Nasarawa</option>
+                    <option value="niger">Niger</option>
+                    <option value="ogun">Ogun</option>
+                    <option value="ondo">Ondo</option>
+                    <option value="osun">Osun</option>
+                    <option value="oyo">Oyo</option>
+                    <option value="plateau">Plateau</option>
+                    <option value="rivers">Rivers</option>
+                    <option value="sokoto">Sokoto</option>
+                    <option value="taraba">Taraba</option>
+                    <option value="yobe">Yobe</option>
+                    <option value="zamfara">Zamfara</option>
+                    <option value="abuja">Abuja (FCT)</option>
+                  </select>
+                </div>
+
+                <!-- LGA -->
+                <div class="col-md-6">
+                  <label for="state" class="form-label">LGA</label>
+                  <select
+                    id="lgaOfOrigin"
+                    name="lgaOfOrigin"
+                    class="form-control"
+                  >
+                    <option value="">Select Local Government</option>
+                  </select>
+                </div>
+
+                <!-- Password -->
+                <div class="col-md-6">
+                  <label for="password" class="form-label">Password</label>
+                  <div class="input-group">
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="password"
+                      required
+                      aria-describedby="passwordHelp"
+                    />
+                    <button
+                      class="btn btn-outline-secondary password-toggle"
+                      type="button"
+                      data-target="#password"
+                    >
+                      <i class="fa fa-eye-slash"></i>
+                    </button>
+                  </div>
                   <small id="passwordHelp" class="form-text text-muted">
                     Enter a strong password
                   </small>
                 </div>
-              </div>
 
-              <!-- Confirm Password -->
-              <div class="col-md-4">
-                <label for="re_password" class="form-label"
-                  >Confirm password</label
-                >
-                <div class="input-group">
-                  <input
-                    type="password"
-                    class="form-control"
-                    id="re_password"
-                    name="re_password"
-                    required
-                    autocomplete="new-password"
-                    aria-describedby="rePasswordHelp"
-                  />
-                  <button
-                    class="btn btn-outline-secondary password-toggle"
-                    type="button"
-                    data-target="#re_password"
+                <!-- Confirm Password -->
+                <div class="col-md-6">
+                  <label for="re_password" class="form-label"
+                    >Confirm password</label
                   >
-                    <i class="fa fa-eye-slash"></i>
-                  </button>
+                  <div class="input-group">
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="re_password"
+                      name="re_password"
+                      required
+                      autocomplete="new-password"
+                      aria-describedby="rePasswordHelp"
+                    />
+                    <button
+                      class="btn btn-outline-secondary password-toggle"
+                      type="button"
+                      data-target="#re_password"
+                    >
+                      <i class="fa fa-eye-slash"></i>
+                    </button>
+                  </div>
                   <small id="rePasswordHelp" class="form-text text-muted">
                     Re-type your password
                   </small>
                 </div>
-              </div>
-              <!-- NIN -->
-              <div class="col-md-4">
-                <label for="nin" class="form-label">NIN</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="NIN"
-                  name="NIN"
-                  maxlength="11"
-                  minlength="11"
-                  required
-                  inputmode="numeric"
-                  pattern="\d{11}"
-                  aria-describedby="ninHelp"
-                  autocomplete="off"
-                />
-                <small id="ninHelp" class="form-text text-muted">
-                  Enter your 11-digit NIN
-                </small>
-                <div id="ninStatus" class="mt-1 text-sm text-info"></div>
+
+                <!-- {/* Password requirements as a list item */} -->
+                <!-- <div className="col-span-full">
+                  <ul className="list-disc pl-5 space-y-2 mt-2">
+                    <li className="flex items-center gap-2 text-sm">
+                      <Checkbox id="chars" checked="{hasMinChars}" />
+                      <label htmlFor="chars" className="text-gray-600">
+                        At least 8 Characters
+                      </label>
+                    </li>
+                    <li className="flex items-center gap-2 text-sm">
+                      <Checkbox id="special" checked="{hasSpecialChar}" />
+                      <label htmlFor="special" className="text-gray-600">
+                        Should contain at least one symbol
+                      </label>
+                    </li>
+                    <li className="flex items-center gap-2 text-sm">
+                      <Checkbox id="capital" checked="{hasCapitalLetter}" />
+                      <label htmlFor="capital" className="text-gray-600">
+                        Should contain at least one capital letter
+                      </label>
+                    </li>
+                    <li className="flex items-center gap-2 text-sm">
+                      <Checkbox id="number" checked="{hasNumber}" />
+                      <label htmlFor="number" className="text-gray-600">
+                        Should contain at least one number
+                      </label>
+                    </li>
+                  </ul>
+                </div> -->
+
+                <!-- Password validation -->
+                <div class="password-validation d-flex flex-wrap gap-2 mt-2">
+                  <div class="d-flex align-items-center small">
+                    <i
+                      class="fas fa-check-circle me-1 invalid"
+                      id="lengthCheck"
+                    ></i>
+                    <span class="invalid" id="lengthText">8 Characters</span>
+                  </div>
+                  <div class="d-flex align-items-center small">
+                    <i
+                      class="fas fa-check-circle me-1 invalid"
+                      id="symbolCheck"
+                    ></i>
+                    <span class="invalid" id="symbolText">One symbol</span>
+                  </div>
+                  <div class="d-flex align-items-center small">
+                    <i
+                      class="fas fa-check-circle me-1 invalid"
+                      id="capitalCheck"
+                    ></i>
+                    <span class="invalid" id="capitalText"
+                      >One capital letter</span
+                    >
+                  </div>
+                  <div class="d-flex align-items-center small">
+                    <i
+                      class="fas fa-check-circle me-1 invalid"
+                      id="numberCheck"
+                    ></i>
+                    <span class="invalid" id="numberText">One number</span>
+                  </div>
+                </div>
               </div>
 
-              <!-- {/* Password requirements as a list item */} -->
-              <div className="col-span-full">
-                <ul className="list-disc pl-5 space-y-2 mt-2">
-                  <li className="flex items-center gap-2 text-sm">
-                    <Checkbox id="chars" checked="{hasMinChars}" />
-                    <label htmlFor="chars" className="text-gray-600">
-                      At least 8 Characters
-                    </label>
-                  </li>
-                  <li className="flex items-center gap-2 text-sm">
-                    <Checkbox id="special" checked="{hasSpecialChar}" />
-                    <label htmlFor="special" className="text-gray-600">
-                      Should contain at least one symbol
-                    </label>
-                  </li>
-                  <li className="flex items-center gap-2 text-sm">
-                    <Checkbox id="capital" checked="{hasCapitalLetter}" />
-                    <label htmlFor="capital" className="text-gray-600">
-                      Should contain at least one capital letter
-                    </label>
-                  </li>
-                  <li className="flex items-center gap-2 text-sm">
-                    <Checkbox id="number" checked="{hasNumber}" />
-                    <label htmlFor="number" className="text-gray-600">
-                      Should contain at least one number
-                    </label>
-                  </li>
-                </ul>
-              </div>
+              <!-- Sign up button -->
+              <!-- <button
+                type="submit"
+                id="submitbtn"
+                class="btn btn-success w-100 mt-4"
+                >
+                Sign up
+              </button> -->
+              <button
+                type="button"
+                class="btn btn-success w-100 mb-3"
+                id="proceedButton"
+              >
+                Proceed
+              </button>
             </div>
-
-            <!-- Sign up button -->
-            <button
-              type="submit"
-              id="submitbtn"
-              class="btn btn-success w-100 mt-4"
-            >
-              Sign up
-            </button>
           </form>
 
           <!-- Login link -->
@@ -329,9 +424,9 @@
           </div>
 
           <div class="copyright">
-            <a href="https://bdic.ng/" target="_blank">
-              Powered By BDIC <br />© 2025 All Rights Reserved
-            </a>
+            <!-- <a href="https://bdic.ng/" target="_blank"> -->
+            Powered By BDIC <br />© 2025 All Rights Reserved
+            <!-- </a> -->
           </div>
         </div>
       </div>
@@ -345,6 +440,20 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
       $(document).ready(function () {
+        // Form data object that matches the API structure
+        const formData = {
+          firstname: "",
+          lastname: "",
+          email: "",
+          password: "",
+          phone: "",
+          NIN: "",
+          lgaOfOrigin: "",
+          stateOfOrigin: "",
+          confirmPassword: "",
+        };
+        let currentStep = 1;
+
         $(".password-toggle").click(function () {
           const targetSelector = $(this).data("target");
           const input = $(targetSelector);
@@ -353,8 +462,53 @@
           $(this).find("i").toggleClass("fa-eye fa-eye-slash");
         });
 
+        // Password validation
+        $("#password").on("input", function () {
+          const password = $(this).val();
+          formData.password = password;
+
+          // Validation checks
+          const lengthValid = password.length >= 8;
+          const symbolValid = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+          const capitalValid = /[A-Z]/.test(password);
+          const numberValid = /\d/.test(password);
+
+          // Update UI
+          updateValidationIcon("#lengthCheck", "#lengthText", lengthValid);
+          updateValidationIcon("#symbolCheck", "#symbolText", symbolValid);
+          updateValidationIcon("#capitalCheck", "#capitalText", capitalValid);
+          updateValidationIcon("#numberCheck", "#numberText", numberValid);
+        });
+
+        function updateValidationIcon(iconId, textId, isValid) {
+          if (isValid) {
+            $(iconId).removeClass("invalid").addClass("valid");
+            $(textId).removeClass("invalid").addClass("valid");
+          } else {
+            $(iconId).removeClass("valid").addClass("invalid");
+            $(textId).removeClass("valid").addClass("invalid");
+          }
+        }
+
         // Helper function to display error messages
         const showError = (input, message) => {
+          const formGroup = input.closest(".col-md-6");
+          const errorElement = formGroup.querySelector(".error-message");
+
+          if (!errorElement) {
+            const errorDiv = document.createElement("div");
+            errorDiv.className = "error-message text-danger mt-1";
+            errorDiv.innerText = message;
+            formGroup.appendChild(errorDiv);
+          } else {
+            errorElement.innerText = message;
+          }
+
+          input.classList.add("is-invalid");
+        };
+
+        // Helper function to display error messages
+        const showNINError = (input, message) => {
           const formGroup = input.closest(".col-md-4");
           const errorElement = formGroup.querySelector(".error-message");
 
@@ -372,6 +526,17 @@
 
         // Helper function to clear error messages
         const clearError = (input) => {
+          const formGroup = input.closest(".col-md-6");
+          const errorElement = formGroup.querySelector(".error-message");
+
+          if (errorElement) {
+            errorElement.remove();
+          }
+
+          input.classList.remove("is-invalid");
+        };
+
+        const clearNINError = (input) => {
           const formGroup = input.closest(".col-md-4");
           const errorElement = formGroup.querySelector(".error-message");
 
@@ -386,13 +551,13 @@
         const validateFirstName = (input) => {
           const value = input.value.trim();
           if (!value) {
-            showError(input, "First name is required.");
+            showNINError(input, "First name is required.");
             return false;
           } else if (!/^[a-zA-Z]+$/.test(value)) {
-            showError(input, "First name should contain only letters.");
+            showNINError(input, "First name should contain only letters.");
             return false;
           } else {
-            clearError(input);
+            clearNINError(input);
             return true;
           }
         };
@@ -400,13 +565,13 @@
         const validateLastName = (input) => {
           const value = input.value.trim();
           if (!value) {
-            showError(input, "Last name is required.");
+            showNINError(input, "Last name is required.");
             return false;
           } else if (!/^[a-zA-Z]+$/.test(value)) {
-            showError(input, "Last name should contain only letters.");
+            showNINError(input, "Last name should contain only letters.");
             return false;
           } else {
-            clearError(input);
+            clearNINError(input);
             return true;
           }
         };
@@ -480,16 +645,16 @@
         const validateNIN = (input) => {
           const value = input.value.trim();
           if (!value) {
-            showError(input, "NIN is required.");
+            showNINError(input, "NIN is required.");
             return false;
           } else if (!/^\d{11}$/.test(value)) {
-            showError(
+            showNINError(
               input,
               "NIN should contain only numbers and be exactly 11 digits long."
             );
             return false;
           } else {
-            clearError(input);
+            clearNINError(input);
             return true;
           }
         };
@@ -602,40 +767,77 @@
         });
 
         // Form submission handler
-        $("#signUpForm").on("submit", function (e) {
-          e.preventDefault();
+        // $("#signUpForm").on("submit", function (e) {
+        //   e.preventDefault();
 
+        $("#nextButton").click(function () {
+          console.log("click");
           const isFirstNameValid = validateFirstName($("#firstname")[0]);
           const isLastNameValid = validateLastName($("#lastname")[0]);
           const isEmailValid = validateEmail($("#email")[0]);
           const isPhoneValid = validatePhone($("#phone")[0]);
-          const isPasswordValid = validatePassword($("#password")[0]);
-          const isConfirmPasswordValid = validateConfirmPassword(
-            $("#re_password")[0]
-          );
+          // const isPasswordValid = validatePassword($("#password")[0]);
+          // const isConfirmPasswordValid = validateConfirmPassword(
+          //   $("#re_password")[0]
+          // );
           const isNINValid = validateNIN($("#NIN")[0]);
 
           if (
+            // isPasswordValid &&
             isFirstNameValid &&
             isLastNameValid &&
             isEmailValid &&
             isPhoneValid &&
-            isPasswordValid &&
-            isConfirmPasswordValid &&
+            // isConfirmPasswordValid &&
             isNINValid
           ) {
-            const formData = {
-              firstname: $("#firstname").val().trim(),
-              lastname: $("#lastname").val().trim(),
-              email: $("#email").val().trim(),
-              phone: $("#phone").val().trim(),
-              password: $("#password").val().trim(),
-              NIN: $("#NIN").val().trim(),
-              stateOfOrigin: $("#stateOfOrigin").val().trim(),
-              lgaOfOrigin: $("#lgaOfOrigin").val().trim(),
+            //   lastname: $("#lastname").val().trim(),
+            // const formData = {
+            //   firstname: $("#firstname").val().trim(),
+            //   email: $("#email").val().trim(),
+            //   phone: $("#phone").val().trim(),
+            //   password: $("#password").val().trim(),
+            //   // NIN: $("#NIN").val().trim(),
+            //   // stateOfOrigin: $("#stateOfOrigin").val().trim(),
+            //   // lgaOfOrigin: $("#lgaOfOrigin").val().trim(),
+            // };
+
+            formData.firstname = $("#firstname").val().trim();
+            formData.lastname = $("#lastname").val().trim();
+            formData.email = $("#email").val().trim();
+            formData.phone = $("#phone").val().trim();
+            formData.NIN = $("#NIN").val().trim();
+
+            // submitForm(formData);
+            // Proceed to next step
+            currentStep = 2;
+            updateStepUI();
+          }
+        });
+        $("#proceedButton").click(function () {
+          const isPasswordValid = validatePassword($("#password")[0]);
+          const isConfirmPasswordValid = validateConfirmPassword(
+            $("#re_password")[0]
+          );
+
+          if (isPasswordValid && isConfirmPasswordValid) {
+            formData.stateOfOrigin = $("#stateOfOrigin").val().trim();
+            formData.lgaOfOrigin = $("#lgaOfOrigin").val().trim();
+            formData.confirmPassword = $("#re_password").val().trim();
+            formData.password = $("#password").val().trim();
+
+            const apiData = {
+              firstname: formData.firstname,
+              lastname: formData.lastname,
+              email: formData.email,
+              password: formData.password,
+              phone: formData.phone,
+              NIN: formData.NIN,
+              lgaOfOrigin: formData.lgaOfOrigin,
+              stateOfOrigin: formData.stateOfOrigin,
             };
 
-            submitForm(formData);
+            submitForm(apiData);
           }
         });
 
@@ -670,6 +872,24 @@
             $("#submitbtn").html("Sign Up").attr("disabled", false);
           }
         };
+        // Update step UI
+        function updateStepUI() {
+          if (currentStep === 1) {
+            $("#step1").removeClass("d-none");
+            $("#step2").addClass("d-none");
+            $("#step1-indicator").addClass("active").removeClass("inactive");
+            $("#step2-indicator").addClass("inactive").removeClass("active");
+            $("#step1-text").addClass("text-success").removeClass("text-muted");
+            $("#step2-text").addClass("text-muted").removeClass("text-success");
+          } else {
+            $("#step1").addClass("d-none");
+            $("#step2").removeClass("d-none");
+            $("#step1-indicator").addClass("active").removeClass("inactive");
+            $("#step2-indicator").addClass("active").removeClass("inactive");
+            $("#step1-text").addClass("text-success").removeClass("text-muted");
+            $("#step2-text").addClass("text-success").removeClass("text-muted");
+          }
+        }
       });
     </script>
     <script>
@@ -1505,7 +1725,5 @@
     <!-- jQuery and Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    Custom JS
-    <script src="scripts.js"></script>
   </body>
 </html>

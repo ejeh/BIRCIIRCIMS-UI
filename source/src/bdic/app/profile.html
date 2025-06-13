@@ -54,6 +54,12 @@
       .form-section.active {
         display: block;
       }
+      .camera-upload-box video,
+      .camera-upload-box canvas,
+      .camera-upload-box img {
+        border-radius: 8px;
+        margin-bottom: 10px;
+      }
     </style>
   </head>
   <body>
@@ -234,7 +240,11 @@
               </a>
             </li>
             <li>
-              <a class="ai-icon" href="../../../auth/login.html" aria-expanded="false">
+              <a
+                class="ai-icon"
+                href="../../../auth/login.html"
+                aria-expanded="false"
+              >
                 <i class="fa fa-sign-out" aria-hidden="true"></i>
                 <span class="nav-text" onclick="logout(this)">Logout</span>
               </a>
@@ -342,53 +352,10 @@
                       <div class="col-sm-6 m-b30">
                         <label class="form-label">Select State Of Origin</label>
 
-                        <!-- <select
-                          id="stateOfOrigin"
-                          class="selectpicker nice-select default-select form-control wide mh-auto"
-                          onchange="updateLocalGovernmentsOfOrigin()"
-                        >
-                          <option value="">Select State</option>
-                          <option value="adamawa">Adamawa</option>
-                          <option value="akwa_ibom">Akwa Ibom</option>
-                          <option value="anambra">Anambra</option>
-                          <option value="abia">Abia</option>
-                          <option value="bauchi">Bauchi</option>
-                          <option value="benue">Benue</option>
-                          <option value="borno">Borno</option>
-                          <option value="bayelsa">Bayelsa</option>
-                          <option value="delta">Delta</option>
-                          <option value="ebonyi">Ebonyi</option>
-                          <option value="edo">Edo</option>
-                          <option value="enugu">Enugu</option>
-                          <option value="abuja">abuja</option>
-                          <option value="gombe">Gombe</option>
-                          <option value="jigawa">Jigawa</option>
-                          <option value="ekiti">Ekiti</option>
-                          <option value="lagos">Lagos</option>
-                          <option value="oyo">Oyo</option>
-                          <option value="imo">Imo</option>
-                          <option value="kaduna">Kaduna</option>
-                          <option value="kebbi">Kebbi</option>
-                          <option value="kano">Kano</option>
-                          <option value="kogi">Kogi</option>
-                          <option value="osun">Osun</option>
-                          <option value="sokoto">Sokoto</option>
-                          <option value="plateau">Plateau</option>
-                          <option value="taraba">Taraba</option>
-                          <option value="yobe">Yobe</option>
-                          <option value="zamfara">zamfara</option>
-                          <option value="katsina">Katsina</option>
-                          <option value="kwara">Kwara</option>
-                          <option value="nasarawa">Nasarawa</option>
-                          <option value="niger">Niger</option>
-                          <option value="rivers">Rivers</option>
-                        </select> -->
-
                         <input
                           id="stateOfOrigin"
                           type="text"
                           class="form-control"
-                          required
                           name="stateOfOrigin"
                           readonly
                           onchange="updateLocalGovernmentsOfOrigin()"
@@ -440,14 +407,85 @@
 
                       <div class="col-sm-4 m-b30">
                         <label class="form-label"
-                          >Recent Passport Photograph
-                        </label>
-                        <input
-                          id="passportPhoto"
-                          type="file"
-                          class="form-control"
-                          name="passportPhoto"
-                        />
+                          >Recent Passport Photograph</label
+                        >
+                        <div
+                          class="camera-upload-box text-center border rounded p-3"
+                        >
+                          <video
+                            id="camera-stream"
+                            width="100%"
+                            height="200"
+                            autoplay
+                            playsinline
+                            style="display: none; border-radius: 8px"
+                          ></video>
+                          <canvas
+                            id="snapshot"
+                            width="300"
+                            height="200"
+                            style="display: none"
+                          ></canvas>
+                          <img
+                            id="photo-preview"
+                            src=""
+                            alt="Passport Preview"
+                            class="img-thumbnail mb-2"
+                            style="display: none; max-width: 100%; height: auto"
+                          />
+
+                          <div class="btn-group mb-2">
+                            <button
+                              type="button"
+                              class="btn btn-outline-primary"
+                              id="start-camera"
+                            >
+                              Open Camera
+                            </button>
+                            <button
+                              type="button"
+                              class="btn btn-outline-success"
+                              id="capture-photo"
+                              style="display: none"
+                            >
+                              Capture
+                            </button>
+                            <button
+                              type="button"
+                              class="btn btn-outline-danger"
+                              id="close-camera"
+                              style="display: none"
+                            >
+                              Close Camera
+                            </button>
+                          </div>
+
+                          <input
+                            type="file"
+                            id="passportPhoto"
+                            name="passportPhoto"
+                            class="form-control"
+                            accept="image/*"
+                            style="display: none"
+                          />
+                          <small class="text-muted d-block"
+                            >Or
+                            <button
+                              type="button"
+                              class="btn btn-link p-0"
+                              id="upload-photo-btn"
+                            >
+                              Upload Photo
+                            </button>
+                            instead.</small
+                          >
+
+                          <input
+                            type="hidden"
+                            name="passportPhotoData"
+                            id="passportPhotoData"
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1180,7 +1218,6 @@
                             class="form-control"
                             name="companyName[]"
                             placeholder="Enter company name"
-                            required
                           />
                         </div>
 
@@ -1192,7 +1229,6 @@
                             class="form-control"
                             name="address[]"
                             placeholder="Enter company address"
-                            required
                           />
                         </div>
 
@@ -1204,7 +1240,6 @@
                             class="form-control"
                             name="designation[]"
                             placeholder="Enter your designation"
-                            required
                           />
                         </div>
 
@@ -1217,7 +1252,6 @@
                               class="form-control"
                               name="startYear[]"
                               placeholder="Enter start year"
-                              required
                             />
                           </div>
                           <div class="form-group col-md-6">
@@ -1320,7 +1354,6 @@
                             class="form-control"
                             id="primarySchoolName"
                             name="primarySchool.name"
-                            required
                           />
                         </div>
                         <div class="form-group">
@@ -1333,7 +1366,6 @@
                             class="form-control"
                             id="primarySchoolAddress"
                             name="primarySchool.address"
-                            required
                           />
                         </div>
                         <div class="form-group">
@@ -1346,7 +1378,6 @@
                             class="form-control"
                             id="primarySchoolYear"
                             name="primarySchool.yearOfAttendance"
-                            required
                           />
                         </div>
                       </div>
@@ -1364,7 +1395,6 @@
                             class="form-control"
                             id="secondarySchoolName"
                             name="secondarySchool.name"
-                            required
                           />
                         </div>
                         <div class="form-group">
@@ -1377,7 +1407,6 @@
                             class="form-control"
                             id="secondarySchoolAddress"
                             name="secondarySchool.address"
-                            required
                           />
                         </div>
                         <div class="form-group">
@@ -1390,7 +1419,6 @@
                             class="form-control"
                             id="secondarySchoolYear"
                             name="secondarySchool.yearOfAttendance"
-                            required
                           />
                         </div>
                       </div>
@@ -1409,35 +1437,30 @@
                             class="form-control"
                             name="educationalHistory.tertiaryInstitutions[0].name"
                             placeholder="Name of Tertiary Institution"
-                            required
                           />
                           <input
                             type="text"
                             class="form-control"
                             name="educationalHistory.tertiaryInstitutions[0].address"
                             placeholder="Address of Tertiary Institution"
-                            required
                           />
                           <input
                             type="text"
                             class="form-control"
                             name="educationalHistory.tertiaryInstitutions[0].certificateObtained"
                             placeholder="Certificate Obtained"
-                            required
                           />
                           <input
                             type="text"
                             class="form-control"
                             name="educationalHistory.tertiaryInstitutions[0].matricNo"
                             placeholder="Matriculation Number"
-                            required
                           />
                           <input
                             type="text"
                             class="form-control"
                             name="educationalHistory.tertiaryInstitutions[0].yearOfAttendance"
                             placeholder="Year of Attendance"
-                            required
                           />
                         </div>
                       </div>
@@ -1494,7 +1517,6 @@
                           id="bloodGroup"
                           name="bloodGroup"
                           class="selectpicker nice-select default-select form-control wide mh-auto"
-                          required
                         >
                           <option value="A+">A+</option>
                           <option value="A-">A-</option>
@@ -1511,7 +1533,6 @@
                         <select
                           id="genotype"
                           name="genotype"
-                          required
                           class="selectpicker nice-select default-select form-control wide mh-auto"
                         >
                           <option value="AA">AA</option>
@@ -1527,7 +1548,6 @@
                           id="disabilityStatus"
                           name="disabilityStatus"
                           class="selectpicker nice-select default-select form-control wide mh-auto"
-                          required
                         >
                           <option value="None">None</option>
                           <option value="Physical">Physical</option>
@@ -1556,6 +1576,891 @@
             <div id="autoSaveStatus"></div>
           </form>
         </div>
+        <script>
+          $(document).ready(function () {
+            // Hold state for counts and the auto-save timer.
+            const state = {
+              autoSaveTimer: null,
+              institutionCount: 0,
+              neighborCount: 0,
+              familyCount: 0,
+              employmentCount: 0,
+            };
+
+            // Utility function to set input values
+            const setInputValue = (id, value) => {
+              const element = document.getElementById(id);
+              if (element) element.value = value || "";
+            };
+
+            /* ===================================================
+             * Field Addition Functions
+             * =================================================== */
+
+            // Add a new tertiary institution section.
+            const addInstitution = (institutionData = {}) => {
+              const container = $("#tertiary-institution-container");
+              // Calculate the index from the number of current institutions.
+              const index = container.find(".institution-fields").length;
+
+              const newInstitutionFields = `
+    <div class="institution-fields m-b30">
+      <label class="form-label">Tertiary Institution ${index + 1}</label>
+      <input
+        type="text"
+        class="form-control"
+        name="educationalHistory.tertiaryInstitutions[${index}].name"
+        placeholder="Name of Tertiary Institution"
+        value="${institutionData.name || ""}"
+        
+      />
+      <input
+        type="text"
+        class="form-control"
+        name="educationalHistory.tertiaryInstitutions[${index}].address"
+        placeholder="Address of Tertiary Institution"
+        value="${institutionData.address || ""}"
+        
+      />
+      <input
+        type="text"
+        class="form-control"
+        name="educationalHistory.tertiaryInstitutions[${index}].certificateObtained"
+        placeholder="Certificate Obtained"
+        value="${institutionData.certificateObtained || ""}"
+        
+      />
+      <input
+        type="text"
+        class="form-control"
+        name="educationalHistory.tertiaryInstitutions[${index}].matricNo"
+        placeholder="Matriculation Number"
+        value="${institutionData.matricNo || ""}"
+        
+      />
+      <input
+        type="text"
+        class="form-control"
+        name="educationalHistory.tertiaryInstitutions[${index}].yearOfAttendance"
+        placeholder="Year of Attendance"
+        value="${institutionData.yearOfAttendance || ""}"
+        
+      />
+    </div>`;
+              container.append(newInstitutionFields);
+              state.institutionCount++;
+
+              // Validate the newly added fields before auto-saving
+              validateAndAutoSaveIntitution(container, index);
+            };
+
+            // Function to validate the newly added institution fields and trigger auto-save if valid
+            const validateAndAutoSaveIntitution = (container, index) => {
+              const fields = container
+                .find(`.institution-fields:nth-child(${index + 1})`)
+                .find("input");
+              let isValid = true;
+
+              fields.each(function () {
+                if (!$(this).val().trim()) {
+                  isValid = false;
+                  return false; // Exit the loop early if any field is empty
+                }
+              });
+
+              if (isValid) {
+                autoSave();
+              } else {
+                console.log(
+                  "Please fill out all required fields before saving."
+                );
+              }
+            };
+
+            // Add a new family section.
+            const addFamily = (familyData = {}) => {
+              const container = $("#family-container");
+              // Calculate the index from the number of current institutions.
+              const index = container.find(".family-fields").length;
+
+              const newFamilyFields = `
+    <div class="family-fields m-b30">
+      <label class="form-label">Family ${index + 1}</label>
+      <input 
+        type="text" 
+        class="form-control m-b10 family-name" 
+        name="family_name[]" 
+        placeholder="Full Name" 
+        value="${familyData.name || ""}"
+         />
+
+      <input
+        type="text" 
+        class="form-control m-b10 family-relationship" 
+        name="family_relationship[]" 
+        placeholder="Relationship" 
+        value="${familyData.relationship || ""}"
+         />
+
+      <input 
+        type="tel" 
+        class="form-control family-phone" 
+        name="family_phone[]" 
+        placeholder="Phone Number" 
+        value="${familyData.phone || ""}"
+         />
+
+      <input 
+        type="text" 
+        class="form-control family-address" 
+        name="family_address[]" 
+        placeholder="Residential Address" 
+        value="${familyData.address || ""}"
+         />
+    </div>`;
+
+              container.append(newFamilyFields);
+              state.familyCount++;
+
+              if (state.familyCount === 5) {
+                $("#add-family")
+                  .prop("disabled", true)
+                  .text("Maximum family reached")
+                  .removeClass("btn-primary")
+                  .addClass("btn-secondary");
+              }
+
+              // Trigger auto-save after adding new fields
+              autoSaveFamily();
+            };
+
+            // Existing auto-save function (modified to validate family data)
+            const autoSaveFamily = () => {
+              // Validate family data before saving
+              if (validateFamilyData()) {
+                console.log(
+                  "All family fields are valid. Proceeding with auto-save..."
+                );
+                autoSave();
+              } else {
+                console.log(
+                  "Some family fields are incomplete. Auto-save skipped."
+                );
+              }
+            };
+
+            // Helper function to validate family data
+            const validateFamilyData = () => {
+              const familyContainer = $("#family-container");
+              const familyFields = familyContainer.find(".family-fields");
+              let allFieldsValid = true;
+
+              familyFields.each((index, field) => {
+                const name = $(field).find(".family-name").val().trim();
+                const relationship = $(field)
+                  .find(".family-relationship")
+                  .val()
+                  .trim();
+                const phone = $(field).find(".family-phone").val().trim();
+                const address = $(field).find(".family-address").val().trim();
+
+                if (!name || !relationship || !phone || !address) {
+                  allFieldsValid = false;
+                  return false; // Exit the loop early if any field is invalid
+                }
+              });
+
+              return allFieldsValid;
+            };
+
+            // // Add a new neighbor section.
+            const addNeighbor = (neighborData = {}) => {
+              const container = $("#neighbors-container");
+              const index = container.find(".neighbor-fields").length;
+
+              const newNeighborFields = `
+      <div class="neighbor-fields m-b30">
+        <label class="form-label">Neighbor ${index + 1}</label>
+        <input 
+          type="text" 
+          class="form-control m-b10 neighbor-name" 
+          name="neighbor_name[]" 
+          placeholder="Full Name" 
+          value="${neighborData.name || ""}"
+           />
+  
+        <input 
+          type="text" 
+          class="form-control m-b10 neighbor-address" 
+          name="neighbor_address[]" 
+          placeholder="Residential Address" 
+          value="${neighborData.address || ""}"
+           />
+  
+        <input 
+          type="tel" 
+          class="form-control neighbor-phone" 
+          name="neighbor_phone[]" 
+          placeholder="Phone Number" 
+          value="${neighborData.phone || ""}"
+           />
+      </div>`;
+
+              container.append(newNeighborFields);
+              state.neighborCount++;
+
+              if (state.neighborCount === 5) {
+                $("#add-neighbor")
+                  .prop("disabled", true)
+                  .text("Maximum neighbors reached")
+                  .removeClass("btn-primary")
+                  .addClass("btn-secondary");
+              }
+
+              // Attach event listeners to the new fields for auto-save validation
+              const newFields = container.find(".neighbor-fields").last();
+              newFields.find("input").on("input", function () {
+                validateAndAutoSave(newFields);
+              });
+            };
+
+            // Function to validate and auto-save only if all fields are filled
+            const validateAndAutoSave = (neighborFields) => {
+              const name = neighborFields.find(".neighbor-name").val().trim();
+              const address = neighborFields
+                .find(".neighbor-address")
+                .val()
+                .trim();
+              const phone = neighborFields.find(".neighbor-phone").val().trim();
+
+              if (name && address && phone) {
+                autoSave(); // Trigger auto-save only if all fields are complete
+              }
+            };
+
+            // Add a new employment section.
+            const addEmployment = (employmentData = {}) => {
+              const container = $("#employment-history-container");
+              // Calculate the index from the number of current employment.
+              const index = container.find(".employment-fields").length;
+              const newEmploymentFields = `
+      <div class="employment-fields m-b30">
+        <label class="form-label">Employment ${index + 1}</label> 
+        <input
+          type="text"
+          class="form-control"
+          name="companyName[]"
+          placeholder="Company Name"
+          value="${employmentData.companyName || ""}"
+          
+        />
+        <input
+          type="text"
+          class="form-control"
+          name="address[]"
+          placeholder="Company Address"
+          value="${employmentData.address || ""}"
+          
+        />
+        <input
+          type="text"
+          class="form-control"  
+          name="designation[]"
+          placeholder="Designation"
+          value="${employmentData.designation || ""}"
+          
+          />
+          <input
+          type="number"
+          class="form-control"
+          name="startYear[]"
+          placeholder="Start Year"
+          value="${employmentData.startYear || ""}"
+          
+          />
+          <div>
+          <input
+          type="number"
+          class="form-control"
+          name="endYear[]"
+          placeholder="End Year"
+          value="${employmentData.endYear || ""}"
+          
+          />
+           <small class="form-text text-muted">Leave blank if this is your current employment.</small>
+          </div>
+          
+          <div class="form-check">
+          <input
+          type="checkbox"
+          class="form-check-input"
+          name="isCurrentEmployment[]"
+          value="${employmentData.isCurrentEmployment || ""}"
+          />
+             <label class="form-check-label"for="isCurrentEmployment">This is my current employment</label>
+          </div>
+           <div>
+            <label for="description">Description of Company</label>
+          <textarea
+          class="form-control"
+          name="description[]"
+          placeholder="Job Description"
+          value="${employmentData.description || ""}"
+          
+          >
+          </textarea>
+         </div>
+      </div>`;
+              container.append(newEmploymentFields);
+              state.employmentCount++;
+
+              // Validate and auto-save only if all required fields are filled
+              validateAndAutoSaveEmployment();
+            };
+
+            const validateAndAutoSaveEmployment = () => {
+              const container = $("#employment-history-container");
+              const employmentFields = container.find(".employment-fields");
+
+              let isComplete = true;
+
+              employmentFields.each(function () {
+                const fields = $(this).find(
+                  "input[required], textarea[required]"
+                );
+                fields.each(function () {
+                  if (!$(this).val()) {
+                    isComplete = false;
+                    return false; // Exit the loop early if any field is empty
+                  }
+                });
+
+                if (!isComplete) {
+                  return false; // Exit the outer loop early if any field is empty
+                }
+              });
+
+              if (isComplete) {
+                autoSave();
+              }
+            };
+
+            /* ===================================================
+             * Data Population Logic (Updated)
+             * =================================================== */
+
+            const populateTertiaryInstitutions = (institutions) => {
+              const container = $("#tertiary-institution-container");
+              container.empty(); // Clear existing fields
+
+              if (institutions && institutions.length > 0) {
+                institutions.forEach((institution) =>
+                  addInstitution(institution)
+                );
+              } else {
+                // Add at least one empty institution field
+                addInstitution();
+              }
+            };
+
+            const populateFamily = (family) => {
+              const container = $("#family-container");
+              container.empty(); // Clear existing fields
+
+              if (family && family.length > 0) {
+                family.forEach((fam) => addFamily(fam));
+              } else {
+                // Add at least one empty family field
+                addFamily();
+              }
+            };
+
+            const populateNeighbors = (neighbors) => {
+              const container = $("#neighbors-container");
+              container.empty(); // Clear existing fields
+
+              if (neighbors && neighbors.length > 0) {
+                neighbors.forEach((neighbor) => addNeighbor(neighbor));
+              } else {
+                // Add at least one empty family field
+                addNeighbor();
+              }
+            };
+
+            const populateEmploymentHistory = (employments) => {
+              const container = $("#employment-history-container");
+              container.empty(); // Clear existing fields
+
+              if (employments && employments.length > 0) {
+                employments.forEach((employment) => addEmployment(employment));
+              } else {
+                // Add at least one empty employment field
+                addEmployment();
+              }
+            };
+
+            // Modified AJAX success handler
+            const handleProfileDataSuccess = (data) => {
+              // ... existing population code for other fields ...
+
+              // Handle educational history
+              if (data.educationalHistory) {
+                // Primary and secondary school population (keep existing code)
+
+                // Tertiary institutions - use our new method
+                populateTertiaryInstitutions(
+                  data.educationalHistory.tertiaryInstitutions
+                );
+              }
+
+              // Update institution count state
+              state.institutionCount = $(
+                "#tertiary-institution-container .institution-fields"
+              ).length;
+
+              if (data.family) {
+                populateFamily(data.family);
+                // ... rest of existing population code ...
+              }
+              state.familyCount = $(
+                "#neighbors-container .neighbor-fields"
+              ).length;
+
+              if (data.neighbor) {
+                populateNeighbors(data.neighbor);
+                // ... rest of existing population code ...
+              }
+              state.neighborCount = $(
+                "#neighbors-container .neighbor-fields"
+              ).length;
+
+              if (data.employmentHistory) {
+                populateEmploymentHistory(data.employmentHistory);
+                // ... rest of existing population code ...
+              }
+              state.employmentCount = $(
+                "#employment-history-container .employment-fields"
+              ).length;
+            };
+
+            // Modified AJAX call
+            $.ajax({
+              url: `${BACKEND_URL}/users/${user.id}`,
+              method: "GET",
+              headers: { Authorization: `Bearer ${token}` },
+              success: handleProfileDataSuccess,
+              error: function (error) {
+                // ... existing error handling ...
+              },
+            });
+
+            /* ===================================================
+             * Data Collection
+             * =================================================== */
+
+            const collectFormData = () => {
+              // Initialize FormData (this will also capture file uploads)
+              const formData = new FormData();
+
+              // List of simple fields by their IDs.
+              const fields = [
+                "middlename",
+                "lastname",
+                "nationality",
+                "community",
+                "religion",
+                "gender",
+                "stateOfOrigin",
+                "DOB",
+                "countryOfResidence",
+                "lgaOfOrigin",
+                "maritalStatus",
+                "house_number",
+                "street_name",
+                "nearest_bus_stop_landmark",
+                "city_town",
+                "stateOfResidence",
+                "lgaOfResidence",
+                "id_number",
+                "issue_date",
+                "expiry_date",
+              ];
+              fields.forEach((field) => {
+                const value = $(`#${field}`).val() || "";
+                formData.append(field, value);
+              });
+
+              // Build the next-of-kin object.
+              const nextOfKin = {
+                nok_surname: $("#nok_surname").val().trim(),
+                nok_firstname: $("#nok_firstname").val().trim(),
+                nok_middlename: $("#nok_middlename").val().trim(),
+                nok_relationship: $("#nok_relationship").val().trim(),
+                nok_countryOfResidence: $("#nok_countryOfResidence")
+                  .val()
+                  .trim(),
+                nok_stateOfResidence: $("#nok_stateOfResidence").val().trim(),
+                nok_lgaOfResidence: $("#nok_lgaOfResidence").val().trim(),
+                nok_cityOfResidence: $("#nok_cityOfResidence").val().trim(),
+                nok_address: $("#nok_address").val().trim(),
+              };
+
+              // Build the health info object.
+              const healthInfo = {
+                bloodGroup: $("#bloodGroup").val(),
+                genotype: $("#genotype").val(),
+                disabilityStatus: $("#disabilityStatus").val(),
+              };
+
+              // Build the business object.
+              const business = {
+                biz_name: $("#biz_name").val().trim(),
+                biz_type: $("#biz_type").val(),
+                registration_number: $("#registration_number").val().trim(),
+                biz_address: $("#biz_address").val().trim(),
+                nature_of_bussiness: $("#nature_of_bussiness").val().trim(),
+                numberOfYears: $("#numberOfYears").val().trim(),
+                numberOfEmployees: $("#numberOfEmployees").val().trim(),
+                annualRevenue: $("#annualRevenue").val().trim(),
+                TIN: $("#TIN").val().trim(),
+                biz_phone: $("#biz_phone").val().trim(),
+                biz_email: $("#biz_email").val().trim(),
+              };
+
+              // Collect neighbor entries.
+              const neighbor = [];
+              $(".neighbor-fields").each(function () {
+                neighbor.push({
+                  name: $(this).find('input[name="neighbor_name[]"]').val(),
+                  address: $(this)
+                    .find('input[name="neighbor_address[]"]')
+                    .val(),
+                  phone: $(this).find('input[name="neighbor_phone[]"]').val(),
+                });
+              });
+
+              // Collect family entries.
+              const family = [];
+              $(".family-fields").each(function () {
+                family.push({
+                  name: $(this).find('input[name="family_name[]"]').val(),
+                  relationship: $(this)
+                    .find('input[name="family_relationship[]"]')
+                    .val(),
+                  phone: $(this).find('input[name="family_phone[]"]').val(),
+                  address: $(this).find('input[name="family_address[]"]').val(),
+                });
+              });
+
+              // Build educational history.
+              const educationalHistory = {
+                primarySchool: {
+                  name: $('input[name="primarySchool.name"]').val(),
+                  address: $('input[name="primarySchool.address"]').val(),
+                  yearOfAttendance: $(
+                    'input[name="primarySchool.yearOfAttendance"]'
+                  ).val(),
+                },
+                secondarySchool: {
+                  name: $('input[name="secondarySchool.name"]').val(),
+                  address: $('input[name="secondarySchool.address"]').val(),
+                  yearOfAttendance: $(
+                    'input[name="secondarySchool.yearOfAttendance"]'
+                  ).val(),
+                },
+                tertiaryInstitutions: [],
+              };
+
+              $(".institution-fields").each(function (index) {
+                const institution = {
+                  name: $(this)
+                    .find(
+                      `input[name="educationalHistory.tertiaryInstitutions[${index}].name"]`
+                    )
+                    .val(),
+                  address: $(this)
+                    .find(
+                      `input[name="educationalHistory.tertiaryInstitutions[${index}].address"]`
+                    )
+                    .val(),
+                  certificateObtained: $(this)
+                    .find(
+                      `input[name="educationalHistory.tertiaryInstitutions[${index}].certificateObtained"]`
+                    )
+                    .val(),
+                  matricNo: $(this)
+                    .find(
+                      `input[name="educationalHistory.tertiaryInstitutions[${index}].matricNo"]`
+                    )
+                    .val(),
+                  yearOfAttendance: $(this)
+                    .find(
+                      `input[name="educationalHistory.tertiaryInstitutions[${index}].yearOfAttendance"]`
+                    )
+                    .val(),
+                };
+                educationalHistory.tertiaryInstitutions.push(institution);
+              });
+
+              // Employment History
+              const employmentHistory = [];
+              $(".employment-fields").each(function () {
+                employmentHistory.push({
+                  companyName: $(this)
+                    .find('input[name="companyName[]"]')
+                    .val(),
+                  address: $(this).find('input[name="address[]"]').val(),
+                  designation: $(this)
+                    .find('input[name="designation[]"]')
+                    .val(),
+                  startYear: $(this).find('input[name="startYear[]"]').val(),
+                  endYear: $(this).find('input[name="endYear[]"]').val(),
+                  isCurrentEmployment: $(this)
+                    .find('input[name="isCurrentEmployment[]"]')
+                    .is(":checked"),
+                  description: $(this)
+                    .find('textarea[name="description[]"]')
+                    .val(),
+                });
+              });
+
+              // Return both the FormData (with file uploads) and our JSON–ready objects.
+              return {
+                formData,
+                nextOfKin,
+                healthInfo,
+                business,
+                educationalHistory,
+                employmentHistory,
+                neighbor,
+                family,
+              };
+            };
+
+            /* ===================================================
+             * Auto-Save / Update Handling
+             * =================================================== */
+            let cameraStream = null;
+            let photoCaptured = false;
+
+            // Utility: Convert dataURL to File
+            function dataURLtoFile(dataurl, filename) {
+              const arr = dataurl.split(",");
+              const mime = arr[0].match(/:(.*?);/)[1];
+              const bstr = atob(arr[1]);
+              let n = bstr.length;
+              const u8arr = new Uint8Array(n);
+              while (n--) {
+                u8arr[n] = bstr.charCodeAt(n);
+              }
+              return new File([u8arr], filename, { type: mime });
+            }
+            const autoSave = async () => {
+              try {
+                // Collect all the form data.
+                let {
+                  formData,
+                  nextOfKin,
+                  healthInfo,
+                  business,
+                  educationalHistory,
+                  employmentHistory,
+                  neighbor,
+                  family,
+                } = collectFormData();
+
+                // Append the JSON–structured data.
+                formData.append("nextOfKin", JSON.stringify(nextOfKin));
+                formData.append("healthInfo", JSON.stringify(healthInfo));
+                formData.append("business", JSON.stringify(business));
+                formData.append(
+                  "educationalHistory",
+                  JSON.stringify(educationalHistory)
+                );
+                formData.append(
+                  "employmentHistory",
+                  JSON.stringify(employmentHistory)
+                );
+                formData.append("neighbor", JSON.stringify(neighbor));
+                formData.append("family", JSON.stringify(family));
+
+                // Handle identification – use the alternative input if "others" is selected.
+                const selectedValue = $("#identification").val();
+                const otherValue = $("#other-identification").val();
+                const finalIdentification =
+                  selectedValue === "others" ? otherValue : selectedValue;
+                formData.append("identification", finalIdentification);
+
+                const canvas = $("#snapshot").get(0);
+                const dataURL = canvas.toDataURL("image/jpeg", 0.9);
+                const passportPhotoFile = $("#passportPhoto")[0]?.files[0];
+
+                // console.log("photoCaptured:", photoCaptured);
+                // console.log("passportPhotoFile:", passportPhotoFile);
+                // console.log("dataURL from canvas:", dataURL);
+
+                if (photoCaptured && dataURL) {
+                  formData.append(
+                    "passportPhoto",
+                    dataURLtoFile(dataURL, "captured-passport.jpg")
+                  );
+                } else if (passportPhotoFile) {
+                  formData.append("passportPhoto", passportPhotoFile);
+                }
+
+                // Send the PUT request to update the user.
+                const response = await fetch(
+                  `${BACKEND_URL}/users/${user.id}`,
+                  {
+                    method: "PUT",
+                    headers: {
+                      Authorization: `Bearer ${token}`,
+                    },
+                    body: formData,
+                  }
+                );
+
+                if (response.ok) {
+                  console.log("Auto-save successful");
+                  $("#autoSaveStatus").text("Saved").css("color", "green");
+                } else {
+                  console.error("Auto-save failed", response.statusText);
+                  $("#autoSaveStatus")
+                    .text("Failed to save")
+                    .css("color", "red");
+                }
+              } catch (error) {
+                console.log("Auto-save error:", error.message);
+                console.error("Auto-save error:", error);
+                $("#autoSaveStatus").text("Failed to save").css("color", "red");
+              }
+            };
+            // ✅ Camera Start
+            $("#start-camera").click(function () {
+              navigator.mediaDevices
+                .getUserMedia({ video: true })
+                .then(function (stream) {
+                  cameraStream = stream;
+                  $("#camera-stream").get(0).srcObject = stream;
+                  $("#camera-stream").show();
+                  $("#capture-photo, #close-camera").show();
+                  $("#start-camera").hide();
+                  $("#photo-preview").hide();
+                })
+                .catch(function (err) {
+                  alert("Unable to access camera: " + err);
+                });
+            });
+            // ✅ Capture Photo & Trigger AutoSave
+            $("#capture-photo").click(function () {
+              const video = $("#camera-stream").get(0);
+              const canvas = $("#snapshot").get(0);
+              const context = canvas.getContext("2d");
+
+              canvas.width = video.videoWidth || 640;
+              canvas.height = video.videoHeight || 480;
+              context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+              const dataUrl = canvas.toDataURL("image/jpeg", 0.9);
+              $("#photo-preview").attr("src", dataUrl).show();
+              $("#passportPhotoData").val(dataUrl);
+
+              if (cameraStream) {
+                cameraStream.getTracks().forEach((track) => track.stop());
+                cameraStream = null;
+              }
+
+              $("#camera-stream, #capture-photo, #close-camera").hide();
+              $("#start-camera").show();
+              photoCaptured = true;
+
+              $("#autoSaveStatus")
+                .text("Photo captured! Saving...")
+                .css("color", "orange");
+              console.log("Calling autoSave() after camera capture...");
+              autoSave();
+            });
+
+            // ✅ Close Camera Manually
+            $("#close-camera").click(function () {
+              if (cameraStream) {
+                cameraStream.getTracks().forEach((track) => track.stop());
+                cameraStream = null;
+              }
+              $("#camera-stream, #capture-photo, #close-camera").hide();
+              $("#start-camera").show();
+            });
+
+            // ✅ Upload Photo from File
+            $("#upload-photo-btn").click(function () {
+              $("#passportPhoto").click();
+            });
+
+            $("#passportPhoto").change(function (e) {
+              const file = e.target.files[0];
+              if (file) {
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                  $("#photo-preview").attr("src", event.target.result).show();
+                  $("#passportPhotoData").val(event.target.result);
+
+                  if (cameraStream) {
+                    cameraStream.getTracks().forEach((track) => track.stop());
+                    cameraStream = null;
+                    $("#camera-stream, #capture-photo, #close-camera").hide();
+                    $("#start-camera").show();
+                  }
+                  photoCaptured = false; // File upload is NOT photoCaptured
+                  $("#autoSaveStatus")
+                    .text("Photo uploaded! Saving...")
+                    .css("color", "orange");
+                  console.log("Calling autoSave() after photo upload...");
+                  autoSave();
+                };
+                reader.readAsDataURL(file);
+              }
+            });
+
+            /* ===================================================
+             * Event Bindings
+             * =================================================== */
+
+            const bindEvents = () => {
+              // Bind the click events to add new sections.
+              $("#add-institution").on("click", addInstitution);
+              $("#add-neighbor").on("click", addNeighbor);
+              $("#add-family").on("click", addFamily);
+              $("#add-employment").on("click", addEmployment);
+
+              $(document).on(
+                "input change",
+                "input, select, textarea",
+                function () {
+                  clearTimeout(state.autoSaveTimer);
+                  $("#autoSaveStatus").text("Saving...").css("color", "blue");
+                  state.autoSaveTimer = setTimeout(autoSave, 1000); // 1-second debounce
+                }
+              );
+
+              // For final submission – prevent default and trigger auto-save.
+              $("#unifiedForm").on("submit", function (e) {
+                console.log("cool");
+                e.preventDefault();
+                // autoSave();
+                autoSave().then(() => {
+                  Swal.fire({
+                    title: "Success!",
+                    text: "Your form has been submitted successfully.",
+                    confirmButtonText: "OK",
+                  });
+                });
+              });
+            };
+
+            // Initialize all event bindings.
+            bindEvents();
+          });
+        </script>
 
         <script>
           document.querySelectorAll(".next-btn").forEach((btn) => {
