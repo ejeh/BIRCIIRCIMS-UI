@@ -15,7 +15,7 @@ body {
   position: fixed !important;
   left: 0 !important;
   top: 0 !important;
-  background-color: #fbfbfb99 !important;
+  background-color: #fbfbfb !important;
   border-right: 1px solid #e2e8f0 !important;
   transition: all 0.3s !important;
   z-index: 1000 !important;
@@ -49,8 +49,8 @@ body {
 
 .notification-badge {
   position: absolute !important;
-  top: -5px !important;
-  right: -5px !important;
+  top: 12px !important;
+  /* right: -5px !important; */
   width: 20px !important;
   height: 20px !important;
   border-radius: 50% !important;
