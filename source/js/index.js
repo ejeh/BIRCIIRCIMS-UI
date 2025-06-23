@@ -1427,264 +1427,103 @@ $(document).ready(function () {
   fetchData(currentPage);
 });
 
-// // Id Card
 $(document).ready(function () {
-  const pageSize = 10;
-  let currentPage = 1;
-  let rejectionId = null;
+  // function fetchLatestCertificate() {
+  $.ajax({
+    url: `${BACKEND_URL}/indigene/certificate/latest`,
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    success: function (latestCertificate) {
+      // Handle the single latest record
+      $("#latest-cert-request").text(
+        latestCertificate.firstname + " " + latestCertificate.lastname
+      );
 
-  const apiHeaders = {
-    Authorization: `Bearer ${token}`,
-  };
-
-  const tableBody = $("#view-all-card-table");
-
-  function updatePaginationButtons(hasNextPage) {
-    $("#btn-prev").prop("disabled", currentPage === 1);
-    $("#btn-next").prop("disabled", !hasNextPage);
-  }
-
-  function updateRequestCount(count) {
-    $("#request").text(count);
-  }
-
-  function renderTable(data) {
-    tableBody.empty();
-    data.forEach((item, index) => {
-      const statusBadge = {
-        Approved: `<span class="badge rounded-pill bg-success">Approved</span>`,
-        Pending: `<span class="badge rounded-pill bg-warning text-dark">Pending</span>`,
-        Rejected: `<span class="badge rounded-pill bg-danger">Rejected</span>`,
-      };
-      const isRejected = item.status === "Rejected";
-      tableBody.append(`
-        <tr data-id="${item._id}">
-          <td>${(currentPage - 1) * pageSize + index + 1}</td>
-          <td>${item.firstname} ${item.lastname}</td>
-          <td>${item.phone}</td>
-          <td>${item.email}</td>
-           <td>${statusBadge[item.status] || item.status}</td>
-          <td>
-            <button class="btn btn-sm btn-success btn-approve" data-id="${
-              item._id
-            }" title="Approve">
-              <i class="fas fa-check"></i>
-            </button>
-            <button class="btn btn-sm btn-warning btn-view" data-id="${
-              item._id
-            }" title="View">
-              <i class="fas fa-eye"></i>
-            </button>
-            <button class="btn btn-sm btn-danger btn-reject" data-id="${
-              item._id
-            }" title="Reject" ${item.status === "Rejected" ? "disabled" : ""}>
-              <i class="fas fa-times"></i>
-            </button>
-          </td>
-        </tr>
-      `);
-    });
-  }
-
-  function fetchData(page) {
-    $.ajax({
-      url: `${BACKEND_URL}/idcard/request?page=${page}&limit=${pageSize}&statuses=Pending,Rejected`,
-      method: "GET",
-      headers: apiHeaders,
-      success: function (response) {
-        const { data, hasNextPage } = response;
-        renderTable(data);
-        updatePaginationButtons(hasNextPage);
-        updateRequestCount(data.length);
-      },
-      error: function (error) {
-        console.error("Error fetching data:", error);
-      },
-    });
-  }
-
-  // Handle card Approval
-  function handleApproval(requestId) {
-    $.ajax({
-      url: `${BACKEND_URL}/idcard/${requestId}/approve`,
-      method: "PATCH",
-      headers: apiHeaders,
-      success: function () {
-        fetchData(currentPage);
-      },
-      error: function (error) {
-        console.error("Error approving request:", error);
-      },
-    });
-  }
-
-  // Handle card rejection
-  function handleRejection(rejectionReason) {
-    if (!rejectionReason) {
-      alert("Please provide a rejection reason.");
-      return;
-    }
-
-    $.ajax({
-      url: `${BACKEND_URL}/idcard/${rejectionId}/reject`,
-      method: "PATCH",
-      contentType: "application/json",
-      data: JSON.stringify({ rejectionReason }),
-      headers: apiHeaders,
-      success: function () {
-        $("#rejectionModal").modal("hide");
-        $("#rejectionReason").val("");
-        fetchData(currentPage);
-      },
-      error: function (error) {
-        console.error("Error rejecting request:", error);
-      },
-    });
-  }
-
-  // Handle card view
-  function handleView(requestId) {
-    $.ajax({
-      url: `${BACKEND_URL}/idcard/${requestId}/request`,
-      method: "GET",
-      headers: apiHeaders,
-      success: function (response) {
-        const documentPaths = [
-          response.utilityBill,
-          response.ref_letter,
-        ].filter(Boolean);
-        const documentTitles = ["Utility Bill", "Reference Letter"];
-
-        let modalContent = `
-          <div class="container-fluid">
-            <div class="row mb-3">
-              <div class="col-md-3 text-center">
-                <img 
-                  src="${
-                    response.passportPhoto || "/assets/images/avatar.jpeg"
-                  }" 
-                  alt="Passport Photo" 
-                  class="img-fluid rounded shadow-sm"
-                  style="max-height: 150px;"
-                >
-              </div>
-              <div class="col-md-9">
-                <h5 class="fw-bold mb-2">${response.firstname} ${
-          response.lastname
-        }</h5>
-                <p class="mb-1"><strong>Phone:</strong> ${response.phone}</p>
-                <p class="mb-1"><strong>Email:</strong> ${response.email}</p>
-                <p class="mb-1"><strong>Status:</strong> <span class="badge bg-info">${
-                  response.status
-                }</span></p>
-                <p><strong>Details:</strong> ${response.details || "N/A"}</p>
-              </div>
-            </div>
-  
-            <hr class="my-3">
-            <h6 class="text-primary">Uploaded Documents</h6>
-        `;
-
-        if (documentPaths.length === 0) {
-          modalContent += `<p class="text-muted">No documents uploaded.</p>`;
-        }
-
-        documentPaths.forEach((doc, index) => {
-          const filename = doc?.split("/").pop();
-          const fileUrl = `${BACKEND_URL}/idcard/pdf/${filename}`;
-
-          modalContent += `
-            <div class="card my-3 shadow-sm">
-              <div class="card-header bg-light fw-semibold">
-                ${documentTitles[index] || `Document ${index + 1}`}
-              </div>
-              <div class="card-body">
-                <div id="pdf-viewer-container-${index}" style="width:100%; height:400px;" class="border rounded bg-white"></div>
-                <div class="text-end mt-2">
-                  <a href="${fileUrl}" target="_blank" class="btn btn-sm btn-outline-primary me-2">Open in New Tab</a>
-                  <a href="${fileUrl}" download class="btn btn-sm btn-outline-secondary">Download</a>
-                </div>
-              </div>
-            </div>
-          `;
-        });
-
-        modalContent += `</div>`;
-
-        $("#viewModal .modal-body").html(modalContent);
-        $("#viewModal").modal("show");
-
-        // Load PDFs securely
-        documentPaths.forEach((doc, index) => {
-          const filename = doc?.split("/").pop();
-          const fileUrl = `${BACKEND_URL}/idcard/pdf/${filename}`;
-
-          fetch(fileUrl, {
-            headers: {
-              Authorization: apiHeaders.Authorization,
-            },
-          })
-            .then((res) => {
-              if (!res.ok) throw new Error("Failed to fetch PDF");
-              return res.blob();
-            })
-            .then((blob) => {
-              const blobUrl = URL.createObjectURL(blob);
-              loadPDFJS(
-                blobUrl,
-                document.getElementById(`pdf-viewer-container-${index}`)
-              );
-            })
-            .catch((err) => {
-              console.error("Error loading secure PDF:", err.message);
-              $(`#pdf-viewer-container-${index}`).html(
-                "<p class='text-danger'>Failed to load document.</p>"
-              );
-            });
-        });
-      },
-      error: function (error) {
-        console.error("Error fetching request details:", error);
-      },
-    });
-  }
-
-  $(document).on("click", ".btn-approve", function () {
-    const requestId = $(this).data("id");
-    handleApproval(requestId);
+      $("#cert-pending").text(latestCertificate.status);
+    },
+    error: function (error) {
+      console.error("Error fetching latest certificate:", error);
+    },
   });
-
-  $(document).on("click", ".btn-reject", function () {
-    rejectionId = $(this).data("id");
-    $("#rejectionModal").modal("show");
-  });
-
-  $("#dataTable").on("click", ".btn-view", function () {
-    const requestId = $(this).data("id");
-
-    handleView(requestId);
-  });
-
-  $("#submitRejection").click(function () {
-    const reason = $("#rejectionReason").val();
-    handleRejection(reason);
-  });
-
-  $("#btn-prev").click(function () {
-    if (currentPage > 1) {
-      currentPage--;
-      fetchData(currentPage);
-    }
-  });
-
-  $("#btn-next").click(function () {
-    currentPage++;
-    fetchData(currentPage);
-  });
-
-  // Initial data load
-  fetchData(currentPage);
+  // }
 });
+
+$(document).ready(function () {
+  $.ajax({
+    url: `${BACKEND_URL}/idcard/latest`,
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    success: function (latestCard) {
+      // Handle the single latest record
+      $("#latest-card-request").text(
+        latestCard.firstname + " " + latestCard.lastname
+      );
+
+      $("#card-pending").text(latestCard.status);
+    },
+    error: function (error) {
+      console.error("Error fetching latest card:", error);
+    },
+  });
+  // }
+});
+
+$(document).ready(function () {
+  $.ajax({
+    url: `${BACKEND_URL}/indigene/certificate/latest-approved`,
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    success: function (certificate) {
+      if (certificate) {
+        console.log("Latest approved:", certificate);
+        // Update UI with this single record
+        $("#latest-cert-approved").text(
+          certificate.firstname + " " + certificate.lastname
+        );
+        $("#cert-approved").text(certificate.status);
+        // $("#cert-approved-date").text(
+        //   new Date(certificate.approvedAt).toLocaleDateString()
+        // );
+      } else {
+        console.log("No approved certificates found");
+      }
+    },
+    error: function (error) {
+      console.error("Error:", error);
+    },
+  });
+});
+
+$(document).ready(function () {
+  $.ajax({
+    url: `${BACKEND_URL}/idcard/latest-approved`,
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    success: function (card) {
+      if (card) {
+        console.log("Latest approved:", card);
+        // Update UI with this single record
+        $("#latest-card-approved").text(card.firstname + " " + card.lastname);
+        $("#card-approved").text(card.status);
+      } else {
+        console.log("No approved certificates found");
+      }
+    },
+    error: function (error) {
+      console.error("Error:", error);
+    },
+  });
+});
+
+// LGA Data for Nigeria
 const nigeriaData = {
   adamawa: [
     "Demsa",
@@ -3710,4 +3549,358 @@ function createKindredGroupedTable(kindredHeadLGAs, matchingRequests) {
 // Trigger on button click
 $(document).on("click", "#filter-kindred-btn", function () {
   filterAndMatchKindredHeadLGAs();
+});
+
+// // Id Card
+$(document).ready(function () {
+  const pageSize = 10;
+  let currentPage = 1;
+  let rejectionId = null;
+
+  const apiHeaders = {
+    Authorization: `Bearer ${token}`,
+  };
+
+  const tableBody = $("#view-all-card-table");
+
+  function updatePaginationButtons(hasNextPage) {
+    $("#btn-prev").prop("disabled", currentPage === 1);
+    $("#btn-next").prop("disabled", !hasNextPage);
+  }
+
+  function updateRequestCount(count) {
+    $("#request").text(count);
+  }
+
+  function renderTable(data) {
+    tableBody.empty();
+    data.forEach((item, index) => {
+      const statusBadge = {
+        Approved: `<span class="badge rounded-pill bg-success">Approved</span>`,
+        Pending: `<span class="badge rounded-pill bg-warning text-dark">Pending</span>`,
+        Rejected: `<span class="badge rounded-pill bg-danger">Rejected</span>`,
+      };
+      const isRejected = item.status === "Rejected";
+      tableBody.append(`
+        <tr data-id="${item._id}">
+          <td>${(currentPage - 1) * pageSize + index + 1}</td>
+          <td>${item.firstname} ${item.lastname}</td>
+          <td>${item.phone}</td>
+          <td>${item.email}</td>
+           <td>${statusBadge[item.status] || item.status}</td>
+          <td>
+            <button class="btn btn-sm btn-success btn-approve" data-id="${
+              item._id
+            }" title="Approve">
+              <i class="fas fa-check"></i>
+            </button>
+            <button class="btn btn-sm btn-warning btn-view" data-id="${
+              item._id
+            }" title="View">
+              <i class="fas fa-eye"></i>
+            </button>
+            <button class="btn btn-sm btn-danger btn-reject" data-id="${
+              item._id
+            }" title="Reject" ${item.status === "Rejected" ? "disabled" : ""}>
+              <i class="fas fa-times"></i>
+            </button>
+          </td>
+        </tr>
+      `);
+    });
+  }
+
+  function fetchData(page) {
+    $.ajax({
+      url: `${BACKEND_URL}/idcard/request?page=${page}&limit=${pageSize}&statuses=Pending,Rejected`,
+      method: "GET",
+      headers: apiHeaders,
+      success: function (response) {
+        const { data, hasNextPage } = response;
+        console.log("data", data);
+        renderTable(data);
+        updatePaginationButtons(hasNextPage);
+        updateRequestCount(data.length);
+      },
+      error: function (error) {
+        console.error("Error fetching data:", error);
+      },
+    });
+  }
+
+  function fetchData(page) {
+    $.ajax({
+      url: `${BACKEND_URL}/idcard/get-all-request`,
+      method: "GET",
+      headers: apiHeaders,
+      success: function (response) {
+        const { data } = response;
+        $("#id-request").text(response.length);
+      },
+      error: function (error) {
+        console.error("Error fetching data:", error);
+      },
+    });
+  }
+
+  // Handle card Approval
+  function handleApproval(requestId) {
+    $.ajax({
+      url: `${BACKEND_URL}/idcard/${requestId}/approve`,
+      method: "PATCH",
+      headers: apiHeaders,
+      success: function () {
+        showNotification("success", "Card approved successfully.");
+        fetchData(currentPage);
+      },
+      error: function (error) {
+        console.error("Error approving request:", error);
+      },
+    });
+  }
+
+  // Handle card rejection
+  function handleIDRejection(rejectionReason) {
+    if (!rejectionReason) {
+      alert("Please provide a reason for rejection.");
+      return;
+    }
+
+    $.ajax({
+      url: `${BACKEND_URL}/idcard/${rejectionId}/reject`,
+      method: "PATCH",
+      contentType: "application/json",
+      data: JSON.stringify({ rejectionReason }),
+      headers: apiHeaders,
+      success: function () {
+        $("#rejectionModal").modal("hide");
+        $("#idRejectionReason").val("");
+        showNotification("success", "Request rejected successfully.");
+
+        fetchData(currentPage);
+      },
+      error: function (error) {
+        console.error("Error rejecting request:", error);
+        showNotification(
+          "danger",
+          xhr.responseJSON?.message || "Error occurred."
+        );
+      },
+    });
+  }
+
+  // Handle card view
+  function handleView(requestId) {
+    $.ajax({
+      url: `${BACKEND_URL}/idcard/${requestId}/request`,
+      method: "GET",
+      headers: apiHeaders,
+      success: function (response) {
+        const documentPaths = [
+          response.utilityBill,
+          response.ref_letter,
+        ].filter(Boolean);
+        const documentTitles = ["Utility Bill", "Reference Letter"];
+
+        let modalContent = `
+          <div class="container-fluid">
+            <div class="row mb-3">
+              <div class="col-md-3 text-center">
+                <img 
+                  src="${
+                    response.passportPhoto || "/assets/images/avatar.jpeg"
+                  }" 
+                  alt="Passport Photo" 
+                  class="img-fluid rounded shadow-sm"
+                  style="max-height: 150px;"
+                >
+              </div>
+              <div class="col-md-9">
+                <h5 class="fw-bold mb-2">${response.firstname} ${
+          response.lastname
+        }</h5>
+                <p class="mb-1"><strong>Phone:</strong> ${response.phone}</p>
+                <p class="mb-1"><strong>Email:</strong> ${response.email}</p>
+                <p class="mb-1"><strong>Status:</strong> <span class="badge bg-info">${
+                  response.status
+                }</span></p>
+                <p><strong>Details:</strong> ${response.details || "N/A"}</p>
+              </div>
+            </div>
+  
+            <hr class="my-3">
+            <h6 class="text-primary">Uploaded Documents</h6>
+        `;
+
+        if (documentPaths.length === 0) {
+          modalContent += `<p class="text-muted">No documents uploaded.</p>`;
+        }
+
+        documentPaths.forEach((doc, index) => {
+          const filename = doc?.split("/").pop();
+          const fileUrl = `${BACKEND_URL}/idcard/pdf/${filename}`;
+
+          modalContent += `
+            <div class="card my-3 shadow-sm">
+              <div class="card-header bg-light fw-semibold">
+                ${documentTitles[index] || `Document ${index + 1}`}
+              </div>
+              <div class="card-body">
+                <div id="pdf-viewer-container-${index}" style="width:100%; height:400px;" class="border rounded bg-white"></div>
+                <div class="text-end mt-2">
+                  <a href="${fileUrl}" target="_blank" class="btn btn-sm btn-outline-primary me-2">Open in New Tab</a>
+                  <a href="${fileUrl}" download class="btn btn-sm btn-outline-secondary">Download</a>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+
+        modalContent += `</div>`;
+
+        $("#viewModal .modal-body").html(modalContent);
+        $("#viewModal").modal("show");
+
+        // Load PDFs securely
+        documentPaths.forEach((doc, index) => {
+          const filename = doc?.split("/").pop();
+          const fileUrl = `${BACKEND_URL}/idcard/pdf/${filename}`;
+
+          fetch(fileUrl, {
+            headers: {
+              Authorization: apiHeaders.Authorization,
+            },
+          })
+            .then((res) => {
+              if (!res.ok) throw new Error("Failed to fetch PDF");
+              return res.blob();
+            })
+            .then((blob) => {
+              const blobUrl = URL.createObjectURL(blob);
+              loadPDFJS(
+                blobUrl,
+                document.getElementById(`pdf-viewer-container-${index}`)
+              );
+            })
+            .catch((err) => {
+              console.error("Error loading secure PDF:", err.message);
+              $(`#pdf-viewer-container-${index}`).html(
+                "<p class='text-danger'>Failed to load document.</p>"
+              );
+            });
+        });
+      },
+      error: function (error) {
+        console.error("Error fetching request details:", error);
+      },
+    });
+  }
+
+  function showNotification(type, message) {
+    const toastHtml = `
+            <div class="toast align-items-center text-white bg-${type} border-0 mb-2" role="alert" aria-live="assertive" aria-atomic="true">
+              <div class="d-flex">
+                <div class="toast-body">${message}</div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+              </div>
+            </div>`;
+    $("#toast-container").append(toastHtml);
+    const toastEl = $("#toast-container .toast:last")[0];
+    // new bootstrap.Toast(toastEl, { delay: 60000 }).show();
+    new bootstrap.Toast(toastEl, { autohide: false }).show();
+  }
+
+  $(document).ready(function () {
+    if (typeof io === "undefined") {
+      console.error("Socket.io library is not loaded.");
+      return;
+    }
+
+    const eventName = `member-status-update-${user?.id}`;
+
+    const socket = io("http://localhost:5000", {
+      transports: ["websocket"],
+    });
+
+    socket.on(eventName, function (data) {
+      console.log("📥 Received data:", data);
+      showNotification(
+        "info",
+        `Status: Your request for identity card was ${data.status}. Reason: ${
+          data.reason || "N/A"
+        }`
+      );
+    });
+  });
+
+  $(document).on("click", ".btn-approve", function () {
+    const requestId = $(this).data("id");
+    handleApproval(requestId);
+  });
+
+  $(document).on("click", ".btn-reject", function () {
+    rejectionId = $(this).data("id");
+    $("#rejectionModal").modal("show");
+  });
+
+  $("#dataTable").on("click", ".btn-view", function () {
+    const requestId = $(this).data("id");
+
+    handleView(requestId);
+  });
+
+  $("#submitIDRejection").click(function () {
+    const reason = $("#idRejectionReason").val();
+    handleIDRejection(reason);
+  });
+
+  $("#btn-prev").click(function () {
+    if (currentPage > 1) {
+      currentPage--;
+      fetchData(currentPage);
+    }
+  });
+
+  $("#btn-next").click(function () {
+    currentPage++;
+    fetchData(currentPage);
+  });
+
+  // Initial data load
+  fetchData(currentPage);
+});
+$(document).ready(function () {
+  // Toggle sidebar on mobile
+  $("#sidebarToggle").click(function () {
+    $(".sidebar").toggleClass("show");
+  });
+
+  // Add hover effects to cards
+  $(".stat-card").hover(
+    function () {
+      $(this).addClass("shadow");
+    },
+    function () {
+      $(this).removeClass("shadow");
+    }
+  );
+
+  // Add click effect to quick action buttons
+  $(".quick-action-btn").click(function () {
+    $(this).addClass("active");
+    setTimeout(() => {
+      $(this).removeClass("active");
+    }, 200);
+  });
+});
+
+// ✅ Active Page Highlight Script
+$(document).ready(function () {
+  const currentPage = window.location.pathname.split("/").pop(); // e.g., profile.html
+  $("#sidebar-links .nav-link").each(function () {
+    const linkPage = $(this).attr("href");
+    if (linkPage === currentPage) {
+      $(this).addClass("active");
+    }
+  });
 });

@@ -37,14 +37,29 @@
       .id-card {
         width: 85.6mm;
         height: 54mm;
-        background-color: white;
+        background: url("/assets/images/id-front-bg.jpeg") no-repeat center
+          center;
+        background-size: cover;
+        position: relative;
         border-radius: 5px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         position: relative;
         overflow: hidden;
       }
 
-      .id-card-background {
+      .id-card-back {
+        width: 85.6mm;
+        height: 54mm;
+        background: url("/assets/images/id-back.jpeg") no-repeat center center;
+        background-size: cover;
+        position: relative;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* .id-card-background {
         position: absolute;
         top: 0;
         left: 0;
@@ -57,8 +72,9 @@
           rgba(240, 240, 255, 0.9) 10px,
           rgba(240, 240, 255, 0.9) 20px
         );
+
         z-index: 0;
-      }
+      } */
 
       .id-card-watermark {
         position: absolute;
@@ -83,15 +99,17 @@
 
       .header {
         display: flex;
-        justify-content: space-between;
-        margin-bottom: 5px;
+        /* justify-content: space-between; */
+        justify-content: normal;
+
+        /* margin-bottom: 5px; */
+        margin-bottom: 0px;
+        align-items: center;
       }
 
       .logo-placeholder {
         width: 40px;
         height: 40px;
-        background-color: #f0f0f0;
-        border: 1px solid #ddd;
       }
 
       .title {
@@ -111,21 +129,22 @@
         color: var(--benue-blue);
         font-size: 12px;
         margin: 0;
+        text-align: center;
       }
 
       .main-content {
         display: flex;
         gap: 8px;
-        margin-top: 5px;
+        margin-top: 2px;
         flex: 1;
       }
       .photo {
-        width: 25mm;
-        height: 30mm;
+        width: 23mm;
+        height: 25mm;
       }
 
       .photo-section {
-        width: 25mm;
+        width: 23mm;
         height: 30mm;
       }
 
@@ -142,7 +161,7 @@
       }
 
       .details-section p {
-        margin: 3px 0;
+        margin: 0px 0;
       }
 
       .label {
@@ -169,7 +188,7 @@
       }
 
       .bin-label {
-        color: var(--benue-blue);
+        color: #000080;
         font-size: 10px;
         font-weight: bold;
         margin: 0;
@@ -186,7 +205,6 @@
       }
 
       .footer {
-        background-color: #f8f8f8;
         padding: 8px;
         border-top: 1px solid #e0e0e0;
       }
@@ -200,8 +218,8 @@
       .footer-logo-placeholder {
         width: 50px;
         height: 50px;
-        background-color: #f0f0f0;
-        border: 1px solid #ddd;
+        /* background-color: #f0f0f0;
+        border: 1px solid #ddd; */
       }
 
       .footer-text {
@@ -231,7 +249,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 40px;
+        width: 60px;
         height: 40px;
       }
 
@@ -353,7 +371,7 @@
       </div>
 
       <!-- Back Side -->
-      <div class="id-card">
+      <div class="id-card-back">
         <div class="footer">
           <div class="footer-logo">
             <div class="footer-logo-placeholder">

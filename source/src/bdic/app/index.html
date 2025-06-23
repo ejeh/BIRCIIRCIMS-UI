@@ -1,557 +1,730 @@
 <!DOCTYPE html>
 <html lang="en">
-  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
   <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="keywords" content="dashboard" />
-    <meta name="author" content="BSCR-MIS" />
-    <meta name="robots" content="index, follow" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <meta property="og:image" content="social-image.html" />
-    <meta name="format-detection" content="telephone=no" />
-    <title>
-      Benue State Integrated Residents/Citizens Identity/Indigeneship
-      Registration and Card Issuance Management System
-    </title>
-    <!-- Favicon icon -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BIRCIIRCIMS - Benue State Identity Management System</title>
+    <!-- Bootstrap CSS -->
     <link
       rel="icon"
       type="image/png"
       sizes="16x16"
       href="/assets/images/benue-state-logo.png"
     />
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <link
-      rel="stylesheet"
-      href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
-    <link
-      href="vendor/bootstrap-select/dist/css/bootstrap-select.min.css"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <link href="css/style.css" rel="stylesheet" />
+    <!-- Font Awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
 
-    <link
-      rel="stylesheet"
-      href="../../cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
-      integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q="
-      crossorigin="anonymous"
-    />
-    <!--end::Fonts-->
-    <!--begin::Third Party Plugin(OverlayScrollbars)-->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css"
-      integrity="sha256-tZHrRjVqNSRyWg2wbppGnT833E/Ys0DHWGwT04GiqQg="
-      crossorigin="anonymous"
-    />
-    <!--end::Third Party Plugin(OverlayScrollbars)-->
-    <!--begin::Third Party Plugin(Bootstrap Icons)-->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-      integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI="
-      crossorigin="anonymous"
-    />
-    <!--end::Third Party Plugin(Bootstrap Icons)-->
-    <!--begin::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="../app/css/adminlte.css" />
-
-    <!--end::Required Plugin(AdminLTE)-->
-    <!-- apexcharts -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
-      integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
-      crossorigin="anonymous"
-    />
-    <!-- jsvectormap -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css"
-      integrity="sha256-+uGLJmmTKOqBr+2E6KDYs/NRsHxSkONXFHUL0fy2O/4="
-      crossorigin="anonymous"
-    />
-    <script src="../../unpkg.com/sweetalert%402.1.2/dist/sweetalert.min.js"></script>
-    <link href="vendor/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet" />
-    <script src="../../ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <!-- Custom CSS -->
     <style>
-      .card-v1 {
-        /* color: #fff !important; */
-        /* background-color: #198754 !important; */
-        border: none;
-        transition: transform 0.3s, box-shadow 0.3s;
-        border-radius: 10px;
+      :root {
+        --primary: #16a34a;
+        --primary-dark: #15803d;
+        --primary-light: #dcfce7;
+        --secondary: #3b82f6;
+        --success: #10b981;
+        --info: #8b5cf6;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+        --light: #f8f9fa;
+        --dark: #212529;
+        --gray: #6c757d;
+        --gray-light: #e9ecef;
       }
 
-      .card-v2 {
-        /* color: #fff !important; */
-        /* background-color: #0d6efd !important; */
-        border: none;
-        /* transition: transform 0.3s, box-shadow 0.3s; */
-        border-radius: 10px;
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        background-color: #f8fafc;
+        font-size: 18px !important;
       }
 
-      .card-v3 {
-        /* color: #fff !important; */
-        /* background-color: #ffc107 !important; */
-        border: none;
-        transition: transform 0.3s, box-shadow 0.3s;
-        border-radius: 10px;
+      .sidebar {
+        /* width: 280px; */
+        width: 330px;
+        height: 100vh;
+        position: fixed;
+        left: 0;
+        top: 0;
+        background-color: #fbfbfb99;
+        border-right: 1px solid #e2e8f0;
+        transition: all 0.3s;
+        z-index: 1000;
       }
 
-      .card-v4 {
-        /* color: #fff !important; */
-        /* background-color: #dc3545 !important; */
-        border: none;
-        transition: transform 0.3s, box-shadow 0.3s;
-        border-radius: 10px;
+      .main-content {
+        /* margin-left: 280px; */
+        margin-left: 330px;
+        transition: all 0.3s;
       }
 
-      .card:hover {
+      .welcome-banner {
+        background: linear-gradient(135deg, #16a34a, #15803d);
+        color: white;
+        border-radius: 12px;
+      }
+
+      .stat-card {
+        transition: all 0.3s;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+      }
+
+      .stat-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0px 6px 15px rgba(36, 35, 35, 0.3);
-      }
-      .copyright a {
-        color: #666;
-        text-decoration: none;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
       }
 
-      .copyright a:hover {
-        text-decoration: underline;
+      .stat-icon {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 15px;
+        color: white;
       }
-      .blue {
-        color: blue;
+
+      .activity-item {
+        border-radius: 10px;
+        background-color: #f8fafc;
+        transition: all 0.2s;
+      }
+
+      .activity-item:hover {
+        background-color: #f1f5f9;
+      }
+
+      .quick-action-btn {
+        border-radius: 10px;
+        text-align: left;
+        transition: all 0.2s;
+      }
+
+      .quick-action-btn:hover {
+        transform: translateX(5px);
+      }
+
+      .badge {
+        padding: 5px 10px;
+        font-weight: 500;
+      }
+
+      .navbar {
+        border-bottom: 1px solid #e2e8f0;
+      }
+
+      .avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #dcfce7;
+        color: #166534;
+        font-weight: 600;
+      }
+
+      .notification-badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        font-size: 10px;
+      }
+
+      @media (max-width: 992px) {
+        .sidebar {
+          transform: translateX(-100%);
+        }
+
+        .sidebar.show {
+          transform: translateX(0);
+        }
+
+        .main-content {
+          margin-left: 0;
+        }
+      }
+      .h5,
+      h5 {
+        /* font-size: 1.25rem; */
+        font-size: 1.125rem;
+        line-height: 1.75rem;
+      }
+
+      .nav-link {
+        color: #6c757d;
+        padding: 0.5rem 0.75rem;
+      }
+      .nav-link:hover,
+      .nav-link.active {
+        /* color: #16a34a; */
+        color: #16a249;
+        background-color: #f1f5f9;
+      }
+
+      .text-muted {
+        font-size: 0.775rem;
+        line-height: 1.25rem;
       }
     </style>
   </head>
   <body>
-    <!--*******************
-        Preloader start
-    ********************-->
-    <div id="preloader">
-      <div class="sk-three-bounce">
-        <div class="sk-child sk-bounce1"></div>
-        <div class="sk-child sk-bounce2"></div>
-        <div class="sk-child sk-bounce3"></div>
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="d-flex flex-column h-100">
+        <!-- Sidebar Header -->
+        <div class="p-4 border-bottom">
+          <div class="d-flex align-items-center">
+            <img
+              src="/assets/images/benue-state-logo.png"
+              alt="Benue State Logo"
+              class="me-3"
+              width="40"
+            />
+            <div>
+              <h5 class="mb-0 fw-bold">BIRCIIRCIMS</h5>
+              <small class="text-muted" style="font-size: 0.8rem"
+                >Identity Management</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar Content -->
+        <div class="flex-grow-1 py-3 px-4 overflow-auto" id="sidebar-links">
+          <div class="mb-5 p-2 text-muted" style="font-size: 0.9rem">
+            <h6 class="text-uppercase text-muted small mb-3 mt-3">
+              Administration
+            </h6>
+            <ul class="nav flex-column">
+              <li class="nav-item super-admin-menu">
+                <a href="index.html" class="nav-link d-flex align-items-center">
+                  <i class="fas fa-tachometer-alt me-3"></i>
+                  <span> Dashboard</span>
+                </a>
+              </li>
+              <li class="nav-item super-admin-menu">
+                <a
+                  href="approvals.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="fas fa-check-circle me-3"></i>
+                  <span>Approvals</span>
+                </a>
+              </li>
+              <li class="nav-item user-menu">
+                <a
+                  href="request.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="fas fa-file-alt me-3"></i>
+                  <span>View Certificate Statu</span>
+                </a>
+              </li>
+              <li class="nav-item user-menu">
+                <a
+                  href="idcard.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="fas fa-file-alt me-3"></i>
+                  <span>View Card Statu</span>
+                </a>
+              </li>
+              <li class="nav-item super-admin-menu">
+                <a
+                  href="all-request.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="fas fa-file-alt me-3"></i>
+                  <span>Certificate Requests</span>
+                </a>
+              </li>
+              <li class="nav-item super-admin-menu">
+                <a
+                  href="all-card.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="fas fa-credit-card me-3"></i>
+                  <span>Card Requests</span>
+                </a>
+              </li>
+              <li class="nav-item user-menu">
+                <a href="card.html" class="nav-link d-flex align-items-center">
+                  <i class="fas fa-credit-card me-3"></i>
+                  <span>User Account</span>
+                </a>
+              </li>
+              <li class="nav-item super-admin-menu">
+                <a
+                  href="citizens.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="fas fa-users me-3"></i>
+                  <span>Users</span>
+                </a>
+              </li>
+              <li class="nav-item super-admin-menu">
+                <a
+                  href="kindred.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="fas fa-shield-alt me-3"></i>
+                  <span>Kindreds</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h6 class="text-uppercase text-muted small mb-3">Account</h6>
+            <ul class="nav flex-column">
+              <li class="nav-item mb-1">
+                <a href="#" class="nav-link d-flex align-items-center">
+                  <i class="fas fa-cog me-3"></i>
+                  <span>Settings</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  href="../../..//auth/login.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="fas fa-sign-out-alt me-3"></i>
+                  <span onclick="logout(this)">Logout</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Sidebar Footer -->
+        <div class="p-3 border-top text-center">
+          <small class="text-muted">Powered by BDIC</small>
+          <p class="small text-muted mb-0">© 2025 All Rights Reserved</p>
+        </div>
       </div>
     </div>
-    <!--*******************
-        Preloader end
-    ********************-->
 
-    <!--**********************************
-        Main wrapper start
-    ***********************************-->
-    <div id="main-wrapper">
-      <!--**********************************
-            Nav header start
-        ***********************************-->
-      <div class="nav-header">
-        <!-- Logo Section -->
-        <a href="index.html" class="brand-logo">
-          <img
-            src="/assets/images/benue-state-logo.png"
-            alt="Government Logo"
-            class="logo-img"
-          />
-          <div class="brand-text">BIRCIIRCIMS</div>
-        </a>
-
-        <!-- Hamburger Menu for Navigation Control -->
-        <div class="nav-control">
-          <div class="hamburger">
-            <span class="line"></span><span class="line"></span
-            ><span class="line"></span>
-          </div>
-        </div>
-      </div>
-      <!--**********************************
-            Nav header end
-        ***********************************-->
-
-      <!--**********************************
-            Header start
-        ***********************************-->
-      <div class="header">
-        <div class="header-content">
-          <nav class="navbar navbar-expand">
-            <div class="collapse navbar-collapse justify-content-between">
-              <div class="header-left">
-                <div class="dashboard_bar">Dashboard</div>
-              </div>
-            </div>
-          </nav>
-        </div>
-      </div>
-      <!--**********************************
-            Header end ti-comment-alt
-        ***********************************-->
-
-      <!--**********************************
-            Sidebar start
-        ***********************************-->
-      <div class="deznav">
-        <div class="deznav-scroll">
-          <ul class="metismenu" id="menu">
-            <!-- Super Admin Menu -->
-            <li class="super-admin-menu">
-              <a class="ai-icon" href="index.html" aria-expanded="false">
-                <i class="flaticon-381-networking"></i>
-                <span class="nav-text">Dashboard</span>
-              </a>
-            </li>
-            <!-- user Menu -->
-            <li class="user-menu">
-              <a
-                class="ai-icon"
-                href="user-dasboard.html"
-                aria-expanded="false"
-              >
-                <i class="flaticon-381-networking"></i>
-                <span class="nav-text">Dashboard</span>
-              </a>
-            </li>
-            <li class="super-admin-menu">
-              <a class="ai-icon" href="approvals.html" aria-expanded="false">
-                <i class="fa fa-exchange" aria-hidden="true"></i>
-                <span class="nav-text">Approvals</span>
-              </a>
-            </li>
-            <li class="user-menu">
-              <a class="ai-icon" href="request.html" aria-expanded="false">
-                <i class="fa fa-money" aria-hidden="true"></i>
-                <span class="nav-text">View Certificate Status</span>
-              </a>
-            </li>
-
-            <li class="user-menu">
-              <a class="ai-icon" href="idcard.html" aria-expanded="false">
-                <i class="fa fa-money" aria-hidden="true"></i>
-                <span class="nav-text">View Card Status</span>
-              </a>
-            </li>
-
-            <li class="super-admin-menu">
-              <a class="ai-icon" href="all-request.html" aria-expanded="false">
-                <i class="fa fa-money" aria-hidden="true"></i>
-                <span class="nav-text">View Certificate Request</span>
-              </a>
-            </li>
-
-            <li class="super-admin-menu">
-              <a class="ai-icon" href="all-card.html" aria-expanded="false">
-                <i class="fa fa-money" aria-hidden="true"></i>
-                <span class="nav-text">View Card Request</span>
-              </a>
-            </li>
-            <!-- Super Admin Menu -->
-            <li class="super-admin-menu">
-              <a class="ai-icon" href="citizens.html" aria-expanded="false">
-                <i class="fa fa-user" aria-hidden="true"></i>
-
-                <span class="nav-text">Users</span>
-              </a>
-            </li>
-            <li class="super-admin-menu">
-              <a class="ai-icon" href="kindred.html" aria-expanded="false">
-                <i class="fa fa-user" aria-hidden="true"></i>
-                <span class="nav-text">Kindreds</span>
-              </a>
-            </li>
-
-            <li class="support-admin-menu">
-              <a class="ai-icon" href="user-kindred.html" aria-expanded="false">
-                <i class="fa fa-user" aria-hidden="true"></i>
-                <span class="nav-text">Kindreds</span>
-              </a>
-            </li>
-            <li class="support-admin-menu">
-              <a
-                class="ai-icon"
-                href="support-admin-lga.html"
-                aria-expanded="false"
-              >
-                <i class="fa fa-user" aria-hidden="true"></i>
-                <span class="nav-text">Support Admin LGA</span>
-              </a>
-            </li>
-            <!-- User-menu -->
-            <li class="user-menu">
-              <a class="ai-icon" href="certificate.html" aria-expanded="false">
-                <i class="fa fa-user-plus" aria-hidden="true"></i>
-                <span class="nav-text">Request Certificate</span>
-              </a>
-            </li>
-            <li class="user-menu">
-              <a class="ai-icon" href="card.html" aria-expanded="false">
-                <i class="fa fa-user-plus" aria-hidden="true"></i>
-                <span class="nav-text">Request Card</span>
-              </a>
-            </li>
-
-            <li class="user-menu">
-              <a class="ai-icon" href="profile.html" aria-expanded="false">
-                <i class="fa fa-user" aria-hidden="true"></i>
-                <span class="nav-text">User Account</span>
-              </a>
-            </li>
-            <li class="super-admin-menu">
-              <a class="ai-icon" href="transaction.html" aria-expanded="false">
-                <i class="flaticon-381-networking"></i>
-                <span class="nav-text">transactions</span>
-              </a>
-            </li>
-            <li>
-              <a
-                class="ai-icon"
-                href="../../../auth/login.html"
-                aria-expanded="false"
-              >
-                <i class="fa fa-sign-out" aria-hidden="true"></i>
-                <span class="nav-text" onclick="logout(this)">Logout</span>
-              </a>
-            </li>
-          </ul>
-          <div class="copyright">
-            <p>Powered By BDIC<br />© 2025 All Rights Reserved</p>
-            <p class="op5"></p>
-          </div>
-        </div>
-      </div>
-      <!--**********************************
-            Sidebar end
-        ***********************************-->
-
-      <!--**********************************
-            Content body start
-        ***********************************-->
-      <div id="dashboard" class="content-body">
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Header -->
+      <header class="navbar navbar-expand-lg bg-white shadow-sm px-4 py-3">
         <div class="container-fluid">
-          <!--begin::App Main-->
-          <main class="app-main">
-            <!--begin::App Content Header-->
-            <div class="app-content-header">
-              <!--begin::Container-->
-              <div class="container-fluid">
-                <!--begin::Row-->
-                <div class="row">
-                  <div class="col-sm-6"><h3 class="mb-0">Dashboard</h3></div>
-                  <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-end">
-                      <li class="breadcrumb-item">
-                        <a href="/source/index.html">Home</a>
-                      </li>
-                      <li class="breadcrumb-item active" aria-current="page">
-                        Dashboard
-                      </li>
-                    </ol>
-                  </div>
-                </div>
-                <!--end::Row-->
-              </div>
-              <!--end::Container-->
+          <button class="btn d-lg-none" id="sidebarToggle">
+            <i class="fas fa-bars"></i>
+          </button>
+
+          <div class="d-none d-md-block align-items-center">
+            <h5 class="mb-0 me-2">Dashboard</h5>
+            <small class="text-muted">Welcome back, Administrator</small>
+          </div>
+
+          <div class="ms-auto d-flex align-items-center">
+            <div class="d-none d-md-flex position-relative me-3">
+              <i
+                class="fas fa-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"
+              ></i>
+              <input
+                type="search"
+                class="form-control ps-5"
+                placeholder="Search applications..."
+                style="width: 250px"
+              />
             </div>
-            <!--end::App Content Header-->
-            <!--begin::App Content-->
-            <div class="app-content">
-              <!--begin::Container-->
-              <div class="container-fluid">
-                <!--begin::Row-->
-                <div class="row mt-3">
-                  <div class="col-md-4">
-                    <div class="card-v1 card p-3">
-                      <p id="usercount" class="blue">0</p>
-                      <h5>Total Users</h5>
-                    </div>
-                  </div>
-                  <div class="col-md-4">
-                    <div class="card-v2 card p-3">
-                      <p id="cert-request" class="blue">0</p>
-                      <h5>Request</h5>
-                    </div>
-                  </div>
-                  <div class="col-md-4">
-                    <div class="card-v3 card p-3">
-                      <p id="trans" class="blue">₦0.00</p>
-                      <h5>Revenue</h5>
-                    </div>
-                  </div>
-                </div>
-                <!--end::Row-->
 
-                <!--begin::Row-->
-                <div class="row mt-3">
-                  <div class="col-md-4">
-                    <div class="card-v4 card p-3">
-                      <p id="approvals" class="blue">0</p>
-                      <h5>Approvals</h5>
-                    </div>
-                  </div>
-                  <div class="col-md-4">
-                    <div class="card-v5 card p-3">
-                      <p id="pending" class="blue">0</p>
-                      <h5>Pending Request</h5>
-                    </div>
-                  </div>
-                  <div class="col-md-4">
-                    <div class="card-v6 card p-3">
-                      <p id="rejected" class="blue">0</p>
-                      <h5>Rejected Request</h5>
-                    </div>
-                  </div>
+            <div class="dropdown me-3">
+              <button class="btn position-relative" data-bs-toggle="dropdown">
+                <i class="fas fa-bell"></i>
+                <span
+                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notification-badge"
+                  >3</span
+                >
+              </button>
+              <div
+                class="dropdown-menu dropdown-menu-end p-0"
+                style="width: 300px"
+              >
+                <div class="p-3 border-bottom">
+                  <h6 class="mb-0">Notifications</h6>
                 </div>
-                <!--end::Row-->
-
-                <!-- /.row (main row) -->
+                <div class="overflow-auto" style="max-height: 300px">
+                  <a href="#" class="dropdown-item p-3 border-bottom">
+                    <div class="d-flex justify-content-between">
+                      <span class="fw-medium">New Certificate Request</span>
+                      <small class="text-muted">5 min ago</small>
+                    </div>
+                    <small class="text-muted d-block mt-1"
+                      >John Doe submitted a new certificate application</small
+                    >
+                  </a>
+                  <a href="#" class="dropdown-item p-3 border-bottom">
+                    <div class="d-flex justify-content-between">
+                      <span class="fw-medium">Card Ready for Pickup</span>
+                      <small class="text-muted">1 hour ago</small>
+                    </div>
+                    <small class="text-muted d-block mt-1"
+                      >ID Card for Jane Smith is ready for collection</small
+                    >
+                  </a>
+                  <a href="#" class="dropdown-item p-3">
+                    <div class="d-flex justify-content-between">
+                      <span class="fw-medium">System Update</span>
+                      <small class="text-muted">2 hours ago</small>
+                    </div>
+                    <small class="text-muted d-block mt-1"
+                      >Database backup completed successfully</small
+                    >
+                  </a>
+                </div>
               </div>
-              <!--end::Container-->
             </div>
-            <!--end::App Content-->
-          </main>
+
+            <div class="dropdown">
+              <button class="btn p-0" data-bs-toggle="dropdown">
+                <div class="avatar">AD</div>
+              </button>
+              <div class="dropdown-menu dropdown-menu-end">
+                <div class="px-4 py-3">
+                  <h6 class="mb-0">Administrator</h6>
+                  <small class="text-muted">admin@benue.gov.ng</small>
+                </div>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item"
+                  ><i class="fas fa-user me-2"></i> Profile</a
+                >
+                <a href="#" class="dropdown-item"
+                  ><i class="fas fa-cog me-2"></i> Settings</a
+                >
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item text-danger"
+                  ><i class="fas fa-sign-out-alt me-2"></i> Logout</a
+                >
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-      <!--begin::Script-->
+      </header>
 
-      <script>
-        function logout() {
-          localStorage.removeItem("token");
-          location.reload(); // Refresh page
-        }
-      </script>
-      <!--begin::Third Party Plugin(OverlayScrollbars)-->
-      <script
-        src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
-        integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
-        crossorigin="anonymous"
-      ></script>
-      <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
-      <script
-        src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-        crossorigin="anonymous"
-      ></script>
-      <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
-      <script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
-        crossorigin="anonymous"
-      ></script>
-      <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-      <!-- <script src="../../dist/js/adminlte.js"></script> -->
-      <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
-      <script>
-        const SELECTOR_SIDEBAR_WRAPPER = ".sidebar-wrapper";
-        const Default = {
-          scrollbarTheme: "os-theme-light",
-          scrollbarAutoHide: "leave",
-          scrollbarClickScroll: true,
-        };
-        document.addEventListener("DOMContentLoaded", function () {
-          const sidebarWrapper = document.querySelector(
-            SELECTOR_SIDEBAR_WRAPPER
-          );
-          if (
-            sidebarWrapper &&
-            typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== "undefined"
-          ) {
-            OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
-              scrollbars: {
-                theme: Default.scrollbarTheme,
-                autoHide: Default.scrollbarAutoHide,
-                clickScroll: Default.scrollbarClickScroll,
-              },
-            });
-          }
-        });
-      </script>
-      <!--end::OverlayScrollbars Configure-->
-      <!-- OPTIONAL SCRIPTS -->
-      <!-- sortablejs -->
-      <script
-        src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"
-        integrity="sha256-ipiJrswvAR4VAx/th+6zWsdeYmVae0iJuiR+6OqHJHQ="
-        crossorigin="anonymous"
-      ></script>
-      <!-- sortablejs -->
-      <script>
-        const connectedSortables =
-          document.querySelectorAll(".connectedSortable");
-        connectedSortables.forEach((connectedSortable) => {
-          let sortable = new Sortable(connectedSortable, {
-            group: "shared",
-            handle: ".card-header",
-          });
-        });
-
-        const cardHeaders = document.querySelectorAll(
-          ".connectedSortable .card-header"
-        );
-        cardHeaders.forEach((cardHeader) => {
-          cardHeader.style.cursor = "move";
-        });
-      </script>
-      <!-- apexcharts -->
-      <script
-        src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
-        integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
-        crossorigin="anonymous"
-      ></script>
-
-      <!--**********************************
-            Content body end
-        ***********************************-->
-
-      <!--**********************************
-            Footer start
-        ***********************************-->
-      <div class="footer">
-        <div class="copyright">
-          <p>Copyright ©BDIC Ltd 2025. All rights reserved.</p>
+      <!-- Dashboard Content -->
+      <main class="container-fluid py-4">
+        <!-- Welcome Banner -->
+        <div class="welcome-banner px-4 py-4 mb-4">
+          <div class="row align-items-center">
+            <div class="col-md-8">
+              <h2 class="mb-2 fw-semibold">Welcome to BIRCIIRCIMS</h2>
+              <p
+                class="mb-0"
+                style="
+                  color: #dcfce7;
+                  font-size: 1.125rem;
+                  line-height: 1.75rem;
+                  opacity: 0.9;
+                  white-space: nowrap; /* Prevents line breaks */
+                  overflow: hidden; /* Hides overflow */
+                  text-overflow: ellipsis; /* Adds '...' if text overflows */
+                "
+              >
+                Benue State Integrated Residents/Citizens Identity Registration
+                System
+              </p>
+            </div>
+            <div class="col-md-4 d-none d-md-flex justify-content-end">
+              <img
+                src="/assets/images/benue-state-logo.png"
+                alt="Benue State Logo"
+                width="80"
+                class="opacity-75"
+              />
+            </div>
+          </div>
         </div>
-      </div>
-      <!--**********************************
-            Footer end
-        ***********************************-->
 
-      <!--**********************************
-           Support ticket button start
-        ***********************************-->
+        <!-- Statistics Cards -->
+        <div class="row g-4 mb-4">
+          <div class="col-md-6 col-lg-3">
+            <div class="stat-card px-4 py-3 h-100 bg-white">
+              <div
+                class="d-flex justify-content-between align-items-center mb-2"
+              >
+                <h6 class="mb-0 text-muted">Total Users</h6>
+                <div class="stat-icon bg-primary">
+                  <i class="fas fa-users"></i>
+                </div>
+              </div>
+              <h4 class="mb-2 fw-bold" id="usercount">2,847</h4>
+              <div class="d-flex justify-content-between align-items-center">
+                <small class="text-muted">Registered citizens</small>
+                <span class="badge bg-primary-light text-primary">
+                  <i class="fas fa-arrow-up me-1"></i> 12%
+                </span>
+              </div>
+            </div>
+          </div>
 
-      <!--**********************************
-           Support ticket button end
-        ***********************************-->
+          <div class="col-md-6 col-lg-3">
+            <div class="stat-card px-4 py-3 h-100 bg-white">
+              <div
+                class="d-flex justify-content-between align-items-center mb-3"
+              >
+                <h6 class="mb-0 text-muted">Certificate Requests</h6>
+                <div class="stat-icon bg-success">
+                  <i class="fas fa-file-alt"></i>
+                </div>
+              </div>
+              <h4 class="mb-2 fw-bold" id="cert-request">1,234</h4>
+              <div class="d-flex justify-content-between align-items-center">
+                <small class="text-muted">Total applications</small>
+                <span class="badge bg-success-light text-success">
+                  <i class="fas fa-arrow-up me-1"></i> 8%
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-lg-3">
+            <div class="stat-card px-4 py-3 h-100 bg-white">
+              <div
+                class="d-flex justify-content-between align-items-center mb-3"
+              >
+                <h6 class="mb-0 text-muted">ID Card Requests</h6>
+                <div class="stat-icon bg-info">
+                  <i class="fas fa-credit-card"></i>
+                </div>
+              </div>
+              <h4 class="mb-2 fw-bold" id="id-request">987</h4>
+              <div class="d-flex justify-content-between align-items-center">
+                <small class="text-muted">Card applications</small>
+                <span class="badge bg-info-light text-info">
+                  <i class="fas fa-arrow-up me-1"></i> 15%
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-lg-3">
+            <div class="stat-card px-4 py-3 h-100 bg-white">
+              <div
+                class="d-flex justify-content-between align-items-center mb-3"
+              >
+                <h6 class="mb-0 text-muted">Approved Today</h6>
+                <div class="stat-icon bg-warning">
+                  <i class="fas fa-check-circle"></i>
+                </div>
+              </div>
+              <h4 class="mb-2 fw-bold" id="approvals">56</h4>
+              <div class="d-flex justify-content-between align-items-center">
+                <small class="text-muted">Applications processed</small>
+                <span class="badge bg-warning-light text-warning">
+                  <i class="fas fa-arrow-up me-1"></i> 5%
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="row g-4">
+          <!-- Recent Activity -->
+          <div class="col-lg-8">
+            <div class="card border-0 shadow-sm h-100">
+              <div class="card-body">
+                <div class="d-flex align-items-center mb-1">
+                  <i class="fas fa-clock text-primary me-2"></i>
+                  <h5 class="mb-0">Recent Activity</h5>
+                </div>
+                <p class="text-muted mb-4">
+                  Latest application updates and approvals
+                </p>
+
+                <div class="d-flex flex-column gap-3">
+                  <div class="activity-item p-3">
+                    <div
+                      class="d-flex justify-content-between align-items-center"
+                    >
+                      <div class="d-flex align-items-center">
+                        <i class="fas fa-file-alt text-primary me-3"></i>
+                        <div>
+                          <h6 class="mb-0" id="latest-cert-approved">
+                            John Doe
+                          </h6>
+                          <small class="text-muted"
+                            >Certificate Application</small
+                          >
+                        </div>
+                      </div>
+                      <div class="d-flex align-items-center gap-2">
+                        <span
+                          class="badge bg-success text-white"
+                          id="cert-approved"
+                          >Approved</span
+                        >
+                        <small class="text-muted">2 hours ago</small>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="activity-item p-3">
+                    <div
+                      class="d-flex justify-content-between align-items-center"
+                    >
+                      <div class="d-flex align-items-center">
+                        <i class="fas fa-credit-card text-info me-3"></i>
+                        <div>
+                          <h6 class="mb-0" id="latest-card-request">
+                            Chuck Ibe
+                          </h6>
+                          <small class="text-muted">ID Card Application</small>
+                        </div>
+                      </div>
+                      <div class="d-flex align-items-center gap-2">
+                        <span
+                          class="badge bg-warning text-dark"
+                          id="card-pending"
+                          >Pending</span
+                        >
+                        <small class="text-muted">4 hours ago</small>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="activity-item p-3">
+                    <div
+                      class="d-flex justify-content-between align-items-center"
+                    >
+                      <div class="d-flex align-items-center">
+                        <i class="fas fa-file-alt text-primary me-3"></i>
+                        <div>
+                          <h6 class="mb-0" id="latest-cert-request">
+                            Mike Johnson
+                          </h6>
+                          <small class="text-muted"
+                            >Certificate Application</small
+                          >
+                        </div>
+                      </div>
+                      <div class="d-flex align-items-center gap-2">
+                        <span
+                          class="badge bg-primary text-white"
+                          id="cert-pending"
+                          >Processing</span
+                        >
+                        <small class="text-muted">6 hours ago</small>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="activity-item p-3">
+                    <div
+                      class="d-flex justify-content-between align-items-center"
+                    >
+                      <div class="d-flex align-items-center">
+                        <i class="fas fa-credit-card text-info me-3"></i>
+                        <div>
+                          <h6 class="mb-0" id="latest-card-approved">
+                            Sarah Wilson
+                          </h6>
+                          <small class="text-muted">ID Card Application</small>
+                        </div>
+                      </div>
+                      <div class="d-flex align-items-center gap-2">
+                        <span
+                          class="badge bg-success text-white"
+                          id="card-approved"
+                          >Approved</span
+                        >
+                        <small class="text-muted">8 hours ago</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="col-lg-4">
+            <div class="card border-0 shadow-sm h-100">
+              <div class="card-body">
+                <div class="d-flex align-items-center mb-0">
+                  <i class="fas fa-user-check text-success me-2"></i>
+                  <h5 class="mb-0">Quick Actions</h5>
+                </div>
+                <p class="text-muted mb-4">Common administrative tasks</p>
+
+                <div class="d-flex flex-column gap-3">
+                  <div
+                    class="quick-action-btn activity-item p-3 bg-primary-light text-start"
+                  >
+                    <div class="d-flex align-items-center">
+                      <i class="fas fa-file-alt text-primary me-3"></i>
+                      <div>
+                        <h6 class="mb-0">Review Applications</h6>
+                        <small class="text-muted">23 pending review</small>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div
+                    class="quick-action-btn activity-item p-3 bg-success-light text-start"
+                  >
+                    <div class="d-flex align-items-center">
+                      <i class="fas fa-check-circle text-success me-3"></i>
+                      <div>
+                        <h6 class="mb-0">Approve Certificates</h6>
+                        <small class="text-muted">15 ready for approval</small>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div
+                    class="quick-action-btn activity-item p-3 bg-info-light text-start"
+                  >
+                    <div class="d-flex align-items-center">
+                      <i class="fas fa-credit-card text-info me-3"></i>
+                      <div>
+                        <h6 class="mb-0">Process ID Cards</h6>
+                        <small class="text-muted">8 cards ready</small>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div
+                    class="quick-action-btn activity-item p-3 bg-warning-light text-start"
+                  >
+                    <div class="d-flex align-items-center">
+                      <i
+                        class="fas fa-exclamation-circle text-warning me-3"
+                      ></i>
+                      <div>
+                        <h6 class="mb-0">Handle Issues</h6>
+                        <small class="text-muted">3 urgent matters</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
-    <!--**********************************
-        Main wrapper end
-    ***********************************-->
-    <!-- <script
-      src="../../code.tidio.co_443/bpnp4xkz2axqrebqxcezgdca9yot1iyn.js"
-      async
-    ></script> -->
-    <!--**********************************
-        Scripts
-    ***********************************-->
-    <!-- Required vendors -->
-    <script src="vendor/sweetalert2/dist/sweetalert2.min.js"></script>
-    <script src="js/plugins-init/sweetalert.init.js"></script>
-    <script src="vendor/global/global.min.js"></script>
-    <script src="vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
-    <script src="vendor/chart.js/Chart.bundle.min.js"></script>
-    <script src="vendor/bootstrap-datetimepicker/js/moment.js"></script>
-    <script src="vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
 
-    <script src="js/dashboard/dashboard-1.js"></script>
-
-    <script src="js/custom.min.js"></script>
-    <script src="js/deznav-init.js"></script>
-    <script src="js/demo.js"></script>
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Custom JS -->
     <script src="../../../js/index.js"></script>
   </body>
 </html>
