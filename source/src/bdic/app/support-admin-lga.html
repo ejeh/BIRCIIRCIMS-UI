@@ -31,15 +31,19 @@
       rel="stylesheet"
     />
     <link href="css/style.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/source/auth/styles.css" />
+    <link rel="stylesheet" href="/source/src/bdic/app/css/styles.css" />
     <link
       rel="stylesheet"
-      href="../../cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
     />
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <link
-      rel="stylesheet"
-      href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
+
     <script src="../../unpkg.com/sweetalert%402.1.2/dist/sweetalert.min.js"></script>
     <link href="vendor/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet" />
     <script src="../../ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
@@ -84,245 +88,314 @@
     <!--*******************
         Preloader end
     ********************-->
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="d-flex flex-column h-100">
+        <!-- Sidebar Header -->
+        <div class="p-4 border-bottom">
+          <div class="d-flex align-items-center">
+            <img
+              src="/assets/images/benue-state-logo.png"
+              alt="Benue State Logo"
+              class="me-3"
+              width="40"
+            />
+            <div>
+              <h5 class="mb-0 fw-bold">BIRCIIRCIMS</h5>
+              <small class="text-muted" style="font-size: 0.8rem"
+                >Identity Management</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar Content -->
+        <div class="flex-grow-1 py-3 px-4 overflow-auto" id="sidebar-links">
+          <div class="mb-5 p-2 text-muted" style="font-size: 0.9rem">
+            <h6
+              id="sidebar-user-label"
+              class="text-uppercase text-muted small mb-3 mt-3"
+            >
+              User
+            </h6>
+            <ul class="nav flex-column">
+              <li class="nav-item super-admin-menu">
+                <a href="index.html" class="nav-link d-flex align-items-center">
+                  <i
+                    class="bi bi-speedometer2 me-2 me-3 fs-5 text-secondary"
+                  ></i>
+                  <span> Dashboard</span>
+                </a>
+              </li>
+              <li class="nav-item super-admin-menu">
+                <a
+                  href="approvals.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi-check-circle fs-5 me-3 text-secodary"></i>
+                  <span>Approvals</span>
+                </a>
+              </li>
+              <li class="nav-item user-menu">
+                <a
+                  href="request.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi bi-file-text text-primary me-3 fs-5"></i>
+                  <span>View Certificate Statu</span>
+                </a>
+              </li>
+              <li class="nav-item user-menu">
+                <a
+                  href="idcard.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi bi-credit-card text-secondary me-3 fs-5"></i>
+                  <span>View Card status</span>
+                </a>
+              </li>
+              <li class="nav-item super-admin-menu">
+                <a
+                  href="all-request.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi bi-file-text text-secondary me-3 fs-5"></i>
+                  <span>Certificate Requests</span>
+                </a>
+              </li>
+
+              <!-- Support_addmin menu -->
+              <li class="nav-item support-admin-menu">
+                <a
+                  href="user-kindred.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi bi-file-text text-secondary me-3 fs-5"></i>
+                  <span>Kindreds</span>
+                </a>
+              </li>
+              <li class="nav-item support-admin-menu">
+                <a
+                  href="support-admin-lga.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi bi-file-text text-secondary me-3 fs-5"></i>
+                  <span>Support Admin LGA</span>
+                </a>
+              </li>
+              <li class="nav-item super-admin-menu">
+                <a
+                  href="all-card.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi bi-credit-card text-secondary me-3 fs-5"></i>
+                  <span>Card Requests</span>
+                </a>
+              </li>
+
+              <li class="nav-item super-admin-menu">
+                <a
+                  href="citizens.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi-people fs-5 text-secondary me-3"></i>
+                  <span>Users</span>
+                </a>
+              </li>
+              <li class="nav-item super-admin-menu">
+                <a
+                  href="kindred.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi-diagram-3 me-3"></i>
+                  <span>Kindreds</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  href="profile.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi bi-person text-secodary fs-5 me-3"></i>
+                  <span>User Account</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h6 class="text-uppercase text-muted small mb-3">Account</h6>
+            <ul class="nav flex-column">
+              <li class="nav-item mb-1">
+                <a href="#" class="nav-link d-flex align-items-center">
+                  <i class="fas fa-cog me-3"></i>
+                  <span>Settings</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  href="../../..//auth/login.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="fas fa-sign-out-alt me-3"></i>
+                  <span onclick="logout(this)">Logout</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Sidebar Footer -->
+        <div class="p-3 border-top text-center">
+          <small class="text-muted">Powered by BDIC</small>
+          <p class="small text-muted mb-0">© 2025 All Rights Reserved</p>
+        </div>
+      </div>
+    </div>
 
     <!--**********************************
-        Main wrapper start
-    ***********************************-->
-    <div id="main-wrapper">
-      <!--**********************************
-            Nav header start
-        ***********************************-->
-      <div class="nav-header">
-        <!-- Logo Section -->
-        <a href="index.html" class="brand-logo">
-          <img
-            src="/assets/images/benue-state-logo.png"
-            alt="Government Logo"
-            class="logo-img"
-          />
-          <div class="brand-text">BIRCIIRCIMS</div>
-        </a>
-
-        <!-- Hamburger Menu for Navigation Control -->
-        <div class="nav-control">
-          <div class="hamburger">
-            <span class="line"></span><span class="line"></span
-            ><span class="line"></span>
-          </div>
-        </div>
-      </div>
-      <!--**********************************
-            Nav header end
-        ***********************************-->
-
-      <!--**********************************
-            Header start
-        ***********************************-->
-      <div class="header">
-        <div class="header-content">
-          <nav class="navbar navbar-expand">
-            <div class="collapse navbar-collapse justify-content-between">
-              <div class="header-left">
-                <div class="dashboard_bar">All Request</div>
-              </div>
-              <ul class="navbar-nav header-right">
-                <li class="nav-item dropdown notification_dropdown">
-                  <div class="input-group search-area">
-                    <input
-                      id="searchInput"
-                      type="text"
-                      class="form-control"
-                      placeholder="Search here..."
-                      onkeyup="searchTable()"
-                    />
-                    <span class="input-group-text"
-                      ><a href="javascript:void(0)"
-                        ><i class="flaticon-381-search-2"></i></a
-                    ></span>
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </nav>
-        </div>
-      </div>
-      <!--**********************************
-            Header end ti-comment-alt
-        ***********************************-->
-
-      <!--**********************************
-            Sidebar start
-        ***********************************-->
-      <div class="deznav">
-        <div class="deznav-scroll">
-          <ul class="metismenu" id="menu">
-            <!-- Super Admin Menu -->
-            <li class="super-admin-menu">
-              <a class="ai-icon" href="index.html" aria-expanded="false">
-                <i class="flaticon-381-networking"></i>
-                <span class="nav-text">Dashboard</span>
-              </a>
-            </li>
-
-            <!-- user Menu -->
-            <li class="user-menu">
-              <a
-                class="ai-icon"
-                href="user-dasboard.html"
-                aria-expanded="false"
-              >
-                <i class="flaticon-381-networking"></i>
-                <span class="nav-text">Dashboard</span>
-              </a>
-            </li>
-            <li class="super-admin-menu">
-              <a class="ai-icon" href="approvals.html" aria-expanded="false">
-                <i class="fa fa-exchange" aria-hidden="true"></i>
-                <span class="nav-text">Approvals</span>
-              </a>
-            </li>
-
-            <li class="user-menu">
-              <a class="ai-icon" href="request.html" aria-expanded="false">
-                <i class="fa fa-money" aria-hidden="true"></i>
-                <span class="nav-text">View Certificate Status</span>
-              </a>
-            </li>
-            <li class="user-menu">
-              <a class="ai-icon" href="idcard.html" aria-expanded="false">
-                <i class="fa fa-money" aria-hidden="true"></i>
-                <span class="nav-text">View Card Status</span>
-              </a>
-            </li>
-
-            <!-- Super Admin Menu -->
-            <li class="super-admin-menu">
-              <a class="ai-icon" href="all-request.html" aria-expanded="false">
-                <i class="fa fa-money" aria-hidden="true"></i>
-                <span class="nav-text">View Certificate Request</span>
-              </a>
-            </li>
-
-            <li class="super-admin-menu">
-              <a class="ai-icon" href="all-card.html" aria-expanded="false">
-                <i class="fa fa-money" aria-hidden="true"></i>
-                <span class="nav-text">View Card Request</span>
-              </a>
-            </li>
-            <li class="super-admin-menu">
-              <a class="ai-icon" href="citizens.html" aria-expanded="false">
-                <i class="fa fa-user" aria-hidden="true"></i>
-
-                <span class="nav-text">Users</span>
-              </a>
-            </li>
-            <li class="super-admin-menu">
-              <a class="ai-icon" href="kindred.html" aria-expanded="false">
-                <i class="fa fa-user" aria-hidden="true"></i>
-
-                <span class="nav-text">Kindreds</span>
-              </a>
-            </li>
-            <!-- User-menu -->
-            <li class="user-menu">
-              <a class="ai-icon" href="certificate.html" aria-expanded="false">
-                <i class="fa fa-user-plus" aria-hidden="true"></i>
-                <span class="nav-text">Request Certificate</span>
-              </a>
-            </li>
-
-            <li class="support-admin-menu">
-              <a class="ai-icon" href="user-kindred.html" aria-expanded="false">
-                <i class="fa fa-user" aria-hidden="true"></i>
-                <span class="nav-text">Kindreds</span>
-              </a>
-            </li>
-            <li class="support-admin-menu">
-              <a
-                class="ai-icon"
-                href="support-admin-lga.html"
-                aria-expanded="false"
-              >
-                <i class="fa fa-user" aria-hidden="true"></i>
-                <span class="nav-text">Support Admin LGA</span>
-              </a>
-            </li>
-
-            <li class="user-menu">
-              <a class="ai-icon" href="profile.html" aria-expanded="false">
-                <i class="fa fa-user" aria-hidden="true"></i>
-                <span class="nav-text">User Account</span>
-              </a>
-            </li>
-            <li class="super-admin-menu">
-              <a class="ai-icon" href="transaction.html" aria-expanded="false">
-                <i class="flaticon-381-networking"></i>
-                <span class="nav-text">transactions</span>
-              </a>
-            </li>
-            <li>
-              <a
-                class="ai-icon"
-                href="../../../auth/login.html"
-                aria-expanded="false"
-              >
-                <i class="fa fa-sign-out" aria-hidden="true"></i>
-                <span class="nav-text" onclick="logout(this)">Logout</span>
-              </a>
-            </li>
-          </ul>
-          <div class="copyright">
-            <p>Powered By BDIC <br />© 2025 All Rights Reserved</p>
-            <p class="op5"></p>
-          </div>
-        </div>
-      </div>
-      <!--**********************************
             Sidebar end
         ***********************************-->
 
-      <!--**********************************
+    <!--**********************************
             Content body start
         ***********************************-->
-      <div class="content-body">
+    <div class="main-content">
+      <!-- Header -->
+      <header class="navbar navbar-expand-lg bg-white shadow-sm px-4 py-3">
         <div class="container-fluid">
-          <div class="row">
-            <div class="col-xl-12">
-              <div class="filter cm-content-box box-primary mt-5">
-                <div class="cm-content-body form excerpt">
-                  <div class="card-body">
-                    <div
-                      class="table-responsive"
-                      data-pattern="priority-columns"
+          <button class="btn d-lg-none" id="sidebarToggle">
+            <i class="fas fa-bars"></i>
+          </button>
+
+          <div class="d-none d-md-block align-items-center">
+            <h5 class="mb-0 me-2">All Request</h5>
+            <small class="text-muted"
+              >Welcome back, <span id="header-user-label"> User </span>
+            </small>
+          </div>
+
+          <div class="ms-auto d-flex align-items-center">
+            <div class="d-none d-md-flex position-relative me-3">
+              <i
+                class="fas fa-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"
+              ></i>
+              <input
+                type="search"
+                class="form-control ps-5"
+                id="searchInput"
+                placeholder="Search here..."
+                onkeyup="searchTable()"
+                style="width: 250px"
+              />
+            </div>
+
+            <div class="dropdown me-3">
+              <button class="btn position-relative" data-bs-toggle="dropdown">
+                <i class="fas fa-bell"></i>
+                <span
+                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notification-badge"
+                  >3</span
+                >
+              </button>
+              <div
+                class="dropdown-menu dropdown-menu-end p-0"
+                style="width: 300px"
+              >
+                <div class="p-3 border-bottom">
+                  <h6 class="mb-0">Notifications</h6>
+                </div>
+                <div class="overflow-auto" style="max-height: 300px">
+                  <a href="#" class="dropdown-item p-3 border-bottom">
+                    <div class="d-flex justify-content-between">
+                      <span class="fw-medium">New Certificate Request</span>
+                      <small class="text-muted">5 min ago</small>
+                    </div>
+                    <small class="text-muted d-block mt-1"
+                      >John Doe submitted a new certificate application</small
                     >
-                      <div class="card-header">
-                        <h5 class="card-title">LGA Matching Report</h5>
-                        <button
-                          id="filter-lga-btn"
-                          class="btn btn-primary btn-sm"
-                        >
-                          Generate Report
-                        </button>
-                      </div>
-                      <div class="card-body">
-                        <table
-                          id="dataTable"
-                          class="table table-small-font mb-10 table-bordered table-striped table-hover"
-                        >
-                          <thead class="table-dark">
-                            <tr>
-                              <th>LGA</th>
-                              <th>Name</th>
-                              <th>Email</th>
-                              <th>Phone</th>
-                              <th>Kindred</th>
-                            </tr>
-                          </thead>
-                          <tbody id="lga-match-table">
-                            <!-- Table will be populated by JavaScript -->
-                          </tbody>
-                        </table>
-                      </div>
+                  </a>
+                  <a href="#" class="dropdown-item p-3 border-bottom">
+                    <div class="d-flex justify-content-between">
+                      <span class="fw-medium">Card Ready for Pickup</span>
+                      <small class="text-muted">1 hour ago</small>
+                    </div>
+                    <small class="text-muted d-block mt-1"
+                      >ID Card for Jane Smith is ready for collection</small
+                    >
+                  </a>
+                  <a href="#" class="dropdown-item p-3">
+                    <div class="d-flex justify-content-between">
+                      <span class="fw-medium">System Update</span>
+                      <small class="text-muted">2 hours ago</small>
+                    </div>
+                    <small class="text-muted d-block mt-1"
+                      >Database backup completed successfully</small
+                    >
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div class="dropdown">
+              <button class="btn p-0" data-bs-toggle="dropdown">
+                <div class="avatar">AD</div>
+              </button>
+              <div class="dropdown-menu dropdown-menu-end">
+                <div class="px-4 py-3">
+                  <h6 class="mb-0">Administrator</h6>
+                  <small class="text-muted">admin@benue.gov.ng</small>
+                </div>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item"
+                  ><i class="fas fa-user me-2"></i> Profile</a
+                >
+                <a href="#" class="dropdown-item"
+                  ><i class="fas fa-cog me-2"></i> Settings</a
+                >
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item text-danger"
+                  ><i class="fas fa-sign-out-alt me-2"></i> Logout</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-xl-12">
+            <div class="filter cm-content-box box-primary mt-5">
+              <div class="cm-content-body form excerpt">
+                <div class="card-body">
+                  <div class="table-responsive" data-pattern="priority-columns">
+                    <div class="card-header">
+                      <h5 class="card-title">LGA Matching Report</h5>
+                      <button
+                        id="filter-lga-btn"
+                        class="btn btn-primary btn-sm"
+                      >
+                        Generate Report
+                      </button>
+                    </div>
+                    <div class="card-body">
+                      <table
+                        id="dataTable"
+                        class="table table-small-font mb-10 table-bordered table-striped table-hover"
+                      >
+                        <thead class="table-dark">
+                          <tr>
+                            <th>LGA</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Kindred</th>
+                          </tr>
+                        </thead>
+                        <tbody id="lga-match-table">
+                          <!-- Table will be populated by JavaScript -->
+                        </tbody>
+                      </table>
                     </div>
                   </div>
                 </div>
@@ -330,31 +403,32 @@
             </div>
           </div>
         </div>
-
-        <script
-          src="../../code.tidio.co_443/bpnp4xkz2axqrebqxcezgdca9yot1iyn.js"
-          async
-        ></script>
-
-        <script>
-          function logout() {
-            localStorage.removeItem("token");
-          }
-        </script>
       </div>
-      <!--**********************************
+
+      <script
+        src="../../code.tidio.co_443/bpnp4xkz2axqrebqxcezgdca9yot1iyn.js"
+        async
+      ></script>
+
+      <script>
+        function logout() {
+          localStorage.removeItem("token");
+        }
+      </script>
+    </div>
+    <!--**********************************
             Content body end
         ***********************************-->
 
-      <!--**********************************
+    <!--**********************************
             Footer start
         ***********************************-->
-      <div class="footer">
-        <div class="copyright">
-          <p>Copyright ©BDIC Ltd 2025. All rights reserved.</p>
-        </div>
+    <div class="footer">
+      <div class="copyright">
+        <p>Copyright ©BDIC Ltd 2025. All rights reserved.</p>
       </div>
     </div>
+
     <!--**********************************
         Main wrapper end
     ***********************************-->

@@ -26,22 +26,21 @@
       href="/assets/images/benue-state-logo.png"
     />
 
-    <link
-      href="vendor/bootstrap-select/dist/css/bootstrap-select.min.css"
-      rel="stylesheet"
-    />
     <link href="css/style.css" rel="stylesheet" />
-    <link rel="stylesheet" href="/source//auth/styles.css" />
+    <link rel="stylesheet" href="/source/auth/styles.css" />
+    <link rel="stylesheet" href="/source/src/bdic/app/css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
 
     <link
       rel="stylesheet"
-      href="../../cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
     />
+
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <link
-      rel="stylesheet"
-      href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
+
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
@@ -49,7 +48,10 @@
     <script src="../../unpkg.com/sweetalert%402.1.2/dist/sweetalert.min.js"></script>
     <link href="vendor/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet" />
     <script src="../../ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-
+    <link
+      href="vendor/bootstrap-select/dist/css/bootstrap-select.min.css"
+      rel="stylesheet"
+    />
     <style>
       tr:nth-child(even) {
         background-color: #f9f9f9;
@@ -109,584 +111,659 @@
         Preloader end
     ********************-->
 
-    <!--**********************************
-        Main wrapper start
-    ***********************************-->
-    <div id="main-wrapper">
-      <!--**********************************
-            Nav header start
-        ***********************************-->
-      <div class="nav-header">
-        <!-- Logo Section -->
-        <a href="index.html" class="brand-logo">
-          <img
-            src="/assets/images/benue-state-logo.png"
-            alt="Government Logo"
-            class="logo-img"
-          />
-          <div class="brand-text">BIRCIIRCIMS</div>
-        </a>
-
-        <!-- Hamburger Menu for Navigation Control -->
-        <div class="nav-control">
-          <div class="hamburger">
-            <span class="line"></span><span class="line"></span
-            ><span class="line"></span>
+    <!-- Add New Kindred Modal -->
+    <div
+      class="modal fade"
+      id="addUserModal"
+      tabindex="-1"
+      aria-labelledby="addUserModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addUserModalLabel">
+              Register New Kindred
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
           </div>
-        </div>
-      </div>
-      <!--**********************************
-            Nav header end
-        ***********************************-->
+          <div class="modal-body">
+            <!-- Form Structure -->
+            <form id="signUpForm">
+              <div class="row g-3">
+                <!-- First name -->
+                <div class="col-md-4">
+                  <label for="firstname" class="form-label">First name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="firstname"
+                    required
+                    name="firstname"
+                    aria-describedby="firstnameHelp"
+                  />
+                  <small id="firstnameHelp" class="form-text text-muted">
+                    Enter your first name
+                  </small>
+                </div>
 
-      <!--**********************************
-            Header start
-        ***********************************-->
-      <div class="header">
-        <div class="header-content">
-          <nav class="navbar navbar-expand">
-            <div class="collapse navbar-collapse justify-content-between">
-              <div class="header-left">
-                <div class="dashboard_bar">All Kindred</div>
+                <!-- Last name -->
+                <div class="col-md-4">
+                  <label for="lastname" class="form-label">Last name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="lastname"
+                    required
+                    aria-describedby="lastnameHelp"
+                  />
+                  <small id="lastnameHelp" class="form-text text-muted">
+                    Enter your last name
+                  </small>
+                </div>
+
+                <!-- Email -->
+                <div class="col-md-4">
+                  <label for="email" class="form-label">Email</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    required
+                    aria-describedby="emailHelp"
+                  />
+                  <small id="emailHelp" class="form-text text-muted">
+                    Enter a valid email address
+                  </small>
+                </div>
+
+                <!-- Phone number -->
+                <div class="col-md-4">
+                  <label for="phone" class="form-label">Phone number</label>
+                  <input
+                    type="tel"
+                    class="form-control"
+                    id="phone"
+                    maxlength="11"
+                    pattern="^0[7-9][0-1]\d{8}$"
+                    required
+                    autocomplete="tel-national"
+                    aria-describedby="phoneHelp"
+                  />
+                  <small id="phoneHelp" class="form-text text-muted">
+                    Enter a valid Nigerian phone number
+                  </small>
+                </div>
+
+                <!-- State -->
+                <div class="col-md-4">
+                  <label for="stateOfOrigin" class="form-label">State</label>
+                  <!-- onchange="updateLocalGovernmentsOfOrigin()" -->
+                  <select
+                    id="stateOfOrigin"
+                    name="stateOfOrigin"
+                    class="form-control"
+                    required
+                    aria-describedby="stateHelp"
+                    onchange="updateLocalGovernmentsOfOrigin()"
+                  >
+                    <option value="">Select State</option>
+                    <option value="abia">Abia</option>
+                    <option value="adamawa">Adamawa</option>
+                    <option value="akwa_ibom">Akwa Ibom</option>
+                    <option value="anambra">Anambra</option>
+                    <option value="bauchi">Bauchi</option>
+                    <option value="bayelsa">Bayelsa</option>
+                    <option value="benue">Benue</option>
+                    <option value="borno">Borno</option>
+                    <option value="cross_river">Cross River</option>
+                    <option value="delta">Delta</option>
+                    <option value="ebonyi">Ebonyi</option>
+                    <option value="edo">Edo</option>
+                    <option value="ekiti">Ekiti</option>
+                    <option value="enugu">Enugu</option>
+                    <option value="gombe">Gombe</option>
+                    <option value="imo">Imo</option>
+                    <option value="jigawa">Jigawa</option>
+                    <option value="kaduna">Kaduna</option>
+                    <option value="kano">Kano</option>
+                    <option value="katsina">Katsina</option>
+                    <option value="kebbi">Kebbi</option>
+                    <option value="kogi">Kogi</option>
+                    <option value="kwara">Kwara</option>
+                    <option value="lagos">Lagos</option>
+                    <option value="nasarawa">Nasarawa</option>
+                    <option value="niger">Niger</option>
+                    <option value="ogun">Ogun</option>
+                    <option value="ondo">Ondo</option>
+                    <option value="osun">Osun</option>
+                    <option value="oyo">Oyo</option>
+                    <option value="plateau">Plateau</option>
+                    <option value="rivers">Rivers</option>
+                    <option value="sokoto">Sokoto</option>
+                    <option value="taraba">Taraba</option>
+                    <option value="yobe">Yobe</option>
+                    <option value="zamfara">Zamfara</option>
+                    <option value="abuja">Abuja (FCT)</option>
+                  </select>
+                </div>
+
+                <!-- LGA -->
+                <div class="col-md-4">
+                  <label for="state" class="form-label">LGA</label>
+                  <select
+                    id="lgaOfOrigin"
+                    name="lgaOfOrigin"
+                    class="form-control"
+                  >
+                    <option value="">Select Local Government</option>
+                  </select>
+                </div>
+                <!-- Kindred -->
+                <div class="col-md-4">
+                  <label for="kindred" class="form-label">Kindred</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="kindred"
+                    required
+                    aria-describedby="kindredHelp"
+                  />
+                  <small id="kindredHelp" class="form-text text-muted">
+                    Enter kindred
+                  </small>
+                </div>
+
+                <!-- address -->
+                <div class="col-md-4">
+                  <label for="address" class="form-label">Address</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="address"
+                    required
+                    aria-describedby="addressHelp"
+                  />
+                  <small id="addressHelp" class="form-text text-muted">
+                    Enter kindred
+                  </small>
+                </div>
+
+                <!-- Password -->
+                <div class="col-md-4">
+                  <label for="password" class="form-label">Password</label>
+                  <div class="input-group">
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="password"
+                      required
+                      aria-describedby="passwordHelp"
+                    />
+                    <button
+                      class="btn btn-outline-secondary password-toggle"
+                      type="button"
+                      data-target="#password"
+                    >
+                      <i class="fa fa-eye-slash"></i>
+                    </button>
+                    <small id="passwordHelp" class="form-text text-muted">
+                      Enter a strong password
+                    </small>
+                  </div>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="col-md-4">
+                  <label for="re_password" class="form-label"
+                    >Confirm password</label
+                  >
+                  <div class="input-group">
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="re_password"
+                      name="re_password"
+                      required
+                      autocomplete="new-password"
+                      aria-describedby="rePasswordHelp"
+                    />
+                    <button
+                      class="btn btn-outline-secondary password-toggle"
+                      type="button"
+                      data-target="#re_password"
+                    >
+                      <i class="fa fa-eye-slash"></i>
+                    </button>
+                    <small id="rePasswordHelp" class="form-text text-muted">
+                      Re-type your password
+                    </small>
+                  </div>
+                </div>
+
+                <!-- NIN -->
+                <div class="col-md-4">
+                  <label for="nin" class="form-label">NIN</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="NIN"
+                    name="NIN"
+                    maxlength="11"
+                    minlength="11"
+                    required
+                    inputmode="numeric"
+                    pattern="\d{11}"
+                    aria-describedby="ninHelp"
+                    autocomplete="off"
+                  />
+                  <small id="ninHelp" class="form-text text-muted">
+                    Enter your 11-digit NIN
+                  </small>
+                  <div id="ninStatus" class="mt-1 text-sm text-info"></div>
+                </div>
+
+                <!-- {/* Password requirements as a list item */} -->
+                <div className="col-span-full">
+                  <ul className="list-disc pl-5 space-y-2 mt-2">
+                    <li className="flex items-center gap-2 text-sm">
+                      <Checkbox id="chars" checked="{hasMinChars}" />
+                      <label htmlFor="chars" className="text-gray-600">
+                        At least 8 Characters
+                      </label>
+                    </li>
+                    <li className="flex items-center gap-2 text-sm">
+                      <Checkbox id="special" checked="{hasSpecialChar}" />
+                      <label htmlFor="special" className="text-gray-600">
+                        Should contain at least one symbol
+                      </label>
+                    </li>
+                    <li className="flex items-center gap-2 text-sm">
+                      <Checkbox id="capital" checked="{hasCapitalLetter}" />
+                      <label htmlFor="capital" className="text-gray-600">
+                        Should contain at least one capital letter
+                      </label>
+                    </li>
+                    <li className="flex items-center gap-2 text-sm">
+                      <Checkbox id="number" checked="{hasNumber}" />
+                      <label htmlFor="number" className="text-gray-600">
+                        Should contain at least one number
+                      </label>
+                    </li>
+                  </ul>
+                </div>
               </div>
-              <div>
+              <div class="modal-footer">
                 <button
-                  class="btn btn-primary"
-                  data-bs-toggle="modal"
-                  data-bs-target="#addUserModal"
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
                 >
-                  Add kindred
+                  Close
+                </button>
+                <button type="submit" id="submitbtn" class="btn btn-primary">
+                  Save changes
                 </button>
               </div>
-              <ul class="navbar-nav header-right">
-                <li class="nav-item dropdown notification_dropdown">
-                  <div class="input-group search-area">
-                    <input
-                      id="searchInput"
-                      type="text"
-                      class="form-control"
-                      placeholder="Search here..."
-                      onkeyup="searchTable()"
-                    />
-                    <span class="input-group-text"
-                      ><a href="javascript:void(0)"
-                        ><i class="flaticon-381-search-2"></i></a
-                    ></span>
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </nav>
-        </div>
-      </div>
-
-      <!-- Add New Kindred Modal -->
-      <div
-        class="modal fade"
-        id="addUserModal"
-        tabindex="-1"
-        aria-labelledby="addUserModalLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="addUserModalLabel">
-                Register New Kindred
-              </h5>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="modal-body">
-              <!-- Form Structure -->
-              <form id="signUpForm">
-                <div class="row g-3">
-                  <!-- First name -->
-                  <div class="col-md-4">
-                    <label for="firstname" class="form-label">First name</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="firstname"
-                      required
-                      name="firstname"
-                      aria-describedby="firstnameHelp"
-                    />
-                    <small id="firstnameHelp" class="form-text text-muted">
-                      Enter your first name
-                    </small>
-                  </div>
-
-                  <!-- Last name -->
-                  <div class="col-md-4">
-                    <label for="lastname" class="form-label">Last name</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="lastname"
-                      required
-                      aria-describedby="lastnameHelp"
-                    />
-                    <small id="lastnameHelp" class="form-text text-muted">
-                      Enter your last name
-                    </small>
-                  </div>
-
-                  <!-- Email -->
-                  <div class="col-md-4">
-                    <label for="email" class="form-label">Email</label>
-                    <input
-                      type="email"
-                      class="form-control"
-                      id="email"
-                      required
-                      aria-describedby="emailHelp"
-                    />
-                    <small id="emailHelp" class="form-text text-muted">
-                      Enter a valid email address
-                    </small>
-                  </div>
-
-                  <!-- Phone number -->
-                  <div class="col-md-4">
-                    <label for="phone" class="form-label">Phone number</label>
-                    <input
-                      type="tel"
-                      class="form-control"
-                      id="phone"
-                      maxlength="11"
-                      pattern="^0[7-9][0-1]\d{8}$"
-                      required
-                      autocomplete="tel-national"
-                      aria-describedby="phoneHelp"
-                    />
-                    <small id="phoneHelp" class="form-text text-muted">
-                      Enter a valid Nigerian phone number
-                    </small>
-                  </div>
-
-                  <!-- State -->
-                  <div class="col-md-4">
-                    <label for="stateOfOrigin" class="form-label">State</label>
-                    <!-- onchange="updateLocalGovernmentsOfOrigin()" -->
-                    <select
-                      id="stateOfOrigin"
-                      name="stateOfOrigin"
-                      class="form-control"
-                      required
-                      aria-describedby="stateHelp"
-                      onchange="updateLocalGovernmentsOfOrigin()"
-                    >
-                      <option value="">Select State</option>
-                      <option value="abia">Abia</option>
-                      <option value="adamawa">Adamawa</option>
-                      <option value="akwa_ibom">Akwa Ibom</option>
-                      <option value="anambra">Anambra</option>
-                      <option value="bauchi">Bauchi</option>
-                      <option value="bayelsa">Bayelsa</option>
-                      <option value="benue">Benue</option>
-                      <option value="borno">Borno</option>
-                      <option value="cross_river">Cross River</option>
-                      <option value="delta">Delta</option>
-                      <option value="ebonyi">Ebonyi</option>
-                      <option value="edo">Edo</option>
-                      <option value="ekiti">Ekiti</option>
-                      <option value="enugu">Enugu</option>
-                      <option value="gombe">Gombe</option>
-                      <option value="imo">Imo</option>
-                      <option value="jigawa">Jigawa</option>
-                      <option value="kaduna">Kaduna</option>
-                      <option value="kano">Kano</option>
-                      <option value="katsina">Katsina</option>
-                      <option value="kebbi">Kebbi</option>
-                      <option value="kogi">Kogi</option>
-                      <option value="kwara">Kwara</option>
-                      <option value="lagos">Lagos</option>
-                      <option value="nasarawa">Nasarawa</option>
-                      <option value="niger">Niger</option>
-                      <option value="ogun">Ogun</option>
-                      <option value="ondo">Ondo</option>
-                      <option value="osun">Osun</option>
-                      <option value="oyo">Oyo</option>
-                      <option value="plateau">Plateau</option>
-                      <option value="rivers">Rivers</option>
-                      <option value="sokoto">Sokoto</option>
-                      <option value="taraba">Taraba</option>
-                      <option value="yobe">Yobe</option>
-                      <option value="zamfara">Zamfara</option>
-                      <option value="abuja">Abuja (FCT)</option>
-                    </select>
-                  </div>
-
-                  <!-- LGA -->
-                  <div class="col-md-4">
-                    <label for="state" class="form-label">LGA</label>
-                    <select
-                      id="lgaOfOrigin"
-                      name="lgaOfOrigin"
-                      class="form-control"
-                    >
-                      <option value="">Select Local Government</option>
-                    </select>
-                  </div>
-                  <!-- Kindred -->
-                  <div class="col-md-4">
-                    <label for="kindred" class="form-label">Kindred</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="kindred"
-                      required
-                      aria-describedby="kindredHelp"
-                    />
-                    <small id="kindredHelp" class="form-text text-muted">
-                      Enter kindred
-                    </small>
-                  </div>
-
-                  <!-- address -->
-                  <div class="col-md-4">
-                    <label for="address" class="form-label">Address</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="address"
-                      required
-                      aria-describedby="addressHelp"
-                    />
-                    <small id="addressHelp" class="form-text text-muted">
-                      Enter kindred
-                    </small>
-                  </div>
-
-                  <!-- Password -->
-                  <div class="col-md-4">
-                    <label for="password" class="form-label">Password</label>
-                    <div class="input-group">
-                      <input
-                        type="password"
-                        class="form-control"
-                        id="password"
-                        required
-                        aria-describedby="passwordHelp"
-                      />
-                      <button
-                        class="btn btn-outline-secondary password-toggle"
-                        type="button"
-                        data-target="#password"
-                      >
-                        <i class="fa fa-eye-slash"></i>
-                      </button>
-                      <small id="passwordHelp" class="form-text text-muted">
-                        Enter a strong password
-                      </small>
-                    </div>
-                  </div>
-
-                  <!-- Confirm Password -->
-                  <div class="col-md-4">
-                    <label for="re_password" class="form-label"
-                      >Confirm password</label
-                    >
-                    <div class="input-group">
-                      <input
-                        type="password"
-                        class="form-control"
-                        id="re_password"
-                        name="re_password"
-                        required
-                        autocomplete="new-password"
-                        aria-describedby="rePasswordHelp"
-                      />
-                      <button
-                        class="btn btn-outline-secondary password-toggle"
-                        type="button"
-                        data-target="#re_password"
-                      >
-                        <i class="fa fa-eye-slash"></i>
-                      </button>
-                      <small id="rePasswordHelp" class="form-text text-muted">
-                        Re-type your password
-                      </small>
-                    </div>
-                  </div>
-
-                  <!-- NIN -->
-                  <div class="col-md-4">
-                    <label for="nin" class="form-label">NIN</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="NIN"
-                      name="NIN"
-                      maxlength="11"
-                      minlength="11"
-                      required
-                      inputmode="numeric"
-                      pattern="\d{11}"
-                      aria-describedby="ninHelp"
-                      autocomplete="off"
-                    />
-                    <small id="ninHelp" class="form-text text-muted">
-                      Enter your 11-digit NIN
-                    </small>
-                    <div id="ninStatus" class="mt-1 text-sm text-info"></div>
-                  </div>
-
-                  <!-- {/* Password requirements as a list item */} -->
-                  <div className="col-span-full">
-                    <ul className="list-disc pl-5 space-y-2 mt-2">
-                      <li className="flex items-center gap-2 text-sm">
-                        <Checkbox id="chars" checked="{hasMinChars}" />
-                        <label htmlFor="chars" className="text-gray-600">
-                          At least 8 Characters
-                        </label>
-                      </li>
-                      <li className="flex items-center gap-2 text-sm">
-                        <Checkbox id="special" checked="{hasSpecialChar}" />
-                        <label htmlFor="special" className="text-gray-600">
-                          Should contain at least one symbol
-                        </label>
-                      </li>
-                      <li className="flex items-center gap-2 text-sm">
-                        <Checkbox id="capital" checked="{hasCapitalLetter}" />
-                        <label htmlFor="capital" className="text-gray-600">
-                          Should contain at least one capital letter
-                        </label>
-                      </li>
-                      <li className="flex items-center gap-2 text-sm">
-                        <Checkbox id="number" checked="{hasNumber}" />
-                        <label htmlFor="number" className="text-gray-600">
-                          Should contain at least one number
-                        </label>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <div class="modal-footer">
-                  <button
-                    type="button"
-                    class="btn btn-secondary"
-                    data-bs-dismiss="modal"
-                  >
-                    Close
-                  </button>
-                  <button type="submit" id="submitbtn" class="btn btn-primary">
-                    Save changes
-                  </button>
-                </div>
-              </form>
-            </div>
+            </form>
           </div>
-        </div>
-      </div>
-      <!--**********************************
-            Header end ti-comment-alt
-        ***********************************-->
-
-      <!--**********************************
-            Sidebar start
-        ***********************************-->
-      <div class="deznav">
-        <div class="deznav-scroll">
-          <ul class="metismenu" id="menu">
-            <!-- Super Admin Menu -->
-            <li class="super-admin-menu">
-              <a class="ai-icon" href="index.html" aria-expanded="false">
-                <i class="flaticon-381-networking"></i>
-                <span class="nav-text">Dashboard</span>
-              </a>
-            </li>
-
-            <!-- user Menu -->
-            <li class="user-menu">
-              <a
-                class="ai-icon"
-                href="user-dasboard.html"
-                aria-expanded="false"
-              >
-                <i class="flaticon-381-networking"></i>
-                <span class="nav-text">Dashboard</span>
-              </a>
-            </li>
-            <li class="super-admin-menu">
-              <a class="ai-icon" href="approvals.html" aria-expanded="false">
-                <i class="fa fa-exchange" aria-hidden="true"></i>
-                <span class="nav-text">Approvals</span>
-              </a>
-            </li>
-
-            <li class="user-menu">
-              <a class="ai-icon" href="request.html" aria-expanded="false">
-                <i class="fa fa-money" aria-hidden="true"></i>
-                <span class="nav-text">View Certificate Status</span>
-              </a>
-            </li>
-            <li class="user-menu">
-              <a class="ai-icon" href="idcard.html" aria-expanded="false">
-                <i class="fa fa-money" aria-hidden="true"></i>
-                <span class="nav-text">View Card Status</span>
-              </a>
-            </li>
-
-            <!-- Super Admin Menu -->
-            <li class="super-admin-menu">
-              <a class="ai-icon" href="all-request.html" aria-expanded="false">
-                <i class="fa fa-money" aria-hidden="true"></i>
-                <span class="nav-text">View Certificate Request</span>
-              </a>
-            </li>
-
-            <li class="super-admin-menu">
-              <a class="ai-icon" href="all-card.html" aria-expanded="false">
-                <i class="fa fa-money" aria-hidden="true"></i>
-                <span class="nav-text">View Card Request</span>
-              </a>
-            </li>
-            <li class="super-admin-menu">
-              <a class="ai-icon" href="citizens.html" aria-expanded="false">
-                <i class="fa fa-user" aria-hidden="true"></i>
-
-                <span class="nav-text">Users</span>
-              </a>
-            </li>
-            <li class="super-admin-menu">
-              <a class="ai-icon" href="kindred.html" aria-expanded="false">
-                <i class="fa fa-user" aria-hidden="true"></i>
-                <span class="nav-text">Kindreds</span>
-              </a>
-            </li>
-
-            <li class="support-admin-menu">
-              <a class="ai-icon" href="user-kindred.html" aria-expanded="false">
-                <i class="fa fa-user" aria-hidden="true"></i>
-                <span class="nav-text">Kindreds</span>
-              </a>
-            </li>
-            <li class="support-admin-menu">
-              <a
-                class="ai-icon"
-                href="support-admin-lga.html"
-                aria-expanded="false"
-              >
-                <i class="fa fa-user" aria-hidden="true"></i>
-                <span class="nav-text">Support Admin LGA</span>
-              </a>
-            </li>
-            <!-- User-menu -->
-            <li class="user-menu">
-              <a class="ai-icon" href="certificate.html" aria-expanded="false">
-                <i class="fa fa-user-plus" aria-hidden="true"></i>
-                <span class="nav-text">Request Certificate</span>
-              </a>
-            </li>
-
-            <li class="user-menu">
-              <a class="ai-icon" href="profile.html" aria-expanded="false">
-                <i class="fa fa-user" aria-hidden="true"></i>
-                <span class="nav-text">User Account</span>
-              </a>
-            </li>
-            <li class="super-admin-menu">
-              <a class="ai-icon" href="transaction.html" aria-expanded="false">
-                <i class="flaticon-381-networking"></i>
-                <span class="nav-text">transactions</span>
-              </a>
-            </li>
-            <li>
-              <a
-                class="ai-icon"
-                href="../../../auth/login.html"
-                aria-expanded="false"
-              >
-                <i class="fa fa-sign-out" aria-hidden="true"></i>
-                <span class="nav-text" onclick="logout(this)">Logout</span>
-              </a>
-            </li>
-          </ul>
-          <div class="copyright">
-            <p>Powered By BDIC <br />© 2025 All Rights Reserved</p>
-            <p class="op5"></p>
-          </div>
-        </div>
-      </div>
-      <!--**********************************
-            Sidebar end
-        ***********************************-->
-
-      <!--**********************************
-            Content body start
-        ***********************************-->
-      <div class="content-body">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-xl-12">
-              <div class="filter cm-content-box box-primary mt-5">
-                <div class="cm-content-body form excerpt">
-                  <div class="card-body">
-                    <div
-                      class="table-responsive"
-                      data-pattern="priority-columns"
-                    >
-                      <table
-                        id="dataTable"
-                        class="table table-small-font mb-10 table-bordered table-striped table-hover"
-                      >
-                        <thead class="table-dark">
-                          <tr>
-                            <th>#</th>
-                            <th>Fullname</th>
-                            <th>Phone</th>
-                            <th>Address</th>
-                            <th>Kindred</th>
-                            <th>LGA</th>
-                            <th>Actions</th>
-                          </tr>
-                        </thead>
-                        <tbody id="user-kindred-table"></tbody>
-                      </table>
-                      <div class="d-flex justify-content-between">
-                        <button id="btn-prev" class="btn" disabled>
-                          Previous
-                        </button>
-                        <button id="btn-next" class="btn">Next</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <script
-          src="../../code.tidio.co_443/bpnp4xkz2axqrebqxcezgdca9yot1iyn.js"
-          async
-        ></script>
-
-        <script>
-          function logout() {
-            localStorage.removeItem("token");
-          }
-        </script>
-      </div>
-      <!--**********************************
-            Content body end
-        ***********************************-->
-
-      <!--**********************************
-            Footer start
-        ***********************************-->
-      <div class="footer">
-        <div class="copyright">
-          <p>Copyright ©BDIC Ltd 2025. All rights reserved.</p>
         </div>
       </div>
     </div>
+    <!--**********************************
+            Header end ti-comment-alt
+        ***********************************-->
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="d-flex flex-column h-100">
+        <!-- Sidebar Header -->
+        <div class="p-4 border-bottom">
+          <div class="d-flex align-items-center">
+            <img
+              src="/assets/images/benue-state-logo.png"
+              alt="Benue State Logo"
+              class="me-3"
+              width="40"
+            />
+            <div>
+              <h5 class="mb-0 fw-bold">BIRCIIRCIMS</h5>
+              <small class="text-muted" style="font-size: 0.8rem"
+                >Identity Management</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar Content -->
+        <div class="flex-grow-1 py-3 px-4 overflow-auto" id="sidebar-links">
+          <div class="mb-5 p-2 text-muted" style="font-size: 0.9rem">
+            <h6
+              id="sidebar-user-label"
+              class="text-uppercase text-muted small mb-3 mt-3"
+            >
+              User
+            </h6>
+            <ul class="nav flex-column">
+              <li class="nav-item super-admin-menu">
+                <a href="index.html" class="nav-link d-flex align-items-center">
+                  <i
+                    class="bi bi-speedometer2 me-2 me-3 fs-5 text-secondary"
+                  ></i>
+                  <span> Dashboard</span>
+                </a>
+              </li>
+              <li class="nav-item super-admin-menu">
+                <a
+                  href="approvals.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi-check-circle fs-5 me-3 text-secodary"></i>
+                  <span>Approvals</span>
+                </a>
+              </li>
+              <li class="nav-item user-menu">
+                <a
+                  href="request.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi bi-file-text text-primary me-3 fs-5"></i>
+                  <span>View Certificate Statu</span>
+                </a>
+              </li>
+              <li class="nav-item user-menu">
+                <a
+                  href="idcard.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi bi-credit-card text-secondary me-3 fs-5"></i>
+                  <span>View Card status</span>
+                </a>
+              </li>
+              <li class="nav-item super-admin-menu">
+                <a
+                  href="all-request.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi bi-file-text text-secondary me-3 fs-5"></i>
+                  <span>Certificate Requests</span>
+                </a>
+              </li>
+
+              <!-- Support_addmin menu -->
+              <li class="nav-item support-admin-menu">
+                <a
+                  href="user-kindred.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi bi-file-text text-secondary me-3 fs-5"></i>
+                  <span>Kindreds</span>
+                </a>
+              </li>
+              <li class="nav-item support-admin-menu">
+                <a
+                  href="support-admin-lga.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi bi-file-text text-secondary me-3 fs-5"></i>
+                  <span>Support Admin LGA</span>
+                </a>
+              </li>
+              <li class="nav-item super-admin-menu">
+                <a
+                  href="all-card.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi bi-credit-card text-secondary me-3 fs-5"></i>
+                  <span>Card Requests</span>
+                </a>
+              </li>
+
+              <li class="nav-item super-admin-menu">
+                <a
+                  href="citizens.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi-people fs-5 text-secondary me-3"></i>
+                  <span>Users</span>
+                </a>
+              </li>
+              <li class="nav-item super-admin-menu">
+                <a
+                  href="kindred.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi-diagram-3 me-3"></i>
+                  <span>Kindreds</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  href="profile.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi bi-person text-secodary fs-5 me-3"></i>
+                  <span>User Account</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h6 class="text-uppercase text-muted small mb-3">Account</h6>
+            <ul class="nav flex-column">
+              <li class="nav-item mb-1">
+                <a href="#" class="nav-link d-flex align-items-center">
+                  <i class="fas fa-cog me-3"></i>
+                  <span>Settings</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  href="../../..//auth/login.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="fas fa-sign-out-alt me-3"></i>
+                  <span onclick="logout(this)">Logout</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Sidebar Footer -->
+        <div class="p-3 border-top text-center">
+          <small class="text-muted">Powered by BDIC</small>
+          <p class="small text-muted mb-0">© 2025 All Rights Reserved</p>
+        </div>
+      </div>
+    </div>
+    <!--**********************************
+            Sidebar end
+        ***********************************-->
+
+    <!--**********************************
+            Content body start
+        ***********************************-->
+    <div class="main-content">
+      <!-- Header -->
+      <header class="navbar navbar-expand-lg bg-white shadow-sm px-4 py-3">
+        <div class="container-fluid">
+          <button class="btn d-lg-none" id="sidebarToggle">
+            <i class="fas fa-bars"></i>
+          </button>
+
+          <div class="d-none d-md-block align-items-center">
+            <h5 class="mb-0 me-2">Kindred Heads</h5>
+            <small class="text-muted"
+              >Welcome back, <span id="header-user-label"> User </span>
+            </small>
+          </div>
+
+          <div class="align-center">
+            <button
+              class="btn btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#addUserModal"
+            >
+              Add kindred
+            </button>
+          </div>
+
+          <div class="ms-auto d-flex align-items-center">
+            <div class="d-none d-md-flex position-relative me-3">
+              <i
+                class="fas fa-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"
+              ></i>
+              <input
+                type="search"
+                class="form-control ps-5"
+                id="searchInput"
+                placeholder="Search here..."
+                onkeyup="searchTable()"
+                style="width: 250px"
+              />
+            </div>
+
+            <div class="dropdown me-3">
+              <button class="btn position-relative" data-bs-toggle="dropdown">
+                <i class="fas fa-bell"></i>
+                <span
+                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notification-badge"
+                  >3</span
+                >
+              </button>
+              <div
+                class="dropdown-menu dropdown-menu-end p-0"
+                style="width: 300px"
+              >
+                <div class="p-3 border-bottom">
+                  <h6 class="mb-0">Notifications</h6>
+                </div>
+                <div class="overflow-auto" style="max-height: 300px">
+                  <a href="#" class="dropdown-item p-3 border-bottom">
+                    <div class="d-flex justify-content-between">
+                      <span class="fw-medium">New Certificate Request</span>
+                      <small class="text-muted">5 min ago</small>
+                    </div>
+                    <small class="text-muted d-block mt-1"
+                      >John Doe submitted a new certificate application</small
+                    >
+                  </a>
+                  <a href="#" class="dropdown-item p-3 border-bottom">
+                    <div class="d-flex justify-content-between">
+                      <span class="fw-medium">Card Ready for Pickup</span>
+                      <small class="text-muted">1 hour ago</small>
+                    </div>
+                    <small class="text-muted d-block mt-1"
+                      >ID Card for Jane Smith is ready for collection</small
+                    >
+                  </a>
+                  <a href="#" class="dropdown-item p-3">
+                    <div class="d-flex justify-content-between">
+                      <span class="fw-medium">System Update</span>
+                      <small class="text-muted">2 hours ago</small>
+                    </div>
+                    <small class="text-muted d-block mt-1"
+                      >Database backup completed successfully</small
+                    >
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div class="dropdown">
+              <button class="btn p-0" data-bs-toggle="dropdown">
+                <div class="avatar">AD</div>
+              </button>
+              <div class="dropdown-menu dropdown-menu-end">
+                <div class="px-4 py-3">
+                  <h6 class="mb-0">Administrator</h6>
+                  <small class="text-muted">admin@benue.gov.ng</small>
+                </div>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item"
+                  ><i class="fas fa-user me-2"></i> Profile</a
+                >
+                <a href="#" class="dropdown-item"
+                  ><i class="fas fa-cog me-2"></i> Settings</a
+                >
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item text-danger"
+                  ><i class="fas fa-sign-out-alt me-2"></i> Logout</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+      <div class="container-fluid py-4">
+        <div class="row">
+          <div class="col-xl-12">
+            <div class="filter cm-content-box box-primary mt-5">
+              <div class="cm-content-body form excerpt">
+                <div class="card-body">
+                  <div class="table-responsive" data-pattern="priority-columns">
+                    <table
+                      id="dataTable"
+                      class="table table-small-font mb-10 table-bordered table-striped table-hover"
+                    >
+                      <thead class="table-dark">
+                        <tr>
+                          <th>#</th>
+                          <th>Fullname</th>
+                          <th>Phone</th>
+                          <th>Address</th>
+                          <th>Kindred</th>
+                          <th>LGA</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody id="user-kindred-table"></tbody>
+                    </table>
+                    <div class="d-flex justify-content-between">
+                      <button id="btn-prev" class="btn" disabled>
+                        Previous
+                      </button>
+                      <button id="btn-next" class="btn">Next</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script
+        src="../../code.tidio.co_443/bpnp4xkz2axqrebqxcezgdca9yot1iyn.js"
+        async
+      ></script>
+
+      <script>
+        function logout() {
+          localStorage.removeItem("token");
+        }
+      </script>
+    </div>
+    <!--**********************************
+            Content body end
+        ***********************************-->
+
+    <!--**********************************
+            Footer start
+        ***********************************-->
+    <div class="footer">
+      <div class="copyright">
+        <p>Copyright ©BDIC Ltd 2025. All rights reserved.</p>
+      </div>
+    </div>
+
     <!--**********************************
         Main wrapper end
     ***********************************-->

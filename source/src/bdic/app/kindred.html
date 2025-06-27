@@ -47,6 +47,15 @@
     <link href="vendor/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet" />
     <script src="../../ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
     <style>
       tr:nth-child(even) {
         background-color: #f9f9f9;
@@ -111,14 +120,19 @@
 
         <!-- Sidebar Content -->
         <div class="flex-grow-1 py-3 px-4 overflow-auto" id="sidebar-links">
-          <div class="mb-5 p-2 text-muted">
-            <h6 class="text-uppercase text-muted small mb-3 mt-3">
-              Administration
+          <div class="mb-5 p-2 text-muted" style="font-size: 0.9rem">
+            <h6
+              id="sidebar-user-label"
+              class="text-uppercase text-muted small mb-3 mt-3"
+            >
+              User
             </h6>
             <ul class="nav flex-column">
               <li class="nav-item super-admin-menu">
                 <a href="index.html" class="nav-link d-flex align-items-center">
-                  <i class="fas fa-tachometer-alt me-3"></i>
+                  <i
+                    class="bi bi-speedometer2 me-2 me-3 fs-5 text-secondary"
+                  ></i>
                   <span> Dashboard</span>
                 </a>
               </li>
@@ -127,7 +141,7 @@
                   href="approvals.html"
                   class="nav-link d-flex align-items-center"
                 >
-                  <i class="fas fa-check-circle me-3"></i>
+                  <i class="bi-check-circle fs-5 me-3 text-secodary"></i>
                   <span>Approvals</span>
                 </a>
               </li>
@@ -136,8 +150,8 @@
                   href="request.html"
                   class="nav-link d-flex align-items-center"
                 >
-                  <i class="fas fa-file-alt me-3"></i>
-                  <span>View Certificate Statu</span>
+                  <i class="bi bi-file-text text-primary me-3 fs-5"></i>
+                  <span>View Certificate Status</span>
                 </a>
               </li>
               <li class="nav-item user-menu">
@@ -145,8 +159,8 @@
                   href="idcard.html"
                   class="nav-link d-flex align-items-center"
                 >
-                  <i class="fas fa-file-alt me-3"></i>
-                  <span>View Card Statu</span>
+                  <i class="bi bi-credit-card text-secondary me-3 fs-5"></i>
+                  <span>View Card status</span>
                 </a>
               </li>
               <li class="nav-item super-admin-menu">
@@ -154,7 +168,7 @@
                   href="all-request.html"
                   class="nav-link d-flex align-items-center"
                 >
-                  <i class="fas fa-file-alt me-3"></i>
+                  <i class="bi bi-file-text text-secondary me-3 fs-5"></i>
                   <span>Certificate Requests</span>
                 </a>
               </li>
@@ -163,22 +177,17 @@
                   href="all-card.html"
                   class="nav-link d-flex align-items-center"
                 >
-                  <i class="fas fa-credit-card me-3"></i>
+                  <i class="bi bi-credit-card text-secondary me-3 fs-5"></i>
                   <span>Card Requests</span>
                 </a>
               </li>
-              <li class="nav-item user-menu">
-                <a href="card.html" class="nav-link d-flex align-items-center">
-                  <i class="fas fa-credit-card me-3"></i>
-                  <span>User Account</span>
-                </a>
-              </li>
+
               <li class="nav-item super-admin-menu">
                 <a
                   href="citizens.html"
                   class="nav-link d-flex align-items-center"
                 >
-                  <i class="fas fa-users me-3"></i>
+                  <i class="bi-people fs-5 text-secondary me-3"></i>
                   <span>Users</span>
                 </a>
               </li>
@@ -187,8 +196,17 @@
                   href="kindred.html"
                   class="nav-link d-flex align-items-center"
                 >
-                  <i class="fas fa-shield-alt me-3"></i>
+                  <i class="bi-diagram-3 me-3"></i>
                   <span>Kindreds</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  href="profile.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi bi-person text-secodary fs-5 me-3"></i>
+                  <span>User Account</span>
                 </a>
               </li>
             </ul>
@@ -215,7 +233,6 @@
             </ul>
           </div>
         </div>
-        <div class="overlay" id="sidebar-overlay"></div>
 
         <!-- Sidebar Footer -->
         <div class="p-3 border-top text-center">
@@ -224,7 +241,6 @@
         </div>
       </div>
     </div>
-
     <!--**********************************
             Sidebar end
         ***********************************-->
@@ -242,7 +258,9 @@
 
           <div class="d-none d-md-block align-items-center">
             <h5 class="mb-0 me-2">Approvals</h5>
-            <small class="text-muted">Welcome back, Administrator</small>
+            <small class="text-muted"
+              >Welcome back, <span id="header-user-label"> User </span>
+            </small>
           </div>
 
           <div class="ms-auto d-flex align-items-center">

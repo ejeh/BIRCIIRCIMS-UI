@@ -8,9 +8,70 @@ const FRONTEND_URL = isDevelopment
   ? "http://127.0.0.1:5501"
   : "http://citizenship.benuestate.gov.ng";
 
-let userData = localStorage.getItem("token");
-userData = JSON.parse(userData);
+// Get user info from localStorage
+const userData = JSON.parse(localStorage.getItem("token") || "{}");
 const { token, user } = userData;
+
+$(document).ready(function () {
+  const userRole = user.role || "";
+
+  $("#header-user-label").text(user.firstname);
+
+  // Change sidebar label based on role
+  if (userRole === "super_admin" || userRole === "support_admin") {
+    $("#sidebar-user-label").text("Administration");
+  } else {
+    $("#sidebar-user-label").text("User");
+  }
+
+  console.log(userRole);
+
+  // Show/hide menu items based on role
+  switch (userRole) {
+    case "user":
+      $(".nav-item.user-menu").show();
+      // hide kindred head specific
+      $(
+        '.nav-item.kindred_head:has(a[href="kindred-dasboard.html"]), .nav-item.kindred_head:has(a[href="kindred-head.html"])'
+      ).hide();
+
+      $(
+        '.nav-item.super-admin-menu:has(a[href="all-request.html"]), .nav-item.super-admin-menu:has(a[href="approvals.html"]), .nav-item.super-admin-menu:has(a[href="all-request.html"]), .nav-item.super-admin-menu:has(a[href="all-card.html"]), .nav-item.super-admin-menu:has(a[href="kindred.html"]), .nav-item.super-admin-menu:has(a[href="support-admin-lga.html"]), .nav-item.super-admin-menu:has(a[href="index.html"]), .nav-item.super-admin-menu:has(a[href="citizens.html"])'
+      ).hide();
+
+      break;
+
+    case "kindred_head":
+      $(".nav-item.kindred_head").show();
+      $(".nav-item.user-menu:has(a[href='profile.html'])").show();
+      $(
+        '.nav-item.support-admin-menu:has(a[href="user-kindred.html"]), .nav-item.support-admin-menu:has(a[href="support-admin-lga.html"])'
+      ).hide();
+      $(
+        '.nav-item.super-admin-menu:has(a[href="all-request.html"]), .nav-item.super-admin-menu:has(a[href="approvals.html"]), .nav-item.super-admin-menu:has(a[href="all-request.html"]), .nav-item.super-admin-menu:has(a[href="all-card.html"]), .nav-item.super-admin-menu:has(a[href="kindred.html"]), .nav-item.super-admin-menu:has(a[href="support-admin-lga.html"]), .nav-item.super-admin-menu:has(a[href="index.html"]), .nav-item.super-admin-menu:has(a[href="citizens.html"])'
+      ).hide();
+
+      break;
+
+    case "support_admin":
+      $(".nav-item .user-menu").hide();
+      $(".nav-item .kindred_head").hide();
+      $(
+        '.nav-item.super-admin-menu:has(a[href="all-request.html"]), .nav-item.super-admin-menu:has(a[href="approvals.html"]), .nav-item.super-admin-menu:has(a[href="all-request.html"]), .nav-item.super-admin-menu:has(a[href="all-card.html"]), .nav-item.super-admin-menu:has(a[href="kindred.html"]), .nav-item.super-admin-menu:has(a[href="support-admin-lga.html"]), .nav-item.super-admin-menu:has(a[href="index.html"]), .nav-item.super-admin-menu:has(a[href="citizens.html"])'
+      ).hide();
+      // example: show dashboard only for support_admin if needed
+      $('.super-admin-menu:has(a[href="index.html"])').show(); // optional if present
+      break;
+
+    case "super_admin":
+      $(".nav-item.support-admin-menu").hide();
+      $(".super-admin-menu").show(); // if present
+      break;
+
+    default:
+      console.warn("No valid role found");
+  }
+});
 
 function generatePaymentReference() {
   return "ref-" + Date.now() + "-" + Math.random().toString(36).substr(2, 8);
@@ -43,28 +104,29 @@ $(document).ready(function () {
   }
 });
 
-$(document).ready(function () {
-  // Assume the user role is dynamically fetched from your backend
-  const userRole = user.role;
+// $(document).ready(function () {
+//   // Assume the user role is dynamically fetched from your backend
+//   const userRole = user.role;
 
-  // Hide all menus initially
-  $(".super-admin-menu, .support-admin-menu, .user-menu").hide();
+//   // Hide all menus initially
+//   $(".super-admin-menu, .support-admin-menu, .user-menu ").hide();
 
-  // Show menus based on role
-  if (userRole === "super_admin") {
-    $(".super-admin-menu").show();
-    // $(".dashboard_bar").text("Admin Panel");
-  } else if (userRole === "support_admin") {
-    $(".support-admin-menu").show();
-    // $('.super-admin-menu:has(a[href="approvals.html"])').show();
-    $('.super-admin-menu:has(a[href="index.html"])').show();
-
-    // $(".dashboard_bar").text("Admin Panel");
-  } else if (userRole === "user") {
-    $(".user-menu").show();
-    // $(".dashboard_bar").text("Dashboard");
-  }
-});
+//   // Show menus based on role
+//   if (userRole === "super_admin") {
+//     $(".super-admin-menu").show();
+//   } else if (userRole === "support_admin") {
+//     $(".support-admin-menu").show();
+//     // $('.super-admin-menu:has(a[href="approvals.html"])').show();
+//     $('.super-admin-menu:has(a[href="index.html"])').show();
+//   } else if (userRole === "user") {
+//     $(".user-menu").show();
+//     $('.kindred_head:has(a[href="kindred-head.html"])').hide();
+//     $('.kindred_head:has(a[href="kindred-dasboard.html"])').hide();
+//   } else if (userRole === "kindred_head") {
+//     $(".kindred_head").show();
+//     $('.user-menu:has(a[href="profile.html"])').show();
+//   }
+// });
 
 $(document).ready(function () {
   // Utility function to set input values
@@ -2334,6 +2396,7 @@ const nigeriaData = {
 };
 
 function updateLocalGovernmentsOfOrigin() {
+  console.log("cool");
   const stateSelect = document.getElementById("stateOfOrigin");
   const lgaSelect = document.getElementById("lgaOfOrigin");
   const selectedState = stateSelect.value;

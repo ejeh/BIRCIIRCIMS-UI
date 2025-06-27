@@ -1,328 +1,666 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Benue State ID Card</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refactored Multi-Step Form</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <style>
-      :root {
-        --benue-navy: #000080;
-        --benue-blue: #0000cd;
-        --watermark-red: rgba(255, 0, 0, 0.25);
-      }
-
-      body {
-        margin: 0;
-        padding: 0;
-        background-color: #f1f5f9;
-        font-family: Arial, sans-serif;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        perspective: 1000px;
-      }
-
-      .id-card-container {
-        width: 85.6mm;
-        height: 54mm;
-        position: relative;
-        transform-style: preserve-3d;
-        transition: transform 0.8s;
-      }
-
-      .id-card-container:hover {
-        transform: rotateY(180deg);
-      }
-
-      .id-card {
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        backface-visibility: hidden;
-        border-radius: 5px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        overflow: hidden;
-      }
-
-      .front {
-        background-color: white;
-        z-index: 2;
-      }
-
-      .back {
-        background-color: white;
-        transform: rotateY(180deg);
-      }
-
-      .id-card-background {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: repeating-linear-gradient(
-          45deg,
-          rgba(245, 245, 255, 0.9),
-          rgba(245, 245, 255, 0.9) 10px,
-          rgba(240, 240, 255, 0.9) 10px,
-          rgba(240, 240, 255, 0.9) 20px
-        );
-        z-index: 0;
-      }
-
-      .id-card-watermark {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) rotate(-30deg);
-        font-size: 3.5rem;
-        font-weight: bold;
-        color: var(--watermark-red);
-        z-index: 1;
-        opacity: 0.9;
-      }
-
-      .card-content {
-        position: relative;
-        z-index: 2;
-        padding: 8px;
-        height: calc(100% - 16px);
-        display: flex;
-        flex-direction: column;
-      }
-
-      .header {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 5px;
-      }
-
-      .logo-placeholder {
-        width: 40px;
-        height: 40px;
-        background-color: #f0f0f0;
-      }
-
-      .title {
-        text-align: right;
-      }
-
-      .title h1 {
-        font-weight: bold;
-        color: var(--benue-navy);
-        font-size: 14px;
-        margin: 0;
-        line-height: 1.2;
-      }
-
-      .title h2 {
-        font-weight: bold;
-        color: var(--benue-blue);
-        font-size: 12px;
-        margin: 0;
-      }
-
-      .main-content {
-        display: flex;
-        gap: 8px;
-        margin-top: 5px;
-        flex: 1;
-      }
-
-      .photo-section {
-        width: 25mm;
-        height: 30mm;
-      }
-
-      .photo-placeholder {
-        width: 100%;
-        height: 100%;
-        background-color: #e0e0e0;
-        border: 1px solid #d1d5db;
-      }
-
-      .details-section {
-        flex: 1;
-        font-size: 9px;
-      }
-
-      .details-section p {
-        margin: 3px 0;
-      }
-
-      .label {
-        font-weight: bold;
-      }
-
-      .value {
-        text-transform: uppercase;
-      }
-
-      .row {
-        display: flex;
-        justify-content: space-between;
-      }
-
-      .bin-section {
-        margin-top: auto;
-        text-align: center;
-        padding: 5px 0;
-      }
-
-      .bin-label {
-        color: var(--benue-blue);
-        font-size: 10px;
-        font-weight: bold;
-        margin: 0;
-      }
-
-      .bin-number {
-        color: var(--benue-blue);
-        font-size: 20px;
-        font-weight: bold;
-        margin: 0;
-        letter-spacing: 1px;
-      }
-
-      .footer {
-        background-color: #f8f8f8;
-        padding: 8px;
-        height: calc(100% - 16px);
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-      }
-
-      .footer-logo {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 8px;
-      }
-
-      .footer-logo-placeholder {
-        width: 24px;
-        height: 24px;
-        background-color: #f0f0f0;
-      }
-
-      .footer-text {
-        text-align: center;
-        font-size: 6px;
-        line-height: 1.3;
-      }
-
-      .property {
-        font-weight: bold;
-      }
-
-      .contact {
-        font-style: italic;
-      }
-
-      .powered-by {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 3px;
-        margin-top: 8px;
-      }
-
-      .bdicl {
-        font-weight: bold;
-        color: var(--benue-blue);
-      }
-
-      .flip-instruction {
-        position: absolute;
-        bottom: 10px;
-        left: 0;
-        right: 0;
-        text-align: center;
-        font-size: 10px;
-        color: #666;
-      }
+        .status-indicator {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            z-index: 1000;
+        }
+        .status-saving { background: #ffc107; color: #000; }
+        .status-saved { background: #28a745; color: #fff; }
+        .status-error { background: #dc3545; color: #fff; }
     </style>
-  </head>
-  <body>
-    <div class="id-card-container">
-      <!-- Front Side -->
-      <div class="id-card front">
-        <div class="id-card-background"></div>
-        <div class="id-card-watermark">SAMPLE</div>
+</head>
+<body>
+    <div id="autoSaveStatus" class="status-indicator">Ready</div>
+    
+    <script>
+        class MultiStepFormManager {
+            constructor() {
+                this.state = {
+                    currentStep: 0,
+                    autoSaveTimer: null,
+                    counts: {
+                        neighbors: 1,
+                        familyMembers: 1,
+                        employmentHistory: 1,
+                        tertiaryInstitutions: 1
+                    },
+                    cameraStream: null,
+                    photoCaptured: false,
+                    isSubmitting: false
+                };
 
-        <div class="card-content">
-          <div class="header">
-            <div class="logo-placeholder"></div>
-            <div class="title">
-              <h1>CITIZEN/RESIDENT IDENTITY CARD</h1>
-              <h2>BENUE STATE GOVERNMENT</h2>
-            </div>
-          </div>
+                this.steps = [
+                    { id: "profile", title: "Profile Details", icon: "bi-person" },
+                    { id: "address", title: "Residential Address", icon: "bi-geo-alt" },
+                    { id: "identity", title: "Identification", icon: "bi-credit-card" },
+                    { id: "nok", title: "Next of Kin", icon: "bi-people" },
+                    { id: "contacts", title: "Contact Details", icon: "bi-telephone" },
+                    { id: "family", title: "Family Details", icon: "bi-people" },
+                    { id: "business", title: "Business Details", icon: "bi-briefcase" },
+                    { id: "employment", title: "Employment History", icon: "bi-briefcase" },
+                    { id: "education", title: "Education Details", icon: "bi-mortarboard" },
+                    { id: "health", title: "Health Information", icon: "bi-heart" }
+                ];
 
-          <div class="main-content">
-            <div class="photo-section">
-              <div class="photo-placeholder"></div>
-            </div>
+                this.maxLimits = {
+                    neighbors: 5,
+                    familyMembers: 5,
+                    employmentHistory: 10,
+                    tertiaryInstitutions: 10
+                };
 
-            <div class="details-section">
-              <p>
-                <span class="label">SURNAME/NOM</span><br />
-                <span class="value">TERMASE</span>
-              </p>
-              <p>
-                <span class="label">GIVEN NAMES/PRENDMS</span><br />
-                <span class="value">GEANDE HEMBAOR</span>
-              </p>
-              <div class="row">
-                <p>
-                  <span class="label">DATE OF BIRTH</span><br />
-                  <span class="value">23SEP1982</span>
-                </p>
-                <p>
-                  <span class="label">SEX/SEXE</span><br />
-                  <span class="value">MALE</span>
-                </p>
-              </div>
-              <p>
-                <span class="label">DATE ISSUED</span><br />
-                <span class="value">11MAR2025</span>
-              </p>
-            </div>
-          </div>
+                this.init();
+            }
 
-          <div class="bin-section">
-            <p class="bin-label">Benue State Identification Number</p>
-            <p class="bin-number">BIN-4565-309-6589</p>
-          </div>
-        </div>
-        <div class="flip-instruction">Hover to flip card</div>
-      </div>
+            init() {
+                this.bindEvents();
+                this.updateStepDisplay();
+                this.loadExistingData();
+            }
 
-      <!-- Back Side -->
-      <div class="id-card back">
-        <div class="footer">
-          <div class="footer-logo">
-            <div class="footer-logo-placeholder"></div>
-          </div>
-          <div class="footer-text">
-            <p class="property">
-              This card is the property of<br />
-              Benue state Citizen/Resident Identity Management System<br />
-              (Ministry of Communications and Digital Economy, Makurdi)
-            </p>
-            <p class="contact">
-              If found please contact:<br />
-              Kashim Ibrahim Way,Old GRA,Government House,<br />
-              Makurdi, Benue State
-            </p>
-            <div class="powered-by">
-              <span>Powered by:</span>
-              <span class="bdicl">BDiCL</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </body>
-</html>
+            bindEvents() {
+                // Navigation events
+                $("#next-step").on("click", () => this.nextStep());
+                $("#prev-step").on("click", () => this.prevStep());
+                
+                // Dynamic field events
+                $("#add-neighbor").on("click", () => this.addNeighbor());
+                $("#add-family-member").on("click", () => this.addFamilyMember());
+                $("#add-employment").on("click", () => this.addEmployment());
+                $("#add-institution").on("click", () => this.addInstitution());
+                
+                // Remove handlers (delegated)
+                $(document).on("click", ".remove-neighbor", (e) => this.removeNeighbor(e));
+                $(document).on("click", ".remove-family-member", (e) => this.removeFamilyMember(e));
+                $(document).on("click", ".remove-employment", (e) => this.removeEmployment(e));
+                $(document).on("click", ".remove-institution", (e) => this.removeInstitution(e));
+                
+                // Auto-save on input changes
+                $(document).on("input change", "input, select, textarea", (e) => {
+                    if (!$(e.target).hasClass('no-autosave')) {
+                        this.scheduleAutoSave();
+                    }
+                });
+                
+                // Identification type change
+                $("#identification").on("change", () => this.handleIdentificationChange());
+                
+                // Camera events
+                $("#start-camera").on("click", () => this.startCamera());
+                $("#capture-photo").on("click", () => this.capturePhoto());
+                $("#close-camera").on("click", () => this.closeCamera());
+                $("#upload-photo-btn").on("click", () => $("#passportPhoto").click());
+                $("#passportPhoto").on("change", (e) => this.handlePhotoUpload(e));
+                
+                // Form submission
+                $("#unifiedForm").on("submit", (e) => this.handleFormSubmit(e));
+            }
+
+            // Navigation Methods
+            nextStep() {
+                if (this.state.currentStep < this.steps.length - 1) {
+                    this.state.currentStep++;
+                    this.updateStepDisplay();
+                }
+            }
+
+            prevStep() {
+                if (this.state.currentStep > 0) {
+                    this.state.currentStep--;
+                    this.updateStepDisplay();
+                }
+            }
+
+            updateStepDisplay() {
+                // Hide all sections
+                $(".form-section").removeClass("active");
+                
+                // Show current section
+                $(`#${this.steps[this.state.currentStep].id}-section`).addClass("active");
+                
+                // Update header info
+                $("#current-step-title").text(this.steps[this.state.currentStep].title);
+                $("#current-step-description").text(`Step ${this.state.currentStep + 1} of ${this.steps.length}`);
+                $("#current-step-icon").removeClass().addClass(`bi ${this.steps[this.state.currentStep].icon}`);
+                
+                // Update progress bar
+                const progressPercent = ((this.state.currentStep + 1) / this.steps.length) * 100;
+                $("#progress-bar").css("width", `${progressPercent}%`);
+                
+                // Update navigation buttons
+                $("#prev-step").prop("disabled", this.state.currentStep === 0);
+                
+                if (this.state.currentStep === this.steps.length - 1) {
+                    $("#next-step").hide();
+                    $("#submit-btn").show();
+                } else {
+                    $("#next-step").show();
+                    $("#submit-btn").hide();
+                }
+            }
+
+            // Dynamic Field Management
+            addNeighbor(data = {}) {
+                if (this.state.counts.neighbors >= this.maxLimits.neighbors) {
+                    this.showMessage("Maximum neighbors limit reached", "warning");
+                    return;
+                }
+
+                const index = this.state.counts.neighbors;
+                const neighborHtml = this.generateNeighborHtml(index, data);
+                
+                $("#neighbors-container").append(neighborHtml);
+                this.state.counts.neighbors++;
+                
+                this.updateAddButtonState('neighbors');
+                this.updateRemoveButtonsVisibility('neighbors');
+            }
+
+            removeNeighbor(e) {
+                if (this.state.counts.neighbors <= 1) return;
+                
+                $(e.target).closest(".neighbor-item").remove();
+                this.state.counts.neighbors--;
+                
+                this.renumberItems('.neighbor-item', 'Neighbor', 'neighbor');
+                this.updateAddButtonState('neighbors');
+                this.updateRemoveButtonsVisibility('neighbors');
+                
+                this.scheduleAutoSave();
+            }
+
+            addFamilyMember(data = {}) {
+                if (this.state.counts.familyMembers >= this.maxLimits.familyMembers) {
+                    this.showMessage("Maximum family members limit reached", "warning");
+                    return;
+                }
+
+                const index = this.state.counts.familyMembers;
+                const familyHtml = this.generateFamilyMemberHtml(index, data);
+                
+                $("#family-members-container").append(familyHtml);
+                this.state.counts.familyMembers++;
+                
+                this.updateAddButtonState('familyMembers');
+                this.updateRemoveButtonsVisibility('familyMembers');
+            }
+
+            removeFamilyMember(e) {
+                if (this.state.counts.familyMembers <= 1) return;
+                
+                $(e.target).closest(".family-item").remove();
+                this.state.counts.familyMembers--;
+                
+                this.renumberItems('.family-item', 'Family Member', 'family');
+                this.updateAddButtonState('familyMembers');
+                this.updateRemoveButtonsVisibility('familyMembers');
+                
+                this.scheduleAutoSave();
+            }
+
+            addEmployment(data = {}) {
+                const index = this.state.counts.employmentHistory;
+                const employmentHtml = this.generateEmploymentHtml(index, data);
+                
+                $("#employment-history-container").append(employmentHtml);
+                this.state.counts.employmentHistory++;
+                
+                this.updateRemoveButtonsVisibility('employmentHistory');
+            }
+
+            removeEmployment(e) {
+                if (this.state.counts.employmentHistory <= 1) return;
+                
+                $(e.target).closest(".employment-item").remove();
+                this.state.counts.employmentHistory--;
+                
+                this.renumberItems('.employment-item', 'Employment', 'employment');
+                this.updateRemoveButtonsVisibility('employmentHistory');
+                
+                this.scheduleAutoSave();
+            }
+
+            addInstitution(data = {}) {
+                const index = this.state.counts.tertiaryInstitutions;
+                const institutionHtml = this.generateInstitutionHtml(index, data);
+                
+                $("#tertiary-institutions-container").append(institutionHtml);
+                this.state.counts.tertiaryInstitutions++;
+                
+                this.updateRemoveButtonsVisibility('tertiaryInstitutions');
+            }
+
+            removeInstitution(e) {
+                if (this.state.counts.tertiaryInstitutions <= 1) return;
+                
+                $(e.target).closest(".institution-item").remove();
+                this.state.counts.tertiaryInstitutions--;
+                
+                this.renumberItems('.institution-item', 'Tertiary Institution', 'tertiaryInstitution');
+                this.updateRemoveButtonsVisibility('tertiaryInstitutions');
+                
+                this.scheduleAutoSave();
+            }
+
+            // HTML Generation Methods
+            generateNeighborHtml(index, data) {
+                return `
+                    <div class="neighbor-item" data-index="${index}">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <label class="form-label">Neighbor ${index + 1}</label>
+                            <button type="button" class="btn btn-outline-danger btn-sm remove-neighbor">
+                                <i class="bi bi-dash"></i>
+                            </button>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" name="neighbor_name_${index}" 
+                                       placeholder="Full Name" value="${data.name || ''}">
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" name="neighbor_address_${index}" 
+                                       placeholder="Residential Address" value="${data.address || ''}">
+                            </div>
+                            <div class="col-md-4">
+                                <input type="tel" class="form-control" name="neighbor_phone_${index}" 
+                                       placeholder="Phone Number" value="${data.phone || ''}">
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            generateFamilyMemberHtml(index, data) {
+                return `
+                    <div class="family-item" data-index="${index}">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <label class="form-label">Family Member ${index + 1}</label>
+                            <button type="button" class="btn btn-outline-danger btn-sm remove-family-member">
+                                <i class="bi bi-dash"></i>
+                            </button>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" name="family_name_${index}" 
+                                       placeholder="Full Name" value="${data.name || ''}">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" name="family_relationship_${index}" 
+                                       placeholder="Relationship" value="${data.relationship || ''}">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" name="family_address_${index}" 
+                                       placeholder="Residential Address" value="${data.address || ''}">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="tel" class="form-control" name="family_phone_${index}" 
+                                       placeholder="Phone Number" value="${data.phone || ''}">
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            generateEmploymentHtml(index, data) {
+                return `
+                    <div class="employment-item" data-index="${index}">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <label class="form-label">Employment ${index + 1}</label>
+                            <button type="button" class="btn btn-outline-danger btn-sm remove-employment">
+                                <i class="bi bi-dash"></i>
+                            </button>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Company Name</label>
+                                <input type="text" class="form-control" name="companyName_${index}" 
+                                       placeholder="Enter company name" value="${data.companyName || ''}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Address</label>
+                                <input type="text" class="form-control" name="employment_address_${index}" 
+                                       placeholder="Enter company address" value="${data.address || ''}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Designation</label>
+                                <input type="text" class="form-control" name="designation_${index}" 
+                                       placeholder="Enter your designation" value="${data.designation || ''}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Start Year</label>
+                                <input type="number" class="form-control" name="startYear_${index}" 
+                                       placeholder="Enter start year" value="${data.startYear || ''}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">End Year</label>
+                                <input type="number" class="form-control" name="endYear_${index}" 
+                                       placeholder="Enter end year" value="${data.endYear || ''}">
+                                <p class="text-muted small mt-1">Leave blank if this is your current employment.</p>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="isCurrentEmployment_${index}" 
+                                           name="isCurrentEmployment_${index}" ${data.isCurrentEmployment ? 'checked' : ''}>
+                                    <label class="form-check-label" for="isCurrentEmployment_${index}">
+                                        This is my current employment
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <label class="form-label">Description of Company</label>
+                            <textarea class="form-control" name="employment_description_${index}" rows="3" 
+                                      placeholder="Describe the company">${data.description || ''}</textarea>
+                        </div>
+                    </div>
+                `;
+            }
+
+            generateInstitutionHtml(index, data) {
+                return `
+                    <div class="institution-item border rounded p-4 mt-3" data-index="${index}">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <label class="form-label">Tertiary Institution ${index + 1}</label>
+                            <button type="button" class="btn btn-outline-danger btn-sm remove-institution">
+                                <i class="bi bi-dash"></i>
+                            </button>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="tertiaryInstitution_name_${index}" 
+                                       placeholder="Name of Tertiary Institution" value="${data.name || ''}">
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="tertiaryInstitution_address_${index}" 
+                                       placeholder="Address of Tertiary Institution" value="${data.address || ''}">
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="tertiaryInstitution_certificate_${index}" 
+                                       placeholder="Certificate Obtained" value="${data.certificateObtained || ''}">
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="tertiaryInstitution_matricNo_${index}" 
+                                       placeholder="Matriculation Number" value="${data.matricNo || ''}">
+                            </div>
+                            <div class="col-md-12">
+                                <input type="text" class="form-control" name="tertiaryInstitution_year_${index}" 
+                                       placeholder="Year of Attendance" value="${data.yearOfAttendance || ''}">
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Utility Methods
+            renumberItems(selector, labelPrefix, namePrefix) {
+                $(selector).each((index, element) => {
+                    $(element).attr('data-index', index);
+                    $(element).find('.form-label').first().text(`${labelPrefix} ${index + 1}`);
+                    
+                    $(element).find('input, textarea, select').each((i, input) => {
+                        const $input = $(input);
+                        const currentName = $input.attr('name');
+                        if (currentName) {
+                            const newName = currentName.replace(/_\d+(_|$)/, `_${index}$1`);
+                            $input.attr('name', newName);
+                        }
+                        
+                        const currentId = $input.attr('id');
+                        if (currentId) {
+                            const newId = currentId.replace(/_\d+$/, `_${index}`);
+                            $input.attr('id', newId);
+                        }
+                    });
+                    
+                    $(element).find('label[for]').each((i, label) => {
+                        const $label = $(label);
+                        const currentFor = $label.attr('for');
+                        if (currentFor) {
+                            const newFor = currentFor.replace(/_\d+$/, `_${index}`);
+                            $label.attr('for', newFor);
+                        }
+                    });
+                });
+            }
+
+            updateAddButtonState(type) {
+                const count = this.state.counts[type];
+                const maxLimit = this.maxLimits[type];
+                const buttonMap = {
+                    'neighbors': '#add-neighbor',
+                    'familyMembers': '#add-family-member'
+                };
+                
+                const button = $(buttonMap[type]);
+                if (button.length && count >= maxLimit) {
+                    button.prop('disabled', true).text(`Maximum ${type} reached`);
+                    $(`#${type.toLowerCase()}-max-message`).show();
+                } else if (button.length) {
+                    button.prop('disabled', false);
+                    $(`#${type.toLowerCase()}-max-message`).hide();
+                }
+            }
+
+            updateRemoveButtonsVisibility(type) {
+                const count = this.state.counts[type];
+                const selectorMap = {
+                    'neighbors': '.remove-neighbor',
+                    'familyMembers': '.remove-family-member',
+                    'employmentHistory': '.remove-employment',
+                    'tertiaryInstitutions': '.remove-institution'
+                };
+                
+                const selector = selectorMap[type];
+                if (count > 1) {
+                    $(selector).show();
+                } else {
+                    $(selector).hide();
+                }
+            }
+
+            // Auto-save functionality
+            scheduleAutoSave() {
+                if (this.state.isSubmitting) return;
+                
+                clearTimeout(this.state.autoSaveTimer);
+                this.updateStatus('saving', 'Saving...');
+                
+                this.state.autoSaveTimer = setTimeout(() => {
+                    this.performAutoSave();
+                }, 1000);
+            }
+
+            async performAutoSave() {
+                if (this.state.isSubmitting) return;
+                
+                try {
+                    const formData = this.collectFormData();
+                    
+                    const response = await fetch(`${window.BACKEND_URL}/users/${window.user.id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `Bearer ${window.token}`
+                        },
+                        body: formData
+                    });
+                    
+                    if (response.ok) {
+                        this.updateStatus('saved', 'Saved');
+                        console.log('Auto-save successful');
+                    } else {
+                        throw new Error(`Auto-save failed: ${response.statusText}`);
+                    }
+                } catch (error) {
+                    this.updateStatus('error', 'Save failed');
+                    console.error('Auto-save error:', error);
+                }
+            }
+
+            collectFormData() {
+                const formData = new FormData();
+                
+                // Basic fields
+                const basicFields = [
+                    'middlename', 'lastname', 'nationality', 'community', 'religion', 
+                    'gender', 'stateOfOrigin', 'DOB', 'countryOfResidence', 'lgaOfOrigin',
+                    'maritalStatus', 'house_number', 'street_name', 'nearest_bus_stop_landmark',
+                    'city_town', 'stateOfResidence', 'lgaOfResidence', 'id_number', 
+                    'issue_date', 'expiry_date'
+                ];
+                
+                basicFields.forEach(field => {
+                    const value = $(`#${field}`).val() || '';
+                    formData.append(field, value);
+                });
+                
+                // Handle identification
+                const selectedValue = $("#identification").val();
+                const otherValue = $("#other-identification").val();
+                const finalIdentification = selectedValue === "others" ? otherValue : selectedValue;
+                formData.append("identification", finalIdentification);
+                
+                // Complex objects
+                formData.append('nextOfKin', JSON.stringify(this.collectNextOfKinData()));
+                formData.append('healthInfo', JSON.stringify(this.collectHealthData()));
+                formData.append('business', JSON.stringify(this.collectBusinessData()));
+                formData.append('educationalHistory', JSON.stringify(this.collectEducationalData()));
+                formData.append('employmentHistory', JSON.stringify(this.collectEmploymentData()));
+                formData.append('neighbor', JSON.stringify(this.collectNeighborData()));
+                formData.append('family', JSON.stringify(this.collectFamilyData()));
+                
+                // Handle passport photo
+                this.handlePassportPhoto(formData);
+                
+                return formData;
+            }
+
+            collectNextOfKinData() {
+                return {
+                    nok_surname: $("#nok_surname").val().trim(),
+                    nok_firstname: $("#nok_firstname").val().trim(),
+                    nok_middlename: $("#nok_middlename").val().trim(),
+                    nok_relationship: $("#nok_relationship").val().trim(),
+                    nok_countryOfResidence: $("#nok_countryOfResidence").val().trim(),
+                    nok_stateOfResidence: $("#nok_stateOfResidence").val().trim(),
+                    nok_lgaOfResidence: $("#nok_lgaOfResidence").val().trim(),
+                    nok_cityOfResidence: $("#nok_cityOfResidence").val().trim(),
+                    nok_address: $("#nok_address").val().trim()
+                };
+            }
+
+            collectHealthData() {
+                return {
+                    bloodGroup: $("#bloodGroup").val(),
+                    genotype: $("#genotype").val(),
+                    disabilityStatus: $("#disabilityStatus").val()
+                };
+            }
+
+            collectBusinessData() {
+                return {
+                    biz_name: $("#biz_name").val().trim(),
+                    biz_type: $("#biz_type").val(),
+                    registration_number: $("#registration_number").val().trim(),
+                    biz_address: $("#biz_address").val().trim(),
+                    nature_of_business: $("#nature_of_business").val().trim(),
+                    numberOfYears: $("#numberOfYears").val().trim(),
+                    numberOfEmployees: $("#numberOfEmployees").val().trim(),
+                    annualRevenue: $("#annualRevenue").val().trim(),
+                    TIN: $("#TIN").val().trim(),
+                    biz_phone: $("#biz_phone").val().trim(),
+                    biz_email: $("#biz_email").val().trim()
+                };
+            }
+
+            collectEducationalData() {
+                const educationalHistory = {
+                    primarySchool: {
+                        name: $('input[name="primarySchool.name"]').val(),
+                        address: $('input[name="primarySchool.address"]').val(),
+                        yearOfAttendance: $('input[name="primarySchool.yearOfAttendance"]').val()
+                    },
+                    secondarySchool: {
+                        name: $('input[name="secondarySchool.name"]').val(),
+                        address: $('input[name="secondarySchool.address"]').val(),
+                        yearOfAttendance: $('input[name="secondarySchool.yearOfAttendance"]').val()
+                    },
+                    tertiaryInstitutions: []
+                };
+
+                $('.institution-item').each((index, element) => {
+                    const institution = {
+                        name: $(element).find(`input[name*="name"]`).val(),
+                        address: $(element).find(`input[name*="address"]`).val(),
+                        certificateObtained: $(element).find(`input[name*="certificate"]`).val(),
+                        matricNo: $(element).find(`input[name*="matricNo"]`).val(),
+                        yearOfAttendance: $(element).find(`input[name*="year"]`).val()
+                    };
+                    educationalHistory.tertiaryInstitutions.push(institution);
+                });
+
+                return educationalHistory;
+            }
+
+            collectEmploymentData() {
+                const employmentHistory = [];
+                $('.employment-item').each((index, element) => {
+                    const employment = {
+                        companyName: $(element).find(`input[name*="companyName"]`).val(),
+                        address: $(element).find(`input[name*="employment_address"]`).val(),
+                        designation: $(element).find(`input[name*="designation"]`).val(),
+                        startYear: $(element).find(`input[name*="startYear"]`).val(),
+                        endYear: $(element).find(`input[name*="endYear"]`).val(),
+                        isCurrentEmployment: $(element).find(`input[name*="isCurrentEmployment"]`).is(':checked'),
+                        description: $(element).find(`textarea[name*="description"]`).val()
+                    };
+                    employmentHistory.push(employment);
+                });
+                return employmentHistory;
+            }
+
+            collectNeighborData() {
+                const neighbors = [];
+                $('.neighbor-item').each((index, element) => {
+                    const neighbor = {
+                        name: $(element).find(`input[name*="neighbor_name"]`).val(),
+                        address: $(element).find(`input[name*="neighbor_address"]`).val(),
+                        phone: $(element).find(`input[name*="neighbor_phone"]`).val()
+                    };
+                    neighbors.push(neighbor);
+                });
+                return neighbors;
+            }
+
+            collectFamilyData() {
+                const family = [];
+                $('.family-item').each((index, element) => {
+                    const member = {
+                        name: $(element).find(`input[name*="family_name"]`).val(),
+                        relationship: $(element).find(`input[name*="family_relationship"]`).val(),
+                        address: $(element).find(`input[name*="family_address"]`).val(),
+                        phone: $(element).find(`input[name*="family_phone"]`).val()
+                    };
+                    family.push(member);
+                });
+                return family;
+            }
+
+            handlePassportPhoto(formData) {
+                const canvas = $("#snapshot").get(0);
+                const passportPhotoFile = $("#passportPhoto")[0]?.files[0];
+
+                if (this.state.photoCaptured && canvas) {
+                    const dataURL = canvas.toDataURL("image/jpeg", 0.9);
+                    if (dataURL) {
+                        formData.append("passportPhoto", this.dataURLtoFile(dataURL, "captured-passport.jpg"));

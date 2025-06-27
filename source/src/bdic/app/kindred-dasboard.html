@@ -23,105 +23,23 @@
       href="/assets/images/benue-state-logo.png"
     />
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <link
-      rel="stylesheet"
-      href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
-    <link
-      href="vendor/bootstrap-select/dist/css/bootstrap-select.min.css"
-      rel="stylesheet"
-    />
-    <link href="css/style.css" rel="stylesheet" />
-    <link
-      rel="stylesheet"
-      href="../../cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
-      integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q="
-      crossorigin="anonymous"
-    />
-    <!--end::Fonts-->
-    <!--begin::Third Party Plugin(OverlayScrollbars)-->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css"
-      integrity="sha256-tZHrRjVqNSRyWg2wbppGnT833E/Ys0DHWGwT04GiqQg="
-      crossorigin="anonymous"
-    />
-    <!--end::Third Party Plugin(OverlayScrollbars)-->
-    <!--begin::Third Party Plugin(Bootstrap Icons)-->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-      integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI="
-      crossorigin="anonymous"
-    />
-    <!--end::Third Party Plugin(Bootstrap Icons)-->
-    <!--begin::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="../app/css/adminlte.css" />
 
-    <!--end::Required Plugin(AdminLTE)-->
-    <!-- apexcharts -->
+    <link href="css/style.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/source/auth/styles.css" />
+    <link rel="stylesheet" href="/source/src/bdic/app/css/styles.css" />
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
-      integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
-      crossorigin="anonymous"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
+
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
     />
-    <!-- jsvectormap -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css"
-      integrity="sha256-+uGLJmmTKOqBr+2E6KDYs/NRsHxSkONXFHUL0fy2O/4="
-      crossorigin="anonymous"
-    />
+
     <script src="../../unpkg.com/sweetalert%402.1.2/dist/sweetalert.min.js"></script>
     <link href="vendor/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet" />
     <script src="../../ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-    <style>
-      .card-v1 {
-        color: #fff !important;
-        background-color: #198754 !important;
-        border: none;
-        transition: transform 0.3s, box-shadow 0.3s;
-        border-radius: 10px;
-      }
-
-      .card-v2 {
-        color: #fff !important;
-        background-color: #0d6efd !important;
-        border: none;
-        transition: transform 0.3s, box-shadow 0.3s;
-        border-radius: 10px;
-      }
-
-      .card-v3 {
-        color: #fff !important;
-        background-color: #ffc107 !important;
-        border: none;
-        transition: transform 0.3s, box-shadow 0.3s;
-        border-radius: 10px;
-      }
-
-      .card-v4 {
-        color: #fff !important;
-        background-color: #dc3545 !important;
-        border: none;
-        transition: transform 0.3s, box-shadow 0.3s;
-        border-radius: 10px;
-      }
-
-      .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0px 6px 15px rgba(36, 35, 35, 0.3);
-      }
-    </style>
   </head>
   <body>
     <!--*******************
@@ -138,358 +56,417 @@
         Preloader end
     ********************-->
 
-    <!--**********************************
-        Main wrapper start
-    ***********************************-->
-    <div id="main-wrapper">
-      <!--**********************************
-            Nav header start
-        ***********************************-->
-      <div class="nav-header">
-        <!-- Logo Section -->
-        <a href="index.html" class="brand-logo">
-          <img
-            src="/assets/images/benue-state-logo.png"
-            alt="Government Logo"
-            class="logo-img"
-          />
-          <div class="brand-text">BIRCIIRCIMS</div>
-        </a>
-
-        <!-- Hamburger Menu for Navigation Control -->
-        <div class="nav-control">
-          <div class="hamburger">
-            <span class="line"></span><span class="line"></span
-            ><span class="line"></span>
-          </div>
-        </div>
-      </div>
-      <!--**********************************
-            Nav header end
-        ***********************************-->
-
-      <!--**********************************
-            Header start
-        ***********************************-->
-      <div class="header">
-        <div class="header-content">
-          <nav class="navbar navbar-expand">
-            <div class="collapse navbar-collapse justify-content-between">
-              <div class="header-left">
-                <div class="dashboard_bar">Dashboard</div>
-              </div>
-              <!-- <ul class="navbar-nav header-right">
-                <li class="nav-item dropdown notification_dropdown">
-                  <div class="input-group search-area">
-                    <input
-                      type="text"
-                      class="form-control"
-                      placeholder="Search here..."
-                    />
-                    <span class="input-group-text"
-                      ><a href="javascript:void(0)"
-                        ><i class="flaticon-381-search-2"></i></a
-                    ></span>
-                  </div>
-                </li>
-              </ul> -->
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="d-flex flex-column h-100">
+        <!-- Sidebar Header -->
+        <div class="p-4 border-bottom">
+          <div class="d-flex align-items-center">
+            <img
+              src="/assets/images/benue-state-logo.png"
+              alt="Benue State Logo"
+              class="me-3"
+              width="40"
+            />
+            <div>
+              <h5 class="mb-0 fw-bold">BIRCIIRCIMS</h5>
+              <small class="text-muted" style="font-size: 0.8rem"
+                >Identity Management</small
+              >
             </div>
-          </nav>
-        </div>
-      </div>
-      <!--**********************************
-            Header end ti-comment-alt
-        ***********************************-->
-
-      <!--**********************************
-            Sidebar start
-        ***********************************-->
-      <div class="deznav">
-        <div class="deznav-scroll">
-          <ul class="metismenu" id="menu">
-            <li>
-              <style type="text/css">
-                a.gflag {
-                  vertical-align: middle;
-                  font-size: 16px;
-                  padding: 1px 0;
-                  background-repeat: no-repeat;
-                  background-image: url(../../gtranslate.net/flags/16.png);
-                }
-                a.gflag img {
-                  border: 0;
-                }
-                a.gflag:hover {
-                  background-image: url(../../gtranslate.net/flags/16a.png);
-                }
-                #goog-gt-tt {
-                  display: none !important;
-                }
-                .goog-te-banner-frame {
-                  display: none !important;
-                }
-                .goog-te-menu-value:hover {
-                  text-decoration: none !important;
-                }
-                body {
-                  top: 0 !important;
-                }
-                #google_translate_element2 {
-                  display: none !important;
-                }
-              </style>
-            </li>
-
-            <li>
-              <a class="ai-icon" href="kindred-head.html" aria-expanded="false">
-                <i class="flaticon-381-networking"></i>
-                <span class="nav-text">Dashboard</span>
-              </a>
-            </li>
-            <li>
-              <a class="ai-icon" href="kindred-head.html" aria-expanded="false">
-                <i class="fa fa-money" aria-hidden="true"></i>
-                <span class="nav-text">View Certificate Request</span>
-              </a>
-            </li>
-            <li class="user-menu">
-              <a class="ai-icon" href="profile.html" aria-expanded="false">
-                <i class="fa fa-user" aria-hidden="true"></i>
-                <span class="nav-text">User Account</span>
-              </a>
-            </li>
-            <li>
-              <a class="ai-icon" href="../../../auth/login.html" aria-expanded="false">
-                <i class="fa fa-sign-out" aria-hidden="true"></i>
-                <span class="nav-text" onclick="logout(this)">Logout</span>
-              </a>
-            </li>
-          </ul>
-          <div class="copyright">
-            <p>Powered By BDIC<br />© 2025 All Rights Reserved</p>
-            <p class="op5"></p>
           </div>
         </div>
+
+        <!-- Sidebar Content -->
+        <div class="flex-grow-1 py-3 px-4 overflow-auto" id="sidebar-links">
+          <div class="mb-5 p-2 text-muted" style="font-size: 0.9rem">
+            <h6
+              id="sidebar-user-label"
+              class="text-uppercase text-muted small mb-3 mt-3"
+            >
+              User
+            </h6>
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a
+                  href="kindred-dasboard.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i
+                    class="bi bi-speedometer2 me-2 me-3 fs-5 text-secondary"
+                  ></i>
+                  <span> Dashboard</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  href="kindred-head.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi-check-circle fs-5 me-3 text-secodary"></i>
+                  <span>View Certificate Request</span>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a
+                  href="profile.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi bi-person text-secodary fs-5 me-3"></i>
+                  <span>User Account</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h6 class="text-uppercase text-muted small mb-3">Account</h6>
+            <ul class="nav flex-column">
+              <li class="nav-item mb-1">
+                <a href="#" class="nav-link d-flex align-items-center">
+                  <i class="fas fa-cog me-3"></i>
+                  <span>Settings</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  href="../../..//auth/login.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="fas fa-sign-out-alt me-3"></i>
+                  <span onclick="logout(this)">Logout</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Sidebar Footer -->
+        <div class="p-3 border-top text-center">
+          <small class="text-muted">Powered by BDIC</small>
+          <p class="small text-muted mb-0">© 2025 All Rights Reserved</p>
+        </div>
       </div>
-      <!--**********************************
+    </div>
+    <!--**********************************
             Sidebar end
         ***********************************-->
 
-      <!--**********************************
+    <!--**********************************
             Content body start
         ***********************************-->
-      <div id="dashboard" class="content-body">
+    <div class="main-content">
+      <!-- Header -->
+      <header class="navbar navbar-expand-lg bg-white shadow-sm px-4 py-3">
         <div class="container-fluid">
-          <!--begin::App Main-->
-          <main class="app-main">
-            <!--begin::App Content Header-->
-            <div class="app-content-header">
-              <!--begin::Container-->
-              <div class="container-fluid">
-                <!--begin::Row-->
-                <!-- <div class="row">
-                  <div class="col-sm-6"><h3 class="mb-0">Dashboard</h3></div>
-                  <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-end">
-                      <li class="breadcrumb-item"><a href="#">Home</a></li>
-                      <li class="breadcrumb-item active" aria-current="page">
-                        Dashboard
-                      </li>
-                    </ol>
-                  </div>
-                </div> -->
-                <!--end::Row-->
-              </div>
-              <!--end::Container-->
+          <button class="btn d-lg-none" id="sidebarToggle">
+            <i class="fas fa-bars"></i>
+          </button>
+
+          <div class="d-none d-md-block align-items-center">
+            <h5 class="mb-0 me-2">Dashboard</h5>
+            <small class="text-muted"
+              >Welcome back, <span id="header-user-label"> User </span>
+            </small>
+          </div>
+
+          <div class="ms-auto d-flex align-items-center">
+            <div class="d-none d-md-flex position-relative me-3">
+              <i
+                class="fas fa-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"
+              ></i>
+              <input
+                type="search"
+                class="form-control ps-5"
+                id="searchInput"
+                placeholder="Search here..."
+                onkeyup="searchTable()"
+                style="width: 250px"
+              />
             </div>
-            <!--end::App Content Header-->
-            <!--begin::App Content-->
-            <div class="app-content">
-              <!--begin::Container-->
-              <div class="container-fluid">
-                <!--begin::Row-->
-                <div class="row mt-3">
-                  <div class="col-md-4">
-                    <div class="card-v1 card p-3">
-                      <h5>Certificate Status</h5>
-                      <p id="certificate-status">Nil</p>
-                    </div>
-                  </div>
-                  <div class="col-md-4">
-                    <div class="card-v2 card p-3">
-                      <h5>Card Status</h5>
-                      <p id="card-status">Nil</p>
-                    </div>
-                  </div>
-                  <!-- <div class="col-md-4">
-                    <div class="card-v3 card p-3">
-                      <h5>Revenue</h5>
-                      <p>$12,345</p>
-                    </div>
-                  </div> -->
+
+            <div class="dropdown me-3">
+              <button class="btn position-relative" data-bs-toggle="dropdown">
+                <i class="fas fa-bell"></i>
+                <span
+                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notification-badge"
+                  >3</span
+                >
+              </button>
+              <div
+                class="dropdown-menu dropdown-menu-end p-0"
+                style="width: 300px"
+              >
+                <div class="p-3 border-bottom">
+                  <h6 class="mb-0">Notifications</h6>
                 </div>
-                <!--end::Row-->
-
-                <!--begin::Row-->
-                <!-- <div class="row mt-3">
-                  <div class="col-md-4">
-                    <div class="card-v4 card p-3">
-                      <h5>Total Users</h5>
-                      <p>1,234</p>
+                <div class="overflow-auto" style="max-height: 300px">
+                  <a href="#" class="dropdown-item p-3 border-bottom">
+                    <div class="d-flex justify-content-between">
+                      <span class="fw-medium">New Certificate Request</span>
+                      <small class="text-muted">5 min ago</small>
                     </div>
-                  </div>
-                  <div class="col-md-4">
-                    <div class="card-v5 card p-3">
-                      <h5>New Orders</h5>
-                      <p>567</p>
+                    <small class="text-muted d-block mt-1"
+                      >John Doe submitted a new certificate application</small
+                    >
+                  </a>
+                  <a href="#" class="dropdown-item p-3 border-bottom">
+                    <div class="d-flex justify-content-between">
+                      <span class="fw-medium">Card Ready for Pickup</span>
+                      <small class="text-muted">1 hour ago</small>
                     </div>
-                  </div>
-                  <div class="col-md-4">
-                    <div class="card-v6 card p-3">
-                      <h5>Revenue</h5>
-                      <p>$12,345</p>
+                    <small class="text-muted d-block mt-1"
+                      >ID Card for Jane Smith is ready for collection</small
+                    >
+                  </a>
+                  <a href="#" class="dropdown-item p-3">
+                    <div class="d-flex justify-content-between">
+                      <span class="fw-medium">System Update</span>
+                      <small class="text-muted">2 hours ago</small>
                     </div>
-                  </div>
-                </div> -->
-                <!--end::Row-->
-
-                <!-- /.row (main row) -->
+                    <small class="text-muted d-block mt-1"
+                      >Database backup completed successfully</small
+                    >
+                  </a>
+                </div>
               </div>
-              <!--end::Container-->
             </div>
-            <!--end::App Content-->
-          </main>
+
+            <div class="dropdown">
+              <button class="btn p-0" data-bs-toggle="dropdown">
+                <div class="avatar">AD</div>
+              </button>
+              <div class="dropdown-menu dropdown-menu-end">
+                <div class="px-4 py-3">
+                  <h6 class="mb-0">Administrator</h6>
+                  <small class="text-muted">admin@benue.gov.ng</small>
+                </div>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item"
+                  ><i class="fas fa-user me-2"></i> Profile</a
+                >
+                <a href="#" class="dropdown-item"
+                  ><i class="fas fa-cog me-2"></i> Settings</a
+                >
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item text-danger"
+                  ><i class="fas fa-sign-out-alt me-2"></i> Logout</a
+                >
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-      <!--begin::Script-->
+      </header>
+      <div class="container-fluid py-4">
+        <!--begin::App Main-->
+        <!-- Main Content -->
+        <div class="min-vh-100 bg-slate-50">
+          <div class="container-fluid max-w-7xl mx-auto px-0">
+            <!-- Header Section -->
+            <div class="bg-white header-shadow border-bottom px-4 py-3 mb-4">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <h1 class="h2 fw-bold text-gray-900 mb-0">Dashboard</h1>
+                  <p class="text-muted small mb-0">
+                    Benue State Integrated Residents/Citizens Identity
+                    Management System
+                  </p>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                  <span class="badge badge-outline small">BIRCIIRCIMS</span>
+                </div>
+              </div>
+            </div>
 
-      <script>
-        function logout() {
-          localStorage.removeItem("token");
-          location.reload(); // Refresh page
-        }
-      </script>
-      <!--begin::Third Party Plugin(OverlayScrollbars)-->
-      <script
-        src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
-        integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
-        crossorigin="anonymous"
-      ></script>
-      <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
-      <script
-        src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-        crossorigin="anonymous"
-      ></script>
-      <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
-      <script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
-        crossorigin="anonymous"
-      ></script>
-      <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-      <script src="../../dist/js/adminlte.js"></script>
-      <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
-      <script>
-        const SELECTOR_SIDEBAR_WRAPPER = ".sidebar-wrapper";
-        const Default = {
-          scrollbarTheme: "os-theme-light",
-          scrollbarAutoHide: "leave",
-          scrollbarClickScroll: true,
-        };
-        document.addEventListener("DOMContentLoaded", function () {
-          const sidebarWrapper = document.querySelector(
-            SELECTOR_SIDEBAR_WRAPPER
-          );
-          if (
-            sidebarWrapper &&
-            typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== "undefined"
-          ) {
-            OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
-              scrollbars: {
-                theme: Default.scrollbarTheme,
-                autoHide: Default.scrollbarAutoHide,
-                clickScroll: Default.scrollbarClickScroll,
-              },
+            <!-- Status Cards Section -->
+            <div class="px-4">
+              <div class="row g-4 mb-5">
+                <div class="col-md-6 col-lg-4">
+                  <div class="card status-card bg-success text-white">
+                    <div
+                      class="card-header d-flex justify-content-between align-items-center border-0 pb-2"
+                    >
+                      <h5 class="card-title small mb-0 text-white-90">
+                        Certificate Status
+                      </h5>
+                      <i class="bi bi-file-text fs-5 text-white-80"></i>
+                    </div>
+                    <div class="card-body pt-0">
+                      <h3 class="card-title mb-1 text-white">Nil</h3>
+                      <p class="card-text small text-white-70 mb-0">
+                        Current status
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                  <div class="card status-card bg-primary text-white">
+                    <div
+                      class="card-header d-flex justify-content-between align-items-center border-0 pb-2"
+                    >
+                      <h5 class="card-title small mb-0 text-white-90">
+                        Card Status
+                      </h5>
+                      <i class="bi bi-credit-card fs-5 text-white-80"></i>
+                    </div>
+                    <div class="card-body pt-0">
+                      <h3 class="card-title mb-1 text-white">Nil</h3>
+                      <p class="card-text small text-white-70 mb-0">
+                        Current status
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Quick Actions Section -->
+              <div class="row g-3 mb-5">
+                <div class="col-6 col-md-3">
+                  <div class="card quick-action-card border">
+                    <div class="card-body text-center p-4">
+                      <i class="bi bi-house fs-3 text-primary mb-2"></i>
+                      <h5 class="card-title mb-1">Dashboard</h5>
+                      <p class="card-text small text-muted">Main overview</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6 col-md-3">
+                  <div class="card quick-action-card border">
+                    <div class="card-body text-center p-4">
+                      <i class="bi bi-cash-coin fs-3 text-success mb-2"></i>
+                      <h5 class="card-title mb-1">View Certificate Request</h5>
+                      <p class="card-text small text-muted">Track requests</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6 col-md-3">
+                  <div class="card quick-action-card border">
+                    <div class="card-body text-center p-4">
+                      <i class="bi bi-person fs-3 text-purple mb-2"></i>
+                      <h5 class="card-title mb-1">User Account</h5>
+                      <p class="card-text small text-muted">Manage profile</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6 col-md-3">
+                  <div class="card quick-action-card border" id="logout-card">
+                    <div class="card-body text-center p-4">
+                      <i
+                        class="bi bi-box-arrow-right fs-3 text-danger mb-2"
+                      ></i>
+                      <h5 class="card-title mb-1">Logout</h5>
+                      <p class="card-text small text-muted">Sign out</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- System Information -->
+              <div class="card border mb-5">
+                <div class="card-header bg-white border-bottom-0">
+                  <h5 class="card-title mb-0">System Information</h5>
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <h6 class="mb-3">System Status</h6>
+                      <div class="mb-3 d-flex justify-content-between">
+                        <span class="small text-muted"
+                          >Certificate Processing</span
+                        >
+                        <span
+                          class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25"
+                          >Active</span
+                        >
+                      </div>
+                      <div class="d-flex justify-content-between">
+                        <span class="small text-muted">Card Issuance</span>
+                        <span
+                          class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25"
+                          >Available</span
+                        >
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <h6 class="mb-3">Quick Stats</h6>
+                      <div class="mb-3 d-flex justify-content-between">
+                        <span class="small text-muted">Total Applications</span>
+                        <span class="small fw-medium">0</span>
+                      </div>
+                      <div class="d-flex justify-content-between">
+                        <span class="small text-muted">Pending Approvals</span>
+                        <span class="small fw-medium">0</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Footer -->
+          </div>
+        </div>
+
+        <!-- jQuery and Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+        <!-- Custom JS -->
+        <script>
+          $(document).ready(function () {
+            // Logout functionality
+            $("#logout-card").click(function () {
+              localStorage.removeItem("token");
+              window.location.reload();
             });
-          }
-        });
-      </script>
-      <!--end::OverlayScrollbars Configure-->
-      <!-- OPTIONAL SCRIPTS -->
-      <!-- sortablejs -->
-      <script
-        src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"
-        integrity="sha256-ipiJrswvAR4VAx/th+6zWsdeYmVae0iJuiR+6OqHJHQ="
-        crossorigin="anonymous"
-      ></script>
-      <!-- sortablejs -->
-      <script>
-        const connectedSortables =
-          document.querySelectorAll(".connectedSortable");
-        connectedSortables.forEach((connectedSortable) => {
-          let sortable = new Sortable(connectedSortable, {
-            group: "shared",
-            handle: ".card-header",
+
+            // Add hover effects to status cards
+            $(".status-card").hover(
+              function () {
+                $(this).css("transform", "translateY(-4px)");
+                $(this).css("box-shadow", "0 10px 20px rgba(0,0,0,0.1)");
+              },
+              function () {
+                $(this).css("transform", "translateY(0)");
+                $(this).css("box-shadow", "none");
+              }
+            );
           });
-        });
+        </script>
+      </div>
+    </div>
+    <!--begin::Script-->
 
-        const cardHeaders = document.querySelectorAll(
-          ".connectedSortable .card-header"
-        );
-        cardHeaders.forEach((cardHeader) => {
-          cardHeader.style.cursor = "move";
-        });
-      </script>
-      <!-- apexcharts -->
-      <script
-        src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
-        integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
-        crossorigin="anonymous"
-      ></script>
+    <script>
+      function logout() {
+        localStorage.removeItem("token");
+        location.reload(); // Refresh page
+      }
+    </script>
 
-      <!--**********************************
+    <!--**********************************
             Content body end
         ***********************************-->
 
-      <!--**********************************
+    <!--**********************************
             Footer start
         ***********************************-->
-      <div class="footer">
-        <div class="copyright">
-          <p>Copyright ©BDIC Ltd 2025. All rights reserved.</p>
-        </div>
+    <div class="footer">
+      <div class="copyright">
+        <p>Copyright ©BDIC Ltd 2025. All rights reserved.</p>
       </div>
-      <!--**********************************
+    </div>
+    <!--**********************************
             Footer end
         ***********************************-->
 
-      <!--**********************************
-           Support ticket button start
-        ***********************************-->
-
-      <!--**********************************
-           Support ticket button end
-        ***********************************-->
-    </div>
-    <!--**********************************
-        Main wrapper end
-    ***********************************-->
-    <!-- <script
-      src="../../code.tidio.co_443/bpnp4xkz2axqrebqxcezgdca9yot1iyn.js"
-      async
-    ></script> -->
     <!--**********************************
         Scripts
     ***********************************-->
     <!-- Required vendors -->
     <script src="vendor/sweetalert2/dist/sweetalert2.min.js"></script>
     <script src="js/plugins-init/sweetalert.init.js"></script>
-    <script src="vendor/global/global.min.js"></script>
-    <script src="vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
-    <script src="vendor/chart.js/Chart.bundle.min.js"></script>
-    <script src="vendor/bootstrap-datetimepicker/js/moment.js"></script>
-    <script src="vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
 
     <script src="js/dashboard/dashboard-1.js"></script>
 

@@ -87,3 +87,17 @@ h5 {
     margin-left: 0 !important;
   }
 }
+
+.text-secondary {
+  opacity: 1 !important;
+  color: #6c757d !important;
+}
+.text-muted {
+  /* font-size: 1rem !important; */
+  line-height: 1.25rem !important;
+}
+
+.nav-item.user-menu,
+.nav-item.kindred_head {
+  display: none;
+}

@@ -31,6 +31,8 @@
       rel="stylesheet"
     />
     <link href="css/style.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/source/auth/styles.css" />
+    <link rel="stylesheet" href="/source/src/bdic/app/css/styles.css" />
     <link
       rel="stylesheet"
       href="../../cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
@@ -38,13 +40,105 @@
     <script src="../../unpkg.com/sweetalert%402.1.2/dist/sweetalert.min.js"></script>
     <link href="vendor/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet" />
     <script src="../../ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
     <style>
+      body {
+        font-size: 16px !important;
+      }
       .camera-upload-box video,
       .camera-upload-box canvas,
       .camera-upload-box img {
         border-radius: 8px;
         margin-bottom: 10px;
+      }
+      /* body {
+        background-color: #f8f9fa;
+      } */
+      .card-header-gradient {
+        background: linear-gradient(to right, #16a34a, #15803d);
+        color: white;
+        border-radius: 0.5rem 0.5rem 0 0 !important;
+      }
+      .icon-container {
+        padding: 0.5rem;
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 0.5rem;
+      }
+      .section-title {
+        color: #16a34a;
+      }
+      .form-control:focus,
+      .form-select:focus {
+        border-color: #16a34a;
+        box-shadow: 0 0 0 0.25rem rgba(22, 163, 74, 0.25);
+      }
+      .btn-primary {
+        background-color: #16a34a;
+        border-color: #16a34a;
+      }
+      .btn-primary:hover {
+        background-color: #15803d;
+        border-color: #15803d;
+      }
+      .file-upload {
+        position: relative;
+        overflow: hidden;
+      }
+      .file-upload-input {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 0;
+        padding: 0;
+        font-size: 20px;
+        cursor: pointer;
+        opacity: 0;
+        filter: alpha(opacity=0);
+      }
+      .info-box {
+        background-color: #f0f9ff;
+        border: 1px solid #bfdbfe;
+        border-radius: 0.5rem;
+      }
+      .info-icon {
+        background-color: #dbeafe;
+        color: #1d4ed8;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 0.75rem;
+      }
+      .passport-upload-area {
+        border: 2px dashed #dee2e6;
+        border-radius: 0.5rem;
+        background-color: #f8f9fa;
+        padding: 1.5rem;
+        text-align: center;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+      .passport-upload-area:hover {
+        background-color: #e9ecef;
+      }
+
+      .header {
+        height: 64px;
+        background-color: white;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
       }
     </style>
   </head>
@@ -63,538 +157,650 @@
         Preloader end
     ********************-->
 
-    <!--**********************************
-        Main wrapper start
-    ***********************************-->
-    <div id="main-wrapper">
-      <!--**********************************
-            Nav header start
-        ***********************************-->
-      <div class="nav-header">
-        <!-- Logo Section -->
-        <a href="index.html" class="brand-logo">
-          <img
-            src="/assets/images/benue-state-logo.png"
-            alt="Government Logo"
-            class="logo-img"
-          />
-          <div class="brand-text">BIRCIIRCIMS</div>
-        </a>
-
-        <!-- Hamburger Menu for Navigation Control -->
-        <div class="nav-control">
-          <div class="hamburger">
-            <span class="line"></span><span class="line"></span
-            ><span class="line"></span>
-          </div>
-        </div>
-      </div>
-      <!--**********************************
-            Nav header end
-        ***********************************-->
-
-      <!--**********************************
-            Header start
-        ***********************************-->
-      <div class="header">
-        <div class="header-content">
-          <nav class="navbar navbar-expand">
-            <div class="collapse navbar-collapse justify-content-between">
-              <div class="header-left">
-                <div class="dashboard_bar">Profile</div>
-              </div>
-              <!-- <ul class="navbar-nav header-right">
-                <li class="nav-item dropdown notification_dropdown">
-                  <div class="input-group search-area">
-                    <input
-                      type="text"
-                      class="form-control"
-                      placeholder="Search here..."
-                    />
-                    <span class="input-group-text"
-                      ><a href="javascript:void(0)"
-                        ><i class="flaticon-381-search-2"></i></a
-                    ></span>
-                  </div>
-                </li>
-              </ul> -->
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="d-flex flex-column h-100">
+        <!-- Sidebar Header -->
+        <div class="p-4 border-bottom">
+          <div class="d-flex align-items-center">
+            <img
+              src="/assets/images/benue-state-logo.png"
+              alt="Benue State Logo"
+              class="me-3"
+              width="40"
+            />
+            <div>
+              <h5 class="mb-0 fw-bold">BIRCIIRCIMS</h5>
+              <small class="text-muted" style="font-size: 0.8rem"
+                >Identity Management</small
+              >
             </div>
-          </nav>
-        </div>
-      </div>
-      <!--**********************************
-            Header end ti-comment-alt
-        ***********************************-->
-
-      <!--**********************************
-            Sidebar start
-        ***********************************-->
-      <div class="deznav">
-        <div class="deznav-scroll">
-          <ul class="metismenu" id="menu">
-            <!-- Super Admin Menu -->
-            <li class="super-admin-menu">
-              <a class="ai-icon" href="index.html" aria-expanded="false">
-                <i class="flaticon-381-networking"></i>
-                <span class="nav-text">Dashboard</span>
-              </a>
-            </li>
-            <!-- user Menu -->
-            <li class="user-menu">
-              <a
-                class="ai-icon"
-                href="user-dasboard.html"
-                aria-expanded="false"
-              >
-                <i class="flaticon-381-networking"></i>
-                <span class="nav-text">Dashboard</span>
-              </a>
-            </li>
-            <li class="super-admin-menu">
-              <a class="ai-icon" href="approvals.html" aria-expanded="false">
-                <i class="fa fa-exchange" aria-hidden="true"></i>
-                <span class="nav-text">Approvals</span>
-              </a>
-            </li>
-
-            <li class="user-menu">
-              <a class="ai-icon" href="request.html" aria-expanded="false">
-                <i class="fa fa-money" aria-hidden="true"></i>
-                <span class="nav-text">View Certificate Status</span>
-              </a>
-            </li>
-            <li class="user-menu">
-              <a class="ai-icon" href="idcard.html" aria-expanded="false">
-                <i class="fa fa-money" aria-hidden="true"></i>
-                <span class="nav-text">View Card Status</span>
-              </a>
-            </li>
-
-            <li class="super-admin-menu">
-              <a class="ai-icon" href="all-request.html" aria-expanded="false">
-                <i class="fa fa-money" aria-hidden="true"></i>
-                <span class="nav-text">View All Request</span>
-              </a>
-            </li>
-            <!-- Super Admin Menu -->
-            <li class="super-admin-menu">
-              <a class="ai-icon" href="citizens.html" aria-expanded="false">
-                <i class="fa fa-user" aria-hidden="true"></i>
-
-                <span class="nav-text">Users</span>
-              </a>
-            </li>
-            <li class="super-admin-menu">
-              <a class="ai-icon" href="kindred.html" aria-expanded="false">
-                <i class="fa fa-user" aria-hidden="true"></i>
-
-                <span class="nav-text">Kindreds</span>
-              </a>
-            </li>
-            <!-- User-menu -->
-            <li class="user-menu">
-              <a class="ai-icon" href="certificate.html" aria-expanded="false">
-                <i class="fa fa-user-plus" aria-hidden="true"></i>
-                <span class="nav-text">Request Certificate</span>
-              </a>
-            </li>
-
-            <li class="user-menu">
-              <a class="ai-icon" href="card.html" aria-expanded="false">
-                <i class="fa fa-user-plus" aria-hidden="true"></i>
-                <span class="nav-text">Request Card</span>
-              </a>
-            </li>
-
-            <li class="user-menu">
-              <a class="ai-icon" href="profile.html" aria-expanded="false">
-                <i class="fa fa-user" aria-hidden="true"></i>
-                <span class="nav-text">User Account</span>
-              </a>
-            </li>
-            <li class="super-admin-menu">
-              <a class="ai-icon" href="transaction.html" aria-expanded="false">
-                <i class="flaticon-381-networking"></i>
-                <span class="nav-text">transactions</span>
-              </a>
-            </li>
-            <li>
-              <a
-                class="ai-icon"
-                href="../../../auth/login.html"
-                aria-expanded="false"
-              >
-                <i class="fa fa-sign-out" aria-hidden="true"></i>
-                <span class="nav-text" onclick="logout(this)">Logout</span>
-              </a>
-            </li>
-          </ul>
-          <div class="copyright">
-            <p>Powered By BDIC <br />© 2025 All Rights Reserved</p>
-            <p class="op5"></p>
           </div>
         </div>
+
+        <!-- Sidebar Content -->
+        <div class="flex-grow-1 py-3 px-4 overflow-auto" id="sidebar-links">
+          <div class="mb-5 p-2 text-muted">
+            <h6 class="text-uppercase text-muted small mb-3 mt-3">User</h6>
+            <ul class="nav flex-column">
+              <li class="nav-item user-menu">
+                <a
+                  href="user-dasboard.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i
+                    class="bi bi-speedometer2 me-2 me-3 fs-5 text-secondary"
+                  ></i>
+                  <span> Dashboard</span>
+                </a>
+              </li>
+              <li class="nav-item user-menu">
+                <a href="card.html" class="nav-link d-flex align-items-center">
+                  <i class="bi bi-credit-card text-secondary me-3 fs-5"></i>
+                  <span>Request Card</span>
+                </a>
+              </li>
+              <li class="nav-item user-menu">
+                <a
+                  href="certificate.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi bi-file-text text-primary me-3 fs-5"></i>
+                  <span>Request Certificate</span>
+                </a>
+              </li>
+              <li class="nav-item user-menu">
+                <a
+                  href="request.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi bi-file-text text-secodary me-3 fs-5"></i>
+                  <span>View Certificate Status</span>
+                </a>
+              </li>
+              <li class="nav-item user-menu">
+                <a
+                  href="idcard.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi bi-credit-card fs-5 text-secodary me-3"></i>
+                  <span>View Card Status</span>
+                </a>
+              </li>
+
+              <li class="nav-item user-menu">
+                <a
+                  href="profile.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi bi-person text-secodary fs-5 me-3"></i>
+                  <span>User Account</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h6 class="text-uppercase text-muted small mb-3">Account</h6>
+            <ul class="nav flex-column">
+              <li class="nav-item mb-1">
+                <a href="#" class="nav-link d-flex align-items-center">
+                  <i class="fas fa-cog me-3"></i>
+                  <span>Settings</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  href="../../..//auth/login.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="fas fa-sign-out-alt me-3"></i>
+                  <span onclick="logout(this)">Logout</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="overlay" id="sidebar-overlay"></div>
+
+        <!-- Sidebar Footer -->
+        <div class="p-3 border-top text-center">
+          <small class="text-muted">Powered by BDIC</small>
+          <p class="small text-muted mb-0">© 2025 All Rights Reserved</p>
+        </div>
       </div>
-      <!--**********************************
+    </div>
+    <!--**********************************
             Sidebar end
         ***********************************-->
 
-      <!--**********************************
+    <!--**********************************
             Content body start
         ***********************************-->
-      <div class="content-body">
+    <div class="main-content">
+      <!-- Header -->
+      <header class="navbar navbar-expand-lg bg-white shadow-sm px-4 py-3">
         <div class="container-fluid">
-          <!-- row -->
-          <div class="row">
-            <div class="col-xl-12 col-lg-12">
-              <div class="card card-bx m-b30">
-                <div class="card-header d-flex justify-content-between">
-                  <h4 class="card-title">Profile Details</h4>
-                </div>
-                <form
-                  class="profile-form"
-                  id="indigeneForm"
-                  enctype="multipart/form-data"
+          <button class="btn d-lg-none" id="sidebarToggle">
+            <i class="fas fa-bars"></i>
+          </button>
+
+          <div class="d-none d-md-block align-items-center">
+            <h5 class="mb-0 me-2">Certificate Request</h5>
+            <small class="text-muted"
+              >Welcome back, <span id="header-user-label"> User </span>
+            </small>
+          </div>
+
+          <div class="ms-auto d-flex align-items-center">
+            <div class="d-none d-md-flex position-relative me-3">
+              <i
+                class="fas fa-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"
+              ></i>
+              <input
+                type="search"
+                class="form-control ps-5"
+                id="searchInput"
+                placeholder="Search here..."
+                onkeyup="searchTable()"
+                style="width: 250px"
+              />
+            </div>
+
+            <div class="dropdown me-3">
+              <button class="btn position-relative" data-bs-toggle="dropdown">
+                <i class="fas fa-bell"></i>
+                <span
+                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notification-badge"
+                  >3</span
                 >
-                  <div class="card-body">
-                    <div class="row">
-                      <div class="col-sm-4 m-b30">
-                        <label class="form-label">First Name</label>
-                        <input
-                          type="text"
-                          class="form-control"
-                          name="firstname"
-                          id="first_name"
-                          value="firstname"
-                          readonly
-                        />
-                      </div>
-                      <div class="col-sm-4 m-b30">
-                        <label class="form-label">middlename</label>
-                        <input
-                          id="middlename"
-                          type="text"
-                          class="form-control"
-                          name="middlename"
-                          readonly
-                        />
-                      </div>
-                      <div class="col-sm-4 m-b30">
-                        <label class="form-label">Lastname</label>
-                        <input
-                          id="lastname"
-                          type="text"
-                          value="lastname"
-                          name="lastname"
-                          class="form-control"
-                          readonly
-                        />
-                      </div>
-                      <div class="col-sm-4 m-b30">
-                        <label class="form-label">Email</label>
-                        <input
-                          type="email"
-                          class="form-control"
-                          id="email"
-                          name="email"
-                          required
-                        />
-                      </div>
+              </button>
+              <div
+                class="dropdown-menu dropdown-menu-end p-0"
+                style="width: 300px"
+              >
+                <div class="p-3 border-bottom">
+                  <h6 class="mb-0">Notifications</h6>
+                </div>
+                <div class="overflow-auto" style="max-height: 300px">
+                  <a href="#" class="dropdown-item p-3 border-bottom">
+                    <div class="d-flex justify-content-between">
+                      <span class="fw-medium">New Certificate Request</span>
+                      <small class="text-muted">5 min ago</small>
+                    </div>
+                    <small class="text-muted d-block mt-1"
+                      >John Doe submitted a new certificate application</small
+                    >
+                  </a>
+                  <a href="#" class="dropdown-item p-3 border-bottom">
+                    <div class="d-flex justify-content-between">
+                      <span class="fw-medium">Card Ready for Pickup</span>
+                      <small class="text-muted">1 hour ago</small>
+                    </div>
+                    <small class="text-muted d-block mt-1"
+                      >ID Card for Jane Smith is ready for collection</small
+                    >
+                  </a>
+                  <a href="#" class="dropdown-item p-3">
+                    <div class="d-flex justify-content-between">
+                      <span class="fw-medium">System Update</span>
+                      <small class="text-muted">2 hours ago</small>
+                    </div>
+                    <small class="text-muted d-block mt-1"
+                      >Database backup completed successfully</small
+                    >
+                  </a>
+                </div>
+              </div>
+            </div>
 
-                      <div class="col-sm-4 m-b30">
-                        <label class="form-label">Mobile Number</label>
-                        <input
-                          id="phone"
-                          type="text"
-                          class="form-control"
-                          required
-                          name="phone"
-                        />
-                      </div>
-                      <div class="col-sm-4 m-b30">
-                        <label class="form-label">Gender</label>
+            <div class="dropdown">
+              <button class="btn p-0" data-bs-toggle="dropdown">
+                <div class="avatar">AD</div>
+              </button>
+              <div class="dropdown-menu dropdown-menu-end">
+                <div class="px-4 py-3">
+                  <h6 class="mb-0">Administrator</h6>
+                  <small class="text-muted">admin@benue.gov.ng</small>
+                </div>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item"
+                  ><i class="fas fa-user me-2"></i> Profile</a
+                >
+                <a href="#" class="dropdown-item"
+                  ><i class="fas fa-cog me-2"></i> Settings</a
+                >
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item text-danger"
+                  ><i class="fas fa-sign-out-alt me-2"></i> Logout</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+      <main class="flex-grow-1 p-4">
+        <div class="container-fluid max-w-6xl mx-auto p-3">
+          <div class="card shadow-lg border-0">
+            <div class="card-header card-header-gradient text-white">
+              <div class="d-flex align-items-center">
+                <div class="icon-container me-3">
+                  <i class="bi bi-file-text fs-5"></i>
+                </div>
+                <div>
+                  <h2 class="h2 fw-bold mb-0 text-white">
+                    Certificate Request Form
+                  </h2>
+                  <p class="text-white text-opacity-80 mb-0">
+                    Complete your information for indigeneship certificate
+                    request
+                  </p>
+                </div>
+              </div>
+            </div>
 
-                        <input
-                          id="gender"
-                          type="text"
-                          class="form-control"
-                          required
-                          name="gender"
-                          readonly
-                        />
-                      </div>
-                      <div class="col-sm-4 m-b30">
-                        <label class="form-label">Marital Status</label>
-                        <select
-                          id="maritalStatus"
-                          name="maritalStatus"
-                          required
-                          class="selectpicker nice-select default-select form-control wide mh-auto"
-                        >
-                          <option value="single ">Single</option>
-                          <option value="married">Married</option>
-                          <option value="divorced">Divorced</option>
-                          <option value="widowed">Widowed</option>
-                        </select>
-                      </div>
-                      <div class="col-sm-4 m-b30">
-                        <label class="form-label">State Of Origin</label>
-                        <input
-                          id="stateOfOrigin"
-                          type="text"
-                          class="form-control"
-                          required
-                          name="stateOfOrigin"
-                          readonly
-                        />
-                      </div>
-                      <div class="col-sm-4 m-b30">
-                        <label class="form-label">Date Of Birth</label>
+            <form
+              class="profile-form"
+              id="indigeneForm"
+              enctype="multipart/form-data"
+            >
+              <div class="card-body p-4 p-md-5">
+                <!-- Personal Information Section -->
+                <div class="mb-5">
+                  <div class="d-flex align-items-center mb-4">
+                    <i class="bi bi-person fs-5 text-success me-2"></i>
+                    <h3 class="mb-0 fs-5 fw-semibold">Personal Information</h3>
+                  </div>
 
-                        <input
-                          id="DOB"
-                          type="date"
-                          class="form-control"
-                          name="DOB"
-                          min="1900-01-01"
-                          required
-                          readonly
-                        />
-                      </div>
-                      <div class="col-sm-4 m-b30">
-                        <label class="form-label">Local Government</label>
-                        <input
-                          id="lgaOfOrigin"
-                          type="text"
-                          class="form-control"
-                          required
-                          name="lgaOfOrigin"
-                          readonly
-                        />
-                      </div>
+                  <div class="row g-3">
+                    <div class="col-md-4">
+                      <label for="first_name" class="form-label"
+                        >First Name</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control bg-light"
+                        id="first_name"
+                        name="firstname"
+                        value="firstname"
+                        readonly
+                      />
+                    </div>
+                    <div class="col-md-4">
+                      <label for="middlename" class="form-label"
+                        >Middle Name</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control bg-light"
+                        id="middlename"
+                        name="middlename"
+                        readonly
+                      />
+                    </div>
+                    <div class="col-md-4">
+                      <label for="lastname" class="form-label">Last Name</label>
+                      <input
+                        type="text"
+                        class="form-control bg-light"
+                        id="lastname"
+                        name="lastname"
+                        value="lastname"
+                        readonly
+                      />
+                    </div>
+                    <div class="col-md-4">
+                      <label for="email" class="form-label">
+                        <i class="bi bi-envelope me-1"></i> Email Address
+                      </label>
+                      <input
+                        type="email"
+                        class="form-control"
+                        id="email"
+                        name="email"
+                        required
+                      />
+                    </div>
+                    <div class="col-md-4">
+                      <label for="phone" class="form-label">
+                        <i class="bi bi-telephone me-1"></i> Mobile Number
+                      </label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="phone"
+                        name="phone"
+                        required
+                      />
+                    </div>
+                    <div class="col-md-4">
+                      <label for="gender" class="form-label">Gender</label>
+                      <input
+                        type="text"
+                        class="form-control bg-light"
+                        id="gender"
+                        name="gender"
+                        required
+                        readonly
+                      />
+                    </div>
+                    <div class="col-md-4">
+                      <label for="maritalStatus" class="form-label"
+                        >Marital Status</label
+                      >
+                      <select
+                        id="maritalStatus"
+                        class="form-select"
+                        name="maritalStatus"
+                        required
+                      >
+                        <option selected disabled value="">
+                          Select marital status
+                        </option>
+                        <option value="single">Single</option>
+                        <option value="married">Married</option>
+                        <option value="divorced">Divorced</option>
+                        <option value="widowed">Widowed</option>
+                      </select>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="stateOfOrigin" class="form-label"
+                        >State Of Origin</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control bg-light"
+                        id="stateOfOrigin"
+                        name="stateOfOrigin"
+                        required
+                        readonly
+                      />
+                    </div>
+                    <div class="col-md-4">
+                      <label for="DOB" class="form-label">Date Of Birth</label>
+                      <input
+                        type="date"
+                        class="form-control bg-light"
+                        id="DOB"
+                        name="DOB"
+                        min="1900-01-01"
+                        required
+                        readonly
+                      />
+                    </div>
+                    <div class="col-md-4">
+                      <label for="lgaOfOrigin" class="form-label"
+                        >Local Government</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control bg-light"
+                        id="lgaOfOrigin"
+                        name="lgaOfOrigin"
+                        required
+                        readonly
+                      />
+                    </div>
+                    <div class="col-md-4">
+                      <label for="address" class="form-label">
+                        <i class="bi bi-geo-alt me-1"></i> Address
+                      </label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="address"
+                        name="address"
+                        required
+                      />
+                    </div>
+                    <div class="col-md-4">
+                      <label for="ward" class="form-label"
+                        >Community/Ward</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="ward"
+                        name="ward"
+                        required
+                      />
+                    </div>
+                    <div class="col-md-4">
+                      <label for="kindred" class="form-label">Kindred</label>
+                      <select
+                        id="kindred"
+                        class="form-select"
+                        name="kindred"
+                        required
+                      >
+                        <option selected disabled value="">
+                          Select Kindred
+                        </option>
+                        <option value="">Select Kindred</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
 
-                      <div class="col-sm-4 m-b30">
-                        <label class="form-label">Address</label>
-                        <!-- readonly -->
-                        <input
-                          id="address"
-                          type="text"
-                          class="form-control"
-                          required
-                          name="address"
-                        />
-                      </div>
+                <hr class="my-4" />
 
-                      <div class="col-sm-4 m-b30">
-                        <label class="form-label">Community/Ward</label>
-                        <input
-                          id="ward"
-                          type="text"
-                          class="form-control"
-                          required
-                          name="ward"
-                        />
-                      </div>
-                      <div class="col-sm-4 m-b30">
-                        <label class="form-label">Kindred</label>
-                        <select
-                          id="kindred"
-                          class="form-control"
-                          name="kindred"
-                          required
-                          class="selectpicker nice-select default-select form-control wide mh-auto"
-                        >
-                          <option value="">Select Kindred</option>
-                        </select>
-                      </div>
+                <!-- Parent/Guardian Information Section -->
+                <div class="mb-5">
+                  <div class="d-flex align-items-center mb-4">
+                    <i class="bi bi-people fs-5 text-success me-2"></i>
+                    <h3 class="mb-0 fs-5 fw-semibold">
+                      Parent/Guardian Information
+                    </h3>
+                  </div>
 
-                      <h4 class="card-title">Parent/Guardian Information</h4>
-                      <div class="col-sm-4 m-b30">
-                        <label class="form-label">Father’s Name</label>
-                        <input
-                          id="fathersName"
-                          type="text"
-                          class="form-control"
-                          required
-                          name="fathersName"
-                          required
-                        />
-                      </div>
-                      <div class="col-sm-4 m-b30">
-                        <label class="form-label">Mother’s Name</label>
-                        <input
-                          id="mothersName"
-                          type="text"
-                          class="form-control"
-                          required
-                          name="mothersName"
-                          required
-                        />
-                      </div>
-                      <div class="col-sm-4 m-b30">
-                        <label class="form-label"
-                          >Guardian’s Name (if applicable):</label
-                        >
-                        <input
-                          id="guardian"
-                          type="text"
-                          class="form-control"
-                          name="guardian"
-                        />
-                      </div>
+                  <div class="row g-3">
+                    <div class="col-md-4">
+                      <label for="fathersName" class="form-label"
+                        >Father's Name</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="fathersName"
+                        name="fathersName"
+                        required
+                      />
+                    </div>
+                    <div class="col-md-4">
+                      <label for="mothersName" class="form-label"
+                        >Mother's Name</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="mothersName"
+                        name="mothersName"
+                        required
+                      />
+                    </div>
+                    <div class="col-md-4">
+                      <label for="guardian" class="form-label"
+                        >Guardian's Name (if applicable)</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="guardian"
+                        name="guardian"
+                      />
+                    </div>
+                    <div class="col-md-4">
+                      <label for="fathersStateOfOrigin" class="form-label"
+                        >Father's State of Origin</label
+                      >
+                      <select
+                        class="form-select"
+                        name="fathersStateOfOrigin"
+                        required
+                      >
+                        <option selected disabled value="">Select State</option>
+                        <option value="adamawa">Adamawa</option>
+                        <option value="akwa ibom">Akwa Ibom</option>
+                        <option value="anambra">Anambra</option>
+                        <option value="abia">Abia</option>
+                        <option value="bauchi">Bauchi</option>
+                        <option value="benue">Benue</option>
+                        <option value="borno">Borno</option>
+                        <option value="bayelsa">Bayelsa</option>
+                        <option value="delta">Delta</option>
+                        <option value="ebonyi">Ebonyi</option>
+                        <option value="edo">Edo</option>
+                        <option value="enugu">Enugu</option>
+                        <option value="abuja">Abuja</option>
+                        <option value="gombe">Gombe</option>
+                        <option value="jigawa">Jigawa</option>
+                        <option value="ekiti">Ekiti</option>
+                        <option value="lagos">Lagos</option>
+                        <option value="oyo">Oyo</option>
+                        <option value="imo">Imo</option>
+                        <option value="kaduna">Kaduna</option>
+                        <option value="kebbi">Kebbi</option>
+                        <option value="kano">Kano</option>
+                        <option value="kogi">Kogi</option>
+                        <option value="osun">Osun</option>
+                        <option value="sokoto">Sokoto</option>
+                        <option value="plateau">Plateau</option>
+                        <option value="taraba">Taraba</option>
+                        <option value="yobe">Yobe</option>
+                        <option value="zamfara">Zamfara</option>
+                        <option value="katsina">Katsina</option>
+                        <option value="kwara">Kwara</option>
+                        <option value="nasarawa">Nasarawa</option>
+                        <option value="niger">Niger</option>
+                        <option value="rivers">Rivers</option>
+                      </select>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="mothersStateOfOrigin" class="form-label"
+                        >Mother's State of Origin</label
+                      >
+                      <select
+                        class="form-select"
+                        name="mothersStateOfOrigin"
+                        required
+                      >
+                        <option selected disabled value="">Select State</option>
+                        <option value="adamawa">Adamawa</option>
+                        <option value="akwa ibom">Akwa Ibom</option>
+                        <option value="anambra">Anambra</option>
+                        <option value="abia">Abia</option>
+                        <option value="bauchi">Bauchi</option>
+                        <option value="benue">Benue</option>
+                        <option value="borno">Borno</option>
+                        <option value="bayelsa">Bayelsa</option>
+                        <option value="delta">Delta</option>
+                        <option value="ebonyi">Ebonyi</option>
+                        <option value="edo">Edo</option>
+                        <option value="enugu">Enugu</option>
+                        <option value="abuja">Abuja</option>
+                        <option value="gombe">Gombe</option>
+                        <option value="jigawa">Jigawa</option>
+                        <option value="ekiti">Ekiti</option>
+                        <option value="lagos">Lagos</option>
+                        <option value="oyo">Oyo</option>
+                        <option value="imo">Imo</option>
+                        <option value="kaduna">Kaduna</option>
+                        <option value="kebbi">Kebbi</option>
+                        <option value="kano">Kano</option>
+                        <option value="kogi">Kogi</option>
+                        <option value="osun">Osun</option>
+                        <option value="sokoto">Sokoto</option>
+                        <option value="plateau">Plateau</option>
+                        <option value="taraba">Taraba</option>
+                        <option value="yobe">Yobe</option>
+                        <option value="zamfara">Zamfara</option>
+                        <option value="katsina">Katsina</option>
+                        <option value="kwara">Kwara</option>
+                        <option value="nasarawa">Nasarawa</option>
+                        <option value="niger">Niger</option>
+                        <option value="rivers">Rivers</option>
+                      </select>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="relationshionToguardian" class="form-label"
+                        >Relationship to Guardian</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="relationshionToguardian"
+                        name="relationshionToguardian"
+                      />
+                    </div>
+                  </div>
+                </div>
 
-                      <div class="col-sm-4 m-b30">
-                        <label class="form-label"
-                          >Father’s State of Origin</label
-                        >
-                        <!-- class="form-select" -->
-                        <select
-                          id="fathersStateOfOrigin"
-                          name="fathersStateOfOrigin"
-                          required
-                          class="selectpicker nice-select default-select form-control wide mh-auto"
-                        >
-                          <option value="">Select State</option>
-                          <option value="adamawa">Adamawa</option>
-                          <option value="akwa_ibom">Akwa Ibom</option>
-                          <option value="anambra">Anambra</option>
-                          <option value="abia">Abia</option>
-                          <option value="bauchi">Bauchi</option>
-                          <option value="benue">Benue</option>
-                          <option value="borno">Borno</option>
-                          <option value="bayelsa">Bayelsa</option>
-                          <option value="delta">Delta</option>
-                          <option value="ebonyi">Ebonyi</option>
-                          <option value="edo">Edo</option>
-                          <option value="enugu">Enugu</option>
-                          <option value="abuja">abuja</option>
-                          <option value="gombe">Gombe</option>
-                          <option value="jigawa">Jigawa</option>
-                          <option value="ekiti">Ekiti</option>
-                          <option value="lagos">Lagos</option>
-                          <option value="oyo">Oyo</option>
-                          <option value="imo">Imo</option>
-                          <option value="kaduna">Kaduna</option>
-                          <option value="kebbi">Kebbi</option>
-                          <option value="kano">Kano</option>
-                          <option value="kogi">Kogi</option>
-                          <option value="osun">Osun</option>
-                          <option value="sokoto">Sokoto</option>
-                          <option value="plateau">Plateau</option>
-                          <option value="taraba">Taraba</option>
-                          <option value="yobe">Yobe</option>
-                          <option value="zamfara">zamfara</option>
-                          <option value="katsina">Katsina</option>
-                          <option value="kwara">Kwara</option>
-                          <option value="nasarawa">Nasarawa</option>
-                          <option value="niger">Niger</option>
-                          <option value="rivers">Rivers</option>
-                        </select>
-                      </div>
+                <hr class="my-4" />
 
-                      <div class="col-sm-4 m-b30">
-                        <label class="form-label"
-                          >Mother’s State of Origin</label
-                        >
-                        <!-- class="form-select" -->
-                        <select
-                          id="mothersStateOfOrigin"
-                          name="mothersStateOfOrigin"
-                          required
-                          class="selectpicker nice-select default-select form-control wide mh-auto"
-                        >
-                          <option value="">Select State</option>
-                          <option value="adamawa">Adamawa</option>
-                          <option value="akwa_ibom">Akwa Ibom</option>
-                          <option value="anambra">Anambra</option>
-                          <option value="abia">Abia</option>
-                          <option value="bauchi">Bauchi</option>
-                          <option value="benue">Benue</option>
-                          <option value="borno">Borno</option>
-                          <option value="bayelsa">Bayelsa</option>
-                          <option value="delta">Delta</option>
-                          <option value="ebonyi">Ebonyi</option>
-                          <option value="edo">Edo</option>
-                          <option value="enugu">Enugu</option>
-                          <option value="abuja">abuja</option>
-                          <option value="gombe">Gombe</option>
-                          <option value="jigawa">Jigawa</option>
-                          <option value="ekiti">Ekiti</option>
-                          <option value="lagos">Lagos</option>
-                          <option value="oyo">Oyo</option>
-                          <option value="imo">Imo</option>
-                          <option value="kaduna">Kaduna</option>
-                          <option value="kebbi">Kebbi</option>
-                          <option value="kano">Kano</option>
-                          <option value="kogi">Kogi</option>
-                          <option value="osun">Osun</option>
-                          <option value="sokoto">Sokoto</option>
-                          <option value="plateau">Plateau</option>
-                          <option value="taraba">Taraba</option>
-                          <option value="yobe">Yobe</option>
-                          <option value="zamfara">zamfara</option>
-                          <option value="katsina">Katsina</option>
-                          <option value="kwara">Kwara</option>
-                          <option value="nasarawa">Nasarawa</option>
-                          <option value="niger">Niger</option>
-                          <option value="rivers">Rivers</option>
-                        </select>
-                      </div>
+                <!-- Supporting Documents Section -->
+                <div class="mb-4">
+                  <div class="d-flex align-items-center mb-4">
+                    <i class="bi bi-file-text fs-5 text-success me-2"></i>
+                    <h3 class="mb-0 fs-5 fw-semibold">Supporting Documents</h3>
+                  </div>
 
-                      <div class="col-sm-4 m-b30">
-                        <label class="form-label"
-                          >Relationship to Guardian</label
-                        >
-                        <input
-                          id="relationshionToguardian"
-                          type="text"
-                          class="form-control"
-                          name="relationshionToguardian"
-                        />
+                  <div class="row g-3">
+                    <div class="col-md-4">
+                      <label for="birthCertificate" class="form-label">
+                        Birth Certificate or Declaration of Age
+                        <span class="text-danger">*</span>
+                      </label>
+                      <input
+                        type="file"
+                        class="form-control"
+                        id="birthCertificate"
+                        name="birthCertificate"
+                        required
+                      />
+                      <div class="form-text">
+                        Clear scan of birth certificate or age declaration
                       </div>
-                      <h4 class="card-title">Supporting Documents</h4>
-                      <div class="col-sm-4 m-b30">
-                        <label class="form-label"
-                          >Birth Certificate or Declaration of Age</label
-                        >
-                        <input
-                          type="file"
-                          class="form-control"
-                          required
-                          name="birthCertificate"
-                        />
+                    </div>
+                    <div class="col-md-4">
+                      <label for="idCard" class="form-label">
+                        National ID Number (NIN) Slip or ID Card
+                        <span class="text-danger">*</span>
+                      </label>
+                      <input
+                        type="file"
+                        class="form-control"
+                        id="idCard"
+                        name="idCard"
+                        required
+                      />
+                      <div class="form-text">
+                        Front and back of ID card or NIN slip
                       </div>
+                    </div>
+                    <div class="col-md-4">
+                      <label class="form-label d-flex align-items-center">
+                        <i class="bi bi-camera me-1"></i> Recent Passport
+                        Photograph <span class="text-danger ms-1">*</span>
+                      </label>
+                      <div class="passport-upload-area" id="passportUploadArea">
+                        <i class="bi bi-camera fs-1 text-muted mb-3"></i>
+                        <div class="mb-3">
+                          <!-- <button
+                            type="button"
+                            class="btn btn-outline-secondary btn-sm mb-2"
+                            id="openCameraBtn"
+                          >
+                            Open Camera
+                          </button>
+                          <p class="text-muted small mb-2">or</p>
+                          <button
+                            type="button"
+                            class="btn btn-link btn-sm"
+                            id="uploadPhotoBtn"
+                          >
+                            Upload Photo
+                          </button> -->
 
-                      <div class="col-sm-4 m-b30">
-                        <label class="form-label"
-                          >National Identification Number (NIN) Slip or ID
-                          Card</label
-                        >
-                        <input
-                          type="file"
-                          class="form-control"
-                          required
-                          name="idCard"
-                        />
-                      </div>
-                      <!-- <div class="col-sm-4 m-b30">
-                        <label class="form-label"
-                          >Recent Passport Photograph
-                        </label>
-                        <input
-                          type="file"
-                          class="form-control"
-                          required
-                          name="passportPhoto"
-                        />
-                      </div> -->
-                      <div class="col-sm-4 m-b30">
-                        <label class="form-label"
-                          >Recent Passport Photograph</label
-                        >
-                        <div
-                          class="camera-upload-box text-center border rounded p-3"
-                        >
                           <video
                             id="camera-stream"
                             width="100%"
@@ -642,289 +848,300 @@
                               Close Camera
                             </button>
                           </div>
-
-                          <input
-                            type="file"
-                            id="passportPhoto"
-                            name="passportPhoto"
-                            class="form-control"
-                            accept="image/*"
-                            style="display: none"
-                          />
-                          <small class="text-muted d-block"
-                            >Or
-                            <button
-                              type="button"
-                              class="btn btn-link p-0"
-                              id="upload-photo-btn"
-                            >
-                              Upload Photo
-                            </button>
-                            instead.</small
-                          >
-
-                          <input
-                            type="hidden"
-                            name="passportPhotoData"
-                            id="passportPhotoData"
-                          />
                         </div>
-                      </div>
-                      <!-- <div class="col-sm-4 m-b30">
-                        <label class="form-label">
-                          Parent/Guardian’s Indigene Certificate
-                        </label>
                         <input
                           type="file"
-                          class="form-control"
-                          required
-                          name="parentGuardianIndigeneCert"
+                          class="d-none"
+                          id="passportPhoto"
+                          name="passportPhoto"
+                          accept="image/*"
                         />
-                      </div> -->
+                        <small class="text-muted d-block"
+                          >Or
+                          <button
+                            type="button"
+                            class="btn btn-link p-0"
+                            id="upload-photo-btn"
+                          >
+                            Upload Photo
+                          </button>
+                          instead.</small
+                        >
 
-                      <!-- <h4 class="card-title">Certificate Purpose:</h4> -->
+                        <input
+                          type="hidden"
+                          name="passportPhotoData"
+                          id="passportPhotoData"
+                        />
+                      </div>
                     </div>
                   </div>
-                  <div class="card-footer">
-                    <button
-                      type="submit"
-                      class="btn"
-                      style="background-color: #2c6e49; color: #fff"
-                    >
-                      Request Certificate
-                    </button>
+
+                  <!-- Information Notice -->
+                  <div class="info-box p-3 mt-4">
+                    <div class="d-flex">
+                      <div class="info-icon me-3">i</div>
+                      <div>
+                        <h6
+                          class="fs-6 fw-medium text-blue-900 mb-1"
+                          style="color: #072475"
+                        >
+                          Document Requirements
+                        </h6>
+                        <p
+                          class="text-sm text-blue-700 mb-0"
+                          style="color: #1d4ed8"
+                        >
+                          Please ensure all documents are clear, legible, and in
+                          supported formats (PDF, JPG, PNG). Maximum file size:
+                          5MB per document.
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                </form>
+                </div>
               </div>
-            </div>
+
+              <div class="card-footer bg-light rounded-bottom p-4">
+                <div class="d-flex flex-column flex-md-row gap-3 w-100">
+                  <button
+                    type="button"
+                    class="btn btn-outline-secondary flex-grow-1 flex-md-grow-0"
+                  >
+                    Save Draft
+                  </button>
+                  <button type="submit" class="btn btn-success flex-grow-1">
+                    Request Certificate
+                  </button>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
-        <script
-          src="../../code.tidio.co_443/bpnp4xkz2axqrebqxcezgdca9yot1iyn.js"
-          async
-        ></script>
-        <script>
-          function logout() {
-            localStorage.removeItem("token");
+      </main>
+      <script
+        src="../../code.tidio.co_443/bpnp4xkz2axqrebqxcezgdca9yot1iyn.js"
+        async
+      ></script>
+      <script>
+        function logout() {
+          localStorage.removeItem("token");
+        }
+      </script>
+
+      <script>
+        let cameraStream = null;
+        let photoCaptured = false;
+
+        // Utility: Convert dataURL to File
+        function dataURLtoFile(dataurl, filename) {
+          const arr = dataurl.split(",");
+          const mime = arr[0].match(/:(.*?);/)[1];
+          const bstr = atob(arr[1]);
+          let n = bstr.length;
+          const u8arr = new Uint8Array(n);
+          while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
           }
-        </script>
+          return new File([u8arr], filename, { type: mime });
+        }
+        $(document).ready(function () {
+          $("#indigeneForm").on("submit", async function (e) {
+            e.preventDefault();
 
-        <script>
-          let cameraStream = null;
-          let photoCaptured = false;
-
-          // Utility: Convert dataURL to File
-          function dataURLtoFile(dataurl, filename) {
-            const arr = dataurl.split(",");
-            const mime = arr[0].match(/:(.*?);/)[1];
-            const bstr = atob(arr[1]);
-            let n = bstr.length;
-            const u8arr = new Uint8Array(n);
-            while (n--) {
-              u8arr[n] = bstr.charCodeAt(n);
-            }
-            return new File([u8arr], filename, { type: mime });
-          }
-          $(document).ready(function () {
-            $("#indigeneForm").on("submit", async function (e) {
-              e.preventDefault();
-
-              try {
-                // Retrieve user authentication data
-                const userData = JSON.parse(localStorage.getItem("token"));
-                if (!userData?.token || !userData?.user?.id) {
-                  Swal.fire("Error", "User authentication failed!", "error");
-                  return;
-                }
-
-                const { token, user } = userData;
-                // const formData = new FormData(this);
-
-                const formData = new FormData();
-                formData.append("firstname", $("#first_name").val());
-                formData.append("middlename", $("#middlename").val());
-                formData.append("lastname", $("#lastname").val());
-                formData.append("email", $("#email").val());
-                formData.append("phone", $("#phone").val());
-                formData.append("gender", $("#gender").val());
-                formData.append("maritalStatus", $("#maritalStatus").val());
-                formData.append("stateOfOrigin", $("#stateOfOrigin").val());
-                formData.append("DOB", $("#DOB").val());
-                formData.append("lgaOfOrigin", $("#lgaOfOrigin").val());
-                formData.append("address", $("#address").val());
-                formData.append("ward", $("#ward").val());
-                formData.append("kindred", $("#kindred").val());
-                formData.append("fathersName", $("#fathersName").val());
-                formData.append("mothersName", $("#mothersName").val());
-                formData.append("guardian", $("#guardian").val());
-                formData.append(
-                  "relationshionToguardian",
-                  $("#relationshionToguardian").val()
-                );
-                formData.append(
-                  "fathersStateOfOrigin",
-                  $("#fathersStateOfOrigin").val()
-                );
-                formData.append(
-                  "mothersStateOfOrigin",
-                  $("#mothersStateOfOrigin").val()
-                );
-                formData.append(
-                  "birthCertificate",
-                  $("#indigeneForm")[0].birthCertificate.files[0]
-                );
-                formData.append(
-                  "idCard",
-                  $("#indigeneForm")[0].idCard.files[0]
-                );
-                // Append passport photo data
-
-                const canvas = $("#snapshot").get(0);
-                const dataURL = canvas.toDataURL("image/jpeg", 0.9);
-                const passportPhotoFile = $("#passportPhoto")[0]?.files[0];
-
-                console.log("photoCaptured:", photoCaptured);
-                console.log("passportPhotoFile:", passportPhotoFile);
-                console.log("dataURL from canvas:", dataURL);
-
-                if (photoCaptured && dataURL) {
-                  formData.append(
-                    "passportPhoto",
-                    dataURLtoFile(dataURL, "captured-passport.jpg")
-                  );
-                } else if (passportPhotoFile) {
-                  formData.append("passportPhoto", passportPhotoFile);
-                }
-
-                formData.append("userId", user.id);
-
-                // Submit form data
-                const response = await $.ajax({
-                  url: `${BACKEND_URL}/indigene/certificate/create`,
-                  type: "POST",
-                  data: formData,
-                  processData: false,
-                  contentType: false,
-                  headers: { Authorization: `Bearer ${token}` },
-                });
-
-                // if (response && response._id) {
-                Swal.fire(
-                  "Application Submitted",
-                  // "Your attestation letter is being prepared.",
-                  "Your request is being processed.",
-                  "success"
-                );
-              } catch (error) {
-                console.error("Error submitting form:", error);
-                Swal.fire(
-                  "Oops...",
-                  error.responseJSON?.message ||
-                    "An error occurred. Please try again!",
-                  "error"
-                );
+            try {
+              // Retrieve user authentication data
+              const userData = JSON.parse(localStorage.getItem("token"));
+              if (!userData?.token || !userData?.user?.id) {
+                Swal.fire("Error", "User authentication failed!", "error");
+                return;
               }
-            });
-          });
-          // ✅ Camera Start
-          $("#start-camera").click(function () {
-            navigator.mediaDevices
-              .getUserMedia({ video: true })
-              .then(function (stream) {
-                cameraStream = stream;
-                $("#camera-stream").get(0).srcObject = stream;
-                $("#camera-stream").show();
-                $("#capture-photo, #close-camera").show();
-                $("#start-camera").hide();
-                $("#photo-preview").hide();
-              })
-              .catch(function (err) {
-                alert("Unable to access camera: " + err);
+
+              const { token, user } = userData;
+              // const formData = new FormData(this);
+
+              const formData = new FormData();
+              formData.append("firstname", $("#first_name").val());
+              formData.append("middlename", $("#middlename").val());
+              formData.append("lastname", $("#lastname").val());
+              formData.append("email", $("#email").val());
+              formData.append("phone", $("#phone").val());
+              formData.append("gender", $("#gender").val());
+              formData.append("maritalStatus", $("#maritalStatus").val());
+              formData.append("stateOfOrigin", $("#stateOfOrigin").val());
+              formData.append("DOB", $("#DOB").val());
+              formData.append("lgaOfOrigin", $("#lgaOfOrigin").val());
+              formData.append("address", $("#address").val());
+              formData.append("ward", $("#ward").val());
+              formData.append("kindred", $("#kindred").val());
+              formData.append("fathersName", $("#fathersName").val());
+              formData.append("mothersName", $("#mothersName").val());
+              formData.append("guardian", $("#guardian").val());
+              formData.append(
+                "relationshionToguardian",
+                $("#relationshionToguardian").val()
+              );
+              formData.append(
+                "fathersStateOfOrigin",
+                $("#fathersStateOfOrigin").val()
+              );
+              formData.append(
+                "mothersStateOfOrigin",
+                $("#mothersStateOfOrigin").val()
+              );
+              formData.append(
+                "birthCertificate",
+                $("#indigeneForm")[0].birthCertificate.files[0]
+              );
+              formData.append("idCard", $("#indigeneForm")[0].idCard.files[0]);
+              // Append passport photo data
+
+              const canvas = $("#snapshot").get(0);
+              const dataURL = canvas.toDataURL("image/jpeg", 0.9);
+              const passportPhotoFile = $("#passportPhoto")[0]?.files[0];
+
+              console.log("photoCaptured:", photoCaptured);
+              console.log("passportPhotoFile:", passportPhotoFile);
+              console.log("dataURL from canvas:", dataURL);
+
+              if (photoCaptured && dataURL) {
+                formData.append(
+                  "passportPhoto",
+                  dataURLtoFile(dataURL, "captured-passport.jpg")
+                );
+              } else if (passportPhotoFile) {
+                formData.append("passportPhoto", passportPhotoFile);
+              }
+
+              formData.append("userId", user.id);
+
+              // Submit form data
+              const response = await $.ajax({
+                url: `${BACKEND_URL}/indigene/certificate/create`,
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                headers: { Authorization: `Bearer ${token}` },
               });
-          });
-          // ✅ Close Camera Manually
-          $("#close-camera").click(function () {
-            if (cameraStream) {
-              cameraStream.getTracks().forEach((track) => track.stop());
-              cameraStream = null;
-            }
-            $("#camera-stream, #capture-photo, #close-camera").hide();
-            $("#start-camera").show();
-          });
 
-          // ✅ Upload Photo from File
-          $("#upload-photo-btn").click(function () {
-            $("#passportPhoto").click();
-          });
-
-          // ✅ Capture Photo & Trigger AutoSave
-          $("#capture-photo").click(function () {
-            const video = $("#camera-stream").get(0);
-            const canvas = $("#snapshot").get(0);
-            const context = canvas.getContext("2d");
-
-            canvas.width = video.videoWidth || 640;
-            canvas.height = video.videoHeight || 480;
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-            const dataUrl = canvas.toDataURL("image/jpeg", 0.9);
-            $("#photo-preview").attr("src", dataUrl).show();
-            $("#passportPhotoData").val(dataUrl);
-
-            if (cameraStream) {
-              cameraStream.getTracks().forEach((track) => track.stop());
-              cameraStream = null;
-            }
-
-            $("#camera-stream, #capture-photo, #close-camera").hide();
-            $("#start-camera").show();
-            photoCaptured = true;
-          });
-          $("#passportPhoto").change(function (e) {
-            const file = e.target.files[0];
-            if (file) {
-              const reader = new FileReader();
-              reader.onload = function (event) {
-                $("#photo-preview").attr("src", event.target.result).show();
-                $("#passportPhotoData").val(event.target.result);
-
-                if (cameraStream) {
-                  cameraStream.getTracks().forEach((track) => track.stop());
-                  cameraStream = null;
-                  $("#camera-stream, #capture-photo, #close-camera").hide();
-                  $("#start-camera").show();
-                }
-                photoCaptured = false; // File upload is NOT photoCaptured
-              };
-              reader.readAsDataURL(file);
+              // if (response && response._id) {
+              Swal.fire(
+                "Application Submitted",
+                // "Your attestation letter is being prepared.",
+                "Your request is being processed.",
+                "success"
+              );
+            } catch (error) {
+              console.error("Error submitting form:", error.message);
+              Swal.fire(
+                "Oops...",
+                error.responseJSON?.message ||
+                  "An error occurred. Please try again!",
+                "error"
+              );
             }
           });
-        </script>
-      </div>
-      <!--**********************************
+        });
+        // ✅ Camera Start
+        $("#start-camera").click(function () {
+          navigator.mediaDevices
+            .getUserMedia({ video: true })
+            .then(function (stream) {
+              cameraStream = stream;
+              $("#camera-stream").get(0).srcObject = stream;
+              $("#camera-stream").show();
+              $("#capture-photo, #close-camera").show();
+              $("#start-camera").hide();
+              $("#photo-preview").hide();
+            })
+            .catch(function (err) {
+              alert("Unable to access camera: " + err);
+            });
+        });
+        // ✅ Close Camera Manually
+        $("#close-camera").click(function () {
+          if (cameraStream) {
+            cameraStream.getTracks().forEach((track) => track.stop());
+            cameraStream = null;
+          }
+          $("#camera-stream, #capture-photo, #close-camera").hide();
+          $("#start-camera").show();
+        });
+
+        // ✅ Upload Photo from File
+        $("#upload-photo-btn").click(function () {
+          $("#passportPhoto").click();
+        });
+
+        // ✅ Capture Photo & Trigger AutoSave
+        $("#capture-photo").click(function () {
+          const video = $("#camera-stream").get(0);
+          const canvas = $("#snapshot").get(0);
+          const context = canvas.getContext("2d");
+
+          canvas.width = video.videoWidth || 640;
+          canvas.height = video.videoHeight || 480;
+          context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+          const dataUrl = canvas.toDataURL("image/jpeg", 0.9);
+          $("#photo-preview").attr("src", dataUrl).show();
+          $("#passportPhotoData").val(dataUrl);
+
+          if (cameraStream) {
+            cameraStream.getTracks().forEach((track) => track.stop());
+            cameraStream = null;
+          }
+
+          $("#camera-stream, #capture-photo, #close-camera").hide();
+          $("#start-camera").show();
+          photoCaptured = true;
+        });
+        $("#passportPhoto").change(function (e) {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function (event) {
+              $("#photo-preview").attr("src", event.target.result).show();
+              $("#passportPhotoData").val(event.target.result);
+
+              if (cameraStream) {
+                cameraStream.getTracks().forEach((track) => track.stop());
+                cameraStream = null;
+                $("#camera-stream, #capture-photo, #close-camera").hide();
+                $("#start-camera").show();
+              }
+              photoCaptured = false; // File upload is NOT photoCaptured
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+      </script>
+    </div>
+    <!--**********************************
             Content body end
         ***********************************-->
 
-      <!--**********************************
+    <!--**********************************
             Footer start
         ***********************************-->
-      <div class="footer">
-        <div class="copyright">
-          <p>Copyright ©BDIC Ltd 2025. All rights reserved.</p>
-        </div>
+    <div class="footer">
+      <div class="copyright">
+        <p>Copyright ©BDIC Ltd 2025. All rights reserved.</p>
       </div>
-      <!--**********************************
+    </div>
+    <!--**********************************
             Footer end
         ***********************************-->
 
-      <!--**********************************
+    <!--**********************************
            Support ticket button start
         ***********************************-->
 
-      <!--**********************************
+    <!--**********************************
            Support ticket button end
         ***********************************-->
-    </div>
+
     <!--**********************************
         Main wrapper end
     ***********************************-->
