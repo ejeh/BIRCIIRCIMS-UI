@@ -4,13 +4,13 @@ const isDevelopment = window.location.hostname === "127.0.0.1";
 //   ? "http://localhost:5000/api"
 //   : "http://api.citizenship.benuestate.gov.ng/api";
 
-const BACKEND_URL = "http://api.citizenship.benuestate.gov.ng/api"
+const BACKEND_URL = "https://api.citizenship.benuestate.gov.ng/api"
   // ? "http://api.citizenship.benuestate.gov.ng/api"
   // : "http://localhost:5000/api"
 
 const FRONTEND_URL = isDevelopment
   ? "http://127.0.0.1:5501"
-  : "http://citizenship.benuestate.gov.ng";
+  : "https://citizenship.benuestate.gov.ng";
 
 // Get user info from localStorage
 const userData = JSON.parse(localStorage.getItem("token") || "{}");
