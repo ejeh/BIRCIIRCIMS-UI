@@ -1543,7 +1543,6 @@ $(document).ready(function () {
     },
     success: function (certificate) {
       if (certificate) {
-        console.log("Latest approved:", certificate);
         // Update UI with this single record
         $("#latest-cert-approved").text(
           certificate.firstname + " " + certificate.lastname
@@ -1571,7 +1570,6 @@ $(document).ready(function () {
     },
     success: function (card) {
       if (card) {
-        console.log("Latest approved:", card);
         // Update UI with this single record
         $("#latest-card-approved").text(card.firstname + " " + card.lastname);
         $("#card-approved").text(card.status);
