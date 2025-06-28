@@ -5,6 +5,7 @@ const isDevelopment = window.location.hostname === "127.0.0.1";
 //   : "http://api.citizenship.benuestate.gov.ng/api";
 
 const BACKEND_URL = "https://api.citizenship.benuestate.gov.ng/api"
+console.log(BACKEND_URL)
   // ? "http://api.citizenship.benuestate.gov.ng/api"
   // : "http://localhost:5000/api"
 
