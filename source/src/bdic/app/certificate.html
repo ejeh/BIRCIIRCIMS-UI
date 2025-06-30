@@ -480,7 +480,7 @@
                         id="gender"
                         name="gender"
                         required
-                        readonly
+                        y
                       />
                     </div>
                     <div class="col-md-4">
@@ -999,9 +999,9 @@
               const dataURL = canvas.toDataURL("image/jpeg", 0.9);
               const passportPhotoFile = $("#passportPhoto")[0]?.files[0];
 
-              console.log("photoCaptured:", photoCaptured);
-              console.log("passportPhotoFile:", passportPhotoFile);
-              console.log("dataURL from canvas:", dataURL);
+              // console.log("photoCaptured:", photoCaptured);
+              // console.log("passportPhotoFile:", passportPhotoFile);
+              // console.log("dataURL from canvas:", dataURL);
 
               if (photoCaptured && dataURL) {
                 formData.append(

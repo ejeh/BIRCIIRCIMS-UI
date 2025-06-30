@@ -4,14 +4,14 @@ const isDevelopment = window.location.hostname === "127.0.0.1";
 //   ? "http://localhost:5000/api"
 //   : "http://api.citizenship.benuestate.gov.ng/api";
 
-const BACKEND_URL = "https://api.citizenship.benuestate.gov.ng/api"
+const BACKEND_URL = "https://api.citizenship.benuestate.gov.ng/api";
 // console.log(BACKEND_URL)
-// ? "http://api.citizenship.benuestate.gov.ng/api"
-// : "http://localhost:5000/api"
 
 const FRONTEND_URL = isDevelopment
   ? "http://127.0.0.1:5501"
   : "https://citizenship.benuestate.gov.ng";
+
+console.log("FRONTEND_URL", FRONTEND_URL);
 
 // Get user info from localStorage
 const userData = JSON.parse(localStorage.getItem("token") || "{}");
@@ -22,59 +22,41 @@ $(document).ready(function () {
 
   $("#header-user-label").text(user.firstname);
 
-  // Change sidebar label based on role
-  if (userRole === "super_admin" || userRole === "support_admin") {
-    $("#sidebar-user-label").text("Administration");
-  } else {
-    $("#sidebar-user-label").text("User");
-  }
+  // Sidebar label
+  $("#sidebar-user-label").text(
+    ["super_admin", "support_admin", "kindred_head"].includes(userRole)
+      ? "Administration"
+      : "User"
+  );
 
-  console.log(userRole);
+  // First, hide all role-specific menus
+  $(
+    ".nav-item.user-menu, .nav-item.kindred_head, .nav-item.support-admin-menu, .nav-item.super-admin-menu"
+  ).hide();
 
-  // Show/hide menu items based on role
+  // Show only what’s allowed per role
   switch (userRole) {
     case "user":
       $(".nav-item.user-menu").show();
-      // hide kindred head specific
-      $(
-        '.nav-item.kindred_head:has(a[href="kindred-dasboard.html"]), .nav-item.kindred_head:has(a[href="kindred-head.html"])'
-      ).hide();
-
-      $(
-        '.nav-item.super-admin-menu:has(a[href="all-request.html"]), .nav-item.super-admin-menu:has(a[href="approvals.html"]), .nav-item.super-admin-menu:has(a[href="all-request.html"]), .nav-item.super-admin-menu:has(a[href="all-card.html"]), .nav-item.super-admin-menu:has(a[href="kindred.html"]), .nav-item.super-admin-menu:has(a[href="support-admin-lga.html"]), .nav-item.super-admin-menu:has(a[href="index.html"]), .nav-item.super-admin-menu:has(a[href="citizens.html"])'
-      ).hide();
-
       break;
 
     case "kindred_head":
       $(".nav-item.kindred_head").show();
-      $(".nav-item.user-menu:has(a[href='profile.html'])").show();
-      $(
-        '.nav-item.support-admin-menu:has(a[href="user-kindred.html"]), .nav-item.support-admin-menu:has(a[href="support-admin-lga.html"])'
-      ).hide();
-      $(
-        '.nav-item.super-admin-menu:has(a[href="all-request.html"]), .nav-item.super-admin-menu:has(a[href="approvals.html"]), .nav-item.super-admin-menu:has(a[href="all-request.html"]), .nav-item.super-admin-menu:has(a[href="all-card.html"]), .nav-item.super-admin-menu:has(a[href="kindred.html"]), .nav-item.super-admin-menu:has(a[href="support-admin-lga.html"]), .nav-item.super-admin-menu:has(a[href="index.html"]), .nav-item.super-admin-menu:has(a[href="citizens.html"])'
-      ).hide();
-
+      // Also show 'profile.html' from user-menu
+      $('.nav-item.user-menu:has(a[href="profile.html"])').show();
       break;
 
     case "support_admin":
-      $(".nav-item .user-menu").hide();
-      $(".nav-item .kindred_head").hide();
-      $(
-        '.nav-item.super-admin-menu:has(a[href="all-request.html"]), .nav-item.super-admin-menu:has(a[href="approvals.html"]), .nav-item.super-admin-menu:has(a[href="all-request.html"]), .nav-item.super-admin-menu:has(a[href="all-card.html"]), .nav-item.super-admin-menu:has(a[href="kindred.html"]), .nav-item.super-admin-menu:has(a[href="support-admin-lga.html"]), .nav-item.super-admin-menu:has(a[href="index.html"]), .nav-item.super-admin-menu:has(a[href="citizens.html"])'
-      ).hide();
-      // example: show dashboard only for support_admin if needed
+      $(".nav-item.support-admin-menu").show();
       $('.super-admin-menu:has(a[href="index.html"])').show(); // optional if present
       break;
 
     case "super_admin":
-      $(".nav-item.support-admin-menu").hide();
-      $(".super-admin-menu").show(); // if present
+      $(".nav-item.super-admin-menu").show();
       break;
 
     default:
-      console.warn("No valid role found");
+      console.warn("Unknown role:", userRole);
   }
 });
 
@@ -108,30 +90,6 @@ $(document).ready(function () {
     }
   }
 });
-
-// $(document).ready(function () {
-//   // Assume the user role is dynamically fetched from your backend
-//   const userRole = user.role;
-
-//   // Hide all menus initially
-//   $(".super-admin-menu, .support-admin-menu, .user-menu ").hide();
-
-//   // Show menus based on role
-//   if (userRole === "super_admin") {
-//     $(".super-admin-menu").show();
-//   } else if (userRole === "support_admin") {
-//     $(".support-admin-menu").show();
-//     // $('.super-admin-menu:has(a[href="approvals.html"])').show();
-//     $('.super-admin-menu:has(a[href="index.html"])').show();
-//   } else if (userRole === "user") {
-//     $(".user-menu").show();
-//     $('.kindred_head:has(a[href="kindred-head.html"])').hide();
-//     $('.kindred_head:has(a[href="kindred-dasboard.html"])').hide();
-//   } else if (userRole === "kindred_head") {
-//     $(".kindred_head").show();
-//     $('.user-menu:has(a[href="profile.html"])').show();
-//   }
-// });
 
 $(document).ready(function () {
   // Utility function to set input values
@@ -754,7 +712,7 @@ $(document).ready(function () {
          <td>${(currentPage - 1) * pageSize + index + 1}</td>
           <td>${item.firstname} ${item.lastname}</td>
           <td>${item.phone}</td>
-          <td>${item.email}</td>
+          <td>${item.isVerified}</td>
           <td>${statusBadge[item.status] || item.status}</td>
           <td>
             <button class="btn btn-sm btn-success btn-cert-approve" data-id="${
@@ -845,6 +803,21 @@ $(document).ready(function () {
       },
       error: function (error) {
         console.error("Error rejecting request:", error);
+      },
+    });
+  }
+
+  function handleVerification(requestId) {
+    $.ajax({
+      url: `${BACKEND_URL}/indigene/certificate/${requestId}/verify`,
+      method: "PATCH",
+      headers: apiHeaders,
+      success: function () {
+        Swal.fire("Success", "Request successfully verified", "success");
+        fetchData(currentPage);
+      },
+      error: function (error) {
+        Swal.fire("Oops...", "Request successfully verified", "error");
       },
     });
   }
@@ -963,6 +936,11 @@ $(document).ready(function () {
   $(document).on("click", ".btn-cert-approve", function () {
     const requestId = $(this).data("id");
     handleApproval(requestId);
+  });
+
+  $(document).on("click", ".btn-cert-verify", function () {
+    const requestId = $(this).data("id");
+    handleVerification(requestId);
   });
 
   $(document).on("click", ".btn-cert-reject", function () {
@@ -1365,7 +1343,6 @@ $(document).ready(function () {
               console.log("Payment widget closed");
             },
             callBack: function (response) {
-              console.log("Payment successful:", response);
               window.location.href = `${FRONTEND_URL}/source/src/bdic/app/success.html`;
             },
           });
@@ -2882,9 +2859,7 @@ $(document).ready(function () {
                 console.log("Payment widget closed");
               },
               callBack: function (response) {
-                console.log("Payment successful:", response);
-                window.location.href =
-                  "http://127.0.0.1:5501/src/bdic/app/success.html";
+                window.location.href = `${FRONTEND_URL}/source/src/bdic/app/success.html`;
               },
             });
 
@@ -3554,9 +3529,6 @@ function createKindredGroupedTable(kindredHeadLGAs, matchingRequests) {
         <td></td>
         <td></td>
         <td></td>
-
-
-
       </tr>
     `);
   });
@@ -3577,23 +3549,28 @@ function createKindredGroupedTable(kindredHeadLGAs, matchingRequests) {
   } else {
     matchingRequests.forEach((request, index) => {
       const isRejected = request.status === "Rejected";
+      const isVerified = request.isVerified === true;
 
       tableBody.append(`
         <tr>
           <td>${request.lgaOfOrigin}</td>
           <td>${request.firstname} ${request.lastname}</td>
-          <td>${request.email}</td>
           <td>${request.phone}</td>
+          <td>${request.isVerified}</td>
           <td>${request.kindred}</td>
+
           <td>
             <div class="dropdown">
               <button class="btn btn-xs btn-action dropdown-toggle" data-bs-toggle="dropdown">
                 <i class="fas fa-ellipsis-v"></i>
               </button>
               <ul class="dropdown-menu">
-                <li><button class="dropdown-item btn-cert-approve" data-id="${
+                <li><button class="dropdown-item btn-cert-verify" data-id="${
                   request._id
-                }" style="color: green;">Approve</button></li>
+                }"
+                ${
+                  isVerified ? "disabled" : ""
+                }  style="color: green;">Verity Request</button></li>
                 <li><button class="dropdown-item btn-cert-reject" data-id="${
                   request._id
                 }" ${
