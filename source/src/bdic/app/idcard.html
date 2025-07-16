@@ -292,7 +292,7 @@
           </button>
 
           <div class="d-none d-md-block align-items-center">
-            <h5 class="mb-0 me-2">Card Status</h5>
+            <h5 class="mb-0 me-2 dashboard_bar">Card Status</h5>
             <small class="text-muted">Welcome back, User</small>
           </div>
 
@@ -368,16 +368,19 @@
                   <small class="text-muted">admin@benue.gov.ng</small>
                 </div>
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item"
+                <a href="profile.html" class="dropdown-item"
                   ><i class="fas fa-user me-2"></i> Profile</a
                 >
                 <a href="#" class="dropdown-item"
                   ><i class="fas fa-cog me-2"></i> Settings</a
                 >
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item text-danger"
-                  ><i class="fas fa-sign-out-alt me-2"></i> Logout</a
-                >
+                <a
+                  href="../../../auth/login.html"
+                  class="dropdown-item text-danger"
+                  ><i class="fas fa-sign-out-alt me-2"></i>
+                  <span onclick="logout(this)"> Logout </span>
+                </a>
               </div>
             </div>
           </div>
@@ -509,10 +512,6 @@
             Footer end
         ***********************************-->
 
-    <script
-      src="../../code.tidio.co_443/bpnp4xkz2axqrebqxcezgdca9yot1iyn.js"
-      async
-    ></script>
     <!--**********************************
         Scripts
     ***********************************-->

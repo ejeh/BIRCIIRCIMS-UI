@@ -5,13 +5,10 @@ const isDevelopment = window.location.hostname === "127.0.0.1";
 //   : "http://api.citizenship.benuestate.gov.ng/api";
 
 const BACKEND_URL = "https://api.citizenship.benuestate.gov.ng/api";
-// console.log(BACKEND_URL)
 
 const FRONTEND_URL = isDevelopment
   ? "http://127.0.0.1:5501"
   : "https://citizenship.benuestate.gov.ng";
-
-console.log("FRONTEND_URL", FRONTEND_URL);
 
 // Get user info from localStorage
 const userData = JSON.parse(localStorage.getItem("token") || "{}");
@@ -146,6 +143,24 @@ $(document).ready(function () {
         $(".selectpicker").selectpicker("refresh");
       }
 
+      // Handle identification type (including 'others')
+      const predefinedIds = [
+        "national_id",
+        "driver_licence",
+        "international_passport",
+        "voters_card",
+      ];
+      const idValue = data.identification;
+
+      if (idValue && !predefinedIds.includes(idValue)) {
+        // This is a custom "others" value
+        $("#identification").val("others").change(); // This triggers the display of the other field
+        $("#other_identification").val(idValue); // Populate the custom value
+      } else {
+        // Standard identification type
+        $("#identification").val(idValue).change();
+      }
+
       // Set the value in the select field
       $("#maritalStatus").val(data.maritalStatus).change();
       $("#gender").val(data.gender).change();
@@ -154,85 +169,20 @@ $(document).ready(function () {
       $("#stateOfResidence").val(data.stateOfResidence).change();
       $("#lgaOfResidence").val(data.lgaOfResidence).change();
       $("#countryOfResidence").val(data.countryOfResidence).change();
-      $("#identification").val(data.identification);
+      // $("#identification").val(data.identification);
+
       $("#religion").val(data.religion).change();
+      $("#dob").val(data.DOB).change();
+
+      // Handle business data (since it's an array)
+      if (data.business && data.business.length > 0) {
+        const bizData = data.business[0]; // Get first business entry
+        $("#biz_type").val(bizData.biz_type).change();
+        $("#nature_of_business").val(bizData.nature_of_business).change();
+        // Add other business fields if needed
+      }
 
       $(".selectpicker").selectpicker("refresh");
-
-      // ------------------------------
-      // Prepopulate Educational History
-      // ------------------------------
-      if (data.educationalHistory) {
-        // Populate Primary School
-        if (data.educationalHistory.primarySchool) {
-          setInputValue(
-            "primarySchool_name",
-            data.educationalHistory.primarySchool.name
-          );
-          setInputValue(
-            "primarySchool_address",
-            data.educationalHistory.primarySchool.address
-          );
-          setInputValue(
-            "primarySchool_yearOfAttendance",
-            data.educationalHistory.primarySchool.yearOfAttendance
-          );
-        }
-
-        // Populate Secondary School
-        if (data.educationalHistory.secondarySchool) {
-          setInputValue(
-            "secondarySchool_name",
-            data.educationalHistory.secondarySchool.name
-          );
-          setInputValue(
-            "secondarySchool_address",
-            data.educationalHistory.secondarySchool.address
-          );
-          setInputValue(
-            "secondarySchool_yearOfAttendance",
-            data.educationalHistory.secondarySchool.yearOfAttendance
-          );
-        }
-
-        // Populate Tertiary Institutions (assumes one or more institutions)
-        if (
-          data.educationalHistory &&
-          data.educationalHistory.tertiaryInstitutions
-        ) {
-          data.educationalHistory.tertiaryInstitutions.forEach(function (
-            tertiary,
-            index
-          ) {
-            // Use the name attribute to target each input.
-            $(
-              'input[name="educationalHistory.tertiaryInstitutions[' +
-                index +
-                '].name"]'
-            ).val(tertiary.name);
-            $(
-              'input[name="educationalHistory.tertiaryInstitutions[' +
-                index +
-                '].address"]'
-            ).val(tertiary.address);
-            $(
-              'input[name="educationalHistory.tertiaryInstitutions[' +
-                index +
-                '].certificateObtained"]'
-            ).val(tertiary.certificateObtained);
-            $(
-              'input[name="educationalHistory.tertiaryInstitutions[' +
-                index +
-                '].matricNo"]'
-            ).val(tertiary.matricNo);
-            $(
-              'input[name="educationalHistory.tertiaryInstitutions[' +
-                index +
-                '].yearOfAttendance"]'
-            ).val(tertiary.yearOfAttendance);
-          });
-        }
-      }
 
       // Destructure the main fields
       const {
@@ -250,8 +200,6 @@ $(document).ready(function () {
         religion,
         address,
         nextOfKin = [],
-        family = [],
-        neighbor = [],
         business = [],
         maritalStatus,
         house_number,
@@ -262,7 +210,6 @@ $(document).ready(function () {
         id_number,
         issue_date,
         expiry_date,
-        other_identification,
       } = data;
 
       // Populate main fields
@@ -306,37 +253,6 @@ $(document).ready(function () {
         nok_lgaOfResidence: "nok_lgaOfResidence",
         nok_cityOfResidence: "nok_cityOfResidence",
         nok_address: "nok_address",
-      });
-
-      // Populate neighbors' details
-      // Iterate over the neighbor array and populate the input fields
-      $(".neighbor-fields").each(function (index) {
-        if (neighbor[index]) {
-          $(this)
-            .find('input[name="neighbor_name[]"]')
-            .val(neighbor[index].name);
-          $(this)
-            .find('input[name="neighbor_address[]"]')
-            .val(neighbor[index].address);
-          $(this)
-            .find('input[name="neighbor_phone[]"]')
-            .val(neighbor[index].phone);
-        }
-      });
-
-      // Populate family' details
-      // Iterate over the family array and populate the input fields
-      $(".family-fields").each(function (index) {
-        if (family[index]) {
-          $(this).find('input[name="family_name[]"]').val(family[index].name);
-          $(this)
-            .find('input[name="family_address[]"]')
-            .val(family[index].address);
-          $(this).find('input[name="family_phone[]"]').val(family[index].phone);
-          $(this)
-            .find('input[name="family_relationship[]"]')
-            .val(family[index].relationship);
-        }
       });
 
       populateNestedFields(business, {
@@ -493,7 +409,6 @@ $(document).ready(function () {
     const headers = { Authorization: `Bearer ${token}` };
 
     apiRequest(url, "GET", headers, null, (response) => {
-      console.log(response);
       // Construct user details dynamically
       const details = `
         <div class="user-profile">
@@ -2959,8 +2874,6 @@ $(document).ready(function () {
         style: "currency",
         currency: "NGN",
       }).format(totalAmountNaira);
-      console.log(formattedAmount);
-
       $("#btnPrevTran").prop("disabled", page === 1);
       $("#btnNextTran").prop("disabled", !hasNextPage);
       $("#trans").text(formattedAmount); // Display as ₦500,000.00
@@ -3025,7 +2938,7 @@ function updateHeaderTitle() {
     "all-card": "View Card Request",
     citizens: "Users",
     certificate: "Request Certificate",
-    profile: "User Account",
+    profile: "Profile",
     transaction: "Transactions",
     login: "Login",
     card: "Request Card",
@@ -3034,6 +2947,7 @@ function updateHeaderTitle() {
     "user-kindred": "Kindreds",
     "kindred-dasboard": "Kindred Head Dashboard",
     "kindred-head": "View All Request",
+    kindred: "All Kindred Heads",
   };
 
   const pageTitle = titleMap[page] || "Dashboard";

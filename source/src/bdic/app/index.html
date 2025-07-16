@@ -256,7 +256,7 @@
           </button>
 
           <div class="d-none d-md-block align-items-center">
-            <h5 class="mb-0 me-2">Dashboard</h5>
+            <h5 class="mb-0 me-2 dashboard_bar">Dashboard</h5>
             <small class="text-muted"
               >Welcome back, <span id="header-user-label"> User </span>
             </small>
@@ -334,16 +334,19 @@
                   <small class="text-muted">admin@benue.gov.ng</small>
                 </div>
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item"
+                <a href="profile.html" class="dropdown-item"
                   ><i class="fas fa-user me-2"></i> Profile</a
                 >
                 <a href="#" class="dropdown-item"
                   ><i class="fas fa-cog me-2"></i> Settings</a
                 >
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item text-danger"
-                  ><i class="fas fa-sign-out-alt me-2"></i> Logout</a
-                >
+                <a
+                  href="../../../auth/login.html"
+                  class="dropdown-item text-danger"
+                  ><i class="fas fa-sign-out-alt me-2"></i>
+                  <span onclick="logout(this)"> Logout </span>
+                </a>
               </div>
             </div>
           </div>
@@ -369,8 +372,8 @@
                   text-overflow: ellipsis; /* Adds '...' if text overflows */
                 "
               >
-                Benue State Integrated Residents/Citizens Identity Registration
-                System
+                Benue State Integrated Citizenship and Resident Identity
+                Registration Management System
               </p>
             </div>
             <div class="col-md-4 d-none d-md-flex justify-content-end">

@@ -83,11 +83,6 @@
               class="img-fluid rounded"
             />
           </div>
-
-          <!-- Desktop login button -->
-          <!-- <div class="d-none d-md-block mt-auto">
-            <a href="login.html" class="btn btn-outline-light">Log in</a>
-          </div> -->
         </div>
 
         <!-- Registration form -->
@@ -137,7 +132,7 @@
                     inputmode="numeric"
                     pattern="\d{11}"
                     aria-describedby="ninHelp"
-                    autocomplete="off"
+                    autocomplete="on"
                   />
                   <small id="ninHelp" class="form-text text-muted">
                     Enter your 11-digit NIN
@@ -336,36 +331,6 @@
                   </small>
                 </div>
 
-                <!-- {/* Password requirements as a list item */} -->
-                <!-- <div className="col-span-full">
-                  <ul className="list-disc pl-5 space-y-2 mt-2">
-                    <li className="flex items-center gap-2 text-sm">
-                      <Checkbox id="chars" checked="{hasMinChars}" />
-                      <label htmlFor="chars" className="text-gray-600">
-                        At least 8 Characters
-                      </label>
-                    </li>
-                    <li className="flex items-center gap-2 text-sm">
-                      <Checkbox id="special" checked="{hasSpecialChar}" />
-                      <label htmlFor="special" className="text-gray-600">
-                        Should contain at least one symbol
-                      </label>
-                    </li>
-                    <li className="flex items-center gap-2 text-sm">
-                      <Checkbox id="capital" checked="{hasCapitalLetter}" />
-                      <label htmlFor="capital" className="text-gray-600">
-                        Should contain at least one capital letter
-                      </label>
-                    </li>
-                    <li className="flex items-center gap-2 text-sm">
-                      <Checkbox id="number" checked="{hasNumber}" />
-                      <label htmlFor="number" className="text-gray-600">
-                        Should contain at least one number
-                      </label>
-                    </li>
-                  </ul>
-                </div> -->
-
                 <!-- Password validation -->
                 <div class="password-validation d-flex flex-wrap gap-2 mt-2">
                   <div class="d-flex align-items-center small">
@@ -400,15 +365,6 @@
                   </div>
                 </div>
               </div>
-
-              <!-- Sign up button -->
-              <!-- <button
-                type="submit"
-                id="submitbtn"
-                class="btn btn-success w-100 mt-4"
-                >
-                Sign up
-              </button> -->
               <button
                 type="button"
                 class="btn btn-success w-100 mb-3"
@@ -729,7 +685,7 @@
                   $("#stateOfOrigin")
                     .val(formattedState)
                     .trigger("change")
-                    .prop("readonly", true);
+                    .prop("disabled", true);
 
                   // If you're using Bootstrap selectpicker
                   if ($("#stateOfOrigin").hasClass("selectpicker")) {
@@ -741,7 +697,7 @@
                       $("#lgaOfOrigin")
                         .val(lga)
                         .trigger("change")
-                        .prop("readonly", true);
+                        .prop("disabled", true);
 
                       if ($("#lgaOfOrigin").hasClass("selectpicker")) {
                         $("#lgaOfOrigin").selectpicker("refresh");
