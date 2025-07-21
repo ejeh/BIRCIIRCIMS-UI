@@ -1654,7 +1654,14 @@
                     >
                       <i class="bi bi-send-check me-2"></i>Initiate Verification
                     </button>
-                    <div id="verification-status" class="mt-2"></div>
+                    <!-- <div id="verification-status" class="mt-2"> -->
+                    <div id="verification-status">
+                      <div class="alert alert-warning mt-2">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Add at least one reference with name and phone to enable
+                        verification.
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -2623,7 +2630,7 @@
                   return null;
                 }
 
-                console.log("Loaded backup data:", parsed.data); // Debug
+                // console.log("Loaded backup data:", parsed.data); // Debug
                 return parsed.data; // Return JUST the data object
               } catch (error) {
                 console.error("Load failed:", error);
@@ -2645,7 +2652,7 @@
             }
 
             showDataRecoveryDialog(backupData) {
-              console.log("Dialog received backupData:", backupData); // DEBUG
+              // console.log("Dialog received backupData:", backupData); // DEBUG
 
               Swal.fire({
                 title: "Recover Unsaved Changes?",
@@ -3323,6 +3330,19 @@
           let cameraStream = null;
           let photoCaptured = false;
 
+          // Utility: Convert dataURL to File
+          function dataURLtoFile(dataurl, filename) {
+            const arr = dataurl.split(",");
+            const mime = arr[0].match(/:(.*?);/)[1];
+            const bstr = atob(arr[1]);
+            let n = bstr.length;
+            const u8arr = new Uint8Array(n);
+            while (n--) {
+              u8arr[n] = bstr.charCodeAt(n);
+            }
+            return new File([u8arr], filename, { type: mime });
+          }
+
           // ✅ Enhanced Camera Start
           $("#start-camera").click(async function () {
             try {
@@ -3554,108 +3574,64 @@
       </script>
 
       <script>
+        let populateVerificationStatus;
         // Add this to your document ready function or main script
         $(document).ready(function () {
           // Initialize verification functionality
           initVerificationReview(true);
+          // Add this to your document ready function or initialization
+          function setupRealTimeVerificationUpdates() {
+            // Listen for changes in family/neighbor sections
+            $(document).on(
+              "input",
+              '[name^="neighbor_"], [name^="family_"]',
+              function () {
+                // Debounce the update to avoid too many requests
+                clearTimeout(window.verificationUpdateTimer);
+                window.verificationUpdateTimer = setTimeout(() => {
+                  populateVerificationStatus(true); // Force refresh
+                }, 1000);
+              }
+            );
+
+            // Update when items are added/removed
+            $("#add-neighbor, #add-family-member").click(function () {
+              setTimeout(() => {
+                if (typeof populateVerificationStatus === "function") {
+                  populateVerificationStatus(true);
+                }
+              }, 300);
+            });
+
+            $("#neighbors-container").on(
+              "click",
+              ".remove-neighbor",
+              function () {
+                setTimeout(() => {
+                  if (typeof populateVerificationStatus === "function") {
+                    populateVerificationStatus(true);
+                  }
+                }, 300);
+              }
+            );
+
+            $("#family-members-container").on(
+              "click",
+              ".remove-family",
+              function () {
+                setTimeout(() => {
+                  if (typeof populateVerificationStatus === "function") {
+                    populateVerificationStatus(true);
+                  }
+                }, 300);
+              }
+            );
+          }
+
+          setupRealTimeVerificationUpdates();
         });
 
         function initVerificationReview(isInitialLoad = false) {
-          // Function to populate verification status in review section
-          //   function populateVerificationStatus() {
-          //     // Get all neighbors and their status
-          //     const neighbors = [];
-          //     $(".neighbor-item").each(function (index) {
-          //       const id = $(this).data("id");
-          //       const name = $(this)
-          //         .find(`input[name="neighbor_name_${id}"]`)
-          //         .val();
-          //       const phone = $(this)
-          //         .find(`input[name="neighbor_phone_${id}"]`)
-          //         .val();
-          //       const statusElement = $(`#neighbor-status-${id}`);
-          //       const status = statusElement.length
-          //         ? statusElement.text()
-          //         : "Pending";
-
-          //       neighbors.push({ id, name, phone, status });
-          //     });
-
-          //     // Get all family members and their status
-          //     const familyMembers = [];
-          //     $(".family-item").each(function (index) {
-          //       const id = $(this).data("id");
-          //       const name = $(this)
-          //         .find(`input[name="family_name_${id}"]`)
-          //         .val();
-          //       const phone = $(this)
-          //         .find(`input[name="family_phone_${id}"]`)
-          //         .val();
-          //       const statusElement = $(`#family-status-${id}`);
-          //       const status = statusElement.length
-          //         ? statusElement.text()
-          //         : "Pending";
-
-          //       familyMembers.push({ id, name, phone, status });
-          //     });
-
-          //     // Populate neighbors status
-          //     const neighborContainer = $("#neighbor-verification-status");
-          //     neighborContainer.empty();
-
-          //     if (neighbors.length === 0) {
-          //       neighborContainer.append(
-          //         '<p class="text-muted">No neighbors added</p>'
-          //       );
-          //     } else {
-          //       neighbors.forEach((neighbor) => {
-          //         neighborContainer.append(`
-          //   <div class="d-flex justify-content-between align-items-center mb-2 border-bottom pb-2">
-          //     <div>
-          //       <span class="fw-medium">${
-          //         neighbor.name || "Unnamed neighbor"
-          //       }</span>
-          //       <div class="text-muted small">${
-          //         neighbor.phone || "No phone provided"
-          //       }</div>
-          //     </div>
-          //     <span class="badge ${getStatusBadgeClass(neighbor.status)}">
-          //       ${neighbor.status}
-          //     </span>
-          //   </div>
-          // `);
-          //       });
-          //     }
-
-          //     // Populate family members status
-          //     const familyContainer = $("#family-verification-status");
-          //     familyContainer.empty();
-
-          //     if (familyMembers.length === 0) {
-          //       familyContainer.append(
-          //         '<p class="text-muted">No family members added</p>'
-          //       );
-          //     } else {
-          //       familyMembers.forEach((member) => {
-          //         familyContainer.append(`
-          //   <div class="d-flex justify-content-between align-items-center mb-2 border-bottom pb-2">
-          //     <div>
-          //       <span class="fw-medium">${
-          //         member.name || "Unnamed family member"
-          //       }</span>
-          //       <div class="text-muted small">${
-          //         member.phone || "No phone provided"
-          //       }</div>
-          //     </div>
-          //     <span class="badge ${getStatusBadgeClass(member.status)}">
-          //       ${member.status}
-          //     </span>
-          //   </div>
-          // `);
-          //       });
-          //     }
-          //   }
-
           // Use sessionStorage to maintain verification state
           const storageKey = `verificationState-${user.id}`;
 
@@ -3674,19 +3650,181 @@
             return saved ? JSON.parse(saved) : null;
           }
 
-          async function populateVerificationStatus(forceRefresh = false) {
+          // Helper function to get appropriate badge class based on status
+          function getStatusBadgeClass(status) {
+            status = status.toLowerCase();
+            if (status === "verified") return "bg-success";
+            if (status === "denied") return "bg-danger";
+            return "bg-warning";
+          }
+
+          let currentUserData = null;
+
+          // Update the render function to properly check for empty values
+          function renderVerificationStatus(userData) {
+            currentUserData = userData;
+
+            const neighborContainer = $(
+              "#neighbor-verification-status"
+            ).empty();
+            userData.neighbor?.forEach((neighbor, index) => {
+              const phoneValue = neighbor.phone || "";
+              const isInvalid = !neighbor.name || !phoneValue.trim();
+
+              neighborContainer.append(`
+      <div class="d-flex justify-content-between align-items-center mb-2 border-bottom pb-2 ${
+        isInvalid ? "bg-light-danger" : ""
+      }">
+        <div>
+          <span class="fw-medium">${
+            neighbor.name || "Neighbor " + (index + 1)
+          }</span>
+          <div class="text-muted small">${phoneValue || "No phone"}</div>
+          ${
+            isInvalid
+              ? '<div class="text-danger small">Missing required fields</div>'
+              : ""
+          }
+        </div>
+        <span class="badge ${getStatusBadgeClass(neighbor.status)}">
+          ${neighbor.status || "Pending"}
+        </span>
+      </div>
+    `);
+            });
+
+            const familyContainer = $("#family-verification-status").empty();
+            userData.family?.forEach((family, index) => {
+              const phoneValue = family.phone || "";
+              const isInvalid = !family.name || !phoneValue.trim();
+
+              familyContainer.append(`
+      <div class="d-flex justify-content-between align-items-center mb-2 border-bottom pb-2 ${
+        isInvalid ? "bg-light-danger" : ""
+      }">
+        <div>
+          <span class="fw-medium">${
+            family.name || "Family " + (index + 1)
+          }</span>
+          <div class="text-muted small">${phoneValue || "No phone"}</div>
+          ${
+            isInvalid
+              ? '<div class="text-danger small">Missing required fields</div>'
+              : ""
+          }
+        </div>
+        <span class="badge ${getStatusBadgeClass(family.status)}">
+          ${family.status || "Pending"}
+        </span>
+      </div>
+    `);
+            });
+
+            updateVerificationButtonState(userData);
+          }
+
+          // Function to check if there are valid references
+          function allReferencesValid() {
+            if (!currentUserData) return false;
+            // Check neighbors
+            const hasValidNeighbors = currentUserData.neighbor?.some(
+              (neighbor) => neighbor.name || neighbor.phone
+            );
+
+            // Check family members
+            const hasValidFamily = currentUserData.family?.some(
+              (member) => member.name || member.phone
+            );
+
+            return hasValidNeighbors && hasValidFamily;
+          }
+
+          // Update verification button state
+          //       function updateVerificationButtonState() {
+          //         const isValid = allReferencesValid();
+          //         $("#initiate-verification").prop("disabled", !isValid);
+
+          //         if (!isValid) {
+          //           $("#verification-status").html(`
+          //   <div class="alert alert-warning">
+          //     <i class="bi bi-exclamation-triangle me-2"></i>
+          //     All references must have both name and phone to initiate verification.
+          //   </div>
+          // `);
+          //         } else {
+          //           $("#verification-status").empty();
+          //         }
+          //       }
+          function updateVerificationButtonState() {
+            const isValid = allReferencesValid();
+            const hasPendingReference =
+              currentUserData &&
+              [
+                ...(currentUserData.neighbor || []),
+                ...(currentUserData.family || []),
+              ].some((ref) => (ref.status || "").toLowerCase() === "pending");
+
+            const shouldDisable = !isValid || !hasPendingReference;
+
+            $("#initiate-verification").prop("disabled", shouldDisable);
+
+            if (!isValid) {
+              const invalidRefs = getInvalidReferences();
+              let message =
+                "All references must have both name and phone. Issues with:";
+
+              invalidRefs.forEach((ref) => {
+                message += `<br>• ${ref.type} #${
+                  ref.index
+                }: Missing ${ref.missing.join(" and ")}`;
+              });
+
+              $("#verification-status").html(`
+      <div class="alert alert-warning">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        ${message}
+      </div>
+    `);
+            } else if (!hasPendingReference) {
+              $("#verification-status").html(`
+      <div class="alert alert-info">
+        <i class="bi bi-info-circle me-2"></i>
+        All references have already been verified or denied. No action needed.
+      </div>
+    `);
+            } else {
+              $("#verification-status").empty();
+            }
+          }
+
+          populateVerificationStatus = async function (forceRefresh = false) {
+            if ($("#verification-success-message").length > 0) {
+              return;
+            }
+
             const savedState = loadVerificationState();
             const shouldUseCache =
               savedState &&
               !forceRefresh &&
-              new Date().getTime() - savedState.timestamp < 30000; // 30 second cache
+              new Date().getTime() - savedState.timestamp < 30000;
 
             if (shouldUseCache) {
               renderVerificationStatus(savedState.data);
               return;
             }
 
+            const currentFormData = collectCurrentFormData();
+
+            // Show loading state while fetching
+            $(
+              "#neighbor-verification-status, #family-verification-status"
+            ).html(
+              '<div class="text-center py-2"><div class="spinner-border spinner-border-sm" role="status"></div> Loading...</div>'
+            );
+
             try {
+              // First update with current form data (immediate UI update)
+              renderVerificationStatus(currentFormData);
               const response = await fetch(`${BACKEND_URL}/users/${user.id}`, {
                 headers: { Authorization: `Bearer ${token}` },
               });
@@ -3700,73 +3838,143 @@
               renderVerificationStatus(userData);
             } catch (error) {
               console.error("Error loading verification status:", error);
-              if (savedState) renderVerificationStatus(savedState.data);
+              // if (savedState) renderVerificationStatus(savedState.data);
+              renderVerificationStatus(currentFormData);
             }
-          }
-
-          function renderVerificationStatus(userData) {
-            // Render neighbors status
-            const neighborContainer = $(
-              "#neighbor-verification-status"
-            ).empty();
-            userData.neighbor?.forEach((neighbor, index) => {
-              neighborContainer.append(`
-        <div class="d-flex justify-content-between align-items-center mb-2 border-bottom pb-2">
-          <div>
-            <span class="fw-medium">${
-              neighbor.name || "Neighbor " + (index + 1)
-            }</span>
-            <div class="text-muted small">${neighbor.phone || "No phone"}</div>
-          </div>
-          <span class="badge ${getStatusBadgeClass(neighbor.status)}">
-            ${neighbor.status || "Pending"}
-          </span>
-        </div>
-      `);
+          };
+          // Add this helper function to collect current form data
+          function collectCurrentFormData() {
+            const neighbors = [];
+            $(".neighbor-item").each(function () {
+              const id = $(this).data("id");
+              neighbors.push({
+                name: $(this).find(`input[name="neighbor_name_${id}"]`).val(),
+                phone: $(this).find(`input[name="neighbor_phone_${id}"]`).val(),
+                status: "Pending", // Default status
+              });
             });
 
-            // Render family members status
-            const familyContainer = $("#family-verification-status").empty();
-            userData.family?.forEach((member, index) => {
-              familyContainer.append(`
-        <div class="d-flex justify-content-between align-items-center mb-2 border-bottom pb-2">
-          <div>
-            <span class="fw-medium">${
-              member.name || "Family " + (index + 1)
-            }</span>
-            <div class="text-muted small">${member.phone || "No phone"}</div>
-          </div>
-          <span class="badge ${getStatusBadgeClass(member.status)}">
-            ${member.status || "Pending"}
-          </span>
-        </div>
-      `);
+            const family = [];
+            $(".family-item").each(function () {
+              const id = $(this).data("id");
+              family.push({
+                name: $(this).find(`input[name="family_name_${id}"]`).val(),
+                phone: $(this).find(`input[name="family_phone_${id}"]`).val(),
+                status: "Pending", // Default status
+              });
             });
+
+            return { neighbor: neighbors, family: family };
           }
 
-          // Helper function to get appropriate badge class based on status
-          function getStatusBadgeClass(status) {
-            status = status.toLowerCase();
-            if (status === "verified") return "bg-success";
-            if (status === "denied") return "bg-danger";
-            return "bg-warning";
+          function getInvalidReferences() {
+            if (!currentUserData) return [];
+
+            const invalid = [];
+
+            currentUserData.neighbor?.forEach((neighbor, index) => {
+              if (!neighbor.name || !neighbor.phone) {
+                invalid.push({
+                  type: "Neighbor",
+                  index: index + 1,
+                  missing: [
+                    ...(!neighbor.name ? ["name"] : []),
+                    ...(!neighbor.phone ? ["phone"] : []),
+                  ],
+                });
+              }
+            });
+
+            currentUserData.family?.forEach((member, index) => {
+              if (!member.name || !member.phone) {
+                invalid.push({
+                  type: "Family",
+                  index: index + 1,
+                  missing: [
+                    ...(!member.name ? ["name"] : []),
+                    ...(!member.phone ? ["phone"] : []),
+                  ],
+                });
+              }
+            });
+
+            return invalid;
+          }
+
+          function updateVerificationButtonState() {
+            if (!currentUserData) return;
+
+            const allRefs = [
+              ...(currentUserData.neighbor || []),
+              ...(currentUserData.family || []),
+            ];
+
+            // Must have at least one valid reference
+            const allValid = allRefs.every((ref) => ref.name && ref.phone);
+
+            // Check if ANY reference is still pending
+            const hasPending = allRefs.some(
+              (ref) => (ref.status || "").toLowerCase() === "pending"
+            );
+
+            // Disable if not valid or if there are no pending references
+            const shouldDisable = !allValid || !hasPending;
+
+            $("#initiate-verification").prop("disabled", shouldDisable);
+
+            if (!allValid) {
+              const invalidRefs = getInvalidReferences();
+              let message =
+                "All references must have both name and phone. Issues with:";
+              invalidRefs.forEach((ref) => {
+                message += `<br>• ${ref.type} #${
+                  ref.index
+                }: Missing ${ref.missing.join(" and ")}`;
+              });
+              $("#verification-status").html(`
+      <div class="alert alert-warning">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        ${message}
+      </div>
+    `);
+            } else if (!hasPending) {
+              $("#verification-status").html(`
+      <div class="alert alert-info">
+        <i class="bi bi-info-circle me-2"></i>
+        All references have already been verified or denied. No pending verification.
+      </div>
+    `);
+            } else {
+              $("#verification-status").empty();
+            }
           }
 
           // Function to initiate verification
           async function initiateVerification() {
+            // Early check for valid references
+            if (!allReferencesValid()) {
+              $("#verification-status").html(`
+        <div class="alert alert-danger">
+          <i class="bi bi-exclamation-triangle me-2"></i>
+          Cannot initiate verification: No valid references with both name and phone.
+        </div>
+      `);
+
+              return;
+            }
             try {
               // Show loading state
               $("#initiate-verification").prop("disabled", true).html(`
-        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-        Initiating...
-      `);
+              <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              Initiating...
+            `);
 
               $("#verification-status").html(`
-        <div class="alert alert-info">
-          <i class="bi bi-info-circle me-2"></i>
-          Initiating verification process...
-        </div>
-      `);
+              <div class="alert alert-info">
+                <i class="bi bi-info-circle me-2"></i>
+                Initiating verification process...
+              </div>
+            `);
 
               const response = await fetch(
                 `${BACKEND_URL}/users/${user.id}/initiate-verification`,
@@ -3791,43 +3999,60 @@
 
               const result = await response.json();
 
+              //       // Show success message
+              //       $("#verification-status").html(`
+              //   <div class="alert alert-success">
+              //     <i class="bi bi-check-circle me-2"></i>
+              //     Verification initiated successfully! Reference contacts will receive verification messages.
+              //   </div>
+              // `);
+
               // Show success message
-              $("#verification-status").html(`
-        <div class="alert alert-success">
-          <i class="bi bi-check-circle me-2"></i>
-          Verification initiated successfully! Reference contacts will receive verification messages.
-        </div>
-      `);
+              const successMessage = `
+      <div class="alert alert-success" id="verification-success-message">
+        <i class="bi bi-check-circle me-2"></i>
+        Verification initiated successfully! Reference contacts will receive verification messages.
+      </div>
+    `;
 
-              // Update verification status badges
-              updateVerificationStatuses();
+              $("#verification-status").html(successMessage);
 
-              // Refresh the review section
-              populateVerificationStatus();
+              // Update verification status badges after a delay
+              setTimeout(() => {
+                updateVerificationStatuses();
+              }, 2000);
+
+              // Refresh the review section after a longer delay
+              setTimeout(() => {
+                // Only refresh if success message is still visible
+                if ($("#verification-success-message").length) {
+                  populateVerificationStatus();
+                }
+              }, 4000);
             } catch (error) {
               // Handle verification in progress error
               if (error.message.includes("already in progress")) {
                 $("#verification-status").html(`
-        <div class="alert alert-warning">
-          <i class="bi bi-hourglass-split me-2"></i>
-          ${error.message}
-        </div>
-      `);
+          <div class="alert alert-warning">
+            <i class="bi bi-hourglass-split me-2"></i>
+            ${error.message}
+          </div>
+        `);
               }
               // Handle other errors
               else {
                 $("#verification-status").html(`
-        <div class="alert alert-danger">
-          <i class="bi bi-exclamation-triangle me-2"></i>
-          ${error.message || "Verification failed"}
-        </div>
-      `);
+          <div class="alert alert-danger">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            ${error.message || "Verification failed"}
+          </div>
+        `);
               }
             } finally {
               // Reset button state
               $("#initiate-verification").prop("disabled", false).html(`
-        <i class="bi bi-send-check me-2"></i>Initiate Verification
-      `);
+          <i class="bi bi-send-check me-2"></i>Initiate Verification
+        `);
             }
           }
 
@@ -3901,9 +4126,10 @@
           // Initialize on page load
           if (isInitialLoad) {
             populateVerificationStatus();
-            $("#review-section").on("show", () =>
-              populateVerificationStatus(true)
-            ); // Force refresh when section shown
+            $("#review-section").on("show", () => {
+              populateVerificationStatus(true);
+              updateVerificationButtonState();
+            }); // Force refresh when section shown
           }
         }
       </script>

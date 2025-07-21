@@ -20,7 +20,7 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
     />
 
-    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="../../../js/index.js"></script>
 
     <style>
       body {
@@ -128,12 +128,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        const isDevelopment = window.location.hostname === "127.0.0.1";
-
-        const BACKEND_URL = isDevelopment
-          ? "http://localhost:5000/api"
-          : "http://api.citizenship.benuestate.gov.ng/api";
-
         const pathToken = new URLSearchParams(window.location.search).get(
           "token"
         );
@@ -158,7 +152,7 @@
           })
           .catch((error) => {
             alert(error.message);
-            // window.location.href = "/";
+            // window.location.href = "/source";
           });
 
         // Handle form submission
@@ -198,7 +192,7 @@
                   icon: "success",
                   confirmButtonText: "OK",
                 }).then(() => {
-                  window.location.href = "/verification-complete";
+                  window.location.href = "/source";
                 });
               } else {
                 throw new Error("Verification failed");

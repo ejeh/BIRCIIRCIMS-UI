@@ -140,7 +140,7 @@ $(document).ready(function () {
         }
 
         // Refresh the select picker (if using Bootstrap Select)
-        $(".selectpicker").selectpicker("refresh");
+        // $(".selectpicker").selectpicker("refresh");
       }
 
       // Handle identification type (including 'others')
@@ -658,6 +658,7 @@ $(document).ready(function () {
       headers: apiHeaders,
       success: function (response) {
         const { data, hasNextPage } = response;
+        // console.log("data", data);
         $("#cert-request").text(data.length);
 
         renderTable(data);
@@ -3537,7 +3538,7 @@ $(document).ready(function () {
         Pending: `<span class="badge rounded-pill bg-warning text-dark">Pending</span>`,
         Rejected: `<span class="badge rounded-pill bg-danger">Rejected</span>`,
       };
-      const isRejected = item.status === "Rejected";
+
       tableBody.append(`
         <tr data-id="${item._id}">
           <td>${(currentPage - 1) * pageSize + index + 1}</td>
@@ -3569,15 +3570,30 @@ $(document).ready(function () {
 
   function fetchData(page) {
     $.ajax({
-      url: `${BACKEND_URL}/idcard/request?page=${page}&limit=${pageSize}&statuses=Pending,Rejected`,
+      url: `${BACKEND_URL}/idcard/card-request?page=${page}&limit=${pageSize}&statuses=Pending,Rejected`,
       method: "GET",
       headers: apiHeaders,
       success: function (response) {
         const { data, hasNextPage } = response;
-        console.log("data", data);
+        $("#id-request").text(data.length);
         renderTable(data);
         updatePaginationButtons(hasNextPage);
         updateRequestCount(data.length);
+
+        let pendingCount = 0;
+        let rejectedCount = 0;
+
+        data.forEach((element) => {
+          if (element.status === "Pending") {
+            pendingCount++;
+          }
+          if (element.status === "Rejected") {
+            rejectedCount++;
+          }
+        });
+
+        $("#pending").text(pendingCount);
+        $("#rejected").text(rejectedCount);
       },
       error: function (error) {
         console.error("Error fetching data:", error);
@@ -3585,20 +3601,20 @@ $(document).ready(function () {
     });
   }
 
-  function fetchData(page) {
-    $.ajax({
-      url: `${BACKEND_URL}/idcard/get-all-request`,
-      method: "GET",
-      headers: apiHeaders,
-      success: function (response) {
-        const { data } = response;
-        $("#id-request").text(response.length);
-      },
-      error: function (error) {
-        console.error("Error fetching data:", error);
-      },
-    });
-  }
+  // function fetchData(page) {
+  //   $.ajax({
+  //     url: `${BACKEND_URL}/idcard/get-all-request`,
+  //     method: "GET",
+  //     headers: apiHeaders,
+  //     success: function (response) {
+  //       const { data } = response;
+  //       $("#id-request").text(response.length);
+  //     },
+  //     error: function (error) {
+  //       console.error("Error fetching data:", error);
+  //     },
+  //   });
+  // }
 
   // Handle card Approval
   function handleApproval(requestId) {
@@ -3775,7 +3791,7 @@ $(document).ready(function () {
 
     const eventName = `member-status-update-${user?.id}`;
 
-    const socket = io("http://localhost:5000", {
+    const socket = io(`${BACKEND_URL}`, {
       transports: ["websocket"],
     });
 
