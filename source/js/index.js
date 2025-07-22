@@ -2,7 +2,7 @@ const isDevelopment = window.location.hostname === "127.0.0.1";
 
 // const BACKEND_URL = isDevelopment
 //   ? "http://localhost:5000/api"
-//   : "http://api.citizenship.benuestate.gov.ng/api";
+//   : "https://api.citizenship.benuestate.gov.ng/api";
 
 const BACKEND_URL = "https://api.citizenship.benuestate.gov.ng/api";
 
@@ -497,7 +497,6 @@ function closeModal(modalId) {
 function loadPDFJS(pdfUrl, container) {
   const loader = document.getElementById("pdf-loader");
   if (!window["pdfjsLib"]) {
-    console.error("PDF.js not loaded");
     container.innerHTML = `<iframe src="${pdfUrl}" width="100%" height="100%"></iframe>`;
     return;
   }
@@ -760,7 +759,7 @@ $(document).ready(function () {
                     response.passportPhoto || "/assets/images/avatar.jpeg"
                   }" 
                   alt="Passport Photo" 
-                  class="img-fluid rounded shadow-sm profile-photo""
+                  class="img-fluid rounded shadow-sm profile-photo"
                   style="max-height: 150px;"
                   crossOrigin="anonymous"
                 >
@@ -3409,6 +3408,7 @@ function filterAndMatchKindredHeadLGAs() {
             kindredHeadLGAs.includes(request.lgaOfOrigin)
           );
 
+          $("#card-request-count").text(matchingRequests.length);
           // Create a table with the matching requests
           createKindredGroupedTable(kindredHeadLGAs, matchingRequests);
         },
@@ -3503,6 +3503,10 @@ function createKindredGroupedTable(kindredHeadLGAs, matchingRequests) {
     });
   }
 }
+
+$(document).ready(function () {
+  filterAndMatchKindredHeadLGAs();
+});
 
 // Trigger on button click
 $(document).on("click", "#filter-kindred-btn", function () {
@@ -3679,13 +3683,15 @@ $(document).ready(function () {
           <div class="container-fluid">
             <div class="row mb-3">
               <div class="col-md-3 text-center">
-                <img 
+                  <img 
                   src="${
-                    response.passportPhoto || "/assets/images/avatar.jpeg"
+                    response.userId.passportPhoto ||
+                    "/assets/images/avatar.jpeg"
                   }" 
                   alt="Passport Photo" 
-                  class="img-fluid rounded shadow-sm"
+                  class="img-fluid rounded shadow-sm profile-photo"
                   style="max-height: 150px;"
+                  crossOrigin="anonymous"
                 >
               </div>
               <div class="col-md-9">
