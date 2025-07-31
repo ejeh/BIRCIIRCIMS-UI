@@ -169,7 +169,6 @@ $(document).ready(function () {
       $("#stateOfResidence").val(data.stateOfResidence).change();
       $("#lgaOfResidence").val(data.lgaOfResidence).change();
       $("#countryOfResidence").val(data.countryOfResidence).change();
-      // $("#identification").val(data.identification);
 
       $("#religion").val(data.religion).change();
       $("#dob").val(data.DOB).change();
@@ -776,6 +775,9 @@ $(document).ready(function () {
                 <p><strong>State:</strong> ${response.stateOfOrigin}</p>
                 <p><strong>LGA:</strong> ${response.lgaOfOrigin}</p>
                 <p><strong>Kindred:</strong> ${response.kindred}</p>
+                <p><strong>isProfileCompleted:</strong> ${
+                  response.userId?.isProfileCompleted
+                }</p>
 
               </div>
             </div>
@@ -789,8 +791,10 @@ $(document).ready(function () {
         }
 
         documentPaths.forEach((doc, index) => {
-          const filename = doc?.split("/").pop();
-          const fileUrl = `${BACKEND_URL}/indigene/certificate/pdf/${filename}`;
+          // const filename = doc?.split("/").pop();
+          // const fileUrl = `${BACKEND_URL}/indigene/certificate/pdf/${filename}`;
+          const encodedUrl = encodeURIComponent(doc);
+          const fileUrl = `${BACKEND_URL}/indigene/certificate/pdf/${encodedUrl}`;
 
           modalContent += `
             <div class="card my-3 shadow-sm">
@@ -815,8 +819,11 @@ $(document).ready(function () {
 
         // Load PDFs securely
         documentPaths.forEach((doc, index) => {
-          const filename = doc?.split("/").pop();
-          const fileUrl = `${BACKEND_URL}/indigene/certificate/pdf/${filename}`;
+          // const filename = doc?.split("/").pop();
+          // const fileUrl = `${BACKEND_URL}/indigene/certificate/pdf/${filename}`;
+
+          const encodedUrl = encodeURIComponent(doc);
+          const fileUrl = `${BACKEND_URL}/indigene/certificate/pdf/${encodedUrl}`;
 
           fetch(fileUrl, {
             headers: {
@@ -901,6 +908,38 @@ $(document).ready(function () {
         Authorization: `Bearer ${token}`,
       },
       success: function (data) {
+        const requiredDocs = ["birthCertificate", "idCard", "passportPhoto"];
+
+        let uploadedCount = 0;
+
+        requiredDocs.forEach((doc) => {
+          if (data[doc]) {
+            uploadedCount++;
+          }
+        });
+
+        const totalRequired = requiredDocs.length;
+
+        if (uploadedCount === totalRequired) {
+          $(".upload-status-text")
+            .removeClass()
+            .addClass("text-success small upload-status-text")
+            .text("All documents uploaded");
+        } else if (uploadedCount > 0) {
+          $(".upload-status-text")
+            .removeClass()
+            .addClass("text-warning small upload-status-text")
+            .text("Documents partially uploaded");
+        } else {
+          $(".upload-status-text")
+            .removeClass()
+            .addClass("text-muted small upload-status-text")
+            .text("No documents uploaded");
+        }
+
+        // Update your DOM
+        $(".uploaded-count").text(`${uploadedCount} of ${totalRequired}`);
+
         const tableBody = $("#request-table");
         tableBody.empty();
 
@@ -990,8 +1029,12 @@ $(document).ready(function () {
             </tr>
           `);
         };
-
-        $("#certificate-status").text(data.status);
+        $(".certificate-status").text(data.status);
+        $("#profile-status").text(
+          data.userId?.isProfileCompleted
+            ? "Profile Completed"
+            : "Profile Incomplete"
+        );
 
         if (data.status === "Rejected" || data.status === "Pending") {
           appendRow(true, false);
@@ -1417,12 +1460,26 @@ $(document).ready(function () {
       Authorization: `Bearer ${token}`,
     },
     success: function (latestCard) {
+      function timeAgo(date) {
+        const now = new Date();
+        const updated = new Date(date);
+        const diff = Math.floor((now - updated) / 1000); // in seconds
+
+        if (diff < 60) return "just now";
+        if (diff < 3600) return `${Math.floor(diff / 60)} minute(s) ago`;
+        if (diff < 86400) return `${Math.floor(diff / 3600)} hour(s) ago`;
+        if (diff < 604800) return `${Math.floor(diff / 86400)} day(s) ago`;
+        return updated.toLocaleDateString(); // fallback to actual date
+      }
+
       // Handle the single latest record
       $("#latest-card-request").text(
         latestCard.firstname + " " + latestCard.lastname
       );
 
       $("#card-pending").text(latestCard.status);
+      const updatedTime = timeAgo(latestCard.updated_at);
+      $(".card-approved-date").text(updatedTime);
     },
     error: function (error) {
       console.error("Error fetching latest card:", error);
@@ -1439,15 +1496,27 @@ $(document).ready(function () {
       Authorization: `Bearer ${token}`,
     },
     success: function (certificate) {
+      function timeAgo(date) {
+        const now = new Date();
+        const updated = new Date(date);
+        const diff = Math.floor((now - updated) / 1000); // in seconds
+
+        if (diff < 60) return "just now";
+        if (diff < 3600) return `${Math.floor(diff / 60)} minute(s) ago`;
+        if (diff < 86400) return `${Math.floor(diff / 3600)} hour(s) ago`;
+        if (diff < 604800) return `${Math.floor(diff / 86400)} day(s) ago`;
+        return updated.toLocaleDateString(); // fallback to actual date
+      }
+
       if (certificate) {
         // Update UI with this single record
         $("#latest-cert-approved").text(
           certificate.firstname + " " + certificate.lastname
         );
         $("#cert-approved").text(certificate.status);
-        // $("#cert-approved-date").text(
-        //   new Date(certificate.approvedAt).toLocaleDateString()
-        // );
+
+        const updatedTime = timeAgo(certificate.updated_at);
+        $(".cert-approved-date").text(updatedTime);
       } else {
         console.log("No approved certificates found");
       }
@@ -2494,7 +2563,7 @@ $(document).ready(function () {
   `);
         };
 
-        $("#card-status").text(data.status);
+        $(".card-status").text(data.status);
 
         if (data.status === "Rejected" || data.status === "Pending") {
           appendRow(true, false);
@@ -3685,7 +3754,7 @@ $(document).ready(function () {
               <div class="col-md-3 text-center">
                   <img 
                   src="${
-                    response.userId.passportPhoto ||
+                    response.userId?.passportPhoto ||
                     "/assets/images/avatar.jpeg"
                   }" 
                   alt="Passport Photo" 
@@ -3703,7 +3772,11 @@ $(document).ready(function () {
                 <p class="mb-1"><strong>Status:</strong> <span class="badge bg-info">${
                   response.status
                 }</span></p>
-                <p><strong>Details:</strong> ${response.details || "N/A"}</p>
+                <p><strong>State:</strong> ${response.userId?.stateOfOrigin}</p>
+                <p><strong>LGA:</strong> ${response.userId?.lgaOfOrigin}</p>
+                <p><strong>isProfileCompleted:</strong> ${
+                  response.userId?.isProfileCompleted
+                }</p>
               </div>
             </div>
   
@@ -3716,8 +3789,11 @@ $(document).ready(function () {
         }
 
         documentPaths.forEach((doc, index) => {
-          const filename = doc?.split("/").pop();
-          const fileUrl = `${BACKEND_URL}/idcard/pdf/${filename}`;
+          // const filename = doc?.split("/").pop();
+          // const fileUrl = `${BACKEND_URL}/idcard/pdf/${filename}`;
+
+          const encodedUrl = encodeURIComponent(doc);
+          const fileUrl = `${BACKEND_URL}/idcard/pdf/${encodedUrl}`;
 
           modalContent += `
             <div class="card my-3 shadow-sm">
@@ -3742,8 +3818,11 @@ $(document).ready(function () {
 
         // Load PDFs securely
         documentPaths.forEach((doc, index) => {
-          const filename = doc?.split("/").pop();
-          const fileUrl = `${BACKEND_URL}/idcard/pdf/${filename}`;
+          // const filename = doc?.split("/").pop();
+          // const fileUrl = `${BACKEND_URL}/idcard/pdf/${filename}`;
+
+          const encodedUrl = encodeURIComponent(doc);
+          const fileUrl = `${BACKEND_URL}/idcard/pdf/${encodedUrl}`;
 
           fetch(fileUrl, {
             headers: {
@@ -3849,9 +3928,20 @@ $(document).ready(function () {
   fetchData(currentPage);
 });
 $(document).ready(function () {
-  // Toggle sidebar on mobile
-  $("#sidebarToggle").click(function () {
+  // Toggle sidebar on button click
+  $("#sidebarToggle").click(function (e) {
+    e.stopPropagation(); // prevent the click from bubbling up to document
     $(".sidebar").toggleClass("show");
+  });
+
+  // Prevent clicks inside the sidebar from closing it
+  $(".sidebar").click(function (e) {
+    e.stopPropagation();
+  });
+
+  // Hide sidebar when clicking anywhere else in the document
+  $(document).click(function () {
+    $(".sidebar").removeClass("show");
   });
 
   // Add hover effects to cards

@@ -509,6 +509,20 @@
                 ></div>
               </div>
             </div>
+
+            <div class="mb-3">
+              <label class="form-label">Profile Completion</label>
+              <div class="progress" style="height: 25px">
+                <div
+                  id="profileProgressBar"
+                  class="progress-bar progress-bar-striped progress-bar-animated bg-success"
+                  role="progressbar"
+                  style="width: 0%"
+                >
+                  0%
+                </div>
+              </div>
+            </div>
           </div>
 
           <form
@@ -4181,6 +4195,88 @@
           });
           return isValid;
         }
+      </script>
+      <script>
+        function calculateProfileCompletion(user) {
+          let completed = 0;
+          let total = 14; // adjust total fields based on your backend logic
+
+          const checks = [
+            user.firstname,
+            user.lastname,
+            user.phone,
+            user.NIN,
+            user.DOB,
+            user.gender,
+            user.nationality,
+            user.stateOfOrigin,
+            user.lgaOfOrigin,
+            user.passportPhoto,
+          ];
+
+          checks.forEach((field) => {
+            if (field && String(field).trim() !== "") completed++;
+          });
+
+          // Extra checks (add 1 each if complete)
+          if (
+            Array.isArray(user.educationalHistory) &&
+            user.educationalHistory.length > 0
+          )
+            completed++;
+          if (
+            Array.isArray(user.employmentHistory) &&
+            user.employmentHistory.length > 0
+          )
+            completed++;
+          if (
+            Array.isArray(user.family) &&
+            user.family.some((f) => f.status === "verified")
+          )
+            completed++;
+          if (
+            Array.isArray(user.neighbor) &&
+            user.neighbor.some((n) => n.status === "verified")
+          )
+            completed++;
+
+          const percent = Math.floor((completed / total) * 100);
+          return percent;
+        }
+
+        function updateProgressBar(percent) {
+          $("#profileProgressBar")
+            .css("width", percent + "%")
+            .text(percent + "%");
+
+          // Change color based on progress
+          const bar = $("#profileProgressBar");
+          if (percent < 50) {
+            bar.removeClass("bg-success").addClass("bg-danger");
+          } else if (percent < 80) {
+            bar.removeClass("bg-danger bg-success").addClass("bg-warning");
+          } else {
+            bar.removeClass("bg-warning bg-danger").addClass("bg-success");
+          }
+        }
+
+        // Example usage after fetching user data
+        $(document).ready(function () {
+          $.ajax({
+            url: `${BACKEND_URL}/users/${user.id}`,
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            success: function (user) {
+              const percent = calculateProfileCompletion(user);
+              updateProgressBar(percent);
+            },
+            error: function (xhr) {
+              console.error("Failed to fetch user:", xhr);
+            },
+          });
+        });
       </script>
 
       <script>

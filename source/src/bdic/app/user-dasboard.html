@@ -276,12 +276,12 @@
       <!-- Header -->
       <header class="navbar navbar-expand-lg bg-white shadow-sm px-4 py-3">
         <div class="container-fluid">
-          <button class="btn d-lg-none dashboard_bar" id="sidebarToggle">
+          <button class="btn d-lg-none" id="sidebarToggle">
             <i class="fas fa-bars"></i>
           </button>
 
           <div class="d-none d-md-block align-items-center">
-            <h5 class="mb-0 me-2">Dashboard</h5>
+            <h5 class="mb-0 me-2 dashboard_bar">Dashboard</h5>
             <small class="text-muted"
               >Welcome back, <span id="header-user-label"> User </span>
             </small>
@@ -433,7 +433,7 @@
                     <i class="bi bi-file-text text-white"></i>
                   </div>
                 </div>
-                <h5 class="mb-2 fw-bold" id="certificate-status"></h5>
+                <h5 class="mb-2 fw-bold certificate-status">Not Started</h5>
                 <p class="card-text text-muted small">Certificate of Origin</p>
               </div>
             </div>
@@ -450,7 +450,7 @@
                     <i class="bi bi-credit-card text-white"></i>
                   </div>
                 </div>
-                <h5 class="mb-2 fw-bold" id="card-status"></h5>
+                <h5 class="mb-2 fw-bold card-status">Not Started</h5>
                 <p class="card-text text-muted small">Expected in 3 days</p>
               </div>
             </div>
@@ -467,7 +467,7 @@
                     <i class="bi bi-person text-white"></i>
                   </div>
                 </div>
-                <h5 class="mb-2 fw-bold">Complete</h5>
+                <h5 class="mb-2 fw-bold" id="profile-status">Complete</h5>
                 <p class="card-text text-muted small">
                   All information verified
                 </p>
@@ -486,8 +486,10 @@
                     <i class="bi bi-download text-white"></i>
                   </div>
                 </div>
-                <h5 class="mb-2 fw-bold">3 of 4</h5>
-                <p class="card-text text-muted small">Documents uploaded</p>
+                <h5 class="mb-2 fw-bold uploaded-count">3 of 4</h5>
+                <p class="card-text text-muted small upload-status-text">
+                  Not Started
+                </p>
               </div>
             </div>
           </div>
@@ -523,8 +525,9 @@
                         </div>
                       </div>
                     </div>
-                    <span class="badge bg-success bg-opacity-10 text-success"
-                      >Approved</span
+                    <span
+                      class="badge bg-success bg-opacity-10 text-success certificate-status"
+                      >Not Started</span
                     >
                   </div>
 
@@ -542,8 +545,9 @@
                         </div>
                       </div>
                     </div>
-                    <span class="badge bg-primary bg-opacity-10 text-primary"
-                      >Processing</span
+                    <span
+                      class="badge bg-primary bg-opacity-10 text-primary card-status"
+                      >Not Started</span
                     >
                   </div>
 
@@ -693,6 +697,8 @@
                 (window.location.href = "certificate.html"),
               "apply-for-card": () => (window.location.href = "card.html"),
               "update-profile": () => (window.location.href = "profile.html"),
+              "download-document": () =>
+                (window.location.href = "request.html"),
             };
 
             if (actions[action]) {
