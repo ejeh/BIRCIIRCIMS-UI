@@ -774,7 +774,7 @@
                         required
                       />
                       <div class="form-text">
-                        Front and back of ID card or NIN slip
+                        <!-- Front and back of  -->ID card or NIN slip
                       </div>
                     </div>
                     <div class="col-md-4">
@@ -785,22 +785,6 @@
                       <div class="passport-upload-area" id="passportUploadArea">
                         <i class="bi bi-camera fs-1 text-muted mb-3"></i>
                         <div class="mb-3">
-                          <!-- <button
-                            type="button"
-                            class="btn btn-outline-secondary btn-sm mb-2"
-                            id="openCameraBtn"
-                          >
-                            Open Camera
-                          </button>
-                          <p class="text-muted small mb-2">or</p>
-                          <button
-                            type="button"
-                            class="btn btn-link btn-sm"
-                            id="uploadPhotoBtn"
-                          >
-                            Upload Photo
-                          </button> -->
-
                           <video
                             id="camera-stream"
                             width="100%"
@@ -1020,15 +1004,31 @@
                 processData: false,
                 contentType: false,
                 headers: { Authorization: `Bearer ${token}` },
+                beforeSend: function () {
+                  $("button[type='submit']")
+                    .html("<i class='fa fa-spinner fa-spin'></i>")
+                    .prop("disabled", true);
+                },
+                complete: function () {
+                  $("button[type='submit']")
+                    .html("Request Certificate")
+                    .prop("disabled", false);
+                },
+                success: function (data) {
+                  Swal.fire(
+                    "Application Submitted",
+                    "Your request is being processed.",
+                    "success"
+                  );
+                },
+                error: function (data) {
+                  Swal.fire(
+                    "Oops...",
+                    data.responseJSON.message || "Request failed",
+                    "error"
+                  );
+                },
               });
-
-              // if (response && response._id) {
-              Swal.fire(
-                "Application Submitted",
-                // "Your attestation letter is being prepared.",
-                "Your request is being processed.",
-                "success"
-              );
             } catch (error) {
               console.error("Error submitting form:", error.message);
               Swal.fire(

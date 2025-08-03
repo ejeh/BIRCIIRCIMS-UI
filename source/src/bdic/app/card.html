@@ -631,6 +631,16 @@
                 processData: false,
                 contentType: false,
                 headers: { Authorization: `Bearer ${token}` },
+                beforeSend: function () {
+                  $("button[type='submit']")
+                    .html("<i class='fa fa-spinner fa-spin'></i>")
+                    .prop("disabled", true);
+                },
+                complete: function () {
+                  $("button[type='submit']")
+                    .html("Request Certificate")
+                    .prop("disabled", false);
+                },
               });
 
               if (response && response._id) {

@@ -1,10 +1,10 @@
 const isDevelopment = window.location.hostname === "127.0.0.1";
 
-// const BACKEND_URL = isDevelopment
-//   ? "http://localhost:5000/api"
-//   : "https://api.citizenship.benuestate.gov.ng/api";
+const BACKEND_URL = isDevelopment
+  ? "http://localhost:5000/api"
+  : "https://api.citizenship.benuestate.gov.ng/api";
 
-const BACKEND_URL = "https://api.citizenship.benuestate.gov.ng/api";
+// const BACKEND_URL = "https://api.citizenship.benuestate.gov.ng/api";
 
 const FRONTEND_URL = isDevelopment
   ? "http://127.0.0.1:5501"
@@ -1430,7 +1430,6 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-  // function fetchLatestCertificate() {
   $.ajax({
     url: `${BACKEND_URL}/indigene/certificate/latest`,
     method: "GET",
@@ -1438,18 +1437,42 @@ $(document).ready(function () {
       Authorization: `Bearer ${token}`,
     },
     success: function (latestCertificate) {
-      // Handle the single latest record
-      $("#latest-cert-request").text(
-        latestCertificate.firstname + " " + latestCertificate.lastname
-      );
+      // Function to format time ago
+      /**
+       * Formats the time difference between now and the given date.
+       * @param {string} date - The date to compare with the current time.
+       * @returns {string} - A human-readable string representing the time difference.
+       */
+      function timeAgo(date) {
+        const now = new Date();
+        const updated = new Date(date);
+        const diff = Math.floor((now - updated) / 1000); // in seconds
 
-      $("#cert-pending").text(latestCertificate.status);
+        if (diff < 60) return "just now";
+        if (diff < 3600) return `${Math.floor(diff / 60)} minute(s) ago`;
+        if (diff < 86400) return `${Math.floor(diff / 3600)} hour(s) ago`;
+        if (diff < 604800) return `${Math.floor(diff / 86400)} day(s) ago`;
+        return updated.toLocaleDateString(); // fallback to actual date
+      }
+
+      if (latestCertificate) {
+        // Handle the single latest record
+        $("#latest-cert-request").text(
+          latestCertificate.firstname + " " + latestCertificate.lastname
+        );
+
+        $("#cert-pending").text(latestCertificate.status);
+
+        const updatedTime = timeAgo(latestCertificate.updated_at);
+        $(".cert-pending-date").text(updatedTime);
+      } else {
+        console.log("No approved certificates found");
+      }
     },
     error: function (error) {
       console.error("Error fetching latest certificate:", error);
     },
   });
-  // }
 });
 
 $(document).ready(function () {
@@ -1479,7 +1502,7 @@ $(document).ready(function () {
 
       $("#card-pending").text(latestCard.status);
       const updatedTime = timeAgo(latestCard.updated_at);
-      $(".card-approved-date").text(updatedTime);
+      $(".card-pending-date").text(updatedTime);
     },
     error: function (error) {
       console.error("Error fetching latest card:", error);
@@ -1535,12 +1558,25 @@ $(document).ready(function () {
       Authorization: `Bearer ${token}`,
     },
     success: function (card) {
+      function timeAgo(date) {
+        const now = new Date();
+        const updated = new Date(date);
+        const diff = Math.floor((now - updated) / 1000); // in seconds
+
+        if (diff < 60) return "just now";
+        if (diff < 3600) return `${Math.floor(diff / 60)} minute(s) ago`;
+        if (diff < 86400) return `${Math.floor(diff / 3600)} hour(s) ago`;
+        if (diff < 604800) return `${Math.floor(diff / 86400)} day(s) ago`;
+        return updated.toLocaleDateString(); // fallback to actual date
+      }
       if (card) {
         // Update UI with this single record
         $("#latest-card-approved").text(card.firstname + " " + card.lastname);
         $("#card-approved").text(card.status);
+        const updatedTime = timeAgo(card.updated_at);
+        $(".card-approved-date").text(updatedTime);
       } else {
-        console.log("No approved certificates found");
+        console.log("No approved card found");
       }
     },
     error: function (error) {
