@@ -1,10 +1,10 @@
 const isDevelopment = window.location.hostname === "127.0.0.1";
 
-// const BACKEND_URL = isDevelopment
-//   ? "http://localhost:5000/api"
-//   : "https://api.citizenship.benuestate.gov.ng/api";
+const BACKEND_URL = isDevelopment
+  ? "http://localhost:5000/api"
+  : "https://api.citizenship.benuestate.gov.ng/api";
 
-const BACKEND_URL = "https://api.citizenship.benuestate.gov.ng/api";
+// const BACKEND_URL = "https://api.citizenship.benuestate.gov.ng/api";
 
 const FRONTEND_URL = isDevelopment
   ? "http://127.0.0.1:5501"
@@ -3201,7 +3201,7 @@ function handleUpdate(userData) {
   Swal.fire({
     title: "Update User",
     html: `
-      <input id="updateMiddlename" class="swal2-input" placeholder="Middlename" value=${userData.middlename}>
+      <input id="updateMiddlename" class="swal2-input" placeholder="Email" value=${userData.email}>
       <input id="updatePhone" class="swal2-input" placeholder="Phone" value="${userData.phone}">
       <input id="updateAddress" class="swal2-input" placeholder="Address" value="${userData.address}">
       <input id="updateKindred" class="swal2-input" placeholder="Kindred" value="${userData.kindred}">
