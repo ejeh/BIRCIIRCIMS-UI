@@ -432,7 +432,13 @@ $(document).ready(function () {
   const updateTable = (data, page) => {
     const tableBody = $("#table-body");
     tableBody.empty(); // Clear existing table rows
-
+{/* <td>
+            <button class="btn btn-sm btn-success update-role-btn" 
+                    data-id="${item._id}" title="Update Role"
+                    data-role="${item.role}">
+              <i class="fas fa-user-edit me-1"></i> 
+            </button>
+          </td> */}
     data.forEach((item, index) => {
       const rowHtml = `
         <tr class="align-middle">
@@ -444,13 +450,7 @@ $(document).ready(function () {
             <span class="badge bg-secondary text-capitalize">${item.role}</span>
           </td>
           <td>${item.stateOfOrigin}</td>
-          <td>
-            <button class="btn btn-sm btn-success update-role-btn" 
-                    data-id="${item._id}" title="Update Role"
-                    data-role="${item.role}">
-              <i class="fas fa-user-edit me-1"></i> 
-            </button>
-          </td>
+          
           <td>
             <button class="btn btn-sm btn-primary view-user-btn" 
                     data-id="${item._id}" title="View User">
@@ -478,75 +478,165 @@ $(document).ready(function () {
     });
   };
 
-  // Update the role of a specific user
-  const updateRole = (userId, currentRole) => {
-    const roleMap = {
-      user: "support_admin",
-      support_admin: "super_admin",
-    };
-    const newRole = roleMap[currentRole];
+  // // Update the role of a specific user
+  // const updateRole = (userId, currentRole) => {
+  //   const roleMap = {
+  //     user: "support_admin",
+  //     support_admin: "super_admin",
+  //   };
+  //   const newRole = roleMap[currentRole];
 
-    if (!newRole) return;
+  //   if (!newRole) return;
 
-    const url = `${BACKEND_URL}/users/${userId}/role`;
-    const headers = {
-      super_admin: "user",
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    };
-    const data = JSON.stringify({ role: newRole });
+  //   const url = `${BACKEND_URL}/users/${userId}/role`;
+  //   const headers = {
+  //     super_admin: "user",
+  //     Authorization: `Bearer ${token}`,
+  //     "Content-Type": "application/json",
+  //   };
+  //   const data = JSON.stringify({ role: newRole });
 
-    apiRequest(
-      url,
-      "PATCH",
-      headers,
-      data,
-      () => {
-        alert("Role updated successfully!");
-        fetchData(currentPage.value);
-      },
-      () => alert("Failed to update role.")
-    );
+  //   apiRequest(
+  //     url,
+  //     "PATCH",
+  //     headers,
+  //     data,
+  //     () => {
+  //       alert("Role updated successfully!");
+  //       fetchData(currentPage.value);
+  //     },
+  //     () => alert("Failed to update role.")
+  //   );
+  // };
+
+  // // Fetch and display user details in a modern profile modal
+  // const viewDetails = (userId) => {
+  //   const url = `${BACKEND_URL}/users/${userId}`;
+  //   const headers = { Authorization: `Bearer ${token}` };
+
+  //   apiRequest(url, "GET", headers, null, (response) => {
+  //     // Construct user details dynamically
+  //     const details = `
+  //       <div class="user-profile">
+  //         <div class="profile-header">
+  //           <img 
+  //             src="${response.passportPhoto || "/assets/images/avatar.jpeg"}" 
+  //             alt="Passport Photo" 
+  //             class="profile-photo" 
+  //             crossOrigin="anonymous"
+  //           >
+  //           <h2 class="profile-name">${response.firstname} ${
+  //       response.lastname
+  //     }</h2>
+  //           <p class="profile-role">${response.role}</p>
+  //         </div>
+  //         <div class="profile-details">
+  //           <p><strong>Email:</strong> ${response.email}</p>
+  //           <p><strong>Phone:</strong> ${response.phone}</p>
+  //         </div>
+  //       </div>
+  //     `;
+  //     $("#details-modal .modal-body").html(details); // Populate modal with user details
+  //     $("#details-modal").modal("show"); // Show the
+  //   });
+  // };
+
+  // // Handle role update button clicks
+  // $("#table-body").on("click", ".update-role-btn", function () {
+  //   const userId = $(this).data("id");
+  //   const currentRole = $(this).data("role");
+  //   updateRole(userId, currentRole);
+  // });
+  // Update the role of a specific user to any valid role
+const updateRole = (userId, newRole) => {
+  if (!userId || !newRole) {
+    alert("Invalid user ID or role.");
+    return;
+  }
+
+  const url = `${BACKEND_URL}/users/${userId}/role`;
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
   };
+  const data = JSON.stringify({ role: newRole });
 
-  // Fetch and display user details in a modern profile modal
-  const viewDetails = (userId) => {
-    const url = `${BACKEND_URL}/users/${userId}`;
-    const headers = { Authorization: `Bearer ${token}` };
+  apiRequest(
+    url,
+    "PATCH",
+    headers,
+    data,
+    () => {
+      alert("Role updated successfully!");
+      fetchData(currentPage.value);
+    },
+    () => alert("Failed to update role.")
+  );
+};
 
-    apiRequest(url, "GET", headers, null, (response) => {
-      // Construct user details dynamically
-      const details = `
-        <div class="user-profile">
-          <div class="profile-header">
-            <img 
-              src="${response.passportPhoto || "/assets/images/avatar.jpeg"}" 
-              alt="Passport Photo" 
-              class="profile-photo" 
-              crossOrigin="anonymous"
-            >
-            <h2 class="profile-name">${response.firstname} ${
-        response.lastname
-      }</h2>
-            <p class="profile-role">${response.role}</p>
-          </div>
-          <div class="profile-details">
-            <p><strong>Email:</strong> ${response.email}</p>
-            <p><strong>Phone:</strong> ${response.phone}</p>
-          </div>
+// Fetch and display user details in a modern profile modal
+const viewDetails = (userId) => {
+  const url = `${BACKEND_URL}/users/${userId}`;
+  const headers = { Authorization: `Bearer ${token}` };
+
+  apiRequest(url, "GET", headers, null, (response) => {
+    const roleOptions = ["user", "support_admin", "super_admin"];
+    const roleSelect = `
+      <select id="new-role" class="form-select">
+        ${roleOptions
+          .map(
+            (role) =>
+              `<option value="${role}" ${
+                role === response.role ? "selected" : ""
+              }>${role}</option>`
+          )
+          .join("")}
+      </select>
+      <button class="btn btn-primary mt-2 update-role-modal-btn" data-id="${userId}">
+        Update Role
+      </button>
+    `;
+
+    const details = `
+      <div class="user-profile">
+        <div class="profile-header">
+          <img 
+            src="${response.passportPhoto || "/assets/images/avatar.jpeg"}" 
+            alt="Passport Photo" 
+            class="profile-photo" 
+            crossOrigin="anonymous"
+          >
+          <h2 class="profile-name">${response.firstname} ${response.lastname}</h2>
+          <p class="profile-role">Current Role: ${response.role}</p>
         </div>
-      `;
-      $("#details-modal .modal-body").html(details); // Populate modal with user details
-      $("#details-modal").modal("show"); // Show the
-    });
-  };
+        <div class="profile-details">
+          <p><strong>Email:</strong> ${response.email}</p>
+          <p><strong>Phone:</strong> ${response.phone}</p>
+        </div>
+        <div class="profile-role-update mt-3">
+          ${roleSelect}
+        </div>
+      </div>
+    `;
 
-  // Handle role update button clicks
-  $("#table-body").on("click", ".update-role-btn", function () {
-    const userId = $(this).data("id");
-    const currentRole = $(this).data("role");
-    updateRole(userId, currentRole);
+    $("#details-modal .modal-body").html(details);
+    $("#details-modal").modal("show");
   });
+};
+
+// Trigger viewDetails on .view-details-btn
+// $("#table-body").on("click", ".view-details-btn", function () {
+//   const userId = $(this).data("id");
+//   viewDetails(userId);
+// });
+
+// Handle role update from modal dropdown
+$("#details-modal").on("click", ".update-role-modal-btn", function () {
+  const userId = $(this).data("id");
+  const newRole = $("#new-role").val();
+  updateRole(userId, newRole);
+});
+
 
   // Handle view details button clicks
   $("#table-body").on("click", ".view-user-btn", function () {
@@ -1034,7 +1124,6 @@ $(document).ready(function () {
             // Load PDFs with authorization
             validDocuments.forEach((doc, index) => {
                 const fileUrl = `${BACKEND_URL}/indigene/certificate/${requestId}/document/${doc.key}`;
-                console.log("fileUrl", fileUrl);
                 // Show loader while fetching
                 $(`#pdf-viewer-container-${index}`).html(`
                     <div class="d-flex justify-content-center align-items-center h-100">
