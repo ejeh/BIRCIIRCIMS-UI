@@ -1522,12 +1522,12 @@ $(document).ready(function () {
             channels: ["card", "bank"],
             reference: paymentRef,
             customerPhoneNumber: phone,
-            callbackUrl: `${FRONTEND_URL}/source/src/bdic/app/success.html`,
+            callbackUrl: `${FRONTEND_URL}/src/bdic/app/success.html`,
             onClose: function () {
               console.log("Payment widget closed");
             },
             callBack: function (response) {
-              window.location.href = `${FRONTEND_URL}/source/src/bdic/app/success.html`;
+              window.location.href = `${FRONTEND_URL}/src/bdic/app/success.html`;
             },
           });
 
@@ -3105,7 +3105,7 @@ $(document).ready(function () {
                 console.log("Payment widget closed");
               },
               callBack: function (response) {
-                window.location.href = `${FRONTEND_URL}/source/src/bdic/app/success.html`;
+                window.location.href = `${FRONTEND_URL}/src/bdic/app/success.html`;
               },
             });
 
