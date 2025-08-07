@@ -11,8 +11,8 @@
     <meta property="og:image" content="social-image.html" />
     <meta name="format-detection" content="telephone=no" />
     <title>
-      Benue State Integrated Residents/Citizens Identity/Indigeneship
-      Registration and Card Issuance Management System
+      Benue State Integrated Citizenship and Resident Identity Registration
+      Management System
     </title>
     <!-- Favicon icon -->
     <link
@@ -36,7 +36,6 @@
       rel="stylesheet"
       href="../../cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
-    <script src="../../unpkg.com/sweetalert%402.1.2/dist/sweetalert.min.js"></script>
     <link href="vendor/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet" />
     <script src="../../ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <link
@@ -169,7 +168,7 @@
               width="40"
             />
             <div>
-              <h5 class="mb-0 fw-bold">BIRCIIRCIMS</h5>
+              <h5 class="mb-0 fw-bold">BICRIRMS</h5>
               <small class="text-muted" style="font-size: 0.8rem"
                 >Identity Management</small
               >
@@ -285,7 +284,7 @@
           </button>
 
           <div class="d-none d-md-block align-items-center">
-            <h5 class="mb-0 me-2">Certificate Request</h5>
+            <h5 class="mb-0 me-2 dashboard_bar">Certificate Request</h5>
             <small class="text-muted"
               >Welcome back, <span id="header-user-label"> User </span>
             </small>
@@ -363,16 +362,19 @@
                   <small class="text-muted">admin@benue.gov.ng</small>
                 </div>
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item"
+                <a href="profile.html" class="dropdown-item"
                   ><i class="fas fa-user me-2"></i> Profile</a
                 >
                 <a href="#" class="dropdown-item"
                   ><i class="fas fa-cog me-2"></i> Settings</a
                 >
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item text-danger"
-                  ><i class="fas fa-sign-out-alt me-2"></i> Logout</a
-                >
+                <a
+                  href="../../../auth/login.html"
+                  class="dropdown-item text-danger"
+                  ><i class="fas fa-sign-out-alt me-2"></i>
+                  <span onclick="logout(this)"> Logout </span>
+                </a>
               </div>
             </div>
           </div>
@@ -480,7 +482,7 @@
                         id="gender"
                         name="gender"
                         required
-                        readonly
+                        y
                       />
                     </div>
                     <div class="col-md-4">
@@ -524,7 +526,6 @@
                         name="DOB"
                         min="1900-01-01"
                         required
-                        readonly
                       />
                     </div>
                     <div class="col-md-4">
@@ -773,7 +774,7 @@
                         required
                       />
                       <div class="form-text">
-                        Front and back of ID card or NIN slip
+                        <!-- Front and back of  -->ID card or NIN slip
                       </div>
                     </div>
                     <div class="col-md-4">
@@ -784,22 +785,6 @@
                       <div class="passport-upload-area" id="passportUploadArea">
                         <i class="bi bi-camera fs-1 text-muted mb-3"></i>
                         <div class="mb-3">
-                          <!-- <button
-                            type="button"
-                            class="btn btn-outline-secondary btn-sm mb-2"
-                            id="openCameraBtn"
-                          >
-                            Open Camera
-                          </button>
-                          <p class="text-muted small mb-2">or</p>
-                          <button
-                            type="button"
-                            class="btn btn-link btn-sm"
-                            id="uploadPhotoBtn"
-                          >
-                            Upload Photo
-                          </button> -->
-
                           <video
                             id="camera-stream"
                             width="100%"
@@ -918,10 +903,7 @@
           </div>
         </div>
       </main>
-      <script
-        src="../../code.tidio.co_443/bpnp4xkz2axqrebqxcezgdca9yot1iyn.js"
-        async
-      ></script>
+
       <script>
         function logout() {
           localStorage.removeItem("token");
@@ -999,9 +981,9 @@
               const dataURL = canvas.toDataURL("image/jpeg", 0.9);
               const passportPhotoFile = $("#passportPhoto")[0]?.files[0];
 
-              console.log("photoCaptured:", photoCaptured);
-              console.log("passportPhotoFile:", passportPhotoFile);
-              console.log("dataURL from canvas:", dataURL);
+              // console.log("photoCaptured:", photoCaptured);
+              // console.log("passportPhotoFile:", passportPhotoFile);
+              // console.log("dataURL from canvas:", dataURL);
 
               if (photoCaptured && dataURL) {
                 formData.append(
@@ -1022,15 +1004,31 @@
                 processData: false,
                 contentType: false,
                 headers: { Authorization: `Bearer ${token}` },
+                beforeSend: function () {
+                  $("button[type='submit']")
+                    .html("<i class='fa fa-spinner fa-spin'></i>")
+                    .prop("disabled", true);
+                },
+                complete: function () {
+                  $("button[type='submit']")
+                    .html("Request Certificate")
+                    .prop("disabled", false);
+                },
+                success: function (data) {
+                  Swal.fire(
+                    "Application Submitted",
+                    "Your request is being processed.",
+                    "success"
+                  );
+                },
+                error: function (data) {
+                  Swal.fire(
+                    "Oops...",
+                    data.responseJSON.message || "Request failed",
+                    "error"
+                  );
+                },
               });
-
-              // if (response && response._id) {
-              Swal.fire(
-                "Application Submitted",
-                // "Your attestation letter is being prepared.",
-                "Your request is being processed.",
-                "success"
-              );
             } catch (error) {
               console.error("Error submitting form:", error.message);
               Swal.fire(
@@ -1145,23 +1143,17 @@
         Main wrapper end
     ***********************************-->
 
-    <script
-      src="../../code.tidio.co_443/bpnp4xkz2axqrebqxcezgdca9yot1iyn.js"
-      async
-    ></script>
     <!--**********************************
         Scripts
     ***********************************-->
     <!-- Required vendors -->
     <script src="vendor/sweetalert2/dist/sweetalert2.min.js"></script>
-    <script src="js/plugins-init/sweetalert.init.js"></script>
+    <!-- <script src="js/plugins-init/sweetalert.init.js"></script> -->
     <script src="vendor/global/global.min.js"></script>
     <script src="vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
     <script src="vendor/chart.js/Chart.bundle.min.js"></script>
     <script src="vendor/bootstrap-datetimepicker/js/moment.js"></script>
     <script src="vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
-
-    <script src="js/dashboard/dashboard-1.js"></script>
 
     <script src="js/custom.min.js"></script>
     <script src="js/deznav-init.js"></script>

@@ -15,8 +15,8 @@
     <meta property="og:image" content="social-image.html" />
     <meta name="format-detection" content="telephone=no" />
     <title>
-      Benue State Integrated Residents/Citizens Identity/Indigeneship
-      Registration and Card Issuance Management System
+      Benue State Integrated Citizenship and Resident Identity Registration
+      Management System
     </title>
     <!-- Favicon icon -->
     <link
@@ -431,7 +431,7 @@
               width="40"
             />
             <div>
-              <h5 class="mb-0 fw-bold">BIRCIIRCIMS</h5>
+              <h5 class="mb-0 fw-bold">BICRIRMS</h5>
               <small class="text-muted" style="font-size: 0.8rem"
                 >Identity Management</small
               >
@@ -598,7 +598,7 @@
           </button>
 
           <div class="d-none d-md-block align-items-center">
-            <h5 class="mb-0 me-2">Kindred Heads</h5>
+            <h5 class="mb-0 me-2 dashboard_bar">Kindred Heads</h5>
             <small class="text-muted"
               >Welcome back, <span id="header-user-label"> User </span>
             </small>
@@ -686,16 +686,19 @@
                   <small class="text-muted">admin@benue.gov.ng</small>
                 </div>
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item"
+                <a href="profile.html" class="dropdown-item"
                   ><i class="fas fa-user me-2"></i> Profile</a
                 >
                 <a href="#" class="dropdown-item"
                   ><i class="fas fa-cog me-2"></i> Settings</a
                 >
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item text-danger"
-                  ><i class="fas fa-sign-out-alt me-2"></i> Logout</a
-                >
+                <a
+                  href="../../../auth/login.html"
+                  class="dropdown-item text-danger"
+                  ><i class="fas fa-sign-out-alt me-2"></i>
+                  <span onclick="logout(this)"> Logout </span>
+                </a>
               </div>
             </div>
           </div>
@@ -739,11 +742,6 @@
         </div>
       </div>
 
-      <script
-        src="../../code.tidio.co_443/bpnp4xkz2axqrebqxcezgdca9yot1iyn.js"
-        async
-      ></script>
-
       <script>
         function logout() {
           localStorage.removeItem("token");
@@ -766,10 +764,7 @@
     <!--**********************************
         Main wrapper end
     ***********************************-->
-    <script
-      src="../../code.tidio.co_443/bpnp4xkz2axqrebqxcezgdca9yot1iyn.js"
-      async
-    ></script>
+
     <script>
       $(document).ready(function () {
         $(".password-toggle").click(function () {
@@ -1996,8 +1991,6 @@
     <script src="vendor/chart.js/Chart.bundle.min.js"></script>
     <script src="vendor/bootstrap-datetimepicker/js/moment.js"></script>
     <script src="vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
-
-    <script src="js/dashboard/dashboard-1.js"></script>
 
     <script src="js/custom.min.js"></script>
     <script src="js/deznav-init.js"></script>

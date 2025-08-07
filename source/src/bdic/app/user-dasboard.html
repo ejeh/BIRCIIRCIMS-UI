@@ -12,8 +12,8 @@
     <meta property="og:image" content="social-image.html" />
     <meta name="format-detection" content="telephone=no" />
     <title>
-      Benue State Integrated Residents/Citizens Identity/Indigeneship
-      Registration and Card Issuance Management System
+      Benue State Integrated Citizenship and Resident Identity Registration
+      Management System
     </title>
     <!-- Favicon icon -->
     <link
@@ -37,57 +37,9 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
 
+    <link rel="stylesheet" href="app.css" />
+
     <style>
-      :root {
-        --primary: #16a34a;
-        --primary-dark: #15803d;
-        --primary-light: #dcfce7;
-        --secondary: #3b82f6;
-        --success: #10b981;
-        --info: #8b5cf6;
-        --warning: #f59e0b;
-        --danger: #ef4444;
-        --light: #f8f9fa;
-        --dark: #212529;
-        --gray: #6c757d;
-        --gray-light: #e9ecef;
-      }
-
-      body {
-        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
-          Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-        background-color: #f8fafc;
-        font-size: 18px !important;
-      }
-
-      .sidebar {
-        /* width: 280px; */
-        width: 330px;
-        height: 100vh;
-        position: fixed;
-        left: 0;
-        top: 0;
-        background-color: #fbfbfb;
-        border-right: 1px solid #e2e8f0;
-        transition: all 0.3s;
-        z-index: 1000;
-      }
-
-      .main-content {
-        /* margin-left: 280px; */
-        margin-left: 330px;
-        transition: all 0.3s;
-      }
-      .notification-badge {
-        position: absolute !important;
-        top: 12px !important;
-        /* right: -5px !important; */
-        width: 20px !important;
-        height: 20px !important;
-        border-radius: 50% !important;
-        font-size: 10px !important;
-      }
-
       .welcome-banner {
         background: linear-gradient(135deg, #16a34a, #15803d);
         color: white;
@@ -135,74 +87,6 @@
       .quick-action-btn:hover {
         transform: translateX(5px);
       }
-
-      .badge {
-        padding: 5px 10px;
-        font-weight: 500;
-      }
-
-      .navbar {
-        border-bottom: 1px solid #e2e8f0;
-      }
-
-      .avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: #dcfce7;
-        color: #166534;
-        font-weight: 600;
-      }
-
-      .notification-badge {
-        position: absolute;
-        top: -5px;
-        right: -5px;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        font-size: 10px;
-      }
-
-      @media (max-width: 992px) {
-        .sidebar {
-          transform: translateX(-100%);
-        }
-
-        .sidebar.show {
-          transform: translateX(0);
-        }
-
-        .main-content {
-          margin-left: 0;
-        }
-      }
-      .h5,
-      h5 {
-        /* font-size: 1.25rem; */
-        font-size: 1.125rem;
-        line-height: 1.75rem;
-      }
-
-      .nav-link {
-        color: #6c757d !important;
-        padding-top: 0.4rem !important;
-        padding-bottom: 0.4rem !important;
-      }
-      .nav-link:hover,
-      .nav-link.active {
-        color: #16a249 !important;
-        background-color: #f1f5f9 !important;
-      }
-
-      .text-muted {
-        /* font-size: 0.775rem; */
-        line-height: 1.25rem;
-      }
-
       .quick-action-card.processing {
         opacity: 0.7;
         pointer-events: none; /* Prevent double clicks */
@@ -281,7 +165,7 @@
               width="40"
             />
             <div>
-              <h5 class="mb-0 fw-bold">BIRCIIRCIMS</h5>
+              <h5 class="mb-0 fw-bold">BICRIRMS</h5>
               <small class="text-muted" style="font-size: 0.8rem"
                 >Identity Management</small
               >
@@ -397,7 +281,7 @@
           </button>
 
           <div class="d-none d-md-block align-items-center">
-            <h5 class="mb-0 me-2">Dashboard</h5>
+            <h5 class="mb-0 me-2 dashboard_bar">Dashboard</h5>
             <small class="text-muted"
               >Welcome back, <span id="header-user-label"> User </span>
             </small>
@@ -484,9 +368,12 @@
                   ><i class="fas fa-cog me-2"></i> Settings</a
                 >
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item text-danger"
-                  ><i class="fas fa-sign-out-alt me-2"></i> Logout</a
-                >
+                <a
+                  href="../../../auth/login.html"
+                  class="dropdown-item text-danger"
+                  ><i class="fas fa-sign-out-alt me-2"></i>
+                  <span onclick="logout(this)"> Logout </span>
+                </a>
               </div>
             </div>
           </div>
@@ -546,7 +433,7 @@
                     <i class="bi bi-file-text text-white"></i>
                   </div>
                 </div>
-                <h5 class="mb-2 fw-bold" id="certificate-status"></h5>
+                <h5 class="mb-2 fw-bold certificate-status">Not Started</h5>
                 <p class="card-text text-muted small">Certificate of Origin</p>
               </div>
             </div>
@@ -563,7 +450,7 @@
                     <i class="bi bi-credit-card text-white"></i>
                   </div>
                 </div>
-                <h5 class="mb-2 fw-bold" id="card-status"></h5>
+                <h5 class="mb-2 fw-bold card-status">Not Started</h5>
                 <p class="card-text text-muted small">Expected in 3 days</p>
               </div>
             </div>
@@ -580,7 +467,7 @@
                     <i class="bi bi-person text-white"></i>
                   </div>
                 </div>
-                <h5 class="mb-2 fw-bold">Complete</h5>
+                <h5 class="mb-2 fw-bold" id="profile-status">Complete</h5>
                 <p class="card-text text-muted small">
                   All information verified
                 </p>
@@ -599,8 +486,10 @@
                     <i class="bi bi-download text-white"></i>
                   </div>
                 </div>
-                <h5 class="mb-2 fw-bold">3 of 4</h5>
-                <p class="card-text text-muted small">Documents uploaded</p>
+                <h5 class="mb-2 fw-bold uploaded-count">3 of 4</h5>
+                <p class="card-text text-muted small upload-status-text">
+                  Not Started
+                </p>
               </div>
             </div>
           </div>
@@ -636,8 +525,9 @@
                         </div>
                       </div>
                     </div>
-                    <span class="badge bg-success bg-opacity-10 text-success"
-                      >Approved</span
+                    <span
+                      class="badge bg-success bg-opacity-10 text-success certificate-status"
+                      >Not Started</span
                     >
                   </div>
 
@@ -655,8 +545,9 @@
                         </div>
                       </div>
                     </div>
-                    <span class="badge bg-primary bg-opacity-10 text-primary"
-                      >Processing</span
+                    <span
+                      class="badge bg-primary bg-opacity-10 text-primary card-status"
+                      >Not Started</span
                     >
                   </div>
 
@@ -806,6 +697,8 @@
                 (window.location.href = "certificate.html"),
               "apply-for-card": () => (window.location.href = "card.html"),
               "update-profile": () => (window.location.href = "profile.html"),
+              "download-document": () =>
+                (window.location.href = "request.html"),
             };
 
             if (actions[action]) {
@@ -840,7 +733,6 @@
               month: "long",
               day: "numeric",
             });
-            console.log(formattedDate);
             $("#firstname").text(`${user.firstname}!`);
             $("#startdate").text(`Member since ${formattedDate}`);
             $("#user-email").text(user.email);
@@ -857,14 +749,11 @@
     ***********************************-->
     <!-- Required vendors -->
     <script src="vendor/sweetalert2/dist/sweetalert2.min.js"></script>
-    <script src="js/plugins-init/sweetalert.init.js"></script>
     <script src="vendor/global/global.min.js"></script>
     <script src="vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
     <script src="vendor/chart.js/Chart.bundle.min.js"></script>
     <script src="vendor/bootstrap-datetimepicker/js/moment.js"></script>
     <script src="vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
-
-    <script src="js/dashboard/dashboard-1.js"></script>
 
     <script src="js/custom.min.js"></script>
     <script src="js/deznav-init.js"></script>

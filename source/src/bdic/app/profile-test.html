@@ -509,20 +509,6 @@
                 ></div>
               </div>
             </div>
-
-            <div class="mb-3">
-              <label class="form-label">Profile Completion</label>
-              <div class="progress" style="height: 25px">
-                <div
-                  id="profileProgressBar"
-                  class="progress-bar progress-bar-striped progress-bar-animated bg-success"
-                  role="progressbar"
-                  style="width: 0%"
-                >
-                  0%
-                </div>
-              </div>
-            </div>
           </div>
 
           <form
@@ -569,7 +555,7 @@
                   </div>
                   <div class="col-md-6">
                     <label for="gender" class="form-label">Gender</label>
-                    <select class="form-select" name="gender" id="gender">
+                    <select class="form-select" name="gender">
                       <option selected disabled>Select gender</option>
                       <option value="male">Male</option>
                       <option value="female">Female</option>
@@ -579,11 +565,7 @@
                     <label for="maritalStatus" class="form-label"
                       >Marital Status</label
                     >
-                    <select
-                      class="form-select"
-                      name="maritalStatus"
-                      id="maritalStatus"
-                    >
+                    <select class="form-select" name="maritalStatus">
                       <option selected disabled>Select marital status</option>
                       <option value="single">Single</option>
                       <option value="married">Married</option>
@@ -649,10 +631,8 @@
                     />
                   </div>
                   <div class="col-md-6">
-                    <label for="religion" class="form-label"
-                      >Religion (Optional)</label
-                    >
-                    <select class="form-select" name="religion" id="religion">
+                    <label for="religion" class="form-label">Religion</label>
+                    <select class="form-select" name="religion">
                       <option selected disabled>Select religion</option>
                       <option value="christian">Christian</option>
                       <option value="muslim">Muslim</option>
@@ -845,11 +825,7 @@
                     <label for="countryOfResidence" class="form-label"
                       >Country of Residence</label
                     >
-                    <select
-                      class="form-select"
-                      name="countryOfResidence"
-                      id="countryOfResidence"
-                    >
+                    <select class="form-select" name="countryOfResidence">
                       <option selected disabled>Select Country</option>
                       <option value="nigeria">Nigeria</option>
                       <option value="ghana">Ghana</option>
@@ -859,6 +835,7 @@
                 </div>
               </div>
 
+              <!-- Identity Information Section -->
               <div class="form-section" id="identity-section">
                 <div class="row g-4">
                   <div class="col-md-6">
@@ -869,9 +846,8 @@
                       class="form-select"
                       name="identification"
                       id="identification"
-                      required
                     >
-                      <option value="" selected disabled>
+                      <option selected disabled>
                         Select identification type
                       </option>
                       <option value="national_id">National ID</option>
@@ -897,7 +873,6 @@
                         id="other_identification"
                         name="other_identification"
                         placeholder="Please specify"
-                        required
                       />
                     </div>
                   </div>
@@ -934,6 +909,7 @@
                   </div>
                 </div>
               </div>
+
               <!-- Next of Kin Section -->
               <div class="form-section" id="nok-section">
                 <div class="row g-4">
@@ -1114,11 +1090,10 @@
                       class="d-flex justify-content-between align-items-center mb-3"
                     >
                       <label class="form-label">Family Member 1</label>
-                      <!-- class="btn btn-outline-danger btn-sm remove-family-member" -->
                       <button
                         type="button"
+                        class="btn btn-outline-danger btn-sm remove-family-member"
                         style="display: none"
-                        class="btn btn-outline-danger btn-sm remove-family"
                       >
                         <i class="bi bi-dash"></i>
                       </button>
@@ -1196,7 +1171,7 @@
                     <label for="biz_type" class="form-label"
                       >Business Type</label
                     >
-                    <select class="form-select" name="biz_type" id="biz_type">
+                    <select class="form-select" name="biz_type">
                       <option selected disabled>Select business type</option>
                       <option value="sole_proprietorship">
                         Sole Proprietorship
@@ -1620,11 +1595,7 @@
                     <label for="disabilityStatus" class="form-label"
                       >Disability Status</label
                     >
-                    <select
-                      class="form-select"
-                      name="disabilityStatus"
-                      id="disabilityStatus"
-                    >
+                    <select class="form-select" name="disabilityStatus">
                       <option selected disabled>
                         Select disability status
                       </option>
@@ -1636,50 +1607,6 @@
                     </select>
                   </div>
                 </div>
-              </div>
-              <div class="form-section" id="review-section">
-                <h4 class="mb-4">
-                  <i class="bi bi-check-circle me-2"></i>Review Your Information
-                </h4>
-
-                <div class="card mb-4">
-                  <div class="card-header bg-light">
-                    <h5 class="mb-0">Reference Verification Status</h5>
-                  </div>
-                  <div class="card-body">
-                    <div class="mb-3">
-                      <h6>Neighbors</h6>
-                      <div id="neighbor-verification-status" class="ps-3">
-                        <!-- Dynamically populated -->
-                      </div>
-                    </div>
-
-                    <div class="mb-3">
-                      <h6>Family Members</h6>
-                      <div id="family-verification-status" class="ps-3">
-                        <!-- Dynamically populated -->
-                      </div>
-                    </div>
-
-                    <button
-                      type="button"
-                      id="initiate-verification"
-                      class="btn btn-primary mt-3"
-                    >
-                      <i class="bi bi-send-check me-2"></i>Initiate Verification
-                    </button>
-                    <!-- <div id="verification-status" class="mt-2"> -->
-                    <div id="verification-status">
-                      <div class="alert alert-warning mt-2">
-                        <i class="bi bi-info-circle me-2"></i>
-                        Add at least one reference with name and phone to enable
-                        verification.
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Add other review sections as needed -->
               </div>
             </div>
 
@@ -1715,9 +1642,1330 @@
       </div>
 
       <!-- Bootstrap JS Bundle with Popper -->
-      <div id="autoSaveStatus" class="status-indicator">Ready</div>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+      <!-- <script>
+        $(document).ready(function () {
+          // Form steps data
+          const steps = [
+            { id: "profile", title: "Profile Details", icon: "bi-person" },
+            { id: "address", title: "Residential Address", icon: "bi-geo-alt" },
+            { id: "identity", title: "Identification", icon: "bi-credit-card" },
+            { id: "nok", title: "Next of Kin", icon: "bi-people" },
+            { id: "contacts", title: "Contact Details", icon: "bi-telephone" },
+            { id: "family", title: "Family Details", icon: "bi-people" },
+            { id: "business", title: "Business Details", icon: "bi-briefcase" },
+            {
+              id: "employment",
+              title: "Employment History",
+              icon: "bi-briefcase",
+            },
+            {
+              id: "education",
+              title: "Education Details",
+              icon: "bi-mortarboard",
+            },
+            { id: "health", title: "Health Information", icon: "bi-heart" },
+          ];
+
+          let currentStep = 0;
+          let neighborsCount = 1;
+          let familyMembersCount = 1;
+          let employmentHistoryCount = 1;
+          let tertiaryInstitutionsCount = 1;
+
+          // Initialize form
+          updateStepDisplay();
+
+          // Identification type change handler
+          $("#identification").change(function () {
+            const value = $(this).val();
+            if (value === "others") {
+              $("#other-identification-container").show();
+            } else {
+              $("#other-identification-container").hide();
+            }
+          });
+
+          // Add neighbor handler
+          $("#add-neighbor").click(function () {
+            if (neighborsCount < 5) {
+              neighborsCount++;
+              const newIndex = neighborsCount - 1;
+
+              const neighborHtml = `
+                        <div class="neighbor-item">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <label class="form-label">Neighbor ${neighborsCount}</label>
+                                <button type="button" class="btn btn-outline-danger btn-sm remove-neighbor">
+                                    <i class="bi bi-dash"></i>
+                                </button>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" name="neighbor_name_${newIndex}" placeholder="Full Name">
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" name="neighbor_address_${newIndex}" placeholder="Residential Address">
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="tel" class="form-control" name="neighbor_phone_${newIndex}" placeholder="Phone Number">
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+              $("#neighbors-container").append(neighborHtml);
+
+              if (neighborsCount === 5) {
+                $("#neighbor-max-message").show();
+                $("#add-neighbor").prop("disabled", true);
+              }
+
+              // Show remove buttons for all items if count > 1
+              if (neighborsCount > 1) {
+                $(".remove-neighbor").show();
+              }
+            }
+          });
+
+          // Remove neighbor handler (delegated)
+          $("#neighbors-container").on(
+            "click",
+            ".remove-neighbor",
+            function () {
+              if (neighborsCount > 1) {
+                $(this).closest(".neighbor-item").remove();
+                neighborsCount--;
+
+                // Renumber remaining neighbors
+                $(".neighbor-item").each(function (index) {
+                  $(this)
+                    .find(".form-label")
+                    .text(`Neighbor ${index + 1}`);
+                  $(this)
+                    .find("input")
+                    .each(function () {
+                      const name = $(this)
+                        .attr("name")
+                        .replace(/_(\d+)_/, `_${index}_`);
+                      $(this).attr("name", name);
+                    });
+                });
+
+                if (neighborsCount < 5) {
+                  $("#neighbor-max-message").hide();
+                  $("#add-neighbor").prop("disabled", false);
+                }
+
+                // Hide remove button if only one item left
+                if (neighborsCount === 1) {
+                  $(".remove-neighbor").hide();
+                }
+              }
+            }
+          );
+
+          // Add family member handler
+          $("#add-family-member").click(function () {
+            if (familyMembersCount < 5) {
+              familyMembersCount++;
+              const newIndex = familyMembersCount - 1;
+
+              const familyHtml = `
+                        <div class="family-item">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <label class="form-label">Family Member ${familyMembersCount}</label>
+                                <button type="button" class="btn btn-outline-danger btn-sm remove-family-member">
+                                    <i class="bi bi-dash"></i>
+                                </button>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" name="family_name_${newIndex}" placeholder="Full Name">
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" name="family_relationship_${newIndex}" placeholder="Relationship">
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" name="family_address_${newIndex}" placeholder="Residential Address">
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="tel" class="form-control" name="family_phone_${newIndex}" placeholder="Phone Number">
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+              $("#family-members-container").append(familyHtml);
+
+              if (familyMembersCount === 5) {
+                $("#family-max-message").show();
+                $("#add-family-member").prop("disabled", true);
+              }
+
+              // Show remove buttons for all items if count > 1
+              if (familyMembersCount > 1) {
+                $(".remove-family-member").show();
+              }
+            }
+          });
+
+          // Remove family member handler (delegated)
+          $("#family-members-container").on(
+            "click",
+            ".remove-family-member",
+            function () {
+              if (familyMembersCount > 1) {
+                $(this).closest(".family-item").remove();
+                familyMembersCount--;
+
+                // Renumber remaining family members
+                $(".family-item").each(function (index) {
+                  $(this)
+                    .find(".form-label")
+                    .text(`Family Member ${index + 1}`);
+                  $(this)
+                    .find("input")
+                    .each(function () {
+                      const name = $(this)
+                        .attr("name")
+                        .replace(/_(\d+)_/, `_${index}_`);
+                      $(this).attr("name", name);
+                    });
+                });
+
+                if (familyMembersCount < 5) {
+                  $("#family-max-message").hide();
+                  $("#add-family-member").prop("disabled", false);
+                }
+
+                // Hide remove button if only one item left
+                if (familyMembersCount === 1) {
+                  $(".remove-family-member").hide();
+                }
+              }
+            }
+          );
+
+          // Add employment handler
+          $("#add-employment").click(function () {
+            employmentHistoryCount++;
+            const newIndex = employmentHistoryCount - 1;
+
+            const employmentHtml = `
+                    <div class="employment-item">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <label class="form-label">Employment ${employmentHistoryCount}</label>
+                            <button type="button" class="btn btn-outline-danger btn-sm remove-employment">
+                                <i class="bi bi-dash"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Company Name</label>
+                                <input type="text" class="form-control" name="companyName_${newIndex}" placeholder="Enter company name">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Address</label>
+                                <input type="text" class="form-control" name="employment_address_${newIndex}" placeholder="Enter company address">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Designation</label>
+                                <input type="text" class="form-control" name="designation_${newIndex}" placeholder="Enter your designation">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Start Year</label>
+                                <input type="number" class="form-control" name="startYear_${newIndex}" placeholder="Enter start year">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">End Year</label>
+                                <input type="number" class="form-control" name="endYear_${newIndex}" placeholder="Enter end year">
+                                <p class="text-muted small mt-1">Leave blank if this is your current employment.</p>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="isCurrentEmployment_${newIndex}" name="isCurrentEmployment_${newIndex}">
+                                    <label class="form-check-label" for="isCurrentEmployment_${newIndex}">
+                                        This is my current employment
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
+                            <label class="form-label">Description of Company</label>
+                            <textarea class="form-control" name="employment_description_${newIndex}" rows="3" placeholder="Describe the company"></textarea>
+                        </div>
+                    </div>
+                `;
+
+            $("#employment-history-container").append(employmentHtml);
+
+            // Show remove buttons for all items if count > 1
+            if (employmentHistoryCount > 1) {
+              $(".remove-employment").show();
+            }
+          });
+
+          // Remove employment handler (delegated)
+          $("#employment-history-container").on(
+            "click",
+            ".remove-employment",
+            function () {
+              if (employmentHistoryCount > 1) {
+                $(this).closest(".employment-item").remove();
+                employmentHistoryCount--;
+
+                // Renumber remaining employments
+                $(".employment-item").each(function (index) {
+                  $(this)
+                    .find(".form-label")
+                    .text(`Employment ${index + 1}`);
+                  $(this)
+                    .find("input, textarea")
+                    .each(function () {
+                      const name = $(this)
+                        .attr("name")
+                        .replace(/_(\d+)_/, `_${index}_`);
+                      $(this).attr("name", name);
+                      if ($(this).attr("id")) {
+                        const id = $(this)
+                          .attr("id")
+                          .replace(/_(\d+)$/, `_${index}`);
+                        $(this).attr("id", id);
+                      }
+                    });
+                  $(this)
+                    .find("label")
+                    .each(function () {
+                      const forAttr = $(this).attr("for");
+                      if (forAttr) {
+                        const newFor = forAttr.replace(/_(\d+)$/, `_${index}`);
+                        $(this).attr("for", newFor);
+                      }
+                    });
+                });
+
+                // Hide remove button if only one item left
+                if (employmentHistoryCount === 1) {
+                  $(".remove-employment").hide();
+                }
+              }
+            }
+          );
+
+          // Add institution handler
+          $("#add-institution").click(function () {
+            tertiaryInstitutionsCount++;
+            const newIndex = tertiaryInstitutionsCount - 1;
+
+            const institutionHtml = `
+                    <div class="institution-item border rounded p-4 mt-3">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <label class="form-label">Tertiary Institution ${tertiaryInstitutionsCount}</label>
+                            <button type="button" class="btn btn-outline-danger btn-sm remove-institution">
+                                <i class="bi bi-dash"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="tertiaryInstitution_name_${newIndex}" placeholder="Name of Tertiary Institution">
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="tertiaryInstitution_address_${newIndex}" placeholder="Address of Tertiary Institution">
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="tertiaryInstitution_certificate_${newIndex}" placeholder="Certificate Obtained">
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="tertiaryInstitution_matricNo_${newIndex}" placeholder="Matriculation Number">
+                            </div>
+                            <div class="col-md-12">
+                                <input type="text" class="form-control" name="tertiaryInstitution_year_${newIndex}" placeholder="Year of Attendance">
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+            $("#tertiary-institutions-container").append(institutionHtml);
+
+            // Show remove buttons for all items if count > 1
+            if (tertiaryInstitutionsCount > 1) {
+              $(".remove-institution").show();
+            }
+          });
+
+          // Remove institution handler (delegated)
+          $("#tertiary-institutions-container").on(
+            "click",
+            ".remove-institution",
+            function () {
+              if (tertiaryInstitutionsCount > 1) {
+                $(this).closest(".institution-item").remove();
+                tertiaryInstitutionsCount--;
+
+                // Renumber remaining institutions
+                $(".institution-item").each(function (index) {
+                  $(this)
+                    .find(".form-label")
+                    .text(`Tertiary Institution ${index + 1}`);
+                  $(this)
+                    .find("input")
+                    .each(function () {
+                      const name = $(this)
+                        .attr("name")
+                        .replace(/_(\d+)_/, `_${index}_`);
+                      $(this).attr("name", name);
+                    });
+                });
+
+                // Hide remove button if only one item left
+                if (tertiaryInstitutionsCount === 1) {
+                  $(".remove-institution").hide();
+                }
+              }
+            }
+          );
+
+          // Next step handler
+          $("#next-step").click(function () {
+            if (currentStep < steps.length - 1) {
+              currentStep++;
+              updateStepDisplay();
+            }
+          });
+
+          // Previous step handler
+          $("#prev-step").click(function () {
+            if (currentStep > 0) {
+              currentStep--;
+              updateStepDisplay();
+            }
+          });
+
+          // Form submit handler
+          $("#unifiedForm").submit(function (e) {
+            e.preventDefault();
+          });
+
+          // Update step display
+          function updateStepDisplay() {
+            // Hide all sections
+            $(".form-section").removeClass("active");
+
+            // Show current section
+            $(`#${steps[currentStep].id}-section`).addClass("active");
+
+            // Update step info in header
+            $("#current-step-title").text(steps[currentStep].title);
+            $("#current-step-description").text(
+              `Step ${currentStep + 1} of ${steps.length}`
+            );
+            $("#current-step-icon")
+              .removeClass()
+              .addClass(`bi ${steps[currentStep].icon}`);
+
+            // Update progress bar
+            const progressPercent = ((currentStep + 1) / steps.length) * 100;
+            $("#progress-bar").css("width", `${progressPercent}%`);
+
+            // Update navigation buttons
+            if (currentStep === 0) {
+              $("#prev-step").prop("disabled", true);
+            } else {
+              $("#prev-step").prop("disabled", false);
+            }
+
+            if (currentStep === steps.length - 1) {
+              $("#next-step").hide();
+              $("#submit-btn").show();
+            } else {
+              $("#next-step").show();
+              $("#submit-btn").hide();
+            }
+          }
+        });
+      </script>
+      <script>
+        $(document).ready(function () {
+          // Hold state for counts and the auto-save timer.
+          const state = {
+            autoSaveTimer: null,
+            institutionCount: 0,
+            neighborCount: 0,
+            familyCount: 0,
+            employmentCount: 0,
+          };
+
+          // Utility function to set input values
+          const setInputValue = (id, value) => {
+            const element = document.getElementById(id);
+            if (element) element.value = value || "";
+          };
+
+          /* ===================================================
+           * Field Addition Functions
+           * =================================================== */
+
+          // Add a new tertiary institution section.
+          const addInstitution = (institutionData = {}) => {
+            const container = $("#tertiary-institution-container");
+            // Calculate the index from the number of current institutions.
+            const index = container.find(".institution-fields").length;
+
+            const newInstitutionFields = `
+    <div class="institution-fields m-b30">
+      <label class="form-label">Tertiary Institution ${index + 1}</label>
+      <input
+        type="text"
+        class="form-control"
+        name="educationalHistory.tertiaryInstitutions[${index}].name"
+        placeholder="Name of Tertiary Institution"
+        value="${institutionData.name || ""}"
+        
+      />
+      <input
+        type="text"
+        class="form-control"
+        name="educationalHistory.tertiaryInstitutions[${index}].address"
+        placeholder="Address of Tertiary Institution"
+        value="${institutionData.address || ""}"
+        
+      />
+      <input
+        type="text"
+        class="form-control"
+        name="educationalHistory.tertiaryInstitutions[${index}].certificateObtained"
+        placeholder="Certificate Obtained"
+        value="${institutionData.certificateObtained || ""}"
+        
+      />
+      <input
+        type="text"
+        class="form-control"
+        name="educationalHistory.tertiaryInstitutions[${index}].matricNo"
+        placeholder="Matriculation Number"
+        value="${institutionData.matricNo || ""}"
+        
+      />
+      <input
+        type="text"
+        class="form-control"
+        name="educationalHistory.tertiaryInstitutions[${index}].yearOfAttendance"
+        placeholder="Year of Attendance"
+        value="${institutionData.yearOfAttendance || ""}"
+        
+      />
+    </div>`;
+            container.append(newInstitutionFields);
+            state.institutionCount++;
+
+            // Validate the newly added fields before auto-saving
+            validateAndAutoSaveIntitution(container, index);
+          };
+
+          // Function to validate the newly added institution fields and trigger auto-save if valid
+          const validateAndAutoSaveIntitution = (container, index) => {
+            const fields = container
+              .find(`.institution-fields:nth-child(${index + 1})`)
+              .find("input");
+            let isValid = true;
+
+            fields.each(function () {
+              if (!$(this).val().trim()) {
+                isValid = false;
+                return false; // Exit the loop early if any field is empty
+              }
+            });
+
+            if (isValid) {
+              autoSave();
+            } else {
+              console.log("Please fill out all required fields before saving.");
+            }
+          };
+
+          // Add a new family section.
+          const addFamily = (familyData = {}) => {
+            const container = $("#family-container");
+            // Calculate the index from the number of current institutions.
+            const index = container.find(".family-item").length;
+
+            const newFamilyFields = `
+    <div class="family-item m-b30">
+      <label class="form-label">Family ${index + 1}</label>
+      <input 
+        type="text" 
+        class="form-control m-b10 family-name" 
+        name="family_name[]" 
+        placeholder="Full Name" 
+        value="${familyData.name || ""}"
+         />
+
+      <input
+        type="text" 
+        class="form-control m-b10 family-relationship" 
+        name="family_relationship[]" 
+        placeholder="Relationship" 
+        value="${familyData.relationship || ""}"
+         />
+
+      <input 
+        type="tel" 
+        class="form-control family-phone" 
+        name="family_phone[]" 
+        placeholder="Phone Number" 
+        value="${familyData.phone || ""}"
+         />
+
+      <input 
+        type="text" 
+        class="form-control family-address" 
+        name="family_address[]" 
+        placeholder="Residential Address" 
+        value="${familyData.address || ""}"
+         />
+    </div>`;
+
+            container.append(newFamilyFields);
+            state.familyCount++;
+
+            if (state.familyCount === 5) {
+              $("#add-family")
+                .prop("disabled", true)
+                .text("Maximum family reached")
+                .removeClass("btn-primary")
+                .addClass("btn-secondary");
+            }
+
+            // Trigger auto-save after adding new fields
+            autoSaveFamily();
+          };
+
+          // Existing auto-save function (modified to validate family data)
+          const autoSaveFamily = () => {
+            // Validate family data before saving
+            if (validateFamilyData()) {
+              console.log(
+                "All family fields are valid. Proceeding with auto-save..."
+              );
+              autoSave();
+            } else {
+              console.log(
+                "Some family fields are incomplete. Auto-save skipped."
+              );
+            }
+          };
+
+          // Helper function to validate family data
+          const validateFamilyData = () => {
+            const familyContainer = $("#family-container");
+            const familyFields = familyContainer.find(".family-item");
+            let allFieldsValid = true;
+
+            familyFields.each((index, field) => {
+              const name = $(field).find(".family-name").val().trim();
+              const relationship = $(field)
+                .find(".family-relationship")
+                .val()
+                .trim();
+              const phone = $(field).find(".family-phone").val().trim();
+              const address = $(field).find(".family-address").val().trim();
+
+              if (!name || !relationship || !phone || !address) {
+                allFieldsValid = false;
+                return false; // Exit the loop early if any field is invalid
+              }
+            });
+
+            return allFieldsValid;
+          };
+
+          // // Add a new neighbor section.
+          const addNeighbor = (neighborData = {}) => {
+            const container = $("#neighbors-container");
+            const index = container.find(".neighbor-fields").length;
+
+            const newNeighborFields = `
+      <div class="neighbor-fields m-b30">
+        <label class="form-label">Neighbor ${index + 1}</label>
+        <input 
+          type="text" 
+          class="form-control m-b10 neighbor-name" 
+          name="neighbor_name[]" 
+          placeholder="Full Name" 
+          value="${neighborData.name || ""}"
+           />
+  
+        <input 
+          type="text" 
+          class="form-control m-b10 neighbor-address" 
+          name="neighbor_address[]" 
+          placeholder="Residential Address" 
+          value="${neighborData.address || ""}"
+           />
+  
+        <input 
+          type="tel" 
+          class="form-control neighbor-phone" 
+          name="neighbor_phone[]" 
+          placeholder="Phone Number" 
+          value="${neighborData.phone || ""}"
+           />
+      </div>`;
+
+            container.append(newNeighborFields);
+            state.neighborCount++;
+
+            if (state.neighborCount === 5) {
+              $("#add-neighbor")
+                .prop("disabled", true)
+                .text("Maximum neighbors reached")
+                .removeClass("btn-primary")
+                .addClass("btn-secondary");
+            }
+
+            // Attach event listeners to the new fields for auto-save validation
+            const newFields = container.find(".neighbor-fields").last();
+            newFields.find("input").on("input", function () {
+              validateAndAutoSave(newFields);
+            });
+          };
+
+          // Function to validate and auto-save only if all fields are filled
+          const validateAndAutoSave = (neighborFields) => {
+            const name = neighborFields.find(".neighbor-name").val().trim();
+            const address = neighborFields
+              .find(".neighbor-address")
+              .val()
+              .trim();
+            const phone = neighborFields.find(".neighbor-phone").val().trim();
+
+            if (name && address && phone) {
+              autoSave(); // Trigger auto-save only if all fields are complete
+            }
+          };
+
+          // Add a new employment section.
+          const addEmployment = (employmentData = {}) => {
+            const container = $("#employment-history-container");
+            // Calculate the index from the number of current employment.
+            const index = container.find(".employment-fields").length;
+            const newEmploymentFields = `
+      <div class="employment-fields m-b30">
+        <label class="form-label">Employment ${index + 1}</label> 
+        <input
+          type="text"
+          class="form-control"
+          name="companyName[]"
+          placeholder="Company Name"
+          value="${employmentData.companyName || ""}"
+          
+        />
+        <input
+          type="text"
+          class="form-control"
+          name="address[]"
+          placeholder="Company Address"
+          value="${employmentData.address || ""}"
+          
+        />
+        <input
+          type="text"
+          class="form-control"  
+          name="designation[]"
+          placeholder="Designation"
+          value="${employmentData.designation || ""}"
+          
+          />
+          <input
+          type="number"
+          class="form-control"
+          name="startYear[]"
+          placeholder="Start Year"
+          value="${employmentData.startYear || ""}"
+          
+          />
+          <div>
+          <input
+          type="number"
+          class="form-control"
+          name="endYear[]"
+          placeholder="End Year"
+          value="${employmentData.endYear || ""}"
+          
+          />
+           <small class="form-text text-muted">Leave blank if this is your current employment.</small>
+          </div>
+          
+          <div class="form-check">
+          <input
+          type="checkbox"
+          class="form-check-input"
+          name="isCurrentEmployment[]"
+          value="${employmentData.isCurrentEmployment || ""}"
+          />
+             <label class="form-check-label"for="isCurrentEmployment">This is my current employment</label>
+          </div>
+           <div>
+            <label for="description">Description of Company</label>
+          <textarea
+          class="form-control"
+          name="description[]"
+          placeholder="Job Description"
+          value="${employmentData.description || ""}"
+          
+          >
+          </textarea>
+         </div>
+      </div>`;
+            container.append(newEmploymentFields);
+            state.employmentCount++;
+
+            // Validate and auto-save only if all required fields are filled
+            validateAndAutoSaveEmployment();
+          };
+
+          const validateAndAutoSaveEmployment = () => {
+            const container = $("#employment-history-container");
+            const employmentFields = container.find(".employment-fields");
+
+            let isComplete = true;
+
+            employmentFields.each(function () {
+              const fields = $(this).find(
+                "input[required], textarea[required]"
+              );
+              fields.each(function () {
+                if (!$(this).val()) {
+                  isComplete = false;
+                  return false; // Exit the loop early if any field is empty
+                }
+              });
+
+              if (!isComplete) {
+                return false; // Exit the outer loop early if any field is empty
+              }
+            });
+
+            if (isComplete) {
+              autoSave();
+            }
+          };
+
+          /* ===================================================
+           * Data Population Logic (Updated)
+           * =================================================== */
+
+          const populateTertiaryInstitutions = (institutions) => {
+            const container = $("#tertiary-institution-container");
+            container.empty(); // Clear existing fields
+
+            if (institutions && institutions.length > 0) {
+              institutions.forEach((institution) =>
+                addInstitution(institution)
+              );
+            } else {
+              // Add at least one empty institution field
+              addInstitution();
+            }
+          };
+
+          const populateFamily = (family) => {
+            const container = $("#family-container");
+            container.empty(); // Clear existing fields
+
+            if (family && family.length > 0) {
+              family.forEach((fam) => addFamily(fam));
+            } else {
+              // Add at least one empty family field
+              addFamily();
+            }
+          };
+
+          const populateNeighbors = (neighbors) => {
+            const container = $("#neighbors-container");
+            container.empty(); // Clear existing fields
+
+            if (neighbors && neighbors.length > 0) {
+              neighbors.forEach((neighbor) => addNeighbor(neighbor));
+            } else {
+              // Add at least one empty family field
+              addNeighbor();
+            }
+          };
+
+          const populateEmploymentHistory = (employments) => {
+            const container = $("#employment-history-container");
+            container.empty(); // Clear existing fields
+
+            if (employments && employments.length > 0) {
+              employments.forEach((employment) => addEmployment(employment));
+            } else {
+              // Add at least one empty employment field
+              addEmployment();
+            }
+          };
+
+          // Modified AJAX success handler
+          const handleProfileDataSuccess = (data) => {
+            // ... existing population code for other fields ...
+
+            // Handle educational history
+            if (data.educationalHistory) {
+              // Primary and secondary school population (keep existing code)
+
+              // Tertiary institutions - use our new method
+              populateTertiaryInstitutions(
+                data.educationalHistory.tertiaryInstitutions
+              );
+            }
+
+            // Update institution count state
+            state.institutionCount = $(
+              "#tertiary-institution-container .institution-fields"
+            ).length;
+
+            if (data.family) {
+              populateFamily(data.family);
+              // ... rest of existing population code ...
+            }
+            state.familyCount = $(
+              "#neighbors-container .neighbor-fields"
+            ).length;
+
+            if (data.neighbor) {
+              populateNeighbors(data.neighbor);
+              // ... rest of existing population code ...
+            }
+            state.neighborCount = $(
+              "#neighbors-container .neighbor-fields"
+            ).length;
+
+            if (data.employmentHistory) {
+              populateEmploymentHistory(data.employmentHistory);
+              // ... rest of existing population code ...
+            }
+            state.employmentCount = $(
+              "#employment-history-container .employment-fields"
+            ).length;
+          };
+
+          // Modified AJAX call
+          $.ajax({
+            url: `${BACKEND_URL}/users/${user.id}`,
+            method: "GET",
+            headers: { Authorization: `Bearer ${token}` },
+            success: handleProfileDataSuccess,
+            error: function (error) {
+              // ... existing error handling ...
+            },
+          });
+
+          /* ===================================================
+           * Data Collection
+           * =================================================== */
+
+          const collectFormData = () => {
+            // Initialize FormData (this will also capture file uploads)
+            const formData = new FormData();
+
+            // List of simple fields by their IDs.
+            const fields = [
+              "middlename",
+              "lastname",
+              "nationality",
+              "community",
+              "religion",
+              "gender",
+              "stateOfOrigin",
+              "DOB",
+              "countryOfResidence",
+              "lgaOfOrigin",
+              "maritalStatus",
+              "house_number",
+              "street_name",
+              "nearest_bus_stop_landmark",
+              "city_town",
+              "stateOfResidence",
+              "lgaOfResidence",
+              "id_number",
+              "issue_date",
+              "expiry_date",
+            ];
+            fields.forEach((field) => {
+              const value = $(`#${field}`).val() || "";
+              formData.append(field, value);
+            });
+
+            // Build the next-of-kin object.
+            const nextOfKin = {
+              nok_surname: $("#nok_surname").val().trim(),
+              nok_firstname: $("#nok_firstname").val().trim(),
+              nok_middlename: $("#nok_middlename").val().trim(),
+              nok_relationship: $("#nok_relationship").val().trim(),
+              nok_countryOfResidence: $("#nok_countryOfResidence").val().trim(),
+              nok_stateOfResidence: $("#nok_stateOfResidence").val().trim(),
+              nok_lgaOfResidence: $("#nok_lgaOfResidence").val().trim(),
+              nok_cityOfResidence: $("#nok_cityOfResidence").val().trim(),
+              nok_address: $("#nok_address").val().trim(),
+            };
+
+            // Build the health info object.
+            const healthInfo = {
+              bloodGroup: $("#bloodGroup").val(),
+              genotype: $("#genotype").val(),
+              disabilityStatus: $("#disabilityStatus").val(),
+            };
+
+            // Build the business object.
+            const business = {
+              biz_name: $("#biz_name").val().trim(),
+              biz_type: $("#biz_type").val(),
+              registration_number: $("#registration_number").val().trim(),
+              biz_address: $("#biz_address").val().trim(),
+              // nature_of_business: $("#nature_of_business").val().trim(),
+              nature_of_business: $("#nature_of_bussiness").val()
+                ? $("#nature_of_business").val().trim()
+                : "",
+              numberOfYears: $("#numberOfYears").val().trim(),
+              numberOfEmployees: $("#numberOfEmployees").val().trim(),
+              annualRevenue: $("#annualRevenue").val().trim(),
+              TIN: $("#TIN").val().trim(),
+              biz_phone: $("#biz_phone").val().trim(),
+              biz_email: $("#biz_email").val().trim(),
+            };
+
+            // Collect neighbor entries.
+            const neighbor = [];
+            $(".neighbor-fields").each(function () {
+              neighbor.push({
+                name: $(this).find('input[name="neighbor_name[]"]').val(),
+                address: $(this).find('input[name="neighbor_address[]"]').val(),
+                phone: $(this).find('input[name="neighbor_phone[]"]').val(),
+              });
+            });
+
+            // Collect family entries.
+            const family = [];
+            $(".family-item").each(function () {
+              family.push({
+                name: $(this).find('input[name="family_name[]"]').val(),
+                relationship: $(this)
+                  .find('input[name="family_relationship[]"]')
+                  .val(),
+                phone: $(this).find('input[name="family_phone[]"]').val(),
+                address: $(this).find('input[name="family_address[]"]').val(),
+              });
+            });
+
+            // Build educational history.
+            const educationalHistory = {
+              primarySchool: {
+                name: $('input[name="primarySchool.name"]').val(),
+                address: $('input[name="primarySchool.address"]').val(),
+                yearOfAttendance: $(
+                  'input[name="primarySchool.yearOfAttendance"]'
+                ).val(),
+              },
+              secondarySchool: {
+                name: $('input[name="secondarySchool.name"]').val(),
+                address: $('input[name="secondarySchool.address"]').val(),
+                yearOfAttendance: $(
+                  'input[name="secondarySchool.yearOfAttendance"]'
+                ).val(),
+              },
+              tertiaryInstitutions: [],
+            };
+
+            $(".institution-fields").each(function (index) {
+              const institution = {
+                name: $(this)
+                  .find(
+                    `input[name="educationalHistory.tertiaryInstitutions[${index}].name"]`
+                  )
+                  .val(),
+                address: $(this)
+                  .find(
+                    `input[name="educationalHistory.tertiaryInstitutions[${index}].address"]`
+                  )
+                  .val(),
+                certificateObtained: $(this)
+                  .find(
+                    `input[name="educationalHistory.tertiaryInstitutions[${index}].certificateObtained"]`
+                  )
+                  .val(),
+                matricNo: $(this)
+                  .find(
+                    `input[name="educationalHistory.tertiaryInstitutions[${index}].matricNo"]`
+                  )
+                  .val(),
+                yearOfAttendance: $(this)
+                  .find(
+                    `input[name="educationalHistory.tertiaryInstitutions[${index}].yearOfAttendance"]`
+                  )
+                  .val(),
+              };
+              educationalHistory.tertiaryInstitutions.push(institution);
+            });
+
+            // Employment History
+            const employmentHistory = [];
+            $(".employment-fields").each(function () {
+              employmentHistory.push({
+                companyName: $(this).find('input[name="companyName[]"]').val(),
+                address: $(this).find('input[name="address[]"]').val(),
+                designation: $(this).find('input[name="designation[]"]').val(),
+                startYear: $(this).find('input[name="startYear[]"]').val(),
+                endYear: $(this).find('input[name="endYear[]"]').val(),
+                isCurrentEmployment: $(this)
+                  .find('input[name="isCurrentEmployment[]"]')
+                  .is(":checked"),
+                description: $(this)
+                  .find('textarea[name="description[]"]')
+                  .val(),
+              });
+            });
+
+            // Return both the FormData (with file uploads) and our JSON–ready objects.
+            return {
+              formData,
+              nextOfKin,
+              healthInfo,
+              business,
+              educationalHistory,
+              employmentHistory,
+              neighbor,
+              family,
+            };
+          };
+
+          
+
+          /* ===================================================
+           * Auto-Save / Update Handling
+           * =================================================== */
+          let cameraStream = null;
+          let photoCaptured = false;
+
+          // Utility: Convert dataURL to File
+          function dataURLtoFile(dataurl, filename) {
+            const arr = dataurl.split(",");
+            const mime = arr[0].match(/:(.*?);/)[1];
+            const bstr = atob(arr[1]);
+            let n = bstr.length;
+            const u8arr = new Uint8Array(n);
+            while (n--) {
+              u8arr[n] = bstr.charCodeAt(n);
+            }
+            return new File([u8arr], filename, { type: mime });
+          }
+          const autoSave = async () => {
+            try {
+              // Collect all the form data.
+              let {
+                formData,
+                nextOfKin,
+                healthInfo,
+                business,
+                educationalHistory,
+                employmentHistory,
+                neighbor,
+                family,
+              } = collectFormData();
+
+              // Append the JSON–structured data.
+              formData.append("nextOfKin", JSON.stringify(nextOfKin));
+              formData.append("healthInfo", JSON.stringify(healthInfo));
+              formData.append("business", JSON.stringify(business));
+              formData.append(
+                "educationalHistory",
+                JSON.stringify(educationalHistory)
+              );
+              formData.append(
+                "employmentHistory",
+                JSON.stringify(employmentHistory)
+              );
+              formData.append("neighbor", JSON.stringify(neighbor));
+              formData.append("family", JSON.stringify(family));
+
+              // Handle identification – use the alternative input if "others" is selected.
+              const selectedValue = $("#identification").val();
+              const otherValue = $("#other-identification").val();
+              const finalIdentification =
+                selectedValue === "others" ? otherValue : selectedValue;
+              formData.append("identification", finalIdentification);
+
+              const canvas = $("#snapshot").get(0);
+              const dataURL = canvas.toDataURL("image/jpeg", 0.9);
+              const passportPhotoFile = $("#passportPhoto")[0]?.files[0];
+
+              // console.log("photoCaptured:", photoCaptured);
+              // console.log("passportPhotoFile:", passportPhotoFile);
+              // console.log("dataURL from canvas:", dataURL);
+
+              if (photoCaptured && dataURL) {
+                formData.append(
+                  "passportPhoto",
+                  dataURLtoFile(dataURL, "captured-passport.jpg")
+                );
+              } else if (passportPhotoFile) {
+                formData.append("passportPhoto", passportPhotoFile);
+              }
+
+              // Send the PUT request to update the user.
+              const response = await fetch(`${BACKEND_URL}/users/${user.id}`, {
+                method: "PUT",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+                body: formData,
+              });
+
+              if (response.ok) {
+                console.log("Auto-save successful");
+                $("#autoSaveStatus").text("Saved").css("color", "green");
+              } else {
+                console.error("Auto-save failed", response.statusText);
+                $("#autoSaveStatus").text("Failed to save").css("color", "red");
+              }
+            } catch (error) {
+              console.log("Auto-save error:", error.message);
+              console.error("Auto-save error:", error);
+              $("#autoSaveStatus").text("Failed to save").css("color", "red");
+            }
+          };
+          // ✅ Camera Start
+          $("#start-camera").click(function () {
+            navigator.mediaDevices
+              .getUserMedia({ video: true })
+              .then(function (stream) {
+                cameraStream = stream;
+                $("#camera-stream").get(0).srcObject = stream;
+                $("#camera-stream").show();
+                $("#capture-photo, #close-camera").show();
+                $("#start-camera").hide();
+                $("#photo-preview").hide();
+              })
+              .catch(function (err) {
+                alert("Unable to access camera: " + err);
+              });
+          });
+          // ✅ Capture Photo & Trigger AutoSave
+          $("#capture-photo").click(function () {
+            const video = $("#camera-stream").get(0);
+            const canvas = $("#snapshot").get(0);
+            const context = canvas.getContext("2d");
+
+            canvas.width = video.videoWidth || 640;
+            canvas.height = video.videoHeight || 480;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            const dataUrl = canvas.toDataURL("image/jpeg", 0.9);
+            $("#photo-preview").attr("src", dataUrl).show();
+            $("#passportPhotoData").val(dataUrl);
+
+            if (cameraStream) {
+              cameraStream.getTracks().forEach((track) => track.stop());
+              cameraStream = null;
+            }
+
+            $("#camera-stream, #capture-photo, #close-camera").hide();
+            $("#start-camera").show();
+            photoCaptured = true;
+
+            $("#autoSaveStatus")
+              .text("Photo captured! Saving...")
+              .css("color", "orange");
+            console.log("Calling autoSave() after camera capture...");
+            autoSave();
+          });
+
+          // ✅ Close Camera Manually
+          $("#close-camera").click(function () {
+            if (cameraStream) {
+              cameraStream.getTracks().forEach((track) => track.stop());
+              cameraStream = null;
+            }
+            $("#camera-stream, #capture-photo, #close-camera").hide();
+            $("#start-camera").show();
+          });
+
+          // ✅ Upload Photo from File
+          $("#upload-photo-btn").click(function () {
+            $("#passportPhoto").click();
+          });
+
+          $("#passportPhoto").change(function (e) {
+            const file = e.target.files[0];
+            if (file) {
+              const reader = new FileReader();
+              reader.onload = function (event) {
+                $("#photo-preview").attr("src", event.target.result).show();
+                $("#passportPhotoData").val(event.target.result);
+
+                if (cameraStream) {
+                  cameraStream.getTracks().forEach((track) => track.stop());
+                  cameraStream = null;
+                  $("#camera-stream, #capture-photo, #close-camera").hide();
+                  $("#start-camera").show();
+                }
+                photoCaptured = false; // File upload is NOT photoCaptured
+                $("#autoSaveStatus")
+                  .text("Photo uploaded! Saving...")
+                  .css("color", "orange");
+                console.log("Calling autoSave() after photo upload...");
+                autoSave();
+              };
+              reader.readAsDataURL(file);
+            }
+          });
+
+          /* ===================================================
+           * Event Bindings
+           * =================================================== */
+
+          const bindEvents = () => {
+            // Bind the click events to add new sections.
+            $("#add-institution").on("click", addInstitution);
+            $("#add-neighbor").on("click", addNeighbor);
+            $("#add-family").on("click", addFamily);
+            $("#add-employment").on("click", addEmployment);
+
+            $(document).on(
+              "input change",
+              "input, select, textarea",
+              function () {
+                clearTimeout(state.autoSaveTimer);
+                $("#autoSaveStatus").text("Saving...").css("color", "blue");
+                state.autoSaveTimer = setTimeout(autoSave, 1000); // 1-second debounce
+              }
+            );
+
+            // For final submission – prevent default and trigger auto-save.
+            $("#unifiedForm").on("submit", function (e) {
+              console.log("cool");
+              e.preventDefault();
+              // autoSave();
+              autoSave().then(() => {
+                Swal.fire({
+                  title: "Success!",
+                  text: "Your form has been submitted successfully.",
+                  confirmButtonText: "OK",
+                });
+              });
+            });
+          };
+
+          // Initialize all event bindings.
+          bindEvents();
+        });
+      </script> -->
+
+      <div id="autoSaveStatus" class="status-indicator">Ready</div>
       <script>
         $(document).ready(function () {
           // Form steps data
@@ -1740,12 +2988,6 @@
               icon: "bi-mortarboard",
             },
             { id: "health", title: "Health Information", icon: "bi-heart" },
-
-            {
-              id: "review",
-              title: "Review Your Information",
-              icon: "bi-heart",
-            },
           ];
 
           let currentStep = 0;
@@ -1773,136 +3015,141 @@
 
           // Identification type change handler
           $("#identification").change(function () {
-            const isOthers = $(this).val() === "others";
-            $("#other-identification-container").toggle(isOthers);
-            $("#other_identification").prop("required", isOthers);
+            const value = $(this).val();
+            $("#other-identification-container").toggle(value === "others");
           });
 
           // Generic function to create item HTML
           function createNeighborHTML(id, displayNumber) {
             return `
-      <div class="neighbor-item" data-id="${id}">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <label class="form-label">Neighbor ${displayNumber}</label>
-          <button type="button" class="btn btn-outline-danger btn-sm remove-neighbor" data-id="${id}">
-            <i class="bi bi-dash"></i>
-          </button>
-        </div>
-        <div class="row g-3">
-          <div class="col-md-4">
-            <input type="text" class="form-control" name="neighbor_name_${id}" placeholder="Full Name">
+          <div class="neighbor-item" data-id="${id}">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <label class="form-label">Neighbor ${displayNumber}</label>
+              <button type="button" class="btn btn-outline-danger btn-sm remove-neighbor" data-id="${id}">
+                <i class="bi bi-dash"></i>
+              </button>
+            </div>
+            <div class="row g-3">
+              <div class="col-md-4">
+                <input type="text" class="form-control" name="neighbor_name_${id}" placeholder="Full Name">
+              </div>
+              <div class="col-md-4">
+                <input type="text" class="form-control" name="neighbor_address_${id}" placeholder="Residential Address">
+              </div>
+              <div class="col-md-4">
+                <input type="tel" class="form-control" name="neighbor_phone_${id}" placeholder="Phone Number">
+              </div>
+            </div>
           </div>
-          <div class="col-md-4">
-            <input type="text" class="form-control" name="neighbor_address_${id}" placeholder="Residential Address">
-          </div>
-          <div class="col-md-4">
-            <input type="tel" class="form-control" name="neighbor_phone_${id}" placeholder="Phone Number">
-          </div>
-        </div>
-      </div>
-    `;
+        `;
           }
 
           function createFamilyHTML(id, displayNumber) {
             return `
-      <div class="family-item" data-id="${id}">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <label class="form-label">Family Member ${displayNumber}</label>
-          <button type="button" class="btn btn-outline-danger btn-sm remove-family" data-id="${id}">
-            <i class="bi bi-dash"></i>
-          </button>
-        </div>
-        <div class="row g-3">
-          <div class="col-md-3">
-            <input type="text" class="form-control" name="family_name_${id}" placeholder="Full Name">
+          <div class="family-item" data-id="${id}">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <label class="form-label">Family Member ${displayNumber}</label>
+              <button type="button" class="btn btn-outline-danger btn-sm remove-family-member" data-id="${id}">
+                <i class="bi bi-dash"></i>
+              </button>
+            </div>
+            <div class="row g-3">
+              <div class="col-md-3">
+                <input type="text" class="form-control" name="family_name_${id}" placeholder="Full Name">
+              </div>
+              <div class="col-md-3">
+                <input type="text" class="form-control" name="family_relationship_${id}" placeholder="Relationship">
+              </div>
+              <div class="col-md-3">
+                <input type="text" class="form-control" name="family_address_${id}" placeholder="Residential Address">
+              </div>
+              <div class="col-md-3">
+                <input type="tel" class="form-control" name="family_phone_${id}" placeholder="Phone Number">
+              </div>
+            </div>
           </div>
-          <div class="col-md-3">
-            <input type="text" class="form-control" name="family_relationship_${id}" placeholder="Relationship">
-          </div>
-          <div class="col-md-3">
-            <input type="text" class="form-control" name="family_address_${id}" placeholder="Residential Address">
-          </div>
-          <div class="col-md-3">
-            <input type="tel" class="form-control" name="family_phone_${id}" placeholder="Phone Number">
-          </div>
-        </div>
-      </div>
-    `;
+        `;
           }
 
           function createEmploymentHTML(id, displayNumber) {
             return `
-      <div class="employment-item" data-id="${id}">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <label class="form-label">Employment ${displayNumber}</label>
-          <button type="button" class="btn btn-outline-danger btn-sm remove-employment" data-id="${id}">
-            <i class="bi bi-dash"></i>
-          </button>
-        </div>
-        <div class="row g-3">
-          <div class="col-md-6">
-            <input type="text" class="form-control" name="companyName_${id}" placeholder="Enter company name">
-          </div>
-          <div class="col-md-6">
-            <input type="text" class="form-control" name="employment_address_${id}" placeholder="Enter company address">
-          </div>
-          <div class="col-md-6">
-            <input type="text" class="form-control" name="designation_${id}" placeholder="Enter your designation">
-          </div>
-          <div class="col-md-6">
-            <label class="form-label">Start Year</label>
-            <input type="date" class="form-control" name="startYear_${id}" placeholder="Enter start year">
-          </div>
-          <div class="col-md-6">
-            <label class="form-label">End Year</label>
-            <input type="date" class="form-control" name="endYear_${id}" placeholder="Enter end year">
-            <p class="text-muted small mt-1">Leave blank if this is your current employment.</p>
-          </div>
-          <div class="col-md-6">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="isCurrentEmployment_${id}" name="isCurrentEmployment_${id}">
-              <label class="form-check-label" for="isCurrentEmployment_${id}">
-                This is my current employment
-              </label>
+          <div class="employment-item" data-id="${id}">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <label class="form-label">Employment ${displayNumber}</label>
+              <button type="button" class="btn btn-outline-danger btn-sm remove-employment" data-id="${id}">
+                <i class="bi bi-dash"></i>
+              </button>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Company Name</label>
+                <input type="text" class="form-control" name="companyName_${id}" placeholder="Enter company name">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Address</label>
+                <input type="text" class="form-control" name="employment_address_${id}" placeholder="Enter company address">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Designation</label>
+                <input type="text" class="form-control" name="designation_${id}" placeholder="Enter your designation">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Start Year</label>
+                <input type="date" class="form-control" name="startYear_${id}" placeholder="Enter start year">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">End Year</label>
+                <input type="date" class="form-control" name="endYear_${id}" placeholder="Enter end year">
+                <p class="text-muted small mt-1">Leave blank if this is your current employment.</p>
+              </div>
+              <div class="col-md-6">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="isCurrentEmployment_${id}" name="isCurrentEmployment_${id}">
+                  <label class="form-check-label" for="isCurrentEmployment_${id}">
+                    This is my current employment
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-3">
+              <label class="form-label">Description of Company</label>
+              <textarea class="form-control" name="employment_description_${id}" rows="3" placeholder="Describe the company"></textarea>
             </div>
           </div>
-        </div>
-        <div class="mt-3">
-          <label class="form-label">Description of Company</label>
-          <textarea class="form-control" name="employment_description_${id}" rows="3" placeholder="Describe the company"></textarea>
-        </div>
-      </div>
-    `;
+        `;
           }
 
           function createInstitutionHTML(id, displayNumber) {
             return `
-      <div class="institution-item border rounded p-4 mt-3" data-id="${id}">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <label class="form-label">Tertiary Institution ${displayNumber}</label>
-          <button type="button" class="btn btn-outline-danger btn-sm remove-institution" data-id="${id}">
-            <i class="bi bi-dash"></i>
-          </button>
-        </div>
-        <div class="row g-3">
-          <div class="col-md-6">
-            <input type="text" class="form-control" name="tertiaryInstitution_name_${id}" placeholder="Name of Tertiary Institution">
+          <div class="institution-item border rounded p-4 mt-3" data-id="${id}">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <label class="form-label">Tertiary Institution ${displayNumber}</label>
+              <button type="button" class="btn btn-outline-danger btn-sm remove-institution" data-id="${id}">
+                <i class="bi bi-dash"></i>
+              </button>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <input type="text" class="form-control" name="tertiaryInstitution_name_${id}" placeholder="Name of Tertiary Institution">
+              </div>
+              <div class="col-md-6">
+                <input type="text" class="form-control" name="tertiaryInstitution_address_${id}" placeholder="Address of Tertiary Institution">
+              </div>
+              <div class="col-md-6">
+                <input type="text" class="form-control" name="tertiaryInstitution_certificate_${id}" placeholder="Certificate Obtained">
+              </div>
+              <div class="col-md-6">
+                <input type="text" class="form-control" name="tertiaryInstitution_matricNo_${id}" placeholder="Matriculation Number">
+              </div>
+              <div class="col-md-12">
+                <input type="text" class="form-control" name="tertiaryInstitution_year_${id}" placeholder="Year of Attendance">
+              </div>
+            </div>
           </div>
-          <div class="col-md-6">
-            <input type="text" class="form-control" name="tertiaryInstitution_address_${id}" placeholder="Address of Tertiary Institution">
-          </div>
-          <div class="col-md-6">
-            <input type="text" class="form-control" name="tertiaryInstitution_certificate_${id}" placeholder="Certificate Obtained">
-          </div>
-          <div class="col-md-6">
-            <input type="text" class="form-control" name="tertiaryInstitution_matricNo_${id}" placeholder="Matriculation Number">
-          </div>
-          <div class="col-md-12">
-            <input type="text" class="form-control" name="tertiaryInstitution_year_${id}" placeholder="Year of Attendance">
-          </div>
-        </div>
-      </div>
-    `;
+        `;
           }
 
           // Function to update display numbers without changing form names
@@ -1927,30 +3174,6 @@
             removeButtons.toggle(activeSet.size > 1);
           }
 
-          // Add neighbor handler
-          $("#add-neighbor").click(function () {
-            if (activeNeighbors.size < 5) {
-              const id = nextNeighborId++;
-              activeNeighbors.add(id);
-
-              const neighborHtml = createNeighborHTML(id, activeNeighbors.size);
-              $("#neighbors-container").append(neighborHtml);
-
-              // Update UI state
-              $("#neighbor-max-message").toggle(activeNeighbors.size >= 5);
-              $("#add-neighbor").prop("disabled", activeNeighbors.size >= 5);
-              updateDisplayNumbers(
-                "#neighbors-container",
-                ".neighbor-item",
-                "Neighbor",
-                activeNeighbors
-              );
-
-              // Trigger auto-save
-              if (formManager) formManager.triggerAutoSave();
-            }
-          });
-
           // Remove neighbor handler (delegated)
           $("#neighbors-container").on(
             "click",
@@ -1970,9 +3193,6 @@
                   "Neighbor",
                   activeNeighbors
                 );
-
-                // Trigger auto-save
-                if (formManager) formManager.triggerAutoSave();
               }
             }
           );
@@ -1998,16 +3218,13 @@
                 "Family Member",
                 activeFamilyMembers
               );
-
-              // Trigger auto-save
-              if (formManager) formManager.triggerAutoSave();
             }
           });
 
           // Remove family member handler (delegated)
           $("#family-members-container").on(
             "click",
-            ".remove-family",
+            ".remove-family-member",
             function () {
               const id = parseInt($(this).data("id"));
               if (activeFamilyMembers.size > 1) {
@@ -2023,42 +3240,9 @@
                   "Family Member",
                   activeFamilyMembers
                 );
-
-                // Trigger auto-save
-                if (formManager) formManager.triggerAutoSave();
               }
             }
           );
-
-          // Add employment handler
-          $("#add-employment").click(function () {
-            if (activeEmployments.size < 5) {
-              const id = nextEmploymentId++;
-              activeEmployments.add(id);
-
-              const employmentHtml = createEmploymentHTML(
-                id,
-                activeEmployments.size
-              );
-              $("#employment-history-container").append(employmentHtml);
-
-              // Update UI state
-              $("#employment-max-message").toggle(activeEmployments.size >= 5);
-              $("#add-employment").prop(
-                "disabled",
-                activeEmployments.size >= 5
-              );
-              updateDisplayNumbers(
-                "#employment-history-container",
-                ".employment-item",
-                "Employment",
-                activeEmployments
-              );
-
-              // Trigger auto-save
-              if (formManager) formManager.triggerAutoSave();
-            }
-          });
 
           // Remove employment handler (delegated)
           $("#employment-history-container").on(
@@ -2070,18 +3254,12 @@
                 $(this).closest(".employment-item").remove();
                 activeEmployments.delete(id);
 
-                // Update UI state
-                $("#employment-max-message").hide();
-                $("#add-employment").prop("disabled", false);
                 updateDisplayNumbers(
                   "#employment-history-container",
                   ".employment-item",
                   "Employment",
                   activeEmployments
                 );
-
-                // Trigger auto-save
-                if (formManager) formManager.triggerAutoSave();
               }
             }
           );
@@ -2103,9 +3281,6 @@
               "Tertiary Institution",
               activeInstitutions
             );
-
-            // Trigger auto-save
-            if (formManager) formManager.triggerAutoSave();
           });
 
           // Remove institution handler (delegated)
@@ -2124,9 +3299,6 @@
                   "Tertiary Institution",
                   activeInstitutions
                 );
-
-                // Trigger auto-save
-                if (formManager) formManager.triggerAutoSave();
               }
             }
           );
@@ -2145,6 +3317,13 @@
               currentStep--;
               updateStepDisplay();
             }
+          });
+
+          // Form submit handler
+          $("#unifiedForm").submit(function (e) {
+            e.preventDefault();
+            // Add your form submission logic here
+            console.log("Form submitted");
           });
 
           // Update step display
@@ -2179,15 +3358,9 @@
               $("#submit-btn").hide();
             }
           }
+          // });
 
-          // Initialize the form with default items
-          $("#neighbors-container").append(createNeighborHTML(0, 1));
-          $("#family-members-container").append(createFamilyHTML(0, 1));
-          $("#employment-history-container").append(createEmploymentHTML(0, 1));
-          $("#tertiary-institutions-container").append(
-            createInstitutionHTML(0, 1)
-          );
-
+          // $(document).ready(function () {
           // Hold state for counts and the auto-save timer.
           const state = {
             autoSaveTimer: null,
@@ -2221,6 +3394,323 @@
             };
           })();
 
+          /* ===================================================
+           * Field Addition Functions (Improved)
+           * =================================================== */
+
+          // Add a new tertiary institution section with better validation
+          const addInstitution = (institutionData = {}) => {
+            const container = $("#tertiary-institution-container");
+            const index = container.find(".institution-fields").length;
+
+            const newInstitutionFields = `
+          <div class="institution-fields m-b30" data-index="${index}">
+            <label class="form-label">Tertiary Institution ${index + 1}</label>
+            <input
+              type="text"
+              class="form-control institution-input"
+              name="educationalHistory.tertiaryInstitutions[${index}].name"
+              placeholder="Name of Tertiary Institution"
+              value="${escapeHtml(institutionData.name || "")}"
+              data-field="name"
+            />
+            <input
+              type="text"
+              class="form-control institution-input"
+              name="educationalHistory.tertiaryInstitutions[${index}].address"
+              placeholder="Address of Tertiary Institution"
+              value="${escapeHtml(institutionData.address || "")}"
+              data-field="address"
+            />
+            <input
+              type="text"
+              class="form-control institution-input"
+              name="educationalHistory.tertiaryInstitutions[${index}].certificateObtained"
+              placeholder="Certificate Obtained"
+              value="${escapeHtml(institutionData.certificateObtained || "")}"
+              data-field="certificateObtained"
+            />
+            <input
+              type="text"
+              class="form-control institution-input"
+              name="educationalHistory.tertiaryInstitutions[${index}].matricNo"
+              placeholder="Matriculation Number"
+              value="${escapeHtml(institutionData.matricNo || "")}"
+              data-field="matricNo"
+            />
+            <input
+              type="text"
+              class="form-control institution-input"
+              name="educationalHistory.tertiaryInstitutions[${index}].yearOfAttendance"
+              placeholder="Year of Attendance"
+              value="${escapeHtml(institutionData.yearOfAttendance || "")}"
+              data-field="yearOfAttendance"
+            />
+            <button type="button" class="btn btn-danger btn-sm remove-institution mt-2">Remove</button>
+          </div>`;
+
+            container.append(newInstitutionFields);
+            state.institutionCount++;
+
+            // Bind remove button event
+            container
+              .find(".remove-institution")
+              .last()
+              .on("click", function () {
+                $(this).closest(".institution-fields").remove();
+                state.institutionCount--;
+                reindexInstitutions();
+              });
+
+            // Only trigger auto-save if data is already loaded (not during initial population)
+            if (state.isDataLoaded) {
+              debouncedAutoSave();
+            }
+          };
+
+          // Reindex institutions after removal
+          const reindexInstitutions = () => {
+            $("#tertiary-institution-container .institution-item").each(
+              function (newIndex) {
+                $(this).attr("data-index", newIndex);
+                $(this)
+                  .find("label")
+                  .text(`Tertiary Institution ${newIndex + 1}`);
+                $(this)
+                  .find("input")
+                  .each(function () {
+                    const currentName = $(this).attr("name");
+                    if (
+                      currentName &&
+                      currentName.includes("tertiaryInstitutions")
+                    ) {
+                      const newName = currentName.replace(
+                        /\[\d+\]/,
+                        `[${newIndex}]`
+                      );
+                      $(this).attr("name", newName);
+                    }
+                  });
+              }
+            );
+          };
+
+          // Add a new family section with improved validation
+          const addFamily = (familyData = {}) => {
+            if (state.familyCount >= 5) {
+              console.warn("Maximum family members reached");
+              return;
+            }
+
+            const container = $("#family-members-container");
+            const id = state.familyCount;
+            const html = createFamilyHTML(id, id + 1);
+
+            container.append(html);
+            state.familyCount++;
+
+            // Populate values if available
+            $(`input[name="family_name_${id}"]`).val(familyData.name || "");
+            $(`input[name="family_relationship_${id}"]`).val(
+              familyData.relationship || ""
+            );
+            $(`input[name="family_phone_${id}"]`).val(familyData.phone || "");
+            $(`input[name="family_adress_${id}"]`).val(
+              familyData.address || ""
+            );
+
+            // Bind remove button event
+            container
+              .find(".remove-family")
+              .last()
+              .on("click", function () {
+                $(this).closest(".family-item").remove();
+                state.familyCount--;
+                updateFamilyButtonState();
+                reindexFamily();
+              });
+            updateFamilyButtonState();
+
+            if (state.isDataLoaded) {
+              debouncedAutoSave();
+            }
+          };
+
+          // Update family button state
+          const updateFamilyButtonState = () => {
+            const addButton = $("#add-family-member");
+            if (state.familyCount >= 5) {
+              addButton
+                .prop("disabled", true)
+                .text("Maximum family reached")
+                .removeClass("btn-primary")
+                .addClass("btn-secondary");
+            } else {
+              addButton
+                .prop("disabled", false)
+                .text("Add Family Member")
+                .removeClass("btn-secondary")
+                .addClass("btn-primary");
+            }
+          };
+
+          // Reindex family after removal
+          const reindexFamily = () => {
+            $("#family-members-container .family-item").each(function (
+              newIndex
+            ) {
+              $(this).attr("data-index", newIndex);
+              $(this)
+                .find("label")
+                .text(`Family ${newIndex + 1}`);
+            });
+          };
+
+          const addNeighbor = (neighborData = {}) => {
+            if (state.neighborCount >= 5) {
+              console.warn("Maximum neighbors reached");
+              return;
+            }
+
+            const container = $("#neighbors-container");
+            const id = state.neighborCount;
+            const html = createNeighborHTML(id, id + 1);
+
+            container.append(html);
+            state.neighborCount++;
+
+            // Populate values if available
+            $(`input[name="neighbor_name_${id}"]`).val(neighborData.name || "");
+            $(`input[name="neighbor_address_${id}"]`).val(
+              neighborData.address || ""
+            );
+            $(`input[name="neighbor_phone_${id}"]`).val(
+              neighborData.phone || ""
+            );
+
+            // Attach remove handler
+            container
+              .find(".remove-neighbor")
+              .last()
+              .on("click", function () {
+                $(this).closest(".neighbor-item").remove();
+                state.neighborCount--;
+                updateNeighborButtonState();
+                reindexNeighbors(); // Optional
+              });
+
+            updateNeighborButtonState();
+
+            if (state.isDataLoaded) {
+              debouncedAutoSave();
+            }
+          };
+
+          // Update neighbor button state
+          const updateNeighborButtonState = () => {
+            const addButton = $("#add-neighbor");
+            if (state.neighborCount >= 5) {
+              addButton
+                .prop("disabled", true)
+                .text("Maximum neighbors reached")
+                .removeClass("btn-primary")
+                .addClass("btn-secondary");
+            } else {
+              addButton
+                .prop("disabled", false)
+                .text("+ Add Another Neighbor")
+                .removeClass("btn-secondary")
+                .addClass("btn btn-outline-green");
+            }
+          };
+
+          // Reindex neighbors after removal
+          const reindexNeighbors = () => {
+            $("#neighbors-container .neighbor-item").each(function (newIndex) {
+              $(this).attr("data-index", newIndex);
+              $(this)
+                .find("label")
+                .text(`Neighbor ${newIndex + 1}`);
+            });
+          };
+
+          // Add a new employment section with improved validation
+          const addEmployment = (employmentData = {}) => {
+            if (state.employmentCount >= 5) {
+              console.warn("Maximum family members reached");
+              return;
+            }
+            const container = $("#employment-history-container");
+
+            const id = state.employmentCount;
+            const html = createEmploymentHTML(id, id + 1);
+
+            // Populate values if available
+            $(`input[name="companyName_${id}"]`).val(
+              employmentData.companyName || ""
+            );
+            $(`input[name="employment_address_${id}"]`).val(
+              employmentData.address || ""
+            );
+            $(`input[name="designation_${id}"]`).val(
+              employmentData.designation || ""
+            );
+            $(`input[name="startYear_${id}"]`).val(
+              employmentData.startYear || ""
+            );
+            $(`input[name="endYear_${id}"]`).val(employmentData.endYear || "");
+            $(`input[name="isCurrentEmployment_${id}"]`).val(
+              employmentData.isCurrentEmployment || ""
+            );
+
+            container.append(html);
+            state.employmentCount++;
+
+            // Bind remove button event
+            container
+              .find(".remove-employment")
+              .last()
+              .on("click", function () {
+                $(this).closest(".employment-item").remove();
+                state.employmentCount--;
+                reindexEmployment();
+              });
+            updateEmploymentButtonState();
+
+            if (state.isDataLoaded) {
+              debouncedAutoSave();
+            }
+          };
+          // Update family button state
+          const updateEmploymentButtonState = () => {
+            const addButton = $("#add-employment");
+            if (state.employmentCount >= 5) {
+              addButton
+                .prop("disabled", true)
+                .text("Maximum Employment reached")
+                .removeClass("btn-primary")
+                .addClass("btn-secondary");
+            } else {
+              addButton
+                .prop("disabled", false)
+                .text("+ Add Another Employment")
+                .removeClass("btn-secondary")
+                .addClass("btn-primary");
+            }
+          };
+
+          // Reindex employment after removal
+          const reindexEmployment = () => {
+            $("#employment-history-container .employment-item").each(function (
+              newIndex
+            ) {
+              $(this).attr("data-index", newIndex);
+              $(this)
+                .find("label")
+                .text(`Employment ${newIndex + 1}`);
+            });
+          };
+
           // Utility function to escape HTML to prevent XSS
           const escapeHtml = (text) => {
             if (!text) return "";
@@ -2234,65 +3724,36 @@
             return text.replace(/[&<>"']/g, (m) => map[m]);
           };
 
-          // Helper function to format dates for HTML input[type="date"]
-          function formatDateForInput(dateString) {
-            if (!dateString) return "";
-
-            // If it's already in YYYY-MM-DD format, return as-is
-            if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
-              return dateString;
-            }
-
-            // Try to parse various date formats
-            const date = new Date(dateString);
-            if (isNaN(date.getTime())) return "";
-
-            // Format as YYYY-MM-DD
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, "0");
-            const day = String(date.getDate()).padStart(2, "0");
-
-            return `${year}-${month}-${day}`;
-          }
+          /* ===================================================
+           * Data Population Logic (Improved with Safety Checks)
+           * =================================================== */
 
           // Updated populateNeighbors function
           const populateNeighbors = (neighbors) => {
             const container = $("#neighbors-container");
             container.empty();
-            activeNeighbors.clear();
-            nextNeighborId = 0;
 
             try {
               if (neighbors && neighbors.length > 0) {
                 neighbors.forEach((neighbor, index) => {
-                  const id = nextNeighborId++;
-                  activeNeighbors.add(id);
-                  const neighborHtml = createNeighborHTML(id, index + 1);
+                  const neighborHtml = createNeighborHTML(index, index + 1);
                   container.append(neighborHtml);
 
                   // Set values from database
-                  $(`input[name="neighbor_name_${id}"]`).val(
+                  $(`input[name="neighbor_name_${index}"]`).val(
                     neighbor.name || ""
                   );
-                  $(`input[name="neighbor_address_${id}"]`).val(
+                  $(`input[name="neighbor_address_${index}"]`).val(
                     neighbor.address || ""
                   );
-                  $(`input[name="neighbor_phone_${id}"]`).val(
+                  $(`input[name="neighbor_phone_${index}"]`).val(
                     neighbor.phone || ""
                   );
                 });
               } else {
                 // Add default empty neighbor
-                const id = nextNeighborId++;
-                activeNeighbors.add(id);
-                container.append(createNeighborHTML(id, 1));
+                addNeighbor();
               }
-              updateDisplayNumbers(
-                "#neighbors-container",
-                ".neighbor-item",
-                "Neighbor",
-                activeNeighbors
-              );
             } catch (error) {
               console.error("Error in populateNeighbors:", error);
             }
@@ -2302,141 +3763,105 @@
           const populateFamily = (family) => {
             const container = $("#family-members-container");
             container.empty();
-            activeFamilyMembers.clear();
-            nextFamilyId = 0;
 
             if (family && family.length > 0) {
               family.forEach((member, index) => {
-                const id = nextFamilyId++;
-                activeFamilyMembers.add(id);
-                const familyHtml = createFamilyHTML(id, index + 1);
+                const familyHtml = createFamilyHTML(index, index + 1);
                 container.append(familyHtml);
 
                 // Set values from database
-                $(`input[name="family_name_${id}"]`).val(member.name || "");
-                $(`input[name="family_relationship_${id}"]`).val(
+                $(`input[name="family_name_${index}"]`).val(member.name || "");
+                $(`input[name="family_relationship_${index}"]`).val(
                   member.relationship || ""
                 );
-                $(`input[name="family_address_${id}"]`).val(
+                $(`input[name="family_address_${index}"]`).val(
                   member.address || ""
                 );
-                $(`input[name="family_phone_${id}"]`).val(member.phone || "");
+                $(`input[name="family_phone_${index}"]`).val(
+                  member.phone || ""
+                );
               });
             } else {
               // Add default empty family member
-              const id = nextFamilyId++;
-              activeFamilyMembers.add(id);
-              container.append(createFamilyHTML(id, 1));
+              addFamily();
             }
-            updateDisplayNumbers(
-              "#family-members-container",
-              ".family-item",
-              "Family Member",
-              activeFamilyMembers
-            );
           };
 
           // Updated populateEmploymentHistory function
           const populateEmploymentHistory = (employments) => {
             const container = $("#employment-history-container");
             container.empty();
-            activeEmployments.clear();
-            nextEmploymentId = 0;
 
             if (employments && employments.length > 0) {
               employments.forEach((employment, index) => {
-                const id = nextEmploymentId++;
-                activeEmployments.add(id);
-                const employmentHtml = createEmploymentHTML(id, index + 1);
+                const employmentHtml = createEmploymentHTML(index, index + 1);
                 container.append(employmentHtml);
 
                 // Set values from database
-                $(`input[name="companyName_${id}"]`).val(
+                $(`input[name="companyName_${index}"]`).val(
                   employment.companyName || ""
                 );
-                $(`input[name="employment_address_${id}"]`).val(
+                $(`input[name="employment_address_${index}"]`).val(
                   employment.address || ""
                 );
-                $(`input[name="designation_${id}"]`).val(
+                $(`input[name="designation_${index}"]`).val(
                   employment.designation || ""
                 );
-
-                // Format dates correctly for date inputs
-                const formattedStartDate = formatDateForInput(
-                  employment.startYear
+                $(`input[name="startYear_${index}"]`).val(
+                  employment.startYear || ""
                 );
-                const formattedEndDate = formatDateForInput(employment.endYear);
-
-                $(`input[name="startYear_${id}"]`).val(formattedStartDate);
-                $(`input[name="endYear_${id}"]`).val(formattedEndDate);
-                $(`input[name="isCurrentEmployment_${id}"]`).prop(
+                $(`input[name="endYear_${index}"]`).val(
+                  employment.endYear || ""
+                );
+                $(`input[name="isCurrentEmployment_${index}"]`).prop(
                   "checked",
                   employment.isCurrentEmployment || false
                 );
-                $(`textarea[name="employment_description_${id}"]`).val(
+                $(`textarea[name="employment_description_${index}"]`).val(
                   employment.description || ""
                 );
               });
             } else {
               // Add default empty employment
-              const id = nextEmploymentId++;
-              activeEmployments.add(id);
-              container.append(createEmploymentHTML(id, 1));
+              addEmployment();
             }
-            updateDisplayNumbers(
-              "#employment-history-container",
-              ".employment-item",
-              "Employment",
-              activeEmployments
-            );
           };
 
           // Updated populateTertiaryInstitutions function
           const populateTertiaryInstitutions = (institutions) => {
             const container = $("#tertiary-institutions-container");
             container.empty();
-            activeInstitutions.clear();
-            nextInstitutionId = 0;
 
             if (institutions && institutions.length > 0) {
               institutions.forEach((institution, index) => {
-                const id = nextInstitutionId++;
-                activeInstitutions.add(id);
-                const institutionHtml = createInstitutionHTML(id, index + 1);
+                const institutionHtml = createInstitutionHTML(index, index + 1);
                 container.append(institutionHtml);
 
                 // Set values from database
-                $(`input[name="tertiaryInstitution_name_${id}"]`).val(
+                $(`input[name="tertiaryInstitution_name_${index}"]`).val(
                   institution.name || ""
                 );
-                $(`input[name="tertiaryInstitution_address_${id}"]`).val(
+                $(`input[name="tertiaryInstitution_address_${index}"]`).val(
                   institution.address || ""
                 );
-                $(`input[name="tertiaryInstitution_certificate_${id}"]`).val(
+                $(`input[name="tertiaryInstitution_certificate_${index}"]`).val(
                   institution.certificateObtained || ""
                 );
-                $(`input[name="tertiaryInstitution_matricNo_${id}"]`).val(
+                $(`input[name="tertiaryInstitution_matricNo_${index}"]`).val(
                   institution.matricNo || ""
                 );
-                $(`input[name="tertiaryInstitution_year_${id}"]`).val(
+                $(`input[name="tertiaryInstitution_year_${index}"]`).val(
                   institution.yearOfAttendance || ""
                 );
               });
             } else {
               // Add default empty institution
-              const id = nextInstitutionId++;
-              activeInstitutions.add(id);
-              container.append(createInstitutionHTML(id, 1));
+              addInstitution();
             }
-            updateDisplayNumbers(
-              "#tertiary-institutions-container",
-              ".institution-item",
-              "Tertiary Institution",
-              activeInstitutions
-            );
           };
 
           const handleProfileDataSuccess = (data) => {
+            console.log("data", data);
             try {
               // Set flag to prevent auto-saves during population
               state.isDataLoaded = false;
@@ -2486,6 +3911,8 @@
 
               // Set flag to allow auto-saves after population is complete
               state.isDataLoaded = true;
+
+              console.log("Profile data populated successfully");
             } catch (error) {
               console.error("Error populating profile data:", error);
               state.isDataLoaded = true; // Still allow saves even if population fails
@@ -2518,42 +3945,56 @@
 
                 // Add default empty fields if no data was loaded
                 if (
-                  $("#tertiary-institutions-container .institution-item")
+                  $("#tertiary-institution-container .institution-item")
                     .length === 0
                 ) {
-                  const id = nextInstitutionId++;
-                  activeInstitutions.add(id);
-                  $("#tertiary-institutions-container").append(
-                    createInstitutionHTML(id, 1)
-                  );
+                  addInstitution();
                 }
-                if ($("#family-members-container .family-item").length === 0) {
-                  const id = nextFamilyId++;
-                  activeFamilyMembers.add(id);
-                  $("#family-members-container").append(
-                    createFamilyHTML(id, 1)
-                  );
+                if ($("#family-container .family-item").length === 0) {
+                  addFamily();
                 }
                 if ($("#neighbors-container .neighbor-item").length === 0) {
-                  const id = nextNeighborId++;
-                  activeNeighbors.add(id);
-                  $("#neighbors-container").append(createNeighborHTML(id, 1));
+                  addNeighbor();
                 }
                 if (
                   $("#employment-history-container .employment-item").length ===
                   0
                 ) {
-                  const id = nextEmploymentId++;
-                  activeEmployments.add(id);
-                  $("#employment-history-container").append(
-                    createEmploymentHTML(id, 1)
-                  );
+                  addEmployment();
                 }
               },
             });
           };
 
           loadProfileData();
+
+          /* ===================================================
+           * Data Collection (Improved)
+           * =================================================== */
+
+          /* ===================================================
+           * Auto-Save / Update Handling (Improved)
+           * =================================================== */
+          let cameraStream = null;
+          let photoCaptured = false;
+
+          // Utility: Convert dataURL to File
+          function dataURLtoFile(dataurl, filename) {
+            try {
+              const arr = dataurl.split(",");
+              const mime = arr[0].match(/:(.*?);/)[1];
+              const bstr = atob(arr[1]);
+              let n = bstr.length;
+              const u8arr = new Uint8Array(n);
+              while (n--) {
+                u8arr[n] = bstr.charCodeAt(n);
+              }
+              return new File([u8arr], filename, { type: mime });
+            } catch (error) {
+              console.error("Error converting dataURL to file:", error);
+              return null;
+            }
+          }
 
           // Enhanced Auto-Save System with Data Loss Prevention
           class FormDataManager {
@@ -2573,6 +4014,7 @@
 
               this.initializeNetworkMonitoring();
               this.initializePageUnloadProtection();
+              // this.loadPersistedData();
               this.initialize();
             }
 
@@ -2626,6 +4068,8 @@
               });
             }
 
+            // Load persisted data from local storage
+
             async loadPersistedData() {
               try {
                 const saved = localStorage.getItem("formData_backup");
@@ -2644,13 +4088,15 @@
                   return null;
                 }
 
-                // console.log("Loaded backup data:", parsed.data); // Debug
+                console.log("Loaded backup data:", parsed.data); // Debug
                 return parsed.data; // Return JUST the data object
               } catch (error) {
                 console.error("Load failed:", error);
                 return null;
               }
             }
+
+            // Show dialog to recover unsaved data
 
             // Modify your initialization to wait for DOM ready
             async initialize() {
@@ -2666,7 +4112,7 @@
             }
 
             showDataRecoveryDialog(backupData) {
-              // console.log("Dialog received backupData:", backupData); // DEBUG
+              console.log("Dialog received backupData:", backupData); // DEBUG
 
               Swal.fire({
                 title: "Recover Unsaved Changes?",
@@ -2677,11 +4123,36 @@
                 cancelButtonText: "Discard",
               }).then((result) => {
                 if (result.value === true) {
+                  console.log("Attempting restoration with:", backupData); // DEBUG
                   this.restoreFormData(backupData);
                 } else {
                   localStorage.removeItem("formData_backup");
                 }
               });
+            }
+
+            // Update your loadPersistedData method to extract the data object
+            loadPersistedData() {
+              try {
+                const savedData = localStorage.getItem("formData_backup");
+                if (!savedData) return null;
+
+                const parsed = JSON.parse(savedData);
+                console.log("Parsed backup:", parsed); // Debug log
+
+                if (!parsed?.data) {
+                  console.error(
+                    "Invalid backup structure - missing data property"
+                  );
+                  return null;
+                }
+
+                // Verify timestamp if needed
+                return parsed.data; // Return JUST the data object
+              } catch (error) {
+                console.error("Failed to load backup:", error);
+                return null;
+              }
             }
 
             // Update your restoreFormData to ensure proper this binding
@@ -2691,12 +4162,17 @@
                 return;
               }
 
+              console.group("Full Restoration Debug");
+              console.log("Data being restored:", data); // Debug log
+
               // 1. Restore Main Form Fields
               if (data.formData) {
+                console.log("Restoring form fields:", data.formData);
                 Object.entries(data.formData).forEach(([key, value]) => {
                   const $field = $(`#${key}`);
                   if ($field.length) {
                     $field.val(value || "");
+                    console.log(`Set #${key} =`, value);
                   } else {
                     console.warn(`Field not found: #${key}`);
                   }
@@ -2705,76 +4181,63 @@
 
               // 2. Restore Next of Kin
               if (data.nextOfKin) {
+                console.log("Restoring next of kin:", data.nextOfKin);
                 Object.entries(data.nextOfKin).forEach(([key, value]) => {
-                  const cleanKey = key.replace(/^nok_/, "");
-                  const $field = $(`#nok_${cleanKey}`);
+                  console.log(key, value);
+                  const $field = $(`#nok_${key}`);
                   if ($field.length) {
                     $field.val(value || "");
+                    console.log(`Set #nok_${key} =`, value);
                   } else {
-                    console.warn(`Field not found: #nok_${cleanKey}`);
+                    console.warn(`Field not found: #nok_${key}`);
                   }
                 });
               }
 
               // 3. Restore Neighbors
+              // Update the neighbor restoration code in restoreFormData()
               if (data.neighbor?.length) {
-                // Clear existing neighbors first
-                $("#neighbors-container").empty();
-                activeNeighbors.clear();
-                nextNeighborId = 0;
+                console.log("Restoring neighbors:", data.neighbor);
 
                 data.neighbor.forEach((neighbor, index) => {
-                  const id = nextNeighborId++;
-                  activeNeighbors.add(id);
-                  const neighborHtml = createNeighborHTML(id, index + 1);
-                  $("#neighbors-container").append(neighborHtml);
-
-                  $(`input[name="neighbor_name_${id}"]`).val(
+                  // Use index directly (starts from 0)
+                  $(`input[name="neighbor_name_${index}"]`).val(
                     neighbor.name || ""
                   );
-                  $(`input[name="neighbor_address_${id}"]`).val(
+                  $(`input[name="neighbor_address_${index}"]`).val(
                     neighbor.address || ""
                   );
-                  $(`input[name="neighbor_phone_${id}"]`).val(
+                  $(`input[name="neighbor_phone_${index}"]`).val(
                     neighbor.phone || ""
                   );
                 });
-                updateDisplayNumbers(
-                  "#neighbors-container",
-                  ".neighbor-item",
-                  "Neighbor",
-                  activeNeighbors
-                );
               }
-
               // 4. Restore Family Members
+
               if (data.family?.length) {
-                // Clear existing family first
-                $("#family-members-container").empty();
-                activeFamilyMembers.clear();
-                nextFamilyId = 0;
-
                 data.family.forEach((member, index) => {
-                  const id = nextFamilyId++;
-                  activeFamilyMembers.add(id);
-                  const familyHtml = createFamilyHTML(id, index + 1);
-                  $("#family-members-container").append(familyHtml);
+                  // Use index directly (0-based)
+                  const fields = {
+                    name: $(`input[name="family_name_${index}"]`),
+                    relationship: $(
+                      `input[name="family_relationship_${index}"]`
+                    ),
+                    phone: $(`input[name="family_phone_${index}"]`),
+                    address: $(`input[name="family_address_${index}"]`),
+                  };
 
-                  $(`input[name="family_name_${id}"]`).val(member.name || "");
-                  $(`input[name="family_relationship_${id}"]`).val(
-                    member.relationship || ""
-                  );
-                  $(`input[name="family_phone_${id}"]`).val(member.phone || "");
-                  $(`input[name="family_address_${id}"]`).val(
-                    member.address || ""
-                  );
+                  Object.entries(fields).forEach(([type, $field]) => {});
+
+                  // Set values for existing fields
+                  if (fields.name.length) fields.name.val(member.name || "");
+                  if (fields.relationship.length)
+                    fields.relationship.val(member.relationship || "");
+                  if (fields.phone.length) fields.phone.val(member.phone || "");
+                  if (fields.address.length)
+                    fields.address.val(member.address || "");
                 });
-                updateDisplayNumbers(
-                  "#family-members-container",
-                  ".family-item",
-                  "Family Member",
-                  activeFamilyMembers
-                );
+
+                console.groupEnd();
               }
 
               // 5. Restore Business Info
@@ -2783,130 +4246,195 @@
                   const $field = $(`#${key}`);
                   if ($field.length) {
                     $field.val(value || "");
+                    console.log(`Set #${key} =`, value);
                   }
                 });
               }
 
-              // 6. Restore Employment History
+              // 6. Restore Employment History (0-based indexing)
               if (data.employmentHistory?.length) {
-                // Clear existing employment first
-                $("#employment-history-container").empty();
-                activeEmployments.clear();
-                nextEmploymentId = 0;
+                console.group("Restoring Employment History");
+                console.log(
+                  "Employment data to restore:",
+                  data.employmentHistory
+                );
 
                 data.employmentHistory.forEach((job, index) => {
-                  const id = nextEmploymentId++;
-                  activeEmployments.add(id);
-                  const employmentHtml = createEmploymentHTML(id, index + 1);
-                  $("#employment-history-container").append(employmentHtml);
+                  const fields = {
+                    companyName: $(`input[name="companyName_${index}"]`),
+                    address: $(`input[name="employment_address_${index}"]`),
+                    designation: $(`input[name="designation_${index}"]`),
+                    startYear: $(`input[name="startYear_${index}"]`),
+                    endYear: $(`input[name="endYear_${index}"]`),
+                    isCurrentEmployment: $(
+                      `input[name="isCurrentEmployment_${index}"]`
+                    ),
+                    description: $(
+                      `textarea[name="employment_description_${index}"]`
+                    ),
+                  };
 
-                  $(`input[name="companyName_${id}"]`).val(
-                    job.companyName || ""
-                  );
-                  $(`input[name="employment_address_${id}"]`).val(
-                    job.address || ""
-                  );
-                  $(`input[name="designation_${id}"]`).val(
-                    job.designation || ""
-                  );
-                  $(`input[name="startYear_${id}"]`).val(job.startYear || "");
-                  $(`input[name="endYear_${id}"]`).val(job.endYear || "");
-                  $(`input[name="isCurrentEmployment_${id}"]`).prop(
-                    "checked",
-                    job.isCurrentEmployment || false
-                  );
-                  $(`textarea[name="employment_description_${id}"]`).val(
-                    job.description || ""
-                  );
+                  // Debug: Verify fields exist
+                  console.log(`\nJob ${index} fields check:`);
+                  Object.entries(fields).forEach(([field, $el]) => {
+                    console.log(
+                      `- ${field}_${index}:`,
+                      $el.length ? "Exists" : "MISSING"
+                    );
+                  });
+
+                  // Set values for existing fields
+                  if (fields.companyName.length)
+                    fields.companyName.val(job.companyName || "");
+                  if (fields.address.length)
+                    fields.address.val(job.address || "");
+                  if (fields.designation.length)
+                    fields.designation.val(job.designation || "");
+                  if (fields.startYear.length)
+                    fields.startYear.val(job.startYear || "");
+                  if (fields.endYear.length)
+                    fields.endYear.val(job.endYear || "");
+                  if (fields.isCurrentEmployment.length) {
+                    fields.isCurrentEmployment.prop(
+                      "checked",
+                      job.isCurrentEmployment || false
+                    );
+                  }
+                  if (fields.description.length)
+                    fields.description.val(job.description || "");
+
+                  console.log(`Restored job ${index}:`, {
+                    company: job.companyName,
+                    position: job.designation,
+                    current: job.isCurrentEmployment,
+                  });
                 });
-                updateDisplayNumbers(
-                  "#employment-history-container",
-                  ".employment-item",
-                  "Employment",
-                  activeEmployments
-                );
+                console.groupEnd();
               }
 
               // 7. Restore Education History
               if (data.educationalHistory) {
-                // Primary School
-                if (data.educationalHistory.primarySchool) {
-                  $('input[name="primarySchool_name"]').val(
-                    data.educationalHistory.primarySchool.name || ""
-                  );
-                  $('input[name="primarySchool_address"]').val(
-                    data.educationalHistory.primarySchool.address || ""
-                  );
-                  $('input[name="primarySchool_yearOfAttendance"]').val(
-                    data.educationalHistory.primarySchool.yearOfAttendance || ""
-                  );
-                }
+                console.group("Restoring Education History");
+                console.log(
+                  "Education data to restore:",
+                  data.educationalHistory
+                );
 
-                // Secondary School
-                if (data.educationalHistory.secondarySchool) {
-                  $('input[name="secondarySchool_name"]').val(
-                    data.educationalHistory.secondarySchool.name || ""
+                // Primary School
+                const primaryFields = {
+                  name: $('input[name="primarySchool_name"]'),
+                  address: $('input[name="primarySchool_address"]'),
+                  year: $('input[name="primarySchool_yearOfAttendance"]'),
+                };
+
+                console.log("\nPrimary School fields check:");
+                Object.entries(primaryFields).forEach(([field, $el]) => {
+                  console.log(
+                    `- primary_${field}:`,
+                    $el.length ? "Exists" : "MISSING"
                   );
-                  $('input[name="secondarySchool_address"]').val(
-                    data.educationalHistory.secondarySchool.address || ""
+                });
+
+                if (primaryFields.name.length)
+                  primaryFields.name.val(
+                    data.educationalHistory.primarySchool?.name || ""
                   );
-                  $('input[name="secondarySchool_yearOfAttendance"]').val(
-                    data.educationalHistory.secondarySchool.yearOfAttendance ||
+                if (primaryFields.address.length)
+                  primaryFields.address.val(
+                    data.educationalHistory.primarySchool?.address || ""
+                  );
+                if (primaryFields.year.length)
+                  primaryFields.year.val(
+                    data.educationalHistory.primarySchool?.yearOfAttendance ||
                       ""
                   );
-                }
 
-                // Tertiary Institutions
+                // Secondary School
+                const secondaryFields = {
+                  name: $('input[name="secondarySchool_name"]'),
+                  address: $('input[name="secondarySchool_address"]'),
+                  year: $('input[name="secondarySchool_yearOfAttendance"]'),
+                };
+
+                console.log("\nSecondary School fields check:");
+                Object.entries(secondaryFields).forEach(([field, $el]) => {
+                  console.log(
+                    `- secondary_${field}:`,
+                    $el.length ? "Exists" : "MISSING"
+                  );
+                });
+
+                if (secondaryFields.name.length)
+                  secondaryFields.name.val(
+                    data.educationalHistory.secondarySchool?.name || ""
+                  );
+                if (secondaryFields.address.length)
+                  secondaryFields.address.val(
+                    data.educationalHistory.secondarySchool?.address || ""
+                  );
+                if (secondaryFields.year.length)
+                  secondaryFields.year.val(
+                    data.educationalHistory.secondarySchool?.yearOfAttendance ||
+                      ""
+                  );
+
+                // Tertiary Institutions (0-based indexing)
                 if (data.educationalHistory.tertiaryInstitutions?.length) {
-                  // Clear existing institutions first
-                  $("#tertiary-institutions-container").empty();
-                  activeInstitutions.clear();
-                  nextInstitutionId = 0;
-
+                  console.log("\nRestoring Tertiary Institutions:");
                   data.educationalHistory.tertiaryInstitutions.forEach(
                     (inst, index) => {
-                      const id = nextInstitutionId++;
-                      activeInstitutions.add(id);
-                      const institutionHtml = createInstitutionHTML(
-                        id,
-                        index + 1
-                      );
-                      $("#tertiary-institutions-container").append(
-                        institutionHtml
-                      );
+                      const fields = {
+                        name: $(
+                          `input[name="tertiaryInstitution_name_${index}"]`
+                        ),
+                        address: $(
+                          `input[name="tertiaryInstitution_address_${index}"]`
+                        ),
+                        certificate: $(
+                          `input[name="tertiaryInstitution_certificate_${index}"]`
+                        ),
+                        matricNo: $(
+                          `input[name="tertiaryInstitution_matricNo_${index}"]`
+                        ),
+                        year: $(
+                          `input[name="tertiaryInstitution_year_${index}"]`
+                        ),
+                      };
 
-                      $(`input[name="tertiaryInstitution_name_${id}"]`).val(
-                        inst.name || ""
-                      );
-                      $(`input[name="tertiaryInstitution_address_${id}"]`).val(
-                        inst.address || ""
-                      );
-                      $(
-                        `input[name="tertiaryInstitution_certificate_${id}"]`
-                      ).val(inst.certificateObtained || "");
-                      $(`input[name="tertiaryInstitution_matricNo_${id}"]`).val(
-                        inst.matricNo || ""
-                      );
-                      $(`input[name="tertiaryInstitution_year_${id}"]`).val(
-                        inst.yearOfAttendance || ""
-                      );
+                      console.log(`\nInstitution ${index} fields check:`);
+                      Object.entries(fields).forEach(([field, $el]) => {
+                        console.log(
+                          `- tertiary_${field}_${index}:`,
+                          $el.length ? "Exists" : "MISSING"
+                        );
+                      });
+
+                      if (fields.name.length) fields.name.val(inst.name || "");
+                      if (fields.address.length)
+                        fields.address.val(inst.address || "");
+                      if (fields.certificate.length)
+                        fields.certificate.val(inst.certificateObtained || "");
+                      if (fields.matricNo.length)
+                        fields.matricNo.val(inst.matricNo || "");
+                      if (fields.year.length)
+                        fields.year.val(inst.yearOfAttendance || "");
+
+                      console.log(`Restored institution ${index}:`, inst.name);
                     }
                   );
-                  updateDisplayNumbers(
-                    "#tertiary-institutions-container",
-                    ".institution-item",
-                    "Tertiary Institution",
-                    activeInstitutions
-                  );
                 }
+                console.groupEnd();
               }
-
               this.state.pendingChanges = true;
+              console.log("Restoration complete");
+              console.groupEnd();
             }
 
+            // Save form data to local storage as backup
             saveToLocalStorage() {
               try {
                 const collected = this.collectFormData();
+                console.log("collected", collected);
 
                 // PROPERLY convert FormData to plain object
                 const formDataObj = {};
@@ -2934,6 +4462,7 @@
                   "formData_backup",
                   JSON.stringify(backupData)
                 );
+                console.log("Saved backup:", backupData); // Debug log
               } catch (error) {
                 console.error("Save failed:", error);
               }
@@ -3000,7 +4529,10 @@
                 biz_type: $("#biz_type").val(),
                 registration_number: $("#registration_number").val().trim(),
                 biz_address: $("#biz_address").val().trim(),
-                nature_of_business: $("#nature_of_business").val(),
+                // nature_of_business: $("#nature_of_business").val().trim(),
+                nature_of_business: $("#nature_of_bussiness").val()
+                  ? $("#nature_of_business").val().trim()
+                  : "",
                 numberOfYears: $("#numberOfYears").val().trim(),
                 numberOfEmployees: $("#numberOfEmployees").val().trim(),
                 annualRevenue: $("#annualRevenue").val().trim(),
@@ -3011,7 +4543,7 @@
 
               // Collect neighbors data
               const neighbor = [];
-              $(".neighbor-item").each(function () {
+              $(".neighbor-item").each(function (index) {
                 const id = $(this).data("id");
                 neighbor.push({
                   name: $(this).find(`input[name="neighbor_name_${id}"]`).val(),
@@ -3023,10 +4555,11 @@
                     .val(),
                 });
               });
+              // formData.append("neighbor", JSON.stringify(neighbor));
 
               // Collect family members data
               const family = [];
-              $(".family-item").each(function () {
+              $(".family-item").each(function (index) {
                 const id = $(this).data("id");
                 family.push({
                   name: $(this).find(`input[name="family_name_${id}"]`).val(),
@@ -3039,10 +4572,11 @@
                     .val(),
                 });
               });
+              // formData.append("family", JSON.stringify(family));
 
               // Collect employment history
               const employmentHistory = [];
-              $(".employment-item").each(function () {
+              $(".employment-item").each(function (index) {
                 const id = $(this).data("id");
                 employmentHistory.push({
                   companyName: $(this)
@@ -3066,6 +4600,10 @@
                     .val(),
                 });
               });
+              // formData.append(
+              //   "employmentHistory",
+              //   JSON.stringify(employmentHistory)
+              // );
 
               // Collect education data
               const educationalHistory = {
@@ -3086,7 +4624,7 @@
                 tertiaryInstitutions: [],
               };
 
-              $(".institution-item").each(function () {
+              $(".institution-item").each(function (index) {
                 const id = $(this).data("id");
                 educationalHistory.tertiaryInstitutions.push({
                   name: $(this)
@@ -3106,6 +4644,10 @@
                     .val(),
                 });
               });
+              // formData.append(
+              //   "educationalHistory",
+              //   JSON.stringify(educationalHistory)
+              // );
 
               // Return both the FormData (with file uploads) and our JSON–ready objects.
               return {
@@ -3159,25 +4701,19 @@
                 formData.append("family", JSON.stringify(family));
 
                 // Handle identification – use the alternative input if "others" is selected.
-                const selectedIdentification = $("#identification").val();
-                const otherIdentification = $("#other_identification")
-                  .val()
-                  .trim();
-
-                if (selectedIdentification === "others") {
-                  if (!otherIdentification) {
-                    alert("Please specify your identification type");
-                    return false; // Prevent form submission
-                  }
-                  // Store both the fact that it's "others" and the custom value
-                  formData.append("identification", `${otherIdentification}`);
-                } else {
-                  formData.append("identification", selectedIdentification);
-                }
+                const selectedValue = $("#identification").val();
+                const otherValue = $("#other-identification").val();
+                const finalIdentification =
+                  selectedValue === "others" ? otherValue : selectedValue;
+                formData.append("identification", finalIdentification);
 
                 const canvas = $("#snapshot").get(0);
                 const dataURL = canvas.toDataURL("image/jpeg", 0.9);
                 const passportPhotoFile = $("#passportPhoto")[0]?.files[0];
+
+                // console.log("photoCaptured:", photoCaptured);
+                // console.log("passportPhotoFile:", passportPhotoFile);
+                // console.log("dataURL from canvas:", dataURL);
 
                 if (photoCaptured && dataURL) {
                   formData.append(
@@ -3206,10 +4742,19 @@
             // Save with retry mechanism
             async saveWithRetry(formData, retryCount = 0) {
               try {
+                // const token =
+                //   localStorage.getItem("token") ||
+                //   sessionStorage.getItem("authToken");
+                // console.log(token);
                 if (!token) {
                   throw new Error("Authentication token not found");
                 }
 
+                // const user = JSON.parse(
+                //   localStorage.getItem("user") ||
+                //     sessionStorage.getItem("user") ||
+                //     "{}"
+                // );
                 if (!user.id) {
                   throw new Error("User ID not found");
                 }
@@ -3341,21 +4886,8 @@
           const formManager = new FormDataManager();
 
           // Camera and photo handling with enhanced error handling
-          let cameraStream = null;
-          let photoCaptured = false;
-
-          // Utility: Convert dataURL to File
-          function dataURLtoFile(dataurl, filename) {
-            const arr = dataurl.split(",");
-            const mime = arr[0].match(/:(.*?);/)[1];
-            const bstr = atob(arr[1]);
-            let n = bstr.length;
-            const u8arr = new Uint8Array(n);
-            while (n--) {
-              u8arr[n] = bstr.charCodeAt(n);
-            }
-            return new File([u8arr], filename, { type: mime });
-          }
+          // let cameraStream = null;
+          // let photoCaptured = false;
 
           // ✅ Enhanced Camera Start
           $("#start-camera").click(async function () {
@@ -3433,6 +4965,7 @@
               photoCaptured = true;
 
               formManager.updateStatus("Photo captured! Saving...", "orange");
+              console.log("Calling autoSave() after camera capture...");
               formManager.triggerAutoSave();
             } catch (error) {
               console.error("Photo capture error:", error);
@@ -3499,6 +5032,7 @@
 
                 photoCaptured = false;
                 formManager.updateStatus("Photo uploaded! Saving...", "orange");
+                console.log("Calling autoSave() after photo upload...");
                 formManager.triggerAutoSave();
               };
 
@@ -3519,6 +5053,12 @@
            * =================================================== */
 
           const bindEvents = () => {
+            // Bind the click events to add new sections
+            $("#add-institution").on("click", addInstitution);
+            $("#add-neighbor").on("click", addNeighbor);
+            $("#add-family").on("click", addFamily);
+            $("#add-employment").on("click", addEmployment);
+
             // Enhanced input change detection
             $(document).on(
               "input change",
@@ -3588,64 +5128,325 @@
       </script>
 
       <script>
-        let populateVerificationStatus;
-        // Add this to your document ready function or main script
-        $(document).ready(function () {
-          // Initialize verification functionality
-          initVerificationReview(true);
-          // Add this to your document ready function or initialization
-          function setupRealTimeVerificationUpdates() {
-            // Listen for changes in family/neighbor sections
-            $(document).on(
-              "input",
-              '[name^="neighbor_"], [name^="family_"]',
-              function () {
-                // Debounce the update to avoid too many requests
-                clearTimeout(window.verificationUpdateTimer);
-                window.verificationUpdateTimer = setTimeout(() => {
-                  populateVerificationStatus(true); // Force refresh
-                }, 1000);
-              }
-            );
-
-            // Update when items are added/removed
-            $("#add-neighbor, #add-family-member").click(function () {
-              setTimeout(() => {
-                if (typeof populateVerificationStatus === "function") {
-                  populateVerificationStatus(true);
-                }
-              }, 300);
-            });
-
-            $("#neighbors-container").on(
-              "click",
-              ".remove-neighbor",
-              function () {
-                setTimeout(() => {
-                  if (typeof populateVerificationStatus === "function") {
-                    populateVerificationStatus(true);
-                  }
-                }, 300);
-              }
-            );
-
-            $("#family-members-container").on(
-              "click",
-              ".remove-family",
-              function () {
-                setTimeout(() => {
-                  if (typeof populateVerificationStatus === "function") {
-                    populateVerificationStatus(true);
-                  }
-                }, 300);
-              }
-            );
-          }
-
-          setupRealTimeVerificationUpdates();
+        document.querySelectorAll(".next-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const nextSection = document.getElementById(btn.dataset.next);
+            btn.closest(".form-section").style.display = "none";
+            nextSection.style.display = "block";
+          });
         });
 
-        function initVerificationReview(isInitialLoad = false) {
+        document.querySelectorAll(".prev-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const prevSection = document.getElementById(btn.dataset.prev);
+            btn.closest(".form-section").style.display = "none";
+            prevSection.style.display = "block";
+          });
+        });
+      </script>
+
+      <script>
+        document.querySelectorAll(".next-btn").forEach((button) => {
+          button.addEventListener("click", () => {
+            const currentSection = button.closest(".form-section");
+            const nextSectionId = button.getAttribute("data-next");
+            const nextSection = document.getElementById(nextSectionId);
+
+            // Validate the current form section
+            if (validateForm(currentSection)) {
+              currentSection.classList.remove("active");
+              nextSection.classList.add("active");
+            }
+          });
+        });
+
+        function validateForm(section) {
+          let isValid = true;
+          section.querySelectorAll("input, select").forEach((field) => {
+            const errorMessage = field.nextElementSibling;
+            if (field.hasAttribute("required") && !field.value.trim()) {
+              field.classList.add("error");
+              if (errorMessage) errorMessage.style.display = "block";
+              isValid = false;
+            } else {
+              field.classList.remove("error");
+              if (errorMessage) errorMessage.style.display = "none";
+            }
+          });
+          return isValid;
+        }
+      </script>
+
+      <script>
+        function logout() {
+          localStorage.removeItem("token");
+        }
+      </script>
+    </div>
+    <!--**********************************
+            Content body end
+        ***********************************-->
+
+    <!--**********************************
+            Footer start
+        ***********************************-->
+    <div class="footer">
+      <div class="copyright">
+        <p>Copyright ©BDIC Ltd 2025. All rights reserved.</p>
+      </div>
+    </div>
+
+    <!--**********************************
+            Footer end
+        ***********************************-->
+
+    <!--**********************************
+        Scripts
+    ***********************************-->
+    <!-- Required vendors -->
+    <script src="vendor/sweetalert2/dist/sweetalert2.min.js"></script>
+    <script src="js/plugins-init/sweetalert.init.js"></script>
+    <script src="vendor/global/global.min.js"></script>
+    <script src="vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+    <script src="vendor/chart.js/Chart.bundle.min.js"></script>
+    <script src="vendor/bootstrap-datetimepicker/js/moment.js"></script>
+    <script src="vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+
+    <script src="js/custom.min.js"></script>
+    <script src="js/deznav-init.js"></script>
+    <script src="js/demo.js"></script>
+    <script type="text/javascript" src="../../../js/index.js"></script>
+  </body>
+</html>
+  function createEmploymentHTML(id, displayNumber) {
+            return `
+          <div class="employment-item" data-id="${id}">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <label class="form-label">Employment ${displayNumber}</label>
+              <button type="button" class="btn btn-outline-danger btn-sm remove-employment" data-id="${id}">
+                <i class="bi bi-dash"></i>
+              </button>
+              
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Company Name</label>
+              </div>
+                <input type="text" class="form-control" name="companyName_${id}" placeholder="Enter company name">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Address</label>
+                <input type="text" class="form-control" name="employment_address_${id}" placeholder="Enter company address">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Designation</label>
+                <input type="text" class="form-control" name="designation_${id}" placeholder="Enter your designation">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Start Year</label>
+                <input type="date" class="form-control" name="startYear_${id}" placeholder="Enter start year">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">End Year</label>
+                <input type="date" class="form-control" name="endYear_${id}" placeholder="Enter end year">
+                <p class="text-muted small mt-1">Leave blank if this is your current employment.</p>
+              </div>
+              <div class="col-md-6">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="isCurrentEmployment_${id}" name="isCurrentEmployment_${id}">
+                  <label class="form-check-label" for="isCurrentEmployment_${id}">
+                    This is my current employment
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-3">
+              <label class="form-label">Description of Company</label>
+              <textarea class="form-control" name="employment_description_${id}" rows="3" placeholder="Describe the company"></textarea>
+            </div>
+          </div>
+        `;
+          }
+
+             function createFamilyHTML(id, displayNumber) {
+            return `
+          <div class="family-item" data-id="${id}">
+         
+             <div class="d-flex justify-content-between align-items-center mb-3">
+            <label class="form-label">Family Member ${displayNumber}</labe
+             <div>
+                <span class="badge bg-warning verification-status" id="family-status-${id}">Pending</span>
+              <button type="button" class="btn btn-outline-danger btn-sm remove-family-member" data-id="${id}">
+                <i class="bi bi-dash"></i>
+              </button>
+             </div>
+            </div>
+            <div class="row g-3">
+              <div class="col-md-3">
+                <input type="text" class="form-control" name="family_name_${id}" placeholder="Full Name">
+              </div>
+              <div class="col-md-3">
+                <input type="text" class="form-control" name="family_relationship_${id}" placeholder="Relationship">
+              </div>
+              <div class="col-md-3">
+                <input type="text" class="form-control" name="family_address_${id}" placeholder="Residential Address">
+              </div>
+              <div class="col-md-3">
+
+                <input type="tel" class="form-control" name="family_phone_${id}" placeholder="Phone Number">
+             
+         
+              </div>
+            </div>
+          </div>
+        `;
+          }
+
+          function createEmploymentHTML(id, displayNumber) {
+            return `
+          <div class="employment-item" data-id="${id}">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <label class="form-label">Employment ${displayNumber}</label>
+              <button type="button" class="btn btn-outline-danger btn-sm remove-employment" data-id="${id}">
+                <i class="bi bi-dash"></i>
+              </button>
+              
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Company Name</label>
+              </div>
+                <input type="text" class="form-control" name="companyName_${id}" placeholder="Enter company name">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Address</label>
+                <input type="text" class="form-control" name="employment_address_${id}" placeholder="Enter company address">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Designation</label>
+                <input type="text" class="form-control" name="designation_${id}" placeholder="Enter your designation">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Start Year</label>
+                <input type="date" class="form-control" name="startYear_${id}" placeholder="Enter start year">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">End Year</label>
+                <input type="date" class="form-control" name="endYear_${id}" placeholder="Enter end year">
+                <p class="text-muted small mt-1">Leave blank if this is your current employment.</p>
+              </div>
+              <div class="col-md-6">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="isCurrentEmployment_${id}" name="isCurrentEmployment_${id}">
+                  <label class="form-check-label" for="isCurrentEmployment_${id}">
+                    This is my current employment
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-3">
+              <label class="form-label">Description of Company</label>
+              <textarea class="form-control" name="employment_description_${id}" rows="3" placeholder="Describe the company"></textarea>
+            </div>
+          </div>
+        `;
+          }
+ function initVerificationReview(isInitialLoad = false) {
+          // Function to populate verification status in review section
+          //   function populateVerificationStatus() {
+          //     // Get all neighbors and their status
+          //     const neighbors = [];
+          //     $(".neighbor-item").each(function (index) {
+          //       const id = $(this).data("id");
+          //       const name = $(this)
+          //         .find(`input[name="neighbor_name_${id}"]`)
+          //         .val();
+          //       const phone = $(this)
+          //         .find(`input[name="neighbor_phone_${id}"]`)
+          //         .val();
+          //       const statusElement = $(`#neighbor-status-${id}`);
+          //       const status = statusElement.length
+          //         ? statusElement.text()
+          //         : "Pending";
+
+          //       neighbors.push({ id, name, phone, status });
+          //     });
+
+          //     // Get all family members and their status
+          //     const familyMembers = [];
+          //     $(".family-item").each(function (index) {
+          //       const id = $(this).data("id");
+          //       const name = $(this)
+          //         .find(`input[name="family_name_${id}"]`)
+          //         .val();
+          //       const phone = $(this)
+          //         .find(`input[name="family_phone_${id}"]`)
+          //         .val();
+          //       const statusElement = $(`#family-status-${id}`);
+          //       const status = statusElement.length
+          //         ? statusElement.text()
+          //         : "Pending";
+
+          //       familyMembers.push({ id, name, phone, status });
+          //     });
+
+          //     // Populate neighbors status
+          //     const neighborContainer = $("#neighbor-verification-status");
+          //     neighborContainer.empty();
+
+          //     if (neighbors.length === 0) {
+          //       neighborContainer.append(
+          //         '<p class="text-muted">No neighbors added</p>'
+          //       );
+          //     } else {
+          //       neighbors.forEach((neighbor) => {
+          //         neighborContainer.append(`
+          //   <div class="d-flex justify-content-between align-items-center mb-2 border-bottom pb-2">
+          //     <div>
+          //       <span class="fw-medium">${
+          //         neighbor.name || "Unnamed neighbor"
+          //       }</span>
+          //       <div class="text-muted small">${
+          //         neighbor.phone || "No phone provided"
+          //       }</div>
+          //     </div>
+          //     <span class="badge ${getStatusBadgeClass(neighbor.status)}">
+          //       ${neighbor.status}
+          //     </span>
+          //   </div>
+          // `);
+          //       });
+          //     }
+
+          //     // Populate family members status
+          //     const familyContainer = $("#family-verification-status");
+          //     familyContainer.empty();
+
+          //     if (familyMembers.length === 0) {
+          //       familyContainer.append(
+          //         '<p class="text-muted">No family members added</p>'
+          //       );
+          //     } else {
+          //       familyMembers.forEach((member) => {
+          //         familyContainer.append(`
+          //   <div class="d-flex justify-content-between align-items-center mb-2 border-bottom pb-2">
+          //     <div>
+          //       <span class="fw-medium">${
+          //         member.name || "Unnamed family member"
+          //       }</span>
+          //       <div class="text-muted small">${
+          //         member.phone || "No phone provided"
+          //       }</div>
+          //     </div>
+          //     <span class="badge ${getStatusBadgeClass(member.status)}">
+          //       ${member.status}
+          //     </span>
+          //   </div>
+          // `);
+          //       });
+          //     }
+          //   }
+
           // Use sessionStorage to maintain verification state
           const storageKey = `verificationState-${user.id}`;
 
@@ -3664,181 +5465,19 @@
             return saved ? JSON.parse(saved) : null;
           }
 
-          // Helper function to get appropriate badge class based on status
-          function getStatusBadgeClass(status) {
-            status = status.toLowerCase();
-            if (status === "verified") return "bg-success";
-            if (status === "denied") return "bg-danger";
-            return "bg-warning";
-          }
-
-          let currentUserData = null;
-
-          // Update the render function to properly check for empty values
-          function renderVerificationStatus(userData) {
-            currentUserData = userData;
-
-            const neighborContainer = $(
-              "#neighbor-verification-status"
-            ).empty();
-            userData.neighbor?.forEach((neighbor, index) => {
-              const phoneValue = neighbor.phone || "";
-              const isInvalid = !neighbor.name || !phoneValue.trim();
-
-              neighborContainer.append(`
-      <div class="d-flex justify-content-between align-items-center mb-2 border-bottom pb-2 ${
-        isInvalid ? "bg-light-danger" : ""
-      }">
-        <div>
-          <span class="fw-medium">${
-            neighbor.name || "Neighbor " + (index + 1)
-          }</span>
-          <div class="text-muted small">${phoneValue || "No phone"}</div>
-          ${
-            isInvalid
-              ? '<div class="text-danger small">Missing required fields</div>'
-              : ""
-          }
-        </div>
-        <span class="badge ${getStatusBadgeClass(neighbor.status)}">
-          ${neighbor.status || "Pending"}
-        </span>
-      </div>
-    `);
-            });
-
-            const familyContainer = $("#family-verification-status").empty();
-            userData.family?.forEach((family, index) => {
-              const phoneValue = family.phone || "";
-              const isInvalid = !family.name || !phoneValue.trim();
-
-              familyContainer.append(`
-      <div class="d-flex justify-content-between align-items-center mb-2 border-bottom pb-2 ${
-        isInvalid ? "bg-light-danger" : ""
-      }">
-        <div>
-          <span class="fw-medium">${
-            family.name || "Family " + (index + 1)
-          }</span>
-          <div class="text-muted small">${phoneValue || "No phone"}</div>
-          ${
-            isInvalid
-              ? '<div class="text-danger small">Missing required fields</div>'
-              : ""
-          }
-        </div>
-        <span class="badge ${getStatusBadgeClass(family.status)}">
-          ${family.status || "Pending"}
-        </span>
-      </div>
-    `);
-            });
-
-            updateVerificationButtonState(userData);
-          }
-
-          // Function to check if there are valid references
-          function allReferencesValid() {
-            if (!currentUserData) return false;
-            // Check neighbors
-            const hasValidNeighbors = currentUserData.neighbor?.some(
-              (neighbor) => neighbor.name || neighbor.phone
-            );
-
-            // Check family members
-            const hasValidFamily = currentUserData.family?.some(
-              (member) => member.name || member.phone
-            );
-
-            return hasValidNeighbors && hasValidFamily;
-          }
-
-          // Update verification button state
-          //       function updateVerificationButtonState() {
-          //         const isValid = allReferencesValid();
-          //         $("#initiate-verification").prop("disabled", !isValid);
-
-          //         if (!isValid) {
-          //           $("#verification-status").html(`
-          //   <div class="alert alert-warning">
-          //     <i class="bi bi-exclamation-triangle me-2"></i>
-          //     All references must have both name and phone to initiate verification.
-          //   </div>
-          // `);
-          //         } else {
-          //           $("#verification-status").empty();
-          //         }
-          //       }
-          function updateVerificationButtonState() {
-            const isValid = allReferencesValid();
-            const hasPendingReference =
-              currentUserData &&
-              [
-                ...(currentUserData.neighbor || []),
-                ...(currentUserData.family || []),
-              ].some((ref) => (ref.status || "").toLowerCase() === "pending");
-
-            const shouldDisable = !isValid || !hasPendingReference;
-
-            $("#initiate-verification").prop("disabled", shouldDisable);
-
-            if (!isValid) {
-              const invalidRefs = getInvalidReferences();
-              let message =
-                "All references must have both name and phone. Issues with:";
-
-              invalidRefs.forEach((ref) => {
-                message += `<br>• ${ref.type} #${
-                  ref.index
-                }: Missing ${ref.missing.join(" and ")}`;
-              });
-
-              $("#verification-status").html(`
-      <div class="alert alert-warning">
-        <i class="bi bi-exclamation-triangle me-2"></i>
-        ${message}
-      </div>
-    `);
-            } else if (!hasPendingReference) {
-              $("#verification-status").html(`
-      <div class="alert alert-info">
-        <i class="bi bi-info-circle me-2"></i>
-        All references have already been verified or denied. No action needed.
-      </div>
-    `);
-            } else {
-              $("#verification-status").empty();
-            }
-          }
-
-          populateVerificationStatus = async function (forceRefresh = false) {
-            if ($("#verification-success-message").length > 0) {
-              return;
-            }
-
+          async function populateVerificationStatus(forceRefresh = false) {
             const savedState = loadVerificationState();
             const shouldUseCache =
               savedState &&
               !forceRefresh &&
-              new Date().getTime() - savedState.timestamp < 30000;
+              new Date().getTime() - savedState.timestamp < 30000; // 30 second cache
 
             if (shouldUseCache) {
               renderVerificationStatus(savedState.data);
               return;
             }
 
-            const currentFormData = collectCurrentFormData();
-
-            // Show loading state while fetching
-            $(
-              "#neighbor-verification-status, #family-verification-status"
-            ).html(
-              '<div class="text-center py-2"><div class="spinner-border spinner-border-sm" role="status"></div> Loading...</div>'
-            );
-
             try {
-              // First update with current form data (immediate UI update)
-              renderVerificationStatus(currentFormData);
               const response = await fetch(`${BACKEND_URL}/users/${user.id}`, {
                 headers: { Authorization: `Bearer ${token}` },
               });
@@ -3852,143 +5491,73 @@
               renderVerificationStatus(userData);
             } catch (error) {
               console.error("Error loading verification status:", error);
-              // if (savedState) renderVerificationStatus(savedState.data);
-              renderVerificationStatus(currentFormData);
+              if (savedState) renderVerificationStatus(savedState.data);
             }
-          };
-          // Add this helper function to collect current form data
-          function collectCurrentFormData() {
-            const neighbors = [];
-            $(".neighbor-item").each(function () {
-              const id = $(this).data("id");
-              neighbors.push({
-                name: $(this).find(`input[name="neighbor_name_${id}"]`).val(),
-                phone: $(this).find(`input[name="neighbor_phone_${id}"]`).val(),
-                status: "Pending", // Default status
-              });
-            });
-
-            const family = [];
-            $(".family-item").each(function () {
-              const id = $(this).data("id");
-              family.push({
-                name: $(this).find(`input[name="family_name_${id}"]`).val(),
-                phone: $(this).find(`input[name="family_phone_${id}"]`).val(),
-                status: "Pending", // Default status
-              });
-            });
-
-            return { neighbor: neighbors, family: family };
           }
 
-          function getInvalidReferences() {
-            if (!currentUserData) return [];
-
-            const invalid = [];
-
-            currentUserData.neighbor?.forEach((neighbor, index) => {
-              if (!neighbor.name || !neighbor.phone) {
-                invalid.push({
-                  type: "Neighbor",
-                  index: index + 1,
-                  missing: [
-                    ...(!neighbor.name ? ["name"] : []),
-                    ...(!neighbor.phone ? ["phone"] : []),
-                  ],
-                });
-              }
+          function renderVerificationStatus(userData) {
+            // Render neighbors status
+            const neighborContainer = $(
+              "#neighbor-verification-status"
+            ).empty();
+            userData.neighbor?.forEach((neighbor, index) => {
+              neighborContainer.append(`
+        <div class="d-flex justify-content-between align-items-center mb-2 border-bottom pb-2">
+          <div>
+            <span class="fw-medium">${
+              neighbor.fullName || "Neighbor " + (index + 1)
+            }</span>
+            <div class="text-muted small">${neighbor.phone || "No phone"}</div>
+          </div>
+          <span class="badge ${getStatusBadgeClass(neighbor.status)}">
+            ${neighbor.status || "Pending"}
+          </span>
+        </div>
+      `);
             });
 
-            currentUserData.family?.forEach((member, index) => {
-              if (!member.name || !member.phone) {
-                invalid.push({
-                  type: "Family",
-                  index: index + 1,
-                  missing: [
-                    ...(!member.name ? ["name"] : []),
-                    ...(!member.phone ? ["phone"] : []),
-                  ],
-                });
-              }
+            // Render family members status
+            const familyContainer = $("#family-verification-status").empty();
+            userData.family?.forEach((member, index) => {
+              familyContainer.append(`
+        <div class="d-flex justify-content-between align-items-center mb-2 border-bottom pb-2">
+          <div>
+            <span class="fw-medium">${
+              member.fullName || "Family " + (index + 1)
+            }</span>
+            <div class="text-muted small">${member.phone || "No phone"}</div>
+          </div>
+          <span class="badge ${getStatusBadgeClass(member.status)}">
+            ${member.status || "Pending"}
+          </span>
+        </div>
+      `);
             });
-
-            return invalid;
           }
 
-          function updateVerificationButtonState() {
-            if (!currentUserData) return;
-
-            const allRefs = [
-              ...(currentUserData.neighbor || []),
-              ...(currentUserData.family || []),
-            ];
-
-            // Must have at least one valid reference
-            const allValid = allRefs.every((ref) => ref.name && ref.phone);
-
-            // Check if ANY reference is still pending
-            const hasPending = allRefs.some(
-              (ref) => (ref.status || "").toLowerCase() === "pending"
-            );
-
-            // Disable if not valid or if there are no pending references
-            const shouldDisable = !allValid || !hasPending;
-
-            $("#initiate-verification").prop("disabled", shouldDisable);
-
-            if (!allValid) {
-              const invalidRefs = getInvalidReferences();
-              let message =
-                "All references must have both name and phone. Issues with:";
-              invalidRefs.forEach((ref) => {
-                message += `<br>• ${ref.type} #${
-                  ref.index
-                }: Missing ${ref.missing.join(" and ")}`;
-              });
-              $("#verification-status").html(`
-      <div class="alert alert-warning">
-        <i class="bi bi-exclamation-triangle me-2"></i>
-        ${message}
-      </div>
-    `);
-            } else if (!hasPending) {
-              $("#verification-status").html(`
-      <div class="alert alert-info">
-        <i class="bi bi-info-circle me-2"></i>
-        All references have already been verified or denied. No pending verification.
-      </div>
-    `);
-            } else {
-              $("#verification-status").empty();
-            }
+          // Helper function to get appropriate badge class based on status
+          function getStatusBadgeClass(status) {
+            status = status.toLowerCase();
+            if (status === "verified") return "bg-success";
+            if (status === "denied") return "bg-danger";
+            return "bg-warning";
           }
 
           // Function to initiate verification
           async function initiateVerification() {
-            // Early check for valid references
-            if (!allReferencesValid()) {
-              $("#verification-status").html(`
-        <div class="alert alert-danger">
-          <i class="bi bi-exclamation-triangle me-2"></i>
-          Cannot initiate verification: No valid references with both name and phone.
-        </div>
-      `);
-
-              return;
-            }
             try {
               // Show loading state
               $("#initiate-verification").prop("disabled", true).html(`
-              <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-              Initiating...
-            `);
+        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+        Initiating...
+      `);
 
               $("#verification-status").html(`
-              <div class="alert alert-info">
-                <i class="bi bi-info-circle me-2"></i>
-                Initiating verification process...
-              </div>
-            `);
+        <div class="alert alert-info">
+          <i class="bi bi-info-circle me-2"></i>
+          Initiating verification process...
+        </div>
+      `);
 
               const response = await fetch(
                 `${BACKEND_URL}/users/${user.id}/initiate-verification`,
@@ -4000,10 +5569,6 @@
                   },
                 }
               );
-              if (response.status === 400) {
-                const errorData = await response.json();
-                throw new Error(errorData.message);
-              }
 
               if (!response.ok) {
                 throw new Error(
@@ -4013,60 +5578,32 @@
 
               const result = await response.json();
 
-              //       // Show success message
-              //       $("#verification-status").html(`
-              //   <div class="alert alert-success">
-              //     <i class="bi bi-check-circle me-2"></i>
-              //     Verification initiated successfully! Reference contacts will receive verification messages.
-              //   </div>
-              // `);
-
               // Show success message
-              const successMessage = `
-      <div class="alert alert-success" id="verification-success-message">
-        <i class="bi bi-check-circle me-2"></i>
-        Verification initiated successfully! Reference contacts will receive verification messages.
-      </div>
-    `;
+              $("#verification-status").html(`
+        <div class="alert alert-success">
+          <i class="bi bi-check-circle me-2"></i>
+          Verification initiated successfully! Reference contacts will receive verification messages.
+        </div>
+      `);
 
-              $("#verification-status").html(successMessage);
+              // Update verification status badges
+              updateVerificationStatuses();
 
-              // Update verification status badges after a delay
-              setTimeout(() => {
-                updateVerificationStatuses();
-              }, 2000);
-
-              // Refresh the review section after a longer delay
-              setTimeout(() => {
-                // Only refresh if success message is still visible
-                if ($("#verification-success-message").length) {
-                  populateVerificationStatus();
-                }
-              }, 4000);
+              // Refresh the review section
+              populateVerificationStatus();
             } catch (error) {
-              // Handle verification in progress error
-              if (error.message.includes("already in progress")) {
-                $("#verification-status").html(`
-          <div class="alert alert-warning">
-            <i class="bi bi-hourglass-split me-2"></i>
-            ${error.message}
-          </div>
-        `);
-              }
-              // Handle other errors
-              else {
-                $("#verification-status").html(`
-          <div class="alert alert-danger">
-            <i class="bi bi-exclamation-triangle me-2"></i>
-            ${error.message || "Verification failed"}
-          </div>
-        `);
-              }
+              console.error("Verification error:", error);
+              $("#verification-status").html(`
+        <div class="alert alert-danger">
+          <i class="bi bi-exclamation-triangle me-2"></i>
+          Error initiating verification: ${error.message}
+        </div>
+      `);
             } finally {
               // Reset button state
               $("#initiate-verification").prop("disabled", false).html(`
-          <i class="bi bi-send-check me-2"></i>Initiate Verification
-        `);
+        <i class="bi bi-send-check me-2"></i>Initiate Verification
+      `);
             }
           }
 
@@ -4140,183 +5677,8 @@
           // Initialize on page load
           if (isInitialLoad) {
             populateVerificationStatus();
-            $("#review-section").on("show", () => {
-              populateVerificationStatus(true);
-              updateVerificationButtonState();
-            }); // Force refresh when section shown
+            $("#review-section").on("show", () =>
+              populateVerificationStatus(true)
+            ); // Force refresh when section shown
           }
         }
-      </script>
-      <script>
-        document.querySelectorAll(".next-btn").forEach((btn) => {
-          btn.addEventListener("click", () => {
-            const nextSection = document.getElementById(btn.dataset.next);
-            btn.closest(".form-section").style.display = "none";
-            nextSection.style.display = "block";
-          });
-        });
-
-        document.querySelectorAll(".prev-btn").forEach((btn) => {
-          btn.addEventListener("click", () => {
-            const prevSection = document.getElementById(btn.dataset.prev);
-            btn.closest(".form-section").style.display = "none";
-            prevSection.style.display = "block";
-          });
-        });
-      </script>
-
-      <script>
-        document.querySelectorAll(".next-btn").forEach((button) => {
-          button.addEventListener("click", () => {
-            const currentSection = button.closest(".form-section");
-            const nextSectionId = button.getAttribute("data-next");
-            const nextSection = document.getElementById(nextSectionId);
-
-            // Validate the current form section
-            if (validateForm(currentSection)) {
-              currentSection.classList.remove("active");
-              nextSection.classList.add("active");
-            }
-          });
-        });
-
-        function validateForm(section) {
-          let isValid = true;
-          section.querySelectorAll("input, select").forEach((field) => {
-            const errorMessage = field.nextElementSibling;
-            if (field.hasAttribute("required") && !field.value.trim()) {
-              field.classList.add("error");
-              if (errorMessage) errorMessage.style.display = "block";
-              isValid = false;
-            } else {
-              field.classList.remove("error");
-              if (errorMessage) errorMessage.style.display = "none";
-            }
-          });
-          return isValid;
-        }
-      </script>
-      <script>
-        function calculateProfileCompletion(user) {
-          let completed = 0;
-          let total = 14; // adjust total fields based on your backend logic
-
-          const checks = [
-            user.firstname,
-            user.lastname,
-            user.phone,
-            user.NIN,
-            user.DOB,
-            user.gender,
-            user.nationality,
-            user.stateOfOrigin,
-            user.lgaOfOrigin,
-            user.passportPhoto,
-          ];
-
-          checks.forEach((field) => {
-            if (field && String(field).trim() !== "") completed++;
-          });
-
-          // Extra checks (add 1 each if complete)
-          if (
-            Array.isArray(user.educationalHistory) &&
-            user.educationalHistory.length > 0
-          )
-            completed++;
-          if (
-            Array.isArray(user.employmentHistory) &&
-            user.employmentHistory.length > 0
-          )
-            completed++;
-          if (
-            Array.isArray(user.family) &&
-            user.family.some((f) => f.status === "verified")
-          )
-            completed++;
-          if (
-            Array.isArray(user.neighbor) &&
-            user.neighbor.some((n) => n.status === "verified")
-          )
-            completed++;
-
-          const percent = Math.floor((completed / total) * 100);
-          return percent;
-        }
-
-        function updateProgressBar(percent) {
-          $("#profileProgressBar")
-            .css("width", percent + "%")
-            .text(percent + "%");
-
-          // Change color based on progress
-          const bar = $("#profileProgressBar");
-          if (percent < 50) {
-            bar.removeClass("bg-success").addClass("bg-danger");
-          } else if (percent < 80) {
-            bar.removeClass("bg-danger bg-success").addClass("bg-warning");
-          } else {
-            bar.removeClass("bg-warning bg-danger").addClass("bg-success");
-          }
-        }
-
-        // Example usage after fetching user data
-        $(document).ready(function () {
-          $.ajax({
-            url: `${BACKEND_URL}/users/${user.id}`,
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-            success: function (user) {
-              const percent = calculateProfileCompletion(user);
-              updateProgressBar(percent);
-            },
-            error: function (xhr) {
-              console.error("Failed to fetch user:", xhr);
-            },
-          });
-        });
-      </script>
-
-      <script>
-        function logout() {
-          localStorage.removeItem("token");
-        }
-      </script>
-    </div>
-    <!--**********************************
-            Content body end
-        ***********************************-->
-
-    <!--**********************************
-            Footer start
-        ***********************************-->
-    <div class="footer">
-      <div class="copyright">
-        <p>Copyright ©BDIC Ltd 2025. All rights reserved.</p>
-      </div>
-    </div>
-
-    <!--**********************************
-            Footer end
-        ***********************************-->
-
-    <!--**********************************
-        Scripts
-    ***********************************-->
-    <!-- Required vendors -->
-    <script src="vendor/sweetalert2/dist/sweetalert2.min.js"></script>
-    <script src="js/plugins-init/sweetalert.init.js"></script>
-    <script src="vendor/global/global.min.js"></script>
-    <script src="vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
-    <script src="vendor/chart.js/Chart.bundle.min.js"></script>
-    <script src="vendor/bootstrap-datetimepicker/js/moment.js"></script>
-    <script src="vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
-
-    <script src="js/custom.min.js"></script>
-    <script src="js/deznav-init.js"></script>
-    <script src="js/demo.js"></script>
-    <script type="text/javascript" src="../../../js/index.js"></script>
-  </body>
-</html>

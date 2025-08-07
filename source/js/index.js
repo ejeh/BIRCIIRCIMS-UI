@@ -1,80 +1,166 @@
 const isDevelopment = window.location.hostname === "127.0.0.1";
 
-// const BACKEND_URL = isDevelopment
-//   ? "http://localhost:5000/api"
-//   : "http://api.citizenship.benuestate.gov.ng/api";
+const BACKEND_URL = isDevelopment
+? "http://localhost:5000/api"
+: "https://api.citizenship.benuestate.gov.ng/api";
 
-const BACKEND_URL = "https://api.citizenship.benuestate.gov.ng/api"
-// console.log(BACKEND_URL)
-// ? "http://api.citizenship.benuestate.gov.ng/api"
-// : "http://localhost:5000/api"
+// const BACKEND_URL = "https://api.citizenship.benuestate.gov.ng/api";
 
 const FRONTEND_URL = isDevelopment
-  ? "http://127.0.0.1:5501"
-  : "https://citizenship.benuestate.gov.ng";
+? "http://127.0.0.1:5501"
+: "https://citizenship.benuestate.gov.ng";
 
 // Get user info from localStorage
 const userData = JSON.parse(localStorage.getItem("token") || "{}");
 const { token, user } = userData;
+
+function loadPDFJ(blobUrl, container) {
+  const loader = document.getElementById("pdf-loader");
+  if (typeof pdfjsLib === 'undefined') {
+      container.innerHTML = `<iframe src="${blobUrl}" width="100%" height="100%"></iframe>`;
+      return;
+  }
+
+  // Use the same version as loaded in HTML
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 
+      "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js";
+
+  let pdfDoc = null;
+  let pageNum = 1;
+  let scale = 1.2;
+
+  const renderPage = (num) => {
+      loader.style.display = "block";
+
+      pdfDoc.getPage(num).then((page) => {
+          const viewport = page.getViewport({ scale });
+          const canvas = document.createElement("canvas");
+          const context = canvas.getContext("2d");
+
+          // Make canvas responsive
+          canvas.style.width = "100%";
+          canvas.style.height = "auto";
+          
+          // Set canvas dimensions for rendering
+          const presentationSize = {
+              width: container.clientWidth,
+              height: container.clientWidth * (viewport.height / viewport.width)
+          };
+          
+          canvas.width = presentationSize.width;
+          canvas.height = presentationSize.height;
+          
+          // Adjust viewport to container size
+          const scaledViewport = page.getViewport({
+              scale: presentationSize.width / viewport.width
+          });
+
+          const renderContext = {
+              canvasContext: context,
+              viewport: scaledViewport,
+          };
+
+          container.innerHTML = "";
+          container.appendChild(canvas);
+
+          page.render(renderContext).promise.finally(() => {
+              loader.style.display = "none";
+          });
+      });
+  };
+
+  loader.style.display = "block";
+
+  pdfjsLib.getDocument(blobUrl).promise
+      .then((pdf) => {
+          pdfDoc = pdf;
+          renderPage(pageNum);
+      })
+      .catch((error) => {
+          loader.style.display = "none";
+          console.error("Error rendering PDF:", error);
+          container.innerHTML = `
+              <div class="alert alert-danger">
+                  Failed to render PDF: ${error.message}
+                  <div class="mt-2">
+                      <a href="${blobUrl}" target="_blank" class="btn btn-sm btn-primary">Open in New Tab</a>
+                  </div>
+              </div>
+          `;
+      });
+}
+
+
+  function downloadPDF(button) {
+    const url = button.getAttribute("data-url");
+    fetch(url, {
+      headers: {
+         Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Download failed");
+        return res.blob();
+      })
+      .then((blob) => {
+        const blobUrl = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = blobUrl;
+        a.download = `document-${Date.now()}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(blobUrl);
+      })
+      .catch((err) => {
+        console.error("Download error:", err.message);
+        alert("Failed to download the document.");
+      });
+  }
+  
+  
+
 
 $(document).ready(function () {
   const userRole = user.role || "";
 
   $("#header-user-label").text(user.firstname);
 
-  // Change sidebar label based on role
-  if (userRole === "super_admin" || userRole === "support_admin") {
-    $("#sidebar-user-label").text("Administration");
-  } else {
-    $("#sidebar-user-label").text("User");
-  }
+  // Sidebar label
+  $("#sidebar-user-label").text(
+    ["super_admin", "support_admin", "kindred_head"].includes(userRole)
+      ? "Administration"
+      : "User"
+  );
 
-  console.log(userRole);
+  // First, hide all role-specific menus
+  $(
+    ".nav-item.user-menu, .nav-item.kindred_head, .nav-item.support-admin-menu, .nav-item.super-admin-menu"
+  ).hide();
 
-  // Show/hide menu items based on role
+  // Show only what’s allowed per role
   switch (userRole) {
     case "user":
       $(".nav-item.user-menu").show();
-      // hide kindred head specific
-      $(
-        '.nav-item.kindred_head:has(a[href="kindred-dasboard.html"]), .nav-item.kindred_head:has(a[href="kindred-head.html"])'
-      ).hide();
-
-      $(
-        '.nav-item.super-admin-menu:has(a[href="all-request.html"]), .nav-item.super-admin-menu:has(a[href="approvals.html"]), .nav-item.super-admin-menu:has(a[href="all-request.html"]), .nav-item.super-admin-menu:has(a[href="all-card.html"]), .nav-item.super-admin-menu:has(a[href="kindred.html"]), .nav-item.super-admin-menu:has(a[href="support-admin-lga.html"]), .nav-item.super-admin-menu:has(a[href="index.html"]), .nav-item.super-admin-menu:has(a[href="citizens.html"])'
-      ).hide();
-
       break;
 
     case "kindred_head":
       $(".nav-item.kindred_head").show();
-      $(".nav-item.user-menu:has(a[href='profile.html'])").show();
-      $(
-        '.nav-item.support-admin-menu:has(a[href="user-kindred.html"]), .nav-item.support-admin-menu:has(a[href="support-admin-lga.html"])'
-      ).hide();
-      $(
-        '.nav-item.super-admin-menu:has(a[href="all-request.html"]), .nav-item.super-admin-menu:has(a[href="approvals.html"]), .nav-item.super-admin-menu:has(a[href="all-request.html"]), .nav-item.super-admin-menu:has(a[href="all-card.html"]), .nav-item.super-admin-menu:has(a[href="kindred.html"]), .nav-item.super-admin-menu:has(a[href="support-admin-lga.html"]), .nav-item.super-admin-menu:has(a[href="index.html"]), .nav-item.super-admin-menu:has(a[href="citizens.html"])'
-      ).hide();
-
+      // Also show 'profile.html' from user-menu
+      $('.nav-item.user-menu:has(a[href="profile.html"])').show();
       break;
 
     case "support_admin":
-      $(".nav-item .user-menu").hide();
-      $(".nav-item .kindred_head").hide();
-      $(
-        '.nav-item.super-admin-menu:has(a[href="all-request.html"]), .nav-item.super-admin-menu:has(a[href="approvals.html"]), .nav-item.super-admin-menu:has(a[href="all-request.html"]), .nav-item.super-admin-menu:has(a[href="all-card.html"]), .nav-item.super-admin-menu:has(a[href="kindred.html"]), .nav-item.super-admin-menu:has(a[href="support-admin-lga.html"]), .nav-item.super-admin-menu:has(a[href="index.html"]), .nav-item.super-admin-menu:has(a[href="citizens.html"])'
-      ).hide();
-      // example: show dashboard only for support_admin if needed
+      $(".nav-item.support-admin-menu").show();
       $('.super-admin-menu:has(a[href="index.html"])').show(); // optional if present
       break;
 
     case "super_admin":
-      $(".nav-item.support-admin-menu").hide();
-      $(".super-admin-menu").show(); // if present
+      $(".nav-item.super-admin-menu").show();
       break;
 
     default:
-      console.warn("No valid role found");
+      console.warn("Unknown role:", userRole);
   }
 });
 
@@ -108,30 +194,6 @@ $(document).ready(function () {
     }
   }
 });
-
-// $(document).ready(function () {
-//   // Assume the user role is dynamically fetched from your backend
-//   const userRole = user.role;
-
-//   // Hide all menus initially
-//   $(".super-admin-menu, .support-admin-menu, .user-menu ").hide();
-
-//   // Show menus based on role
-//   if (userRole === "super_admin") {
-//     $(".super-admin-menu").show();
-//   } else if (userRole === "support_admin") {
-//     $(".support-admin-menu").show();
-//     // $('.super-admin-menu:has(a[href="approvals.html"])').show();
-//     $('.super-admin-menu:has(a[href="index.html"])').show();
-//   } else if (userRole === "user") {
-//     $(".user-menu").show();
-//     $('.kindred_head:has(a[href="kindred-head.html"])').hide();
-//     $('.kindred_head:has(a[href="kindred-dasboard.html"])').hide();
-//   } else if (userRole === "kindred_head") {
-//     $(".kindred_head").show();
-//     $('.user-menu:has(a[href="profile.html"])').show();
-//   }
-// });
 
 $(document).ready(function () {
   // Utility function to set input values
@@ -185,7 +247,25 @@ $(document).ready(function () {
         }
 
         // Refresh the select picker (if using Bootstrap Select)
-        $(".selectpicker").selectpicker("refresh");
+        // $(".selectpicker").selectpicker("refresh");
+      }
+
+      // Handle identification type (including 'others')
+      const predefinedIds = [
+        "national_id",
+        "driver_licence",
+        "international_passport",
+        "voters_card",
+      ];
+      const idValue = data.identification;
+
+      if (idValue && !predefinedIds.includes(idValue)) {
+        // This is a custom "others" value
+        $("#identification").val("others").change(); // This triggers the display of the other field
+        $("#other_identification").val(idValue); // Populate the custom value
+      } else {
+        // Standard identification type
+        $("#identification").val(idValue).change();
       }
 
       // Set the value in the select field
@@ -196,85 +276,19 @@ $(document).ready(function () {
       $("#stateOfResidence").val(data.stateOfResidence).change();
       $("#lgaOfResidence").val(data.lgaOfResidence).change();
       $("#countryOfResidence").val(data.countryOfResidence).change();
-      $("#identification").val(data.identification);
+
       $("#religion").val(data.religion).change();
+      $("#dob").val(data.DOB).change();
+
+      // Handle business data (since it's an array)
+      if (data.business && data.business.length > 0) {
+        const bizData = data.business[0]; // Get first business entry
+        $("#biz_type").val(bizData.biz_type).change();
+        $("#nature_of_business").val(bizData.nature_of_business).change();
+        // Add other business fields if needed
+      }
 
       $(".selectpicker").selectpicker("refresh");
-
-      // ------------------------------
-      // Prepopulate Educational History
-      // ------------------------------
-      if (data.educationalHistory) {
-        // Populate Primary School
-        if (data.educationalHistory.primarySchool) {
-          setInputValue(
-            "primarySchool_name",
-            data.educationalHistory.primarySchool.name
-          );
-          setInputValue(
-            "primarySchool_address",
-            data.educationalHistory.primarySchool.address
-          );
-          setInputValue(
-            "primarySchool_yearOfAttendance",
-            data.educationalHistory.primarySchool.yearOfAttendance
-          );
-        }
-
-        // Populate Secondary School
-        if (data.educationalHistory.secondarySchool) {
-          setInputValue(
-            "secondarySchool_name",
-            data.educationalHistory.secondarySchool.name
-          );
-          setInputValue(
-            "secondarySchool_address",
-            data.educationalHistory.secondarySchool.address
-          );
-          setInputValue(
-            "secondarySchool_yearOfAttendance",
-            data.educationalHistory.secondarySchool.yearOfAttendance
-          );
-        }
-
-        // Populate Tertiary Institutions (assumes one or more institutions)
-        if (
-          data.educationalHistory &&
-          data.educationalHistory.tertiaryInstitutions
-        ) {
-          data.educationalHistory.tertiaryInstitutions.forEach(function (
-            tertiary,
-            index
-          ) {
-            // Use the name attribute to target each input.
-            $(
-              'input[name="educationalHistory.tertiaryInstitutions[' +
-                index +
-                '].name"]'
-            ).val(tertiary.name);
-            $(
-              'input[name="educationalHistory.tertiaryInstitutions[' +
-                index +
-                '].address"]'
-            ).val(tertiary.address);
-            $(
-              'input[name="educationalHistory.tertiaryInstitutions[' +
-                index +
-                '].certificateObtained"]'
-            ).val(tertiary.certificateObtained);
-            $(
-              'input[name="educationalHistory.tertiaryInstitutions[' +
-                index +
-                '].matricNo"]'
-            ).val(tertiary.matricNo);
-            $(
-              'input[name="educationalHistory.tertiaryInstitutions[' +
-                index +
-                '].yearOfAttendance"]'
-            ).val(tertiary.yearOfAttendance);
-          });
-        }
-      }
 
       // Destructure the main fields
       const {
@@ -292,8 +306,6 @@ $(document).ready(function () {
         religion,
         address,
         nextOfKin = [],
-        family = [],
-        neighbor = [],
         business = [],
         maritalStatus,
         house_number,
@@ -304,7 +316,6 @@ $(document).ready(function () {
         id_number,
         issue_date,
         expiry_date,
-        other_identification,
       } = data;
 
       // Populate main fields
@@ -348,37 +359,6 @@ $(document).ready(function () {
         nok_lgaOfResidence: "nok_lgaOfResidence",
         nok_cityOfResidence: "nok_cityOfResidence",
         nok_address: "nok_address",
-      });
-
-      // Populate neighbors' details
-      // Iterate over the neighbor array and populate the input fields
-      $(".neighbor-fields").each(function (index) {
-        if (neighbor[index]) {
-          $(this)
-            .find('input[name="neighbor_name[]"]')
-            .val(neighbor[index].name);
-          $(this)
-            .find('input[name="neighbor_address[]"]')
-            .val(neighbor[index].address);
-          $(this)
-            .find('input[name="neighbor_phone[]"]')
-            .val(neighbor[index].phone);
-        }
-      });
-
-      // Populate family' details
-      // Iterate over the family array and populate the input fields
-      $(".family-fields").each(function (index) {
-        if (family[index]) {
-          $(this).find('input[name="family_name[]"]').val(family[index].name);
-          $(this)
-            .find('input[name="family_address[]"]')
-            .val(family[index].address);
-          $(this).find('input[name="family_phone[]"]').val(family[index].phone);
-          $(this)
-            .find('input[name="family_relationship[]"]')
-            .val(family[index].relationship);
-        }
       });
 
       populateNestedFields(business, {
@@ -535,7 +515,6 @@ $(document).ready(function () {
     const headers = { Authorization: `Bearer ${token}` };
 
     apiRequest(url, "GET", headers, null, (response) => {
-      console.log(response);
       // Construct user details dynamically
       const details = `
         <div class="user-profile">
@@ -624,7 +603,6 @@ function closeModal(modalId) {
 function loadPDFJS(pdfUrl, container) {
   const loader = document.getElementById("pdf-loader");
   if (!window["pdfjsLib"]) {
-    console.error("PDF.js not loaded");
     container.innerHTML = `<iframe src="${pdfUrl}" width="100%" height="100%"></iframe>`;
     return;
   }
@@ -754,7 +732,7 @@ $(document).ready(function () {
          <td>${(currentPage - 1) * pageSize + index + 1}</td>
           <td>${item.firstname} ${item.lastname}</td>
           <td>${item.phone}</td>
-          <td>${item.email}</td>
+          <td>${item.isVerified}</td>
           <td>${statusBadge[item.status] || item.status}</td>
           <td>
             <button class="btn btn-sm btn-success btn-cert-approve" data-id="${
@@ -785,6 +763,7 @@ $(document).ready(function () {
       headers: apiHeaders,
       success: function (response) {
         const { data, hasNextPage } = response;
+        // console.log("data", data);
         $("#cert-request").text(data.length);
 
         renderTable(data);
@@ -849,120 +828,267 @@ $(document).ready(function () {
     });
   }
 
-  // Handle cert view
-  function handleView(requestId) {
+  function handleVerification(requestId) {
     $.ajax({
-      url: `${BACKEND_URL}/indigene/certificate/${requestId}/request`,
-      method: "GET",
+      url: `${BACKEND_URL}/indigene/certificate/${requestId}/verify`,
+      method: "PATCH",
       headers: apiHeaders,
-      success: function (response) {
-        const documentPaths = [
-          response.birthCertificate,
-          response.idCard,
-        ].filter(Boolean);
-        const documentTitles = ["Identity Card", "Birth Certificate"];
-
-        let modalContent = `
-          <div class="container-fluid">
-            <div class="row mb-3">
-              <div class="col-md-3 text-center">
-                <img 
-                  src="${
-                    response.passportPhoto || "/assets/images/avatar.jpeg"
-                  }" 
-                  alt="Passport Photo" 
-                  class="img-fluid rounded shadow-sm profile-photo""
-                  style="max-height: 150px;"
-                  crossOrigin="anonymous"
-                >
-              </div>
-              <div class="col-md-9">
-                <h5 class="fw-bold mb-2">${response.firstname} ${
-          response.lastname
-        }</h5>
-                <p class="mb-1"><strong>Phone:</strong> ${response.phone}</p>
-                <p class="mb-1"><strong>Email:</strong> ${response.email}</p>
-                <p class="mb-1"><strong>Status:</strong> <span class="badge bg-info">${
-                  response.status
-                }</span></p>
-                <p><strong>State:</strong> ${response.stateOfOrigin}</p>
-                <p><strong>LGA:</strong> ${response.lgaOfOrigin}</p>
-                <p><strong>Kindred:</strong> ${response.kindred}</p>
-
-              </div>
-            </div>
-  
-            <hr class="my-3">
-            <h6 class="text-primary">Uploaded Documents</h6>
-        `;
-
-        if (documentPaths.length === 0) {
-          modalContent += `<p class="text-muted">No documents uploaded.</p>`;
-        }
-
-        documentPaths.forEach((doc, index) => {
-          const filename = doc?.split("/").pop();
-          const fileUrl = `${BACKEND_URL}/indigene/certificate/pdf/${filename}`;
-
-          modalContent += `
-            <div class="card my-3 shadow-sm">
-              <div class="card-header bg-light fw-semibold">
-                ${documentTitles[index] || `Document ${index + 1}`}
-              </div>
-              <div class="card-body">
-                <div id="pdf-viewer-container-${index}" style="width:100%; height:400px;" class="border rounded bg-white"></div>
-                <div class="text-end mt-2">
-                  <a href="${fileUrl}" target="_blank" class="btn btn-sm btn-outline-primary me-2">Open in New Tab</a>
-                  <a href="${fileUrl}" download class="btn btn-sm btn-outline-secondary">Download</a>
-                </div>
-              </div>
-            </div>
-          `;
-        });
-
-        modalContent += `</div>`;
-
-        $("#viewModal .modal-body").html(modalContent);
-        $("#viewModal").modal("show");
-
-        // Load PDFs securely
-        documentPaths.forEach((doc, index) => {
-          const filename = doc?.split("/").pop();
-          const fileUrl = `${BACKEND_URL}/indigene/certificate/pdf/${filename}`;
-
-          fetch(fileUrl, {
-            headers: {
-              Authorization: apiHeaders.Authorization,
-            },
-          })
-            .then((res) => {
-              if (!res.ok) throw new Error("Failed to fetch PDF");
-              return res.blob();
-            })
-            .then((blob) => {
-              const blobUrl = URL.createObjectURL(blob);
-              loadPDFJS(
-                blobUrl,
-                document.getElementById(`pdf-viewer-container-${index}`)
-              );
-            })
-            .catch((err) => {
-              console.error("Error loading secure PDF:", err.message);
-              $(`#pdf-viewer-container-${index}`).html(
-                "<p class='text-danger'>Failed to load document.</p>"
-              );
-            });
-        });
+      success: function () {
+        Swal.fire("Success", "Request successfully verified", "success");
+        fetchData(currentPage);
       },
       error: function (error) {
-        console.error("Error fetching request details:", error);
+        Swal.fire("Oops...", "Request successfully verified", "error");
       },
+    });
+  }
+
+  // Handle cert view
+  // function handleView(requestId) {
+  //   $.ajax({
+  //     url: `${BACKEND_URL}/indigene/certificate/${requestId}/request`,
+  //     method: "GET",
+  //     headers: apiHeaders,
+  //     success: function (response) {
+  //       const documentPaths = [
+  //         response.birthCertificate,
+  //         response.idCard,
+  //       ].filter(Boolean);
+  //       const documentTitles = ["Identity Card", "Birth Certificate"];
+
+  //       let modalContent = `
+  //         <div class="container-fluid">
+  //           <div class="row mb-3">
+  //             <div class="col-md-3 text-center">
+  //               <img 
+  //                 src="${
+  //                   response.passportPhoto || "/assets/images/avatar.jpeg"
+  //                 }" 
+  //                 alt="Passport Photo" 
+  //                 class="img-fluid rounded shadow-sm profile-photo"
+  //                 style="max-height: 150px;"
+  //                 crossOrigin="anonymous"
+  //               >
+  //             </div>
+  //             <div class="col-md-9">
+  //               <h5 class="fw-bold mb-2">${response.firstname} ${
+  //         response.lastname
+  //       }</h5>
+  //               <p class="mb-1"><strong>Phone:</strong> ${response.phone}</p>
+  //               <p class="mb-1"><strong>Email:</strong> ${response.email}</p>
+  //               <p class="mb-1"><strong>Status:</strong> <span class="badge bg-info">${
+  //                 response.status
+  //               }</span></p>
+  //               <p><strong>State:</strong> ${response.stateOfOrigin}</p>
+  //               <p><strong>LGA:</strong> ${response.lgaOfOrigin}</p>
+  //               <p><strong>Kindred:</strong> ${response.kindred}</p>
+  //               <p><strong>isProfileCompleted:</strong> ${
+  //                 response.userId?.isProfileCompleted
+  //               }</p>
+
+  //             </div>
+  //           </div>
+  
+  //           <hr class="my-3">
+  //           <h6 class="text-primary">Uploaded Documents</h6>
+  //       `;
+
+  //       if (documentPaths.length === 0) {
+  //         modalContent += `<p class="text-muted">No documents uploaded.</p>`;
+  //       }
+
+  //       documentPaths.forEach((doc, index) => {
+  //         // const filename = doc?.split("/").pop();
+  //         // const fileUrl = `${BACKEND_URL}/indigene/certificate/pdf/${filename}`;
+  //         const encodedUrl = encodeURIComponent(doc);
+  //         const fileUrl = `${BACKEND_URL}/indigene/certificate/pdf/${encodedUrl}`;
+
+  //         modalContent += `
+  //           <div class="card my-3 shadow-sm">
+  //             <div class="card-header bg-light fw-semibold">
+  //               ${documentTitles[index] || `Document ${index + 1}`}
+  //             </div>
+  //             <div class="card-body">
+  //               <div id="pdf-viewer-container-${index}" style="width:100%; height:400px;" class="border rounded bg-white"></div>
+  //               <div class="text-end mt-2">
+  //                 <a href="${fileUrl}" target="_blank" class="btn btn-sm btn-outline-primary me-2">Open in New Tab</a>
+  //                 <a href="${fileUrl}" download class="btn btn-sm btn-outline-secondary">Download</a>
+  //               </div>
+  //             </div>
+  //           </div>
+  //         `;
+  //       });
+
+  //       modalContent += `</div>`;
+
+  //       $("#viewModal .modal-body").html(modalContent);
+  //       $("#viewModal").modal("show");
+
+  //       // Load PDFs securely
+  //       documentPaths.forEach((doc, index) => {
+  //         // const filename = doc?.split("/").pop();
+  //         // const fileUrl = `${BACKEND_URL}/indigene/certificate/pdf/${filename}`;
+
+  //         const encodedUrl = encodeURIComponent(doc);
+  //         const fileUrl = `${BACKEND_URL}/indigene/certificate/pdf/${encodedUrl}`;
+
+  //         fetch(fileUrl, {
+  //           headers: {
+  //             Authorization: apiHeaders.Authorization,
+  //           },
+  //         })
+  //           .then((res) => {
+  //             if (!res.ok) throw new Error("Failed to fetch PDF");
+  //             return res.blob();
+  //           })
+  //           .then((blob) => {
+  //             const blobUrl = URL.createObjectURL(blob);
+  //             loadPDFJS(
+  //               blobUrl,
+  //               document.getElementById(`pdf-viewer-container-${index}`)
+  //             );
+  //           })
+  //           .catch((err) => {
+  //             console.error("Error loading secure PDF:", err.message);
+  //             $(`#pdf-viewer-container-${index}`).html(
+  //               "<p class='text-danger'>Failed to load document.</p>"
+  //             );
+  //           });
+  //       });
+  //     },
+  //     error: function (error) {
+  //       console.error("Error fetching request details:", error);
+  //     },
+  //   });
+  // }
+  function handleView(requestId) {
+    $.ajax({
+        url: `${BACKEND_URL}/indigene/certificate/${requestId}/request`,
+        method: "GET",
+        headers: apiHeaders,
+        success: function (response) {
+            const docTypes = ["idCard", "birthCertificate"];
+            const documentTitles = ["Identity Card", "Birth Certificate"];
+            
+            // Filter documents that actually exist in response
+            const validDocuments = docTypes
+                .map((key, index) => ({ key, title: documentTitles[index] }))
+                .filter(doc => response[doc.key]);  // Check if document exists
+  
+            let modalContent = `
+                <div class="container-fluid">
+                    <div class="row mb-3">
+                        <div class="col-md-3 text-center">
+                            <img 
+                                src="${response.passportPhoto || "/assets/images/avatar.jpeg"}" 
+                                alt="Passport Photo" 
+                                class="img-fluid rounded shadow-sm profile-photo"
+                                style="max-height: 150px;"
+                                crossOrigin="anonymous"
+                            >
+                        </div>
+                        <div class="col-md-9">
+                            <h5 class="fw-bold mb-2">${response.firstname} ${response.lastname}</h5>
+                            <p class="mb-1"><strong>Phone:</strong> ${response.phone}</p>
+                            <p class="mb-1"><strong>Email:</strong> ${response.email}</p>
+                            <p class="mb-1"><strong>Status:</strong> <span class="badge bg-info">${response.status}</span></p>
+                            <p><strong>State:</strong> ${response.stateOfOrigin}</p>
+                            <p><strong>LGA:</strong> ${response.lgaOfOrigin}</p>
+                            <p><strong>Kindred:</strong> ${response.kindred}</p>
+                            <p><strong>isProfileCompleted:</strong> ${response.userId?.isProfileCompleted}</p>
+                        </div>
+                    </div>
+  
+                    <hr class="my-3">
+                    <h6 class="text-primary">Uploaded Documents</h6>
+            `;
+
+            if (validDocuments.length === 0) {
+                modalContent += `<p class="text-muted">No documents uploaded.</p>`;
+            }
+  
+            // Generate HTML for each existing document
+            validDocuments.forEach((doc, index) => {
+                const fileUrl = `${BACKEND_URL}/indigene/certificate/${requestId}/document/${doc.key}`;
+                
+                modalContent += `
+                    <div class="card my-3 shadow-sm">
+                        <div class="card-header bg-light fw-semibold">
+                            ${doc.title}
+                        </div>
+                        <div class="card-body">
+                            <div id="pdf-viewer-container-${index}" style="width:100%; height:400px;" class="pdf-container"></div>
+                            <div class="text-end mt-2">
+                               <button class="btn btn-sm btn-outline-primary me-2" onclick="window.open('${fileUrl}', '_blank')">Open in New Tab</button>
+                               <button class="btn btn-sm btn-outline-secondary" data-doc-index="${index}" data-url="${fileUrl}" onclick="downloadPDF(this)">Download</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            modalContent += `</div>`;
+            $("#viewModal .modal-body").html(modalContent);
+            $("#viewModal").modal("show");
+  
+            // Load PDFs with authorization
+            validDocuments.forEach((doc, index) => {
+                const fileUrl = `${BACKEND_URL}/indigene/certificate/${requestId}/document/${doc.key}`;
+                console.log("fileUrl", fileUrl);
+                // Show loader while fetching
+                $(`#pdf-viewer-container-${index}`).html(`
+                    <div class="d-flex justify-content-center align-items-center h-100">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                `);
+                
+                // Fetch document with authorization
+                fetch(fileUrl, {
+                    headers: {
+                        Authorization: apiHeaders.Authorization
+                    }
+                })
+                .then(res => {
+                    if (!res.ok) throw new Error("Failed to fetch PDF");
+                    return res.blob();
+                })
+                .then(blob => {
+                    const blobUrl = URL.createObjectURL(blob);
+                    loadPDFJ(
+                        blobUrl,
+                        document.getElementById(`pdf-viewer-container-${index}`)
+                    );
+                })
+                .catch(err => {
+                    console.error(`Error loading PDF [${doc.key}]:`, err);
+                    $(`#pdf-viewer-container-${index}`).html(`
+                        <div class="alert alert-danger">
+                            Failed to load document: ${err.message}
+                            <div class="mt-2">
+                                <a href="${fileUrl}" target="_blank" class="btn btn-sm btn-primary">Open in New Tab</a>
+                            </div>
+                        </div>
+                    `);
+                });
+            });
+        },
+        error: function (error) {
+            console.error("Error fetching request details:", error);
+            alert("Failed to fetch request details.");
+        },
     });
   }
 
   $(document).on("click", ".btn-cert-approve", function () {
     const requestId = $(this).data("id");
     handleApproval(requestId);
+  });
+
+  $(document).on("click", ".btn-cert-verify", function () {
+    const requestId = $(this).data("id");
+    handleVerification(requestId);
   });
 
   $(document).on("click", ".btn-cert-reject", function () {
@@ -1008,6 +1134,38 @@ $(document).ready(function () {
         Authorization: `Bearer ${token}`,
       },
       success: function (data) {
+        const requiredDocs = ["birthCertificate", "idCard", "passportPhoto"];
+
+        let uploadedCount = 0;
+
+        requiredDocs.forEach((doc) => {
+          if (data[doc]) {
+            uploadedCount++;
+          }
+        });
+
+        const totalRequired = requiredDocs.length;
+
+        if (uploadedCount === totalRequired) {
+          $(".upload-status-text")
+            .removeClass()
+            .addClass("text-success small upload-status-text")
+            .text("All documents uploaded");
+        } else if (uploadedCount > 0) {
+          $(".upload-status-text")
+            .removeClass()
+            .addClass("text-warning small upload-status-text")
+            .text("Documents partially uploaded");
+        } else {
+          $(".upload-status-text")
+            .removeClass()
+            .addClass("text-muted small upload-status-text")
+            .text("No documents uploaded");
+        }
+
+        // Update your DOM
+        $(".uploaded-count").text(`${uploadedCount} of ${totalRequired}`);
+
         const tableBody = $("#request-table");
         tableBody.empty();
 
@@ -1097,8 +1255,12 @@ $(document).ready(function () {
             </tr>
           `);
         };
-
-        $("#certificate-status").text(data.status);
+        $(".certificate-status").text(data.status);
+        $("#profile-status").text(
+          data.userId?.isProfileCompleted
+            ? "Profile Completed"
+            : "Profile Incomplete"
+        );
 
         if (data.status === "Rejected" || data.status === "Pending") {
           appendRow(true, false);
@@ -1365,7 +1527,6 @@ $(document).ready(function () {
               console.log("Payment widget closed");
             },
             callBack: function (response) {
-              console.log("Payment successful:", response);
               window.location.href = `${FRONTEND_URL}/source/src/bdic/app/success.html`;
             },
           });
@@ -1495,7 +1656,6 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-  // function fetchLatestCertificate() {
   $.ajax({
     url: `${BACKEND_URL}/indigene/certificate/latest`,
     method: "GET",
@@ -1503,18 +1663,42 @@ $(document).ready(function () {
       Authorization: `Bearer ${token}`,
     },
     success: function (latestCertificate) {
-      // Handle the single latest record
-      $("#latest-cert-request").text(
-        latestCertificate.firstname + " " + latestCertificate.lastname
-      );
+      // Function to format time ago
+      /**
+       * Formats the time difference between now and the given date.
+       * @param {string} date - The date to compare with the current time.
+       * @returns {string} - A human-readable string representing the time difference.
+       */
+      function timeAgo(date) {
+        const now = new Date();
+        const updated = new Date(date);
+        const diff = Math.floor((now - updated) / 1000); // in seconds
 
-      $("#cert-pending").text(latestCertificate.status);
+        if (diff < 60) return "just now";
+        if (diff < 3600) return `${Math.floor(diff / 60)} minute(s) ago`;
+        if (diff < 86400) return `${Math.floor(diff / 3600)} hour(s) ago`;
+        if (diff < 604800) return `${Math.floor(diff / 86400)} day(s) ago`;
+        return updated.toLocaleDateString(); // fallback to actual date
+      }
+
+      if (latestCertificate) {
+        // Handle the single latest record
+        $("#latest-cert-request").text(
+          latestCertificate.firstname + " " + latestCertificate.lastname
+        );
+
+        $("#cert-pending").text(latestCertificate.status);
+
+        const updatedTime = timeAgo(latestCertificate.updated_at);
+        $(".cert-pending-date").text(updatedTime);
+      } else {
+        console.log("No approved certificates found");
+      }
     },
     error: function (error) {
       console.error("Error fetching latest certificate:", error);
     },
   });
-  // }
 });
 
 $(document).ready(function () {
@@ -1525,12 +1709,26 @@ $(document).ready(function () {
       Authorization: `Bearer ${token}`,
     },
     success: function (latestCard) {
+      function timeAgo(date) {
+        const now = new Date();
+        const updated = new Date(date);
+        const diff = Math.floor((now - updated) / 1000); // in seconds
+
+        if (diff < 60) return "just now";
+        if (diff < 3600) return `${Math.floor(diff / 60)} minute(s) ago`;
+        if (diff < 86400) return `${Math.floor(diff / 3600)} hour(s) ago`;
+        if (diff < 604800) return `${Math.floor(diff / 86400)} day(s) ago`;
+        return updated.toLocaleDateString(); // fallback to actual date
+      }
+
       // Handle the single latest record
       $("#latest-card-request").text(
         latestCard.firstname + " " + latestCard.lastname
       );
 
       $("#card-pending").text(latestCard.status);
+      const updatedTime = timeAgo(latestCard.updated_at);
+      $(".card-pending-date").text(updatedTime);
     },
     error: function (error) {
       console.error("Error fetching latest card:", error);
@@ -1547,15 +1745,27 @@ $(document).ready(function () {
       Authorization: `Bearer ${token}`,
     },
     success: function (certificate) {
+      function timeAgo(date) {
+        const now = new Date();
+        const updated = new Date(date);
+        const diff = Math.floor((now - updated) / 1000); // in seconds
+
+        if (diff < 60) return "just now";
+        if (diff < 3600) return `${Math.floor(diff / 60)} minute(s) ago`;
+        if (diff < 86400) return `${Math.floor(diff / 3600)} hour(s) ago`;
+        if (diff < 604800) return `${Math.floor(diff / 86400)} day(s) ago`;
+        return updated.toLocaleDateString(); // fallback to actual date
+      }
+
       if (certificate) {
         // Update UI with this single record
         $("#latest-cert-approved").text(
           certificate.firstname + " " + certificate.lastname
         );
         $("#cert-approved").text(certificate.status);
-        // $("#cert-approved-date").text(
-        //   new Date(certificate.approvedAt).toLocaleDateString()
-        // );
+
+        const updatedTime = timeAgo(certificate.updated_at);
+        $(".cert-approved-date").text(updatedTime);
       } else {
         console.log("No approved certificates found");
       }
@@ -1574,12 +1784,25 @@ $(document).ready(function () {
       Authorization: `Bearer ${token}`,
     },
     success: function (card) {
+      function timeAgo(date) {
+        const now = new Date();
+        const updated = new Date(date);
+        const diff = Math.floor((now - updated) / 1000); // in seconds
+
+        if (diff < 60) return "just now";
+        if (diff < 3600) return `${Math.floor(diff / 60)} minute(s) ago`;
+        if (diff < 86400) return `${Math.floor(diff / 3600)} hour(s) ago`;
+        if (diff < 604800) return `${Math.floor(diff / 86400)} day(s) ago`;
+        return updated.toLocaleDateString(); // fallback to actual date
+      }
       if (card) {
         // Update UI with this single record
         $("#latest-card-approved").text(card.firstname + " " + card.lastname);
         $("#card-approved").text(card.status);
+        const updatedTime = timeAgo(card.updated_at);
+        $(".card-approved-date").text(updatedTime);
       } else {
-        console.log("No approved certificates found");
+        console.log("No approved card found");
       }
     },
     error: function (error) {
@@ -2602,7 +2825,7 @@ $(document).ready(function () {
   `);
         };
 
-        $("#card-status").text(data.status);
+        $(".card-status").text(data.status);
 
         if (data.status === "Rejected" || data.status === "Pending") {
           appendRow(true, false);
@@ -2882,9 +3105,7 @@ $(document).ready(function () {
                 console.log("Payment widget closed");
               },
               callBack: function (response) {
-                console.log("Payment successful:", response);
-                window.location.href =
-                  "http://127.0.0.1:5501/src/bdic/app/success.html";
+                window.location.href = `${FRONTEND_URL}/source/src/bdic/app/success.html`;
               },
             });
 
@@ -2984,8 +3205,6 @@ $(document).ready(function () {
         style: "currency",
         currency: "NGN",
       }).format(totalAmountNaira);
-      console.log(formattedAmount);
-
       $("#btnPrevTran").prop("disabled", page === 1);
       $("#btnNextTran").prop("disabled", !hasNextPage);
       $("#trans").text(formattedAmount); // Display as ₦500,000.00
@@ -3050,7 +3269,7 @@ function updateHeaderTitle() {
     "all-card": "View Card Request",
     citizens: "Users",
     certificate: "Request Certificate",
-    profile: "User Account",
+    profile: "Profile",
     transaction: "Transactions",
     login: "Login",
     card: "Request Card",
@@ -3059,6 +3278,7 @@ function updateHeaderTitle() {
     "user-kindred": "Kindreds",
     "kindred-dasboard": "Kindred Head Dashboard",
     "kindred-head": "View All Request",
+    kindred: "All Kindred Heads",
   };
 
   const pageTitle = titleMap[page] || "Dashboard";
@@ -3207,7 +3427,7 @@ function handleUpdate(userData) {
   Swal.fire({
     title: "Update User",
     html: `
-      <input id="updateMiddlename" class="swal2-input" placeholder="Middlename" value=${userData.middlename}>
+      <input id="updateMiddlename" class="swal2-input" placeholder="Email" value=${userData.email}>
       <input id="updatePhone" class="swal2-input" placeholder="Phone" value="${userData.phone}">
       <input id="updateAddress" class="swal2-input" placeholder="Address" value="${userData.address}">
       <input id="updateKindred" class="swal2-input" placeholder="Kindred" value="${userData.kindred}">
@@ -3519,6 +3739,7 @@ function filterAndMatchKindredHeadLGAs() {
             kindredHeadLGAs.includes(request.lgaOfOrigin)
           );
 
+          $("#card-request-count").text(matchingRequests.length);
           // Create a table with the matching requests
           createKindredGroupedTable(kindredHeadLGAs, matchingRequests);
         },
@@ -3554,9 +3775,6 @@ function createKindredGroupedTable(kindredHeadLGAs, matchingRequests) {
         <td></td>
         <td></td>
         <td></td>
-
-
-
       </tr>
     `);
   });
@@ -3577,23 +3795,28 @@ function createKindredGroupedTable(kindredHeadLGAs, matchingRequests) {
   } else {
     matchingRequests.forEach((request, index) => {
       const isRejected = request.status === "Rejected";
+      const isVerified = request.isVerified === true;
 
       tableBody.append(`
         <tr>
           <td>${request.lgaOfOrigin}</td>
           <td>${request.firstname} ${request.lastname}</td>
-          <td>${request.email}</td>
           <td>${request.phone}</td>
+          <td>${request.isVerified}</td>
           <td>${request.kindred}</td>
+
           <td>
             <div class="dropdown">
               <button class="btn btn-xs btn-action dropdown-toggle" data-bs-toggle="dropdown">
                 <i class="fas fa-ellipsis-v"></i>
               </button>
               <ul class="dropdown-menu">
-                <li><button class="dropdown-item btn-cert-approve" data-id="${
+                <li><button class="dropdown-item btn-cert-verify" data-id="${
                   request._id
-                }" style="color: green;">Approve</button></li>
+                }"
+                ${
+                  isVerified ? "disabled" : ""
+                }  style="color: green;">Verity Request</button></li>
                 <li><button class="dropdown-item btn-cert-reject" data-id="${
                   request._id
                 }" ${
@@ -3611,6 +3834,10 @@ function createKindredGroupedTable(kindredHeadLGAs, matchingRequests) {
     });
   }
 }
+
+$(document).ready(function () {
+  filterAndMatchKindredHeadLGAs();
+});
 
 // Trigger on button click
 $(document).on("click", "#filter-kindred-btn", function () {
@@ -3646,7 +3873,7 @@ $(document).ready(function () {
         Pending: `<span class="badge rounded-pill bg-warning text-dark">Pending</span>`,
         Rejected: `<span class="badge rounded-pill bg-danger">Rejected</span>`,
       };
-      const isRejected = item.status === "Rejected";
+
       tableBody.append(`
         <tr data-id="${item._id}">
           <td>${(currentPage - 1) * pageSize + index + 1}</td>
@@ -3678,15 +3905,30 @@ $(document).ready(function () {
 
   function fetchData(page) {
     $.ajax({
-      url: `${BACKEND_URL}/idcard/request?page=${page}&limit=${pageSize}&statuses=Pending,Rejected`,
+      url: `${BACKEND_URL}/idcard/card-request?page=${page}&limit=${pageSize}&statuses=Pending,Rejected`,
       method: "GET",
       headers: apiHeaders,
       success: function (response) {
         const { data, hasNextPage } = response;
-        console.log("data", data);
+        $("#id-request").text(data.length);
         renderTable(data);
         updatePaginationButtons(hasNextPage);
         updateRequestCount(data.length);
+
+        let pendingCount = 0;
+        let rejectedCount = 0;
+
+        data.forEach((element) => {
+          if (element.status === "Pending") {
+            pendingCount++;
+          }
+          if (element.status === "Rejected") {
+            rejectedCount++;
+          }
+        });
+
+        $("#pending").text(pendingCount);
+        $("#rejected").text(rejectedCount);
       },
       error: function (error) {
         console.error("Error fetching data:", error);
@@ -3694,20 +3936,7 @@ $(document).ready(function () {
     });
   }
 
-  function fetchData(page) {
-    $.ajax({
-      url: `${BACKEND_URL}/idcard/get-all-request`,
-      method: "GET",
-      headers: apiHeaders,
-      success: function (response) {
-        const { data } = response;
-        $("#id-request").text(response.length);
-      },
-      error: function (error) {
-        console.error("Error fetching data:", error);
-      },
-    });
-  }
+  
 
   // Handle card Approval
   function handleApproval(requestId) {
@@ -3756,111 +3985,251 @@ $(document).ready(function () {
   }
 
   // Handle card view
-  function handleView(requestId) {
-    $.ajax({
+  // function handleView(requestId) {
+  //   $.ajax({
+  //     url: `${BACKEND_URL}/idcard/${requestId}/request`,
+  //     method: "GET",
+  //     headers: apiHeaders,
+  //     success: function (response) {
+  //       const documentPaths = [
+  //         response.utilityBill,
+  //         response.ref_letter,
+  //       ].filter(Boolean);
+  //       const documentTitles = ["Utility Bill", "Reference Letter"];
+
+  //       let modalContent = `
+  //         <div class="container-fluid">
+  //           <div class="row mb-3">
+  //             <div class="col-md-3 text-center">
+  //                 <img 
+  //                 src="${
+  //                   response.userId?.passportPhoto ||
+  //                   "/assets/images/avatar.jpeg"
+  //                 }" 
+  //                 alt="Passport Photo" 
+  //                 class="img-fluid rounded shadow-sm profile-photo"
+  //                 style="max-height: 150px;"
+  //                 crossOrigin="anonymous"
+  //               >
+  //             </div>
+  //             <div class="col-md-9">
+  //               <h5 class="fw-bold mb-2">${response.firstname} ${
+  //         response.lastname
+  //       }</h5>
+  //               <p class="mb-1"><strong>Phone:</strong> ${response.phone}</p>
+  //               <p class="mb-1"><strong>Email:</strong> ${response.email}</p>
+  //               <p class="mb-1"><strong>Status:</strong> <span class="badge bg-info">${
+  //                 response.status
+  //               }</span></p>
+  //               <p><strong>State:</strong> ${response.userId?.stateOfOrigin}</p>
+  //               <p><strong>LGA:</strong> ${response.userId?.lgaOfOrigin}</p>
+  //               <p><strong>isProfileCompleted:</strong> ${
+  //                 response.userId?.isProfileCompleted
+  //               }</p>
+  //             </div>
+  //           </div>
+  
+  //           <hr class="my-3">
+  //           <h6 class="text-primary">Uploaded Documents</h6>
+  //       `;
+
+  //       if (documentPaths.length === 0) {
+  //         modalContent += `<p class="text-muted">No documents uploaded.</p>`;
+  //       }
+
+  //       documentPaths.forEach((doc, index) => {
+  //         // const filename = doc?.split("/").pop();
+  //         // const fileUrl = `${BACKEND_URL}/idcard/pdf/${filename}`;
+
+  //         const encodedUrl = encodeURIComponent(doc);
+  //         const fileUrl = `${BACKEND_URL}/idcard/pdf/${encodedUrl}`;
+
+  //         modalContent += `
+  //           <div class="card my-3 shadow-sm">
+  //             <div class="card-header bg-light fw-semibold">
+  //               ${documentTitles[index] || `Document ${index + 1}`}
+  //             </div>
+  //             <div class="card-body">
+  //               <div id="pdf-viewer-container-${index}" style="width:100%; height:400px;" class="border rounded bg-white"></div>
+  //               <div class="text-end mt-2">
+  //                 <a href="${fileUrl}" target="_blank" class="btn btn-sm btn-outline-primary me-2">Open in New Tab</a>
+  //                 <a href="${fileUrl}" download class="btn btn-sm btn-outline-secondary">Download</a>
+  //               </div>
+  //             </div>
+  //           </div>
+  //         `;
+  //       });
+
+  //       modalContent += `</div>`;
+
+  //       $("#viewModal .modal-body").html(modalContent);
+  //       $("#viewModal").modal("show");
+
+  //       // Load PDFs securely
+  //       documentPaths.forEach((doc, index) => {
+  //         // const filename = doc?.split("/").pop();
+  //         // const fileUrl = `${BACKEND_URL}/idcard/pdf/${filename}`;
+
+  //         const encodedUrl = encodeURIComponent(doc);
+  //         const fileUrl = `${BACKEND_URL}/idcard/pdf/${encodedUrl}`;
+
+  //         fetch(fileUrl, {
+  //           headers: {
+  //             Authorization: apiHeaders.Authorization,
+  //           },
+  //         })
+  //           .then((res) => {
+  //             if (!res.ok) throw new Error("Failed to fetch PDF");
+  //             return res.blob();
+  //           })
+  //           .then((blob) => {
+  //             const blobUrl = URL.createObjectURL(blob);
+  //             loadPDFJS(
+  //               blobUrl,
+  //               document.getElementById(`pdf-viewer-container-${index}`)
+  //             );
+  //           })
+  //           .catch((err) => {
+  //             console.error("Error loading secure PDF:", err.message);
+  //             $(`#pdf-viewer-container-${index}`).html(
+  //               "<p class='text-danger'>Failed to load document.</p>"
+  //             );
+  //           });
+  //       });
+  //     },
+  //     error: function (error) {
+  //       console.error("Error fetching request details:", error);
+  //     },
+  //   });
+  // }
+
+ 
+  
+
+// Handle View Modal Function
+function handleView(requestId) {
+  $.ajax({
       url: `${BACKEND_URL}/idcard/${requestId}/request`,
       method: "GET",
       headers: apiHeaders,
       success: function (response) {
-        const documentPaths = [
-          response.utilityBill,
-          response.ref_letter,
-        ].filter(Boolean);
-        const documentTitles = ["Utility Bill", "Reference Letter"];
+          const docTypes = ["utilityBill", "ref_letter"];
+          const documentTitles = ["Utility Bill", "Reference Letter"];
+          
+          // Filter documents that actually exist in response
+          const validDocuments = docTypes
+              .map((key, index) => ({ key, title: documentTitles[index] }))
+              .filter(doc => response[doc.key]);  // Check if document exists
 
-        let modalContent = `
-          <div class="container-fluid">
-            <div class="row mb-3">
-              <div class="col-md-3 text-center">
-                <img 
-                  src="${
-                    response.passportPhoto || "/assets/images/avatar.jpeg"
-                  }" 
-                  alt="Passport Photo" 
-                  class="img-fluid rounded shadow-sm"
-                  style="max-height: 150px;"
-                >
-              </div>
-              <div class="col-md-9">
-                <h5 class="fw-bold mb-2">${response.firstname} ${
-          response.lastname
-        }</h5>
-                <p class="mb-1"><strong>Phone:</strong> ${response.phone}</p>
-                <p class="mb-1"><strong>Email:</strong> ${response.email}</p>
-                <p class="mb-1"><strong>Status:</strong> <span class="badge bg-info">${
-                  response.status
-                }</span></p>
-                <p><strong>Details:</strong> ${response.details || "N/A"}</p>
-              </div>
-            </div>
-  
-            <hr class="my-3">
-            <h6 class="text-primary">Uploaded Documents</h6>
-        `;
+          let modalContent = `
+              <div class="container-fluid">
+                  <div class="row mb-3">
+                      <div class="col-md-3 text-center">
+                          <img 
+                              src="${response.userId?.passportPhoto || "/assets/images/avatar.jpeg"}" 
+                              alt="Passport Photo" 
+                              class="img-fluid rounded shadow-sm profile-photo"
+                              style="max-height: 150px;"
+                              crossOrigin="anonymous"
+                          >
+                      </div>
+                      <div class="col-md-9">
+                          <h5 class="fw-bold mb-2">${response.firstname} ${response.lastname}</h5>
+                          <p class="mb-1"><strong>Phone:</strong> ${response.phone}</p>
+                          <p class="mb-1"><strong>Email:</strong> ${response.email}</p>
+                          <p class="mb-1"><strong>Status:</strong> <span class="badge bg-info">${response.status}</span></p>
+                          <p><strong>State:</strong> ${response.userId?.stateOfOrigin}</p>
+                          <p><strong>LGA:</strong> ${response.userId?.lgaOfOrigin}</p>
+                          <p><strong>isProfileCompleted:</strong> ${response.userId?.isProfileCompleted}</p>
+                      </div>
+                  </div>
 
-        if (documentPaths.length === 0) {
-          modalContent += `<p class="text-muted">No documents uploaded.</p>`;
-        }
-
-        documentPaths.forEach((doc, index) => {
-          const filename = doc?.split("/").pop();
-          const fileUrl = `${BACKEND_URL}/idcard/pdf/${filename}`;
-
-          modalContent += `
-            <div class="card my-3 shadow-sm">
-              <div class="card-header bg-light fw-semibold">
-                ${documentTitles[index] || `Document ${index + 1}`}
-              </div>
-              <div class="card-body">
-                <div id="pdf-viewer-container-${index}" style="width:100%; height:400px;" class="border rounded bg-white"></div>
-                <div class="text-end mt-2">
-                  <a href="${fileUrl}" target="_blank" class="btn btn-sm btn-outline-primary me-2">Open in New Tab</a>
-                  <a href="${fileUrl}" download class="btn btn-sm btn-outline-secondary">Download</a>
-                </div>
-              </div>
-            </div>
+                  <hr class="my-3">
+                  <h6 class="text-primary">Uploaded Documents</h6>
           `;
-        });
 
-        modalContent += `</div>`;
+          if (validDocuments.length === 0) {
+              modalContent += `<p class="text-muted">No documents uploaded.</p>`;
+          }
 
-        $("#viewModal .modal-body").html(modalContent);
-        $("#viewModal").modal("show");
+          // Generate HTML for each existing document
+          validDocuments.forEach((doc, index) => {
+              const fileUrl = `${BACKEND_URL}/idcard/${requestId}/document/${doc.key}`;
+              
+              modalContent += `
+                  <div class="card my-3 shadow-sm">
+                      <div class="card-header bg-light fw-semibold">
+                          ${doc.title}
+                      </div>
+                      <div class="card-body">
+                          <div id="pdf-viewer-container-${index}" style="width:100%; height:400px;" class="pdf-container"></div>
+                          <div class="text-end mt-2">
+                             <button class="btn btn-sm btn-outline-primary me-2" onclick="window.open('${fileUrl}', '_blank')">Open in New Tab</button>
+                             <button class="btn btn-sm btn-outline-secondary" data-doc-index="${index}" data-url="${fileUrl}" onclick="downloadPDF(this)">Download</button>
+                          </div>
+                      </div>
+                  </div>
+              `;
+          });
+          
+          modalContent += `</div>`;
+          $("#viewModal .modal-body").html(modalContent);
+          $("#viewModal").modal("show");
 
-        // Load PDFs securely
-        documentPaths.forEach((doc, index) => {
-          const filename = doc?.split("/").pop();
-          const fileUrl = `${BACKEND_URL}/idcard/pdf/${filename}`;
-
-          fetch(fileUrl, {
-            headers: {
-              Authorization: apiHeaders.Authorization,
-            },
-          })
-            .then((res) => {
-              if (!res.ok) throw new Error("Failed to fetch PDF");
-              return res.blob();
-            })
-            .then((blob) => {
-              const blobUrl = URL.createObjectURL(blob);
-              loadPDFJS(
-                blobUrl,
-                document.getElementById(`pdf-viewer-container-${index}`)
-              );
-            })
-            .catch((err) => {
-              console.error("Error loading secure PDF:", err.message);
-              $(`#pdf-viewer-container-${index}`).html(
-                "<p class='text-danger'>Failed to load document.</p>"
-              );
-            });
-        });
+          // Load PDFs with authorization
+          validDocuments.forEach((doc, index) => {
+              const fileUrl = `${BACKEND_URL}/idcard/${requestId}/document/${doc.key}`;
+              
+              // Show loader while fetching
+              $(`#pdf-viewer-container-${index}`).html(`
+                  <div class="d-flex justify-content-center align-items-center h-100">
+                      <div class="spinner-border text-primary" role="status">
+                          <span class="visually-hidden">Loading...</span>
+                      </div>
+                  </div>
+              `);
+              
+              // Fetch document with authorization
+              fetch(fileUrl, {
+                  headers: {
+                      Authorization: apiHeaders.Authorization
+                  }
+              })
+              .then(res => {
+                  if (!res.ok) throw new Error("Failed to fetch PDF");
+                  return res.blob();
+              })
+              .then(blob => {
+                  const blobUrl = URL.createObjectURL(blob);
+                  loadPDFJ(
+                      blobUrl,
+                      document.getElementById(`pdf-viewer-container-${index}`)
+                  );
+              })
+              .catch(err => {
+                  console.error(`Error loading PDF [${doc.key}]:`, err);
+                  $(`#pdf-viewer-container-${index}`).html(`
+                      <div class="alert alert-danger">
+                          Failed to load document: ${err.message}
+                          <div class="mt-2">
+                              <a href="${fileUrl}" target="_blank" class="btn btn-sm btn-primary">Open in New Tab</a>
+                          </div>
+                      </div>
+                  `);
+              });
+          });
       },
       error: function (error) {
-        console.error("Error fetching request details:", error);
+          console.error("Error fetching request details:", error);
+          alert("Failed to fetch request details.");
       },
-    });
-  }
+  });
+}
+
+
+
+  
+  
 
   function showNotification(type, message) {
     const toastHtml = `
@@ -3884,7 +4253,7 @@ $(document).ready(function () {
 
     const eventName = `member-status-update-${user?.id}`;
 
-    const socket = io("http://localhost:5000", {
+    const socket = io(`${BACKEND_URL}`, {
       transports: ["websocket"],
     });
 
@@ -3936,9 +4305,20 @@ $(document).ready(function () {
   fetchData(currentPage);
 });
 $(document).ready(function () {
-  // Toggle sidebar on mobile
-  $("#sidebarToggle").click(function () {
+  // Toggle sidebar on button click
+  $("#sidebarToggle").click(function (e) {
+    e.stopPropagation(); // prevent the click from bubbling up to document
     $(".sidebar").toggleClass("show");
+  });
+
+  // Prevent clicks inside the sidebar from closing it
+  $(".sidebar").click(function (e) {
+    e.stopPropagation();
+  });
+
+  // Hide sidebar when clicking anywhere else in the document
+  $(document).click(function () {
+    $(".sidebar").removeClass("show");
   });
 
   // Add hover effects to cards

@@ -11,8 +11,8 @@
     <meta property="og:image" content="social-image.html" />
     <meta name="format-detection" content="telephone=no" />
     <title>
-      Benue State Integrated Residents/Citizens Identity/Indigeneship
-      Registration and Card Issuance Management System
+      Benue State Integrated Citizenship and Resident Identity Registration
+      Management System
     </title>
     <!-- Favicon icon -->
     <link
@@ -36,7 +36,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- jQuery and Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="../../unpkg.com/sweetalert%402.1.2/dist/sweetalert.min.js"></script>
+    <!-- <script src="../../unpkg.com/sweetalert%402.1.2/dist/sweetalert.min.js"></script> -->
     <link href="vendor/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet" />
   </head>
 
@@ -130,7 +130,7 @@
               width="40"
             />
             <div>
-              <h5 class="mb-0 fw-bold">BIRCIIRCIMS</h5>
+              <h5 class="mb-0 fw-bold">BICRIRMS</h5>
               <small class="text-muted" style="font-size: 0.8rem"
                 >Identity Management</small
               >
@@ -252,7 +252,7 @@
           </button>
 
           <div class="d-none d-md-block align-items-center">
-            <h5 class="mb-0 me-2">Card Request</h5>
+            <h5 class="mb-0 me-2 dashboard_bar">Card Request</h5>
             <small class="text-muted"
               >Welcome back, <span id="header-user-label"> User </span>
             </small>
@@ -330,16 +330,19 @@
                   <small class="text-muted">admin@benue.gov.ng</small>
                 </div>
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item"
+                <a href="profile.html" class="dropdown-item"
                   ><i class="fas fa-user me-2"></i> Profile</a
                 >
                 <a href="#" class="dropdown-item"
                   ><i class="fas fa-cog me-2"></i> Settings</a
                 >
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item text-danger"
-                  ><i class="fas fa-sign-out-alt me-2"></i> Logout</a
-                >
+                <a
+                  href="../../../auth/login.html"
+                  class="dropdown-item text-danger"
+                  ><i class="fas fa-sign-out-alt me-2"></i>
+                  <span onclick="logout(this)"> Logout </span>
+                </a>
               </div>
             </div>
           </div>
@@ -628,6 +631,16 @@
                 processData: false,
                 contentType: false,
                 headers: { Authorization: `Bearer ${token}` },
+                beforeSend: function () {
+                  $("button[type='submit']")
+                    .html("<i class='fa fa-spinner fa-spin'></i>")
+                    .prop("disabled", true);
+                },
+                complete: function () {
+                  $("button[type='submit']")
+                    .html("Request Certificate")
+                    .prop("disabled", false);
+                },
               });
 
               if (response && response._id) {
@@ -650,23 +663,23 @@
           });
         });
       </script>
+    </div>
 
-      <!--**********************************
+    <!--**********************************
             Content body end
         ***********************************-->
 
-      <!--**********************************
+    <!--**********************************
             Footer start
         ***********************************-->
-      <div class="footer">
-        <div class="copyright">
-          <p>Copyright ©BDIC Ltd 2025. All rights reserved.</p>
-        </div>
+    <div class="footer">
+      <div class="copyright">
+        <p>Copyright ©BDIC Ltd 2025. All rights reserved.</p>
       </div>
-      <!--**********************************
+    </div>
+    <!--**********************************
             Footer end
         ***********************************-->
-    </div>
     <!--**********************************
         Main wrapper end
     ***********************************-->
@@ -676,14 +689,12 @@
     ***********************************-->
     <!-- Required vendors -->
     <script src="vendor/sweetalert2/dist/sweetalert2.min.js"></script>
-    <script src="js/plugins-init/sweetalert.init.js"></script>
+    <!-- <script src="js/plugins-init/sweetalert.init.js"></script> -->
     <script src="vendor/global/global.min.js"></script>
     <script src="vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
     <script src="vendor/chart.js/Chart.bundle.min.js"></script>
     <script src="vendor/bootstrap-datetimepicker/js/moment.js"></script>
     <script src="vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
-
-    <script src="js/dashboard/dashboard-1.js"></script>
 
     <script src="js/custom.min.js"></script>
     <script src="js/deznav-init.js"></script>
