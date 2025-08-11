@@ -4,10 +4,9 @@ const BACKEND_URL = isDevelopment
 ? "http://localhost:5000/api"
 : "https://api.citizenship.benuestate.gov.ng/api";
 
-// const BACKEND_URL = "https://api.citizenship.benuestate.gov.ng/api";
 
 const FRONTEND_URL = isDevelopment
-? "http://127.0.0.1:5501"
+? "http://127.0.0.1:5503"
 : "https://citizenship.benuestate.gov.ng";
 
 // Get user info from localStorage
@@ -246,8 +245,6 @@ $(document).ready(function () {
           $("#disabilityStatus").val(disabilityStatus).change();
         }
 
-        // Refresh the select picker (if using Bootstrap Select)
-        // $(".selectpicker").selectpicker("refresh");
       }
 
       // Handle identification type (including 'others')
@@ -478,75 +475,6 @@ $(document).ready(function () {
     });
   };
 
-  // // Update the role of a specific user
-  // const updateRole = (userId, currentRole) => {
-  //   const roleMap = {
-  //     user: "support_admin",
-  //     support_admin: "super_admin",
-  //   };
-  //   const newRole = roleMap[currentRole];
-
-  //   if (!newRole) return;
-
-  //   const url = `${BACKEND_URL}/users/${userId}/role`;
-  //   const headers = {
-  //     super_admin: "user",
-  //     Authorization: `Bearer ${token}`,
-  //     "Content-Type": "application/json",
-  //   };
-  //   const data = JSON.stringify({ role: newRole });
-
-  //   apiRequest(
-  //     url,
-  //     "PATCH",
-  //     headers,
-  //     data,
-  //     () => {
-  //       alert("Role updated successfully!");
-  //       fetchData(currentPage.value);
-  //     },
-  //     () => alert("Failed to update role.")
-  //   );
-  // };
-
-  // // Fetch and display user details in a modern profile modal
-  // const viewDetails = (userId) => {
-  //   const url = `${BACKEND_URL}/users/${userId}`;
-  //   const headers = { Authorization: `Bearer ${token}` };
-
-  //   apiRequest(url, "GET", headers, null, (response) => {
-  //     // Construct user details dynamically
-  //     const details = `
-  //       <div class="user-profile">
-  //         <div class="profile-header">
-  //           <img 
-  //             src="${response.passportPhoto || "/assets/images/avatar.jpeg"}" 
-  //             alt="Passport Photo" 
-  //             class="profile-photo" 
-  //             crossOrigin="anonymous"
-  //           >
-  //           <h2 class="profile-name">${response.firstname} ${
-  //       response.lastname
-  //     }</h2>
-  //           <p class="profile-role">${response.role}</p>
-  //         </div>
-  //         <div class="profile-details">
-  //           <p><strong>Email:</strong> ${response.email}</p>
-  //           <p><strong>Phone:</strong> ${response.phone}</p>
-  //         </div>
-  //       </div>
-  //     `;
-  //     $("#details-modal .modal-body").html(details); // Populate modal with user details
-  //     $("#details-modal").modal("show"); // Show the
-  //   });
-  // };
-
-  // // Handle role update button clicks
-  // $("#table-body").on("click", ".update-role-btn", function () {
-  //   const userId = $(this).data("id");
-  //   const currentRole = $(this).data("role");
-  //   updateRole(userId, currentRole);
-  // });
   // Update the role of a specific user to any valid role
 const updateRole = (userId, newRole) => {
   if (!userId || !newRole) {
@@ -580,7 +508,7 @@ const viewDetails = (userId) => {
   const headers = { Authorization: `Bearer ${token}` };
 
   apiRequest(url, "GET", headers, null, (response) => {
-    const roleOptions = ["user", "support_admin", "super_admin"];
+    const roleOptions = ["user", "support_admin", "super_admin", "kindred_head"];
     const roleSelect = `
       <select id="new-role" class="form-select">
         ${roleOptions
@@ -1611,12 +1539,12 @@ $(document).ready(function () {
             channels: ["card", "bank"],
             reference: paymentRef,
             customerPhoneNumber: phone,
-            callbackUrl: `${FRONTEND_URL}/src/bdic/app/success.html`,
+            callbackUrl: `${FRONTEND_URL}/app/success.html`,
             onClose: function () {
               console.log("Payment widget closed");
             },
             callBack: function (response) {
-              window.location.href = `${FRONTEND_URL}/src/bdic/app/success.html`;
+              window.location.href = `${FRONTEND_URL}/app/success.html`;
             },
           });
 
@@ -3189,12 +3117,12 @@ $(document).ready(function () {
               channels: ["card", "bank"],
               reference: paymentRef,
               customerPhoneNumber: phone,
-              callbackUrl: `http://127.0.0.1:5501/src/bdic/app/success.html`,
+              callbackUrl: `${FRONTEND_URL}/app/success.html`,
               onClose: function () {
                 console.log("Payment widget closed");
               },
               callBack: function (response) {
-                window.location.href = `${FRONTEND_URL}/src/bdic/app/success.html`;
+                window.location.href = `${FRONTEND_URL}/app/success.html`;
               },
             });
 
@@ -4072,127 +4000,6 @@ $(document).ready(function () {
       },
     });
   }
-
-  // Handle card view
-  // function handleView(requestId) {
-  //   $.ajax({
-  //     url: `${BACKEND_URL}/idcard/${requestId}/request`,
-  //     method: "GET",
-  //     headers: apiHeaders,
-  //     success: function (response) {
-  //       const documentPaths = [
-  //         response.utilityBill,
-  //         response.ref_letter,
-  //       ].filter(Boolean);
-  //       const documentTitles = ["Utility Bill", "Reference Letter"];
-
-  //       let modalContent = `
-  //         <div class="container-fluid">
-  //           <div class="row mb-3">
-  //             <div class="col-md-3 text-center">
-  //                 <img 
-  //                 src="${
-  //                   response.userId?.passportPhoto ||
-  //                   "/assets/images/avatar.jpeg"
-  //                 }" 
-  //                 alt="Passport Photo" 
-  //                 class="img-fluid rounded shadow-sm profile-photo"
-  //                 style="max-height: 150px;"
-  //                 crossOrigin="anonymous"
-  //               >
-  //             </div>
-  //             <div class="col-md-9">
-  //               <h5 class="fw-bold mb-2">${response.firstname} ${
-  //         response.lastname
-  //       }</h5>
-  //               <p class="mb-1"><strong>Phone:</strong> ${response.phone}</p>
-  //               <p class="mb-1"><strong>Email:</strong> ${response.email}</p>
-  //               <p class="mb-1"><strong>Status:</strong> <span class="badge bg-info">${
-  //                 response.status
-  //               }</span></p>
-  //               <p><strong>State:</strong> ${response.userId?.stateOfOrigin}</p>
-  //               <p><strong>LGA:</strong> ${response.userId?.lgaOfOrigin}</p>
-  //               <p><strong>isProfileCompleted:</strong> ${
-  //                 response.userId?.isProfileCompleted
-  //               }</p>
-  //             </div>
-  //           </div>
-  
-  //           <hr class="my-3">
-  //           <h6 class="text-primary">Uploaded Documents</h6>
-  //       `;
-
-  //       if (documentPaths.length === 0) {
-  //         modalContent += `<p class="text-muted">No documents uploaded.</p>`;
-  //       }
-
-  //       documentPaths.forEach((doc, index) => {
-  //         // const filename = doc?.split("/").pop();
-  //         // const fileUrl = `${BACKEND_URL}/idcard/pdf/${filename}`;
-
-  //         const encodedUrl = encodeURIComponent(doc);
-  //         const fileUrl = `${BACKEND_URL}/idcard/pdf/${encodedUrl}`;
-
-  //         modalContent += `
-  //           <div class="card my-3 shadow-sm">
-  //             <div class="card-header bg-light fw-semibold">
-  //               ${documentTitles[index] || `Document ${index + 1}`}
-  //             </div>
-  //             <div class="card-body">
-  //               <div id="pdf-viewer-container-${index}" style="width:100%; height:400px;" class="border rounded bg-white"></div>
-  //               <div class="text-end mt-2">
-  //                 <a href="${fileUrl}" target="_blank" class="btn btn-sm btn-outline-primary me-2">Open in New Tab</a>
-  //                 <a href="${fileUrl}" download class="btn btn-sm btn-outline-secondary">Download</a>
-  //               </div>
-  //             </div>
-  //           </div>
-  //         `;
-  //       });
-
-  //       modalContent += `</div>`;
-
-  //       $("#viewModal .modal-body").html(modalContent);
-  //       $("#viewModal").modal("show");
-
-  //       // Load PDFs securely
-  //       documentPaths.forEach((doc, index) => {
-  //         // const filename = doc?.split("/").pop();
-  //         // const fileUrl = `${BACKEND_URL}/idcard/pdf/${filename}`;
-
-  //         const encodedUrl = encodeURIComponent(doc);
-  //         const fileUrl = `${BACKEND_URL}/idcard/pdf/${encodedUrl}`;
-
-  //         fetch(fileUrl, {
-  //           headers: {
-  //             Authorization: apiHeaders.Authorization,
-  //           },
-  //         })
-  //           .then((res) => {
-  //             if (!res.ok) throw new Error("Failed to fetch PDF");
-  //             return res.blob();
-  //           })
-  //           .then((blob) => {
-  //             const blobUrl = URL.createObjectURL(blob);
-  //             loadPDFJS(
-  //               blobUrl,
-  //               document.getElementById(`pdf-viewer-container-${index}`)
-  //             );
-  //           })
-  //           .catch((err) => {
-  //             console.error("Error loading secure PDF:", err.message);
-  //             $(`#pdf-viewer-container-${index}`).html(
-  //               "<p class='text-danger'>Failed to load document.</p>"
-  //             );
-  //           });
-  //       });
-  //     },
-  //     error: function (error) {
-  //       console.error("Error fetching request details:", error);
-  //     },
-  //   });
-  // }
-
- 
   
 
 // Handle View Modal Function

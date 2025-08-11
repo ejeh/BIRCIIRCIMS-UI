@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Benue State ID Card</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="../js/index.js"></script>
+
+    <style>
+      :root {
+        --benue-navy: #000080;
+        --benue-blue: #0000cd;
+        --watermark-red: rgba(255, 0, 0, 0.25);
+      }
+
+      body {
+        margin: 0;
+        padding: 20px;
+        background-color: #f1f5f9;
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      .id-card-stack {
+        display: flex;
+        flex-direction: column;
+        /* gap: 15px; */
+        width: 85.6mm;
+      }
+
+      .id-card {
+        width: 85.6mm;
+        height: 54mm;
+        background: url("/assets/images/id-front-bg.jpeg") no-repeat center
+          center;
+        background-size: cover;
+        position: relative;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .id-card-back {
+        width: 85.6mm;
+        height: 54mm;
+        background: url("/assets/images/id-back.jpeg") no-repeat center center;
+        background-size: cover;
+        position: relative;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* .id-card-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: repeating-linear-gradient(
+          45deg,
+          rgba(245, 245, 255, 0.9),
+          rgba(245, 245, 255, 0.9) 10px,
+          rgba(240, 240, 255, 0.9) 10px,
+          rgba(240, 240, 255, 0.9) 20px
+        );
+
+        z-index: 0;
+      } */
+
+      .id-card-watermark {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-30deg);
+        font-size: 3.5rem;
+        font-weight: bold;
+        color: var(--watermark-red);
+        z-index: 1;
+        opacity: 0.9;
+      }
+
+      .card-content {
+        position: relative;
+        z-index: 2;
+        padding: 8px;
+        height: calc(100% - 16px);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .header {
+        display: flex;
+        /* justify-content: space-between; */
+        justify-content: normal;
+
+        /* margin-bottom: 5px; */
+        margin-bottom: 0px;
+        align-items: center;
+      }
+
+      .logo-placeholder {
+        width: 40px;
+        height: 40px;
+      }
+
+      .title {
+        text-align: right;
+      }
+
+      .title h1 {
+        font-weight: bold;
+        color: var(--benue-navy);
+        font-size: 14px;
+        margin: 0;
+        line-height: 1.2;
+      }
+
+      .title h2 {
+        font-weight: bold;
+        color: var(--benue-blue);
+        font-size: 12px;
+        margin: 0;
+        text-align: center;
+      }
+
+      .main-content {
+        display: flex;
+        gap: 8px;
+        margin-top: 2px;
+        flex: 1;
+      }
+      .photo {
+        width: 23mm;
+        height: 25mm;
+      }
+
+      .photo-section {
+        width: 23mm;
+        height: 30mm;
+      }
+
+      .photo-placeholder {
+        width: 100%;
+        height: 100%;
+        background-color: #e0e0e0;
+        border: 1px solid #d1d5db;
+      }
+
+      .details-section {
+        flex: 1;
+        font-size: 9px;
+      }
+
+      .details-section p {
+        margin: 0px 0;
+      }
+
+      .label {
+        font-weight: bold;
+      }
+
+      .value {
+        text-transform: uppercase;
+      }
+
+      .row {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .bin-section {
+        margin-top: auto;
+        text-align: center;
+        padding: 5px 0;
+      }
+      .qr-code {
+        width: 15mm;
+        height: 15mm;
+      }
+
+      .bin-label {
+        color: #000080;
+        font-size: 10px;
+        font-weight: bold;
+        margin: 0;
+        margin-top: -3px;
+      }
+
+      .bin-number {
+        color: var(--benue-blue);
+        font-size: 20px;
+        font-weight: bold;
+        margin: 0;
+        letter-spacing: 1px;
+        margin-top: -4px;
+      }
+
+      .footer {
+        padding: 8px;
+        border-top: 1px solid #e0e0e0;
+      }
+
+      .footer-logo {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 5px;
+      }
+
+      .footer-logo-placeholder {
+        width: 50px;
+        height: 50px;
+        /* background-color: #f0f0f0;
+        border: 1px solid #ddd; */
+      }
+
+      .footer-text {
+        text-align: center;
+        font-size: 6px;
+        line-height: 1.3;
+      }
+
+      .property {
+        font-weight: bold;
+        font-size: 8px;
+      }
+
+      .contact {
+        font-style: italic;
+      }
+
+      .powered-by {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        margin-top: 5px;
+      }
+
+      .bdicl {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 60px;
+        height: 40px;
+      }
+
+      .bdicl img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+      }
+
+      .print-instructions {
+        margin-top: 20px;
+        text-align: center;
+        font-size: 14px;
+        color: #555;
+        max-width: 85.6mm;
+      }
+
+      @media print {
+        body {
+          background: none;
+          padding: 0;
+        }
+        .print-instructions {
+          display: none;
+        }
+      }
+      .go-back-btn {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        background-color: #ff6175;
+        border-color: #ff6175;
+        color: white;
+        padding: 8px 15px;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      .go-back-btn:hover {
+        background-color: #e55565;
+        border-color: #e55565;
+      }
+    </style>
+  </head>
+  <body>
+    <button class="btn btn-secondary go-back-btn" onclick="history.back()">
+      ← Go Back
+    </button>
+    <div class="id-card-stack">
+      <!-- Front Side -->
+      <div class="id-card">
+        <div class="id-card-background"></div>
+        <!-- <div class="id-card-watermark">SAMPLE</div> -->
+
+        <div class="card-content">
+          <div class="header">
+            <div class="logo-placeholder">
+              <img
+                src="/assets//images/benue-state-logo.png"
+                alt="ID Photo"
+                width="100%"
+                height="auto"
+              />
+            </div>
+            <div class="title">
+              <h1>CITIZEN/RESIDENT IDENTITY CARD</h1>
+              <h2>BENUE STATE GOVERNMENT</h2>
+            </div>
+          </div>
+
+          <div class="main-content">
+            <div class="photo-section">
+              <div class="photo-placeholder">
+                <img
+                  id="user-photo"
+                  src="{{passportPhoto}}"
+                  class="photo"
+                  alt="ID Photo"
+                  crossorigin="anonymous"
+                />
+              </div>
+            </div>
+
+            <div class="details-section">
+              <p>
+                <span class="label">SURNAME/NOM</span><br />
+                <span id="surname" class="text-muted">Loading...</span>
+              </p>
+              <p>
+                <span class="label">GIVEN NAMES/PRENDMS</span><br />
+                <span id="name" class="text-muted">Loading...</span>
+              </p>
+              <div class="row">
+                <p>
+                  <span class="label">DATE OF BIRTH</span><br />
+                  <span id="dob" class="text-muted">Loading...</span>
+                </p>
+                <div>
+                  <img class="qr-code" src="{{qrCodeUrl}}" alt="QR Code" />
+                  <p>
+                    <span class="label">SEX/SEXE</span><br />
+                    <span id="gender" class="text-muted">Loading...</span>
+                  </p>
+                </div>
+              </div>
+
+              <p>
+                <span class="label">DATE ISSUED</span><br />
+                <span id="issueDate" class="text-muted">Loading...</span>
+              </p>
+            </div>
+          </div>
+
+          <div class="bin-section">
+            <p class="bin-label">Benue State Identification Number</p>
+            <h1 id="bin" class="bin-number">Loading...</h1>
+          </div>
+        </div>
+      </div>
+
+      <!-- Back Side -->
+      <div class="id-card-back">
+        <div class="footer">
+          <div class="footer-logo">
+            <div class="footer-logo-placeholder">
+              <img
+                src="/assets//images/benue-state-logo.png"
+                alt="ID Photo"
+                width="100%"
+                height="auto"
+              />
+            </div>
+          </div>
+          <div class="footer-text">
+            <p class="property">
+              This card is the property of<br />
+              Benue state Citizen/Resident Identity Management System<br />
+              (Ministry of Communications and Digital Economy, Makurdi)
+            </p>
+            <p class="contact">
+              If found please contact:<br />
+              Kashim Ibrahim Way,Old GRA,Government House,<br />
+              Makurdi, Benue State
+            </p>
+            <div class="powered-by">
+              <span>Powered by:</span>
+              <!-- <span class="bdicl">BDiCL</span> -->
+              <span class="bdicl">
+                <img
+                  src="/assets//images/bdic-logo.png"
+                  alt="BDiCL Logo"
+                  width="100%"
+                  height="auto"
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="print-instructions">
+      <p>You may cut out these cards, fold and laminate as desired.</p>
+      <p>For your security, please DO NOT permit others to make photocopies.</p>
+    </div>
+
+    <script>
+      $(document).ready(function () {
+        // Retrieve the token from localStorage
+        let userData = localStorage.getItem("token");
+        userData = JSON.parse(userData);
+        const { token, user } = userData; // Destructure to get only the token
+
+        // Extract idCardId from the URL query parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const idCardId = urlParams.get("id");
+
+        if (idCardId) {
+          // Make the AJAX request
+          $.ajax({
+            url: `${BACKEND_URL}/idcard/${idCardId}/get`,
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            success: function (response) {
+              if (response && Object.keys(response).length > 0) {
+                const date = new Date();
+                const formattedDate = date.toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                });
+
+                const dob = new Date(user.DOB);
+                const formattedDOB = dob.toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                });
+
+                // Populate fields
+                $("#surname").text(response.lastname);
+                $("#name").text(`${response.firstname} ${user.middlename}`);
+                $("#gender").text(user.gender);
+                $("#bin").text(response.bin);
+                $("#issueDate").text(formattedDate);
+                $("#kindred").text(response.kindred);
+                $("#user-photo").attr(
+                  "src",
+                  response.userId.passportPhoto || "/assets/images/avatar.jpeg"
+                );
+                $("#dob").text(formattedDOB);
+              } else {
+                console.error("Empty data received from the backend.");
+                alert("No certificate data found.");
+              }
+            },
+
+            error: function (xhr, status, error) {
+              console.error(
+                "Error fetching certificate details:",
+                status,
+                error
+              );
+              alert(
+                "Failed to load certificate details. Please try again later."
+              );
+            },
+          });
+        } else {
+          console.error("Certificate ID not found in URL.");
+          alert("Certificate ID is missing in the URL.");
+        }
+      });
+    </script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
+
+    <script>
+      // Print functionality can be added here if needed
+      document.addEventListener("DOMContentLoaded", function () {
+        // You could add window.print() here for automatic printing
+        // or add a print button if desired
+      });
+    </script>
+  </body>
+</html>

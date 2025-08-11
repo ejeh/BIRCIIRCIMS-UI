@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+  <meta
+    http-equiv="content-type"
+    content="text/html;charset=UTF-8"
+  /><!-- /Added by HTTrack -->
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="keywords" content="dashboard" />
+    <meta name="author" content="Coinit" />
+    <meta name="robots" content="index, follow" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <meta property="og:image" content="social-image.html" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>
+      Benue State Integrated Citizenship and Resident Identity Registration
+      Management System
+    </title>
+    <!-- Favicon icon -->
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/assets/images/benue-state-logo.png"
+    />
+
+    <link
+      href="vendor/bootstrap-select/dist/css/bootstrap-select.min.css"
+      rel="stylesheet"
+    />
+    <link href="css/style.css" rel="stylesheet" />
+    <link rel="stylesheet" href="app.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+    />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+    <script src="../../unpkg.com/sweetalert%402.1.2/dist/sweetalert.min.js"></script>
+    <link href="vendor/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet" />
+    <script src="../../ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    <style>
+      tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+
+      tr.no-match {
+        display: none;
+      }
+
+      @media only screen and (max-width: 1400px) {
+        .dropdown-menu .dropdown-item {
+          padding: 0.1rem 1rem;
+          font-size: 0.8rem;
+        }
+      }
+
+      .dropdown-menu .dropdown-item {
+        padding: 0.1rem 1rem;
+        font-size: 0.8rem;
+      }
+      .dropdown-menu {
+        min-width: 7rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!--*******************
+        Preloader start
+    ********************-->
+    <div id="preloader">
+      <div class="sk-three-bounce">
+        <div class="sk-child sk-bounce1"></div>
+        <div class="sk-child sk-bounce2"></div>
+        <div class="sk-child sk-bounce3"></div>
+      </div>
+    </div>
+    <!--*******************
+        Preloader end
+    ********************-->
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="d-flex flex-column h-100">
+        <!-- Sidebar Header -->
+        <div class="p-4 border-bottom">
+          <div class="d-flex align-items-center">
+            <img
+              src="/assets/images/benue-state-logo.png"
+              alt="Benue State Logo"
+              class="me-3"
+              width="40"
+            />
+            <div>
+              <h5 class="mb-0 fw-bold">BICRIRMS</h5>
+              <small class="text-muted" style="font-size: 0.8rem"
+                >Identity Management</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar Content -->
+        <div class="flex-grow-1 py-3 px-4 overflow-auto" id="sidebar-links">
+          <div class="mb-5 p-2 text-muted" style="font-size: 0.9rem">
+            <h6
+              id="sidebar-user-label"
+              class="text-uppercase text-muted small mb-3 mt-3"
+            >
+              User
+            </h6>
+            <ul class="nav flex-column">
+              <li class="nav-item super-admin-menu">
+                <a href="index.html" class="nav-link d-flex align-items-center">
+                  <i
+                    class="bi bi-speedometer2 me-2 me-3 fs-5 text-secondary"
+                  ></i>
+                  <span> Dashboard</span>
+                </a>
+              </li>
+              <li class="nav-item super-admin-menu">
+                <a
+                  href="approvals.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi-check-circle fs-5 me-3 text-secodary"></i>
+                  <span>Approvals</span>
+                </a>
+              </li>
+              <li class="nav-item user-menu">
+                <a
+                  href="request.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi bi-file-text text-primary me-3 fs-5"></i>
+                  <span>View Certificate Statu</span>
+                </a>
+              </li>
+              <li class="nav-item user-menu">
+                <a
+                  href="idcard.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi bi-credit-card text-secondary me-3 fs-5"></i>
+                  <span>View Card status</span>
+                </a>
+              </li>
+              <li class="nav-item super-admin-menu">
+                <a
+                  href="all-request.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi bi-file-text text-secondary me-3 fs-5"></i>
+                  <span>Certificate Requests</span>
+                </a>
+              </li>
+
+              <!-- Support_addmin menu -->
+              <li class="nav-item support-admin-menu">
+                <a
+                  href="user-kindred.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi bi-file-text text-secondary me-3 fs-5"></i>
+                  <span>Kindreds</span>
+                </a>
+              </li>
+              <li class="nav-item support-admin-menu">
+                <a
+                  href="support-admin-lga.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi bi-file-text text-secondary me-3 fs-5"></i>
+                  <span>Support Admin LGA</span>
+                </a>
+              </li>
+              <li class="nav-item super-admin-menu">
+                <a
+                  href="all-card.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi bi-credit-card text-secondary me-3 fs-5"></i>
+                  <span>Card Requests</span>
+                </a>
+              </li>
+
+              <li class="nav-item super-admin-menu">
+                <a
+                  href="citizens.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi-people fs-5 text-secondary me-3"></i>
+                  <span>Users</span>
+                </a>
+              </li>
+              <li class="nav-item super-admin-menu">
+                <a
+                  href="kindred.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi-diagram-3 me-3"></i>
+                  <span>Kindreds</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  href="profile.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="bi bi-person text-secodary fs-5 me-3"></i>
+                  <span>User Account</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h6 class="text-uppercase text-muted small mb-3">Account</h6>
+            <ul class="nav flex-column">
+              <li class="nav-item mb-1">
+                <a href="#" class="nav-link d-flex align-items-center">
+                  <i class="fas fa-cog me-3"></i>
+                  <span>Settings</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  href="./auth/login.html"
+                  class="nav-link d-flex align-items-center"
+                >
+                  <i class="fas fa-sign-out-alt me-3"></i>
+                  <span onclick="logout(this)">Logout</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Sidebar Footer -->
+        <div class="p-3 border-top text-center">
+          <small class="text-muted">Powered by BDIC</small>
+          <p class="small text-muted mb-0">© 2025 All Rights Reserved</p>
+        </div>
+      </div>
+    </div>
+
+    <!--**********************************
+            Sidebar end
+        ***********************************-->
+
+    <!--**********************************
+            Content body start
+        ***********************************-->
+    <div class="main-content">
+      <!-- Header -->
+      <header class="navbar navbar-expand-lg bg-white shadow-sm px-4 py-3">
+        <div class="container-fluid">
+          <button class="btn d-lg-none" id="sidebarToggle">
+            <i class="fas fa-bars"></i>
+          </button>
+
+          <div class="d-none d-md-block align-items-center">
+            <h5 class="mb-0 me-2 dashboard_bar">All Request</h5>
+            <small class="text-muted"
+              >Welcome back, <span id="header-user-label"> User </span>
+            </small>
+          </div>
+
+          <div class="ms-auto d-flex align-items-center">
+            <div class="d-none d-md-flex position-relative me-3">
+              <i
+                class="fas fa-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"
+              ></i>
+              <input
+                type="search"
+                class="form-control ps-5"
+                id="searchInput"
+                placeholder="Search here..."
+                onkeyup="searchTable()"
+                style="width: 250px"
+              />
+            </div>
+
+            <div class="dropdown me-3">
+              <button class="btn position-relative" data-bs-toggle="dropdown">
+                <i class="fas fa-bell"></i>
+                <span
+                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notification-badge"
+                  >3</span
+                >
+              </button>
+              <div
+                class="dropdown-menu dropdown-menu-end p-0"
+                style="width: 300px"
+              >
+                <div class="p-3 border-bottom">
+                  <h6 class="mb-0">Notifications</h6>
+                </div>
+                <div class="overflow-auto" style="max-height: 300px">
+                  <a href="#" class="dropdown-item p-3 border-bottom">
+                    <div class="d-flex justify-content-between">
+                      <span class="fw-medium">New Certificate Request</span>
+                      <small class="text-muted">5 min ago</small>
+                    </div>
+                    <small class="text-muted d-block mt-1"
+                      >John Doe submitted a new certificate application</small
+                    >
+                  </a>
+                  <a href="#" class="dropdown-item p-3 border-bottom">
+                    <div class="d-flex justify-content-between">
+                      <span class="fw-medium">Card Ready for Pickup</span>
+                      <small class="text-muted">1 hour ago</small>
+                    </div>
+                    <small class="text-muted d-block mt-1"
+                      >ID Card for Jane Smith is ready for collection</small
+                    >
+                  </a>
+                  <a href="#" class="dropdown-item p-3">
+                    <div class="d-flex justify-content-between">
+                      <span class="fw-medium">System Update</span>
+                      <small class="text-muted">2 hours ago</small>
+                    </div>
+                    <small class="text-muted d-block mt-1"
+                      >Database backup completed successfully</small
+                    >
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div class="dropdown">
+              <button class="btn p-0" data-bs-toggle="dropdown">
+                <div class="avatar">AD</div>
+              </button>
+              <div class="dropdown-menu dropdown-menu-end">
+                <div class="px-4 py-3">
+                  <h6 class="mb-0">Administrator</h6>
+                  <small class="text-muted">admin@benue.gov.ng</small>
+                </div>
+                <div class="dropdown-divider"></div>
+                <a href="profile.html" class="dropdown-item"
+                  ><i class="fas fa-user me-2"></i> Profile</a
+                >
+                <a href="#" class="dropdown-item"
+                  ><i class="fas fa-cog me-2"></i> Settings</a
+                >
+                <div class="dropdown-divider"></div>
+                <a
+                  href="../../../auth/login.html"
+                  class="dropdown-item text-danger"
+                  ><i class="fas fa-sign-out-alt me-2"></i>
+                  <span onclick="logout(this)"> Logout </span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-xl-12">
+            <div class="filter cm-content-box box-primary mt-5">
+              <div class="cm-content-body form excerpt">
+                <div class="card-body">
+                  <div class="table-responsive" data-pattern="priority-columns">
+                    <div class="card-header">
+                      <h5 class="card-title">LGA Matching Report</h5>
+                      <button
+                        id="filter-lga-btn"
+                        class="btn btn-primary btn-sm"
+                      >
+                        Generate Report
+                      </button>
+                    </div>
+                    <div class="card-body">
+                      <table
+                        id="dataTable"
+                        class="table table-small-font mb-10 table-bordered table-striped table-hover"
+                      >
+                        <thead class="table-dark">
+                          <tr>
+                            <th>LGA</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Kindred</th>
+                          </tr>
+                        </thead>
+                        <tbody id="lga-match-table">
+                          <!-- Table will be populated by JavaScript -->
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        function logout() {
+          localStorage.removeItem("token");
+        }
+      </script>
+    </div>
+    <!--**********************************
+            Content body end
+        ***********************************-->
+
+    <!--**********************************
+            Footer start
+        ***********************************-->
+    <div class="footer">
+      <div class="copyright">
+        <p>Copyright ©BDIC Ltd 2025. All rights reserved.</p>
+      </div>
+    </div>
+
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!--**********************************
+        Scripts
+    ***********************************-->
+    <!-- Required vendors -->
+    <script src="vendor/sweetalert2/dist/sweetalert2.min.js"></script>
+    <script src="js/plugins-init/sweetalert.init.js"></script>
+    <script src="vendor/global/global.min.js"></script>
+    <script src="vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+    <script src="vendor/chart.js/Chart.bundle.min.js"></script>
+    <script src="vendor/bootstrap-datetimepicker/js/moment.js"></script>
+    <script src="vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+
+    <script src="js/custom.min.js"></script>
+    <script src="js/deznav-init.js"></script>
+    <script src="js/demo.js"></script>
+    <script type="text/javascript" src="../js/index.js"></script>
+  </body>
+</html>

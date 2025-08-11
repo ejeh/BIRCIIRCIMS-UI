@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Biometric Identity Verification</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary-color: #2563eb;
+        --primary-light: #dbeafe;
+        --accent-color: #059669;
+        --accent-light: #d1fae5;
+        --warning-color: #d97706;
+        --warning-light: #fef3c7;
+        --danger-color: #dc2626;
+        --danger-light: #fee2e2;
+        --info-color: #0891b2;
+        --info-light: #cffafe;
+      }
+
+      body {
+        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        min-height: 100vh;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      .card {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+      }
+
+      .step-header {
+        background: linear-gradient(135deg, var(--primary-color), #1d4ed8);
+        color: white;
+        border-radius: 16px 16px 0 0;
+        padding: 1.5rem;
+      }
+
+      .step-number {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-right: 0.75rem;
+      }
+
+      #video-container {
+        position: relative;
+        max-width: 480px;
+        margin: 0 auto;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #000;
+      }
+
+      #video-preview {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      #overlay-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+
+      .status-indicator {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .status-ready {
+        background: var(--accent-light);
+        color: var(--accent-color);
+      }
+
+      .status-waiting {
+        background: var(--warning-light);
+        color: var(--warning-color);
+      }
+
+      .finger-box {
+        aspect-ratio: 1;
+        border: 2px dashed #dee2e6;
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: #f8f9fa;
+        min-height: 120px;
+      }
+
+      .finger-box:hover {
+        border-color: var(--primary-color);
+        background: var(--primary-light);
+      }
+
+      .finger-box.scanning {
+        border-color: var(--primary-color);
+        background: var(--primary-light);
+        border-style: solid;
+        animation: pulse 1.5s infinite;
+      }
+
+      .finger-box.success {
+        border-color: var(--accent-color);
+        background: var(--accent-light);
+        border-style: solid;
+      }
+
+      .finger-box.failed {
+        border-color: var(--danger-color);
+        background: var(--danger-light);
+        border-style: solid;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+      }
+
+      .progress-ring {
+        width: 60px;
+        height: 60px;
+        transform: rotate(-90deg);
+      }
+
+      .progress-ring-circle {
+        stroke: var(--accent-color);
+        stroke-width: 4;
+        fill: transparent;
+        stroke-dasharray: 188.5;
+        stroke-dashoffset: 188.5;
+        transition: stroke-dashoffset 0.5s ease;
+      }
+
+      .btn-capture {
+        background: linear-gradient(135deg, var(--accent-color), #047857);
+        border: none;
+        color: white;
+        padding: 12px 32px;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .btn-capture:hover {
+        background: linear-gradient(135deg, #047857, var(--accent-color));
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(5, 150, 105, 0.3);
+      }
+
+      .btn-capture:disabled {
+        background: #6b7280;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .tips-section {
+        background: rgba(var(--info-color), 0.1);
+        border-left: 4px solid var(--info-color);
+        border-radius: 8px;
+        padding: 1rem;
+      }
+
+      .toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1050;
+      }
+
+      .custom-toast {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      }
+
+      .spinner {
+        width: 20px;
+        height: 20px;
+        border: 2px solid transparent;
+        border-top: 2px solid currentColor;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container py-5">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold text-primary mb-3">
+              <i class="fas fa-shield-alt me-3"></i>
+              Biometric Identity Verification
+            </h2>
+            <p class="lead text-muted">
+              Secure identity verification using facial recognition and
+              fingerprint technology
+            </p>
+          </div>
+
+          <!-- Step 1: Facial Capture -->
+          <div class="card mb-4" id="facial-step">
+            <div class="step-header">
+              <h4 class="mb-0">
+                <span class="step-number">1</span>
+                <i class="fas fa-camera me-2"></i>
+                Facial Recognition
+              </h4>
+              <p class="mb-0 mt-2 opacity-75">
+                Position your face within the oval and ensure good lighting
+              </p>
+            </div>
+            <div class="card-body p-4">
+              <div id="video-container" class="mb-4">
+                <video id="video-preview" autoplay muted playsinline></video>
+                <canvas id="overlay-canvas"></canvas>
+                <div id="face-status" class="status-indicator status-waiting">
+                  <i class="fas fa-exclamation-circle"></i>
+                  <span>Position face</span>
+                </div>
+              </div>
+
+              <div class="text-center mb-4">
+                <button
+                  class="btn btn-capture btn-lg"
+                  id="capture-btn"
+                  disabled
+                >
+                  <i class="fas fa-camera me-2"></i>
+                  <span id="capture-text">Capture Face</span>
+                </button>
+              </div>
+
+              <div
+                id="photo-preview-container"
+                class="text-center mb-4"
+                style="display: none"
+              >
+                <p class="text-success fw-semibold mb-2">
+                  <i class="fas fa-check-circle me-1"></i>
+                  Capture successful!
+                </p>
+                <img
+                  id="photo-preview"
+                  class="img-fluid rounded border"
+                  style="max-width: 200px"
+                />
+              </div>
+
+              <div class="tips-section">
+                <h6 class="fw-semibold mb-2">
+                  <i class="fas fa-lightbulb me-2"></i>
+                  Tips for best results:
+                </h6>
+                <ul class="mb-0 small">
+                  <li>Ensure your face is well-lit and clearly visible</li>
+                  <li>Look directly at the camera</li>
+                  <li>Remove sunglasses or face coverings</li>
+                  <li>Keep your face centered in the oval</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: Fingerprint Capture -->
+          <div class="card mb-4" id="fingerprint-step">
+            <div class="step-header">
+              <h4 class="mb-0">
+                <span class="step-number">2</span>
+                <i class="fas fa-fingerprint me-2"></i>
+                Fingerprint Capture
+              </h4>
+              <p class="mb-0 mt-2 opacity-75">
+                Tap each fingerprint area to scan. Place your finger firmly on
+                the scanner surface
+              </p>
+            </div>
+            <div class="card-body p-4">
+              <div class="row mb-4">
+                <div
+                  class="col-6 d-flex justify-content-between align-items-center"
+                >
+                  <span class="fw-semibold">Progress</span>
+                  <span class="text-muted" id="progress-text"
+                    >0/4 captured</span
+                  >
+                </div>
+                <div class="col-6 d-flex justify-content-end">
+                  <svg class="progress-ring">
+                    <circle
+                      class="progress-ring-circle"
+                      cx="30"
+                      cy="30"
+                      r="30"
+                      id="progress-circle"
+                    ></circle>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="progress mb-4" style="height: 8px">
+                <div
+                  class="progress-bar bg-success"
+                  id="fingerprint-progress"
+                  style="width: 0%"
+                ></div>
+              </div>
+
+              <div class="row g-3 mb-4">
+                <div class="col-6">
+                  <div class="finger-box" data-finger="left-thumb">
+                    <i class="fas fa-fingerprint fa-2x text-muted mb-2"></i>
+                    <span class="fw-semibold">Left Thumb</span>
+                    <small class="text-muted">Tap to scan</small>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="finger-box" data-finger="left-index">
+                    <i class="fas fa-fingerprint fa-2x text-muted mb-2"></i>
+                    <span class="fw-semibold">Left Index</span>
+                    <small class="text-muted">Tap to scan</small>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="finger-box" data-finger="right-thumb">
+                    <i class="fas fa-fingerprint fa-2x text-muted mb-2"></i>
+                    <span class="fw-semibold">Right Thumb</span>
+                    <small class="text-muted">Tap to scan</small>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="finger-box" data-finger="right-index">
+                    <i class="fas fa-fingerprint fa-2x text-muted mb-2"></i>
+                    <span class="fw-semibold">Right Index</span>
+                    <small class="text-muted">Tap to scan</small>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                id="fingerprint-complete"
+                class="text-center p-4 rounded"
+                style="background: var(--accent-light); display: none"
+              >
+                <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
+                <p class="fw-semibold text-success mb-1">
+                  All fingerprints captured successfully!
+                </p>
+                <p class="text-muted small mb-0">
+                  Proceeding to consent form...
+                </p>
+              </div>
+
+              <div class="tips-section">
+                <h6 class="fw-semibold mb-2">
+                  <i class="fas fa-lightbulb me-2"></i>
+                  Fingerprint scanning tips:
+                </h6>
+                <ul class="mb-0 small">
+                  <li>Place your finger flat on the scanning area</li>
+                  <li>Apply gentle, consistent pressure</li>
+                  <li>Keep your finger still during scanning</li>
+                  <li>Clean your fingers if scans repeatedly fail</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3: Consent Form -->
+          <div class="card mb-4" id="consent-step">
+            <div class="step-header">
+              <h4 class="mb-0">
+                <span class="step-number">3</span>
+                <i class="fas fa-shield-check me-2"></i>
+                Privacy & Consent
+              </h4>
+              <p class="mb-0 mt-2 opacity-75">
+                Please review and accept our biometric data usage terms
+              </p>
+            </div>
+            <div class="card-body p-4">
+              <div class="bg-light rounded p-4 mb-4">
+                <h6 class="fw-semibold mb-3">
+                  <i class="fas fa-info-circle me-2"></i>
+                  Biometric Data Usage & Privacy
+                </h6>
+                <p class="small mb-3">
+                  Your biometric data (facial image and fingerprints) will be
+                  used exclusively for identity verification purposes. We
+                  implement enterprise-grade security measures to protect your
+                  sensitive information.
+                </p>
+
+                <div class="row g-3 mb-3">
+                  <div class="col-md-6">
+                    <div class="d-flex align-items-start">
+                      <i class="fas fa-lock text-primary me-2 mt-1"></i>
+                      <div>
+                        <strong class="small">Secure Storage</strong>
+                        <p class="small text-muted mb-0">
+                          Data encrypted with AES-256 encryption
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="d-flex align-items-start">
+                      <i class="fas fa-user-shield text-primary me-2 mt-1"></i>
+                      <div>
+                        <strong class="small">Privacy Protected</strong>
+                        <p class="small text-muted mb-0">
+                          Never shared with third parties
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="d-flex align-items-start">
+                      <i class="fas fa-clock text-primary me-2 mt-1"></i>
+                      <div>
+                        <strong class="small">Limited Retention</strong>
+                        <p class="small text-muted mb-0">
+                          Automatically deleted after verification
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="d-flex align-items-start">
+                      <i class="fas fa-gavel text-primary me-2 mt-1"></i>
+                      <div>
+                        <strong class="small">Legal Compliance</strong>
+                        <p class="small text-muted mb-0">
+                          GDPR and CCPA compliant
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-check mb-4">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="consent-checkbox"
+                />
+                <label
+                  class="form-check-label fw-semibold"
+                  for="consent-checkbox"
+                >
+                  I consent to the collection and processing of my biometric
+                  data for identity verification purposes, and I have read and
+                  understood the privacy terms above.
+                </label>
+              </div>
+
+              <div class="form-check mb-4">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="retention-checkbox"
+                />
+                <label class="form-check-label" for="retention-checkbox">
+                  I understand that my biometric data will be securely stored
+                  and automatically deleted after the verification process is
+                  complete.
+                </label>
+              </div>
+
+              <div class="text-center">
+                <button
+                  class="btn btn-primary btn-lg px-5"
+                  id="submit-btn"
+                  disabled
+                >
+                  <i class="fas fa-check me-2"></i>
+                  <span id="submit-text">Confirm & Submit</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        // Global variables
+        let stream = null;
+        let faceDetected = false;
+        let capturedImageBlob = null;
+        let capturedFingers = {};
+        let isCapturing = false;
+
+        // Initialize camera
+        async function initCamera() {
+          try {
+            stream = await navigator.mediaDevices.getUserMedia({
+              video: {
+                width: { ideal: 640 },
+                height: { ideal: 480 },
+                facingMode: "user",
+              },
+            });
+
+            const video = document.getElementById("video-preview");
+            const canvas = document.getElementById("overlay-canvas");
+
+            video.srcObject = stream;
+
+            video.onloadedmetadata = function () {
+              canvas.width = video.videoWidth;
+              canvas.height = video.videoHeight;
+              startFaceDetection();
+            };
+          } catch (error) {
+            console.error("Camera access failed:", error);
+            showToast(
+              "Camera Error",
+              "Unable to access camera. Please check permissions.",
+              "danger"
+            );
+          }
+        }
+
+        // Simple face detection simulation
+        function startFaceDetection() {
+          setInterval(() => {
+            const detected = Math.random() > 0.3; // 70% detection rate
+            faceDetected = detected;
+            updateFaceStatus(detected);
+            drawFaceOverlay(detected);
+          }, 500);
+        }
+
+        function updateFaceStatus(detected) {
+          const statusEl = $("#face-status");
+          const captureBtn = $("#capture-btn");
+
+          if (detected) {
+            statusEl.removeClass("status-waiting").addClass("status-ready");
+            statusEl.html(
+              '<i class="fas fa-check-circle"></i><span>Ready</span>'
+            );
+            captureBtn.prop("disabled", false);
+          } else {
+            statusEl.removeClass("status-ready").addClass("status-waiting");
+            statusEl.html(
+              '<i class="fas fa-exclamation-circle"></i><span>Position face</span>'
+            );
+            captureBtn.prop("disabled", true);
+          }
+        }
+
+        function drawFaceOverlay(detected) {
+          const canvas = document.getElementById("overlay-canvas");
+          const ctx = canvas.getContext("2d");
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          if (canvas.width > 0 && canvas.height > 0) {
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2 - 20;
+            const radiusX = 120;
+            const radiusY = 150;
+
+            ctx.beginPath();
+            ctx.ellipse(centerX, centerY, radiusX, radiusY, 0, 0, 2 * Math.PI);
+            ctx.strokeStyle = detected ? "#059669" : "#d97706";
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            ctx.fillStyle = detected ? "#059669" : "#d97706";
+            ctx.font = "16px Arial";
+            ctx.textAlign = "center";
+            ctx.fillText(
+              detected ? "Face Detected!" : "Position your face in the oval",
+              centerX,
+              centerY + radiusY + 30
+            );
+          }
+        }
+
+        // Capture face photo
+        $("#capture-btn").click(function () {
+          if (!faceDetected || isCapturing) return;
+
+          isCapturing = true;
+          $(this).prop("disabled", true);
+          $("#capture-text").html(
+            '<div class="spinner me-2"></div>Capturing...'
+          );
+
+          setTimeout(() => {
+            const video = document.getElementById("video-preview");
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            ctx.drawImage(video, 0, 0);
+
+            canvas.toBlob(
+              (blob) => {
+                capturedImageBlob = blob;
+                const preview = document.getElementById("photo-preview");
+                preview.src = URL.createObjectURL(blob);
+                $("#photo-preview-container").show();
+
+                $("#capture-text").html(
+                  '<i class="fas fa-check me-2"></i>Captured!'
+                );
+                showToast(
+                  "Success!",
+                  "Facial image captured successfully.",
+                  "success"
+                );
+                isCapturing = false;
+              },
+              "image/jpeg",
+              0.95
+            );
+          }, 1000);
+        });
+
+        // Fingerprint capture
+        $(".finger-box").click(function () {
+          const fingerId = $(this).data("finger");
+          const fingerName = $(this).find("span").first().text();
+
+          if ($(this).hasClass("scanning") || $(this).hasClass("success"))
+            return;
+
+          scanFinger($(this), fingerId, fingerName);
+        });
+
+        function scanFinger($box, fingerId, fingerName) {
+          $box.removeClass("failed").addClass("scanning");
+          $box.html(`
+                    <div class="spinner fa-2x text-primary mb-2"></div>
+                    <span class="fw-semibold">Scanning...</span>
+                    <small class="text-muted">Keep finger still</small>
+                `);
+
+          setTimeout(() => {
+            const success = Math.random() > 0.1; // 90% success rate
+
+            if (success) {
+              capturedFingers[fingerId] = `print-${fingerId}-${Date.now()}`;
+              $box.removeClass("scanning").addClass("success");
+              $box.html(`
+                            <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
+                            <span class="fw-semibold">Captured</span>
+                            <button class="btn btn-sm btn-outline-secondary mt-1" onclick="retryFinger('${fingerId}')">
+                                <i class="fas fa-redo fa-xs me-1"></i>Retry
+                            </button>
+                        `);
+
+              updateFingerprintProgress();
+              showToast(
+                "Success!",
+                `${fingerName} captured successfully.`,
+                "success"
+              );
+            } else {
+              $box.removeClass("scanning").addClass("failed");
+              $box.html(`
+                            <i class="fas fa-times-circle fa-2x text-danger mb-2"></i>
+                            <span class="fw-semibold">Failed</span>
+                            <small class="text-muted">Try again in 2s</small>
+                        `);
+
+              showToast(
+                "Scan Failed",
+                `${fingerName} scan failed. Please try again.`,
+                "danger"
+              );
+
+              setTimeout(() => {
+                $box.removeClass("failed");
+                $box.html(`
+                                <i class="fas fa-fingerprint fa-2x text-muted mb-2"></i>
+                                <span class="fw-semibold">${fingerName}</span>
+                                <small class="text-muted">Tap to scan</small>
+                            `);
+              }, 2000);
+            }
+          }, 2000);
+        }
+
+        window.retryFinger = function (fingerId) {
+          delete capturedFingers[fingerId];
+          const $box = $(`.finger-box[data-finger="${fingerId}"]`);
+          const fingerName = $box.find("span").first().text();
+
+          $box.removeClass("success");
+          $box.html(`
+                    <i class="fas fa-fingerprint fa-2x text-muted mb-2"></i>
+                    <span class="fw-semibold">${fingerName}</span>
+                    <small class="text-muted">Tap to scan</small>
+                `);
+
+          updateFingerprintProgress();
+        };
+
+        function updateFingerprintProgress() {
+          const count = Object.keys(capturedFingers).length;
+          const percentage = (count / 4) * 100;
+
+          $("#progress-text").text(`${count}/4 captured`);
+          $("#fingerprint-progress").css("width", `${percentage}%`);
+
+          // Update progress ring
+          const circumference = 2 * Math.PI * 30;
+          const offset = circumference - (percentage / 100) * circumference;
+          $("#progress-circle").css("stroke-dashoffset", offset);
+
+          if (count === 4) {
+            $("#fingerprint-complete").show();
+            showToast(
+              "Complete!",
+              "All fingerprints captured successfully!",
+              "success"
+            );
+          }
+        }
+
+        // Consent form
+        $("#consent-checkbox, #retention-checkbox").change(function () {
+          const consentChecked = $("#consent-checkbox").is(":checked");
+          const retentionChecked = $("#retention-checkbox").is(":checked");
+          $("#submit-btn").prop(
+            "disabled",
+            !(consentChecked && retentionChecked)
+          );
+        });
+
+        // Submit form
+        $("#submit-btn").click(async function () {
+          const fingerCount = Object.keys(capturedFingers).length;
+
+          if (!capturedImageBlob) {
+            showToast(
+              "Incomplete",
+              "Please complete facial capture first.",
+              "warning"
+            );
+            return;
+          }
+
+          if (fingerCount < 4) {
+            showToast(
+              "Incomplete",
+              "Please capture all 4 fingerprints.",
+              "warning"
+            );
+            return;
+          }
+
+          $(this).prop("disabled", true);
+          $("#submit-text").html(
+            '<div class="spinner me-2"></div>Processing...'
+          );
+
+          const fingerprintJson = JSON.stringify(capturedFingers);
+          const key = await window.crypto.subtle.generateKey(
+            { name: "AES-GCM", length: 256 },
+            true,
+            ["encrypt", "decrypt"]
+          );
+
+          const iv = window.crypto.getRandomValues(new Uint8Array(12));
+
+          // Encrypt fingerprint JSON
+          const encryptedFingers = await window.crypto.subtle.encrypt(
+            { name: "AES-GCM", iv },
+            key,
+            new TextEncoder().encode(fingerprintJson)
+          );
+
+          // Encrypt facial image blob
+          const imageArrayBuffer = await capturedImageBlob.arrayBuffer();
+          const encryptedImage = await window.crypto.subtle.encrypt(
+            { name: "AES-GCM", iv },
+            key,
+            imageArrayBuffer
+          );
+
+          // Export key
+          const exportedKey = await window.crypto.subtle.exportKey("raw", key);
+          const keyBase64 = btoa(
+            String.fromCharCode(...new Uint8Array(exportedKey))
+          );
+          const ivBase64 = btoa(String.fromCharCode(...iv));
+          const encryptedFingersBase64 = btoa(
+            String.fromCharCode(...new Uint8Array(encryptedFingers))
+          );
+          const encryptedImageBlob = new Blob([encryptedImage], {
+            type: "application/octet-stream", // important
+          });
+
+          // Simulate API call
+          // setTimeout(() => {
+          const formData = new FormData();
+          // formData.append("facialImage", capturedImageBlob, "face.jpg");
+          // formData.append("fingers", JSON.stringify(capturedFingers));
+          formData.append("facialImage", encryptedImageBlob, "face.enc");
+          formData.append("fingers", encryptedFingersBase64);
+          formData.append("key", keyBase64); // Add this
+          formData.append("iv", ivBase64); // Add this
+          formData.append("consent", "true");
+          formData.append("userId", user.id);
+
+          console.log("FormData contents:");
+          for (let [key, value] of formData.entries()) {
+            console.log(key, value);
+          }
+
+          fetch(`${BACKEND_URL}/biometric/biometric-upload`, {
+            method: "POST",
+            body: formData,
+          })
+            .then((res) => res.json())
+            .then((data) =>
+              //   alert("Biometric data uploaded successfully."))
+              //   .catch((err) => {
+              //     alert("Upload failed.");
+              //     console.error(err.message);
+              //   });
+
+              // $("#submit-text").html(
+              //   '<i class="fas fa-check me-2"></i>Submitted!'
+              // );
+              // showToast(
+              //   "Success!",
+              //   "Biometric data submitted successfully!",
+              //   "success"
+              // );
+              {
+                showToast(
+                  "Success!",
+                  "Biometric data submitted successfully!",
+                  "success"
+                );
+                $("#submit-text").html(
+                  '<i class="fas fa-check me-2"></i>Submitted!'
+                );
+
+                // Show completion message
+                setTimeout(() => {
+                  $(".container").html(`
+                            <div class="row justify-content-center">
+                                <div class="col-md-6 text-center">
+                                    <div class="card">
+                                        <div class="card-body p-5">
+                                            <i class="fas fa-check-circle fa-4x text-success mb-4"></i>
+                                            <h3 class="text-success mb-3">Verification Complete!</h3>
+                                            <p class="text-muted">Your biometric data has been successfully captured and processed.</p>
+                                            <button class="btn btn-primary mt-3" onclick="location.reload()">Start New Verification</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `);
+                }, 2000);
+                // }, 2000);
+              }
+            )
+            .catch((err) => {
+              alert("Upload failed.");
+              console.error(err.message);
+            });
+        });
+
+        // Toast notification function
+        function showToast(title, message, type = "info") {
+          const toastId = "toast-" + Date.now();
+          const bgClass =
+            type === "success"
+              ? "bg-success"
+              : type === "danger"
+              ? "bg-danger"
+              : type === "warning"
+              ? "bg-warning"
+              : "bg-info";
+
+          const toastHtml = `
+                    <div class="toast custom-toast ${bgClass} text-white" id="${toastId}" role="alert">
+                        <div class="toast-header ${bgClass} text-white border-0">
+                            <i class="fas fa-${
+                              type === "success"
+                                ? "check-circle"
+                                : type === "danger"
+                                ? "exclamation-circle"
+                                : type === "warning"
+                                ? "exclamation-triangle"
+                                : "info-circle"
+                            } me-2"></i>
+                            <strong class="me-auto">${title}</strong>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+                        </div>
+                        <div class="toast-body">
+                            ${message}
+                        </div>
+                    </div>
+                `;
+
+          $(".toast-container").append(toastHtml);
+          const toast = new bootstrap.Toast(document.getElementById(toastId));
+          toast.show();
+
+          // Remove toast element after it's hidden
+          document
+            .getElementById(toastId)
+            .addEventListener("hidden.bs.toast", function () {
+              this.remove();
+            });
+        }
+
+        // Initialize camera on page load
+        initCamera();
+      });
+    </script>
+    <script type="text/javascript" src="../js/index.js"></script>
+  </body>
+</html>
