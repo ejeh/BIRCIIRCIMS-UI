@@ -1,1676 +1,1571 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-      Benue State Integrated Citizenship and Resident Identity Registration
-      Management System
-    </title>
-    <!-- Bootstrap CSS -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="styles.css" />
-    <!-- Font Awesome for icons -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
 
-    <link
-      rel="icon"
-      type="image/png"
-      href="/assets/images/benue-state-logo.png"
-      sizes="16x16"
-    />
-    <!-- <script src="../src/ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script> -->
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>
+    Benue State Integrated Citizenship and Resident Identity Registration
+    Management System
+  </title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-    <script type="text/javascript" src="../../js/index.js"></script>
-    <style>
-      .progress-indicator {
-        width: 3px;
-        height: 1px;
-      }
-      .progress-indicator.active {
-        background-color: #198754;
-      }
-      .progress-indicator.inactive {
-        background-color: #dee2e6;
-      }
-      .password-validation .valid {
-        color: #198754;
-      }
-      .password-validation .invalid {
-        color: #6c757d;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container-fluid p-0">
-      <div class="row g-0">
-        <!-- Green sidebar -->
-        <div class="col-md-5 green-sidebar p-4 text-white d-flex flex-column">
-          <div class="d-flex align-items-center mb-4">
-            <a href="../index.html">
-              <div class="benue-logo me-3"></div>
-            </a>
+  <link rel="icon" type="image/png" href="/assets/images/benue-state-logo.png" sizes="16x16" />
+  <!-- <script src="../src/ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script> -->
+
+  <script type="text/javascript" src="../../js/index.js"></script>
+  <style>
+    .progress-indicator {
+      width: 3px;
+      height: 1px;
+    }
+
+    .progress-indicator.active {
+      background-color: #198754;
+    }
+
+    .progress-indicator.inactive {
+      background-color: #dee2e6;
+    }
+
+    .password-validation .valid {
+      color: #198754;
+    }
+
+    .password-validation .invalid {
+      color: #6c757d;
+    }
+
+    .step-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .step-buttons .btn {
+      flex: 1;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container-fluid p-0">
+    <div class="row g-0">
+      <!-- Green sidebar -->
+      <div class="col-md-5 green-sidebar p-4 text-white d-flex flex-column">
+        <div class="d-flex align-items-center mb-4">
+          <a href="/source/index.html">
+            <div class="benue-logo me-3"></div>
+          </a>
+        </div>
+
+        <h2 class="fs-3 fw-bold mb-2">Benue State Integrated</h2>
+        <h2 class="fs-3 fw-bold mb-1">Citizenship and Resident Identity</h2>
+        <h2 class="fs-3 fw-bold mb-1">Registration Management System</h2>
+
+        <!-- Mobile buttons -->
+        <div class="d-flex d-md-none gap-3 mb-4 w-100">
+          <a href="register.html" class="btn btn-light text-success flex-grow-1">Register</a>
+          <a href="login.html" class="btn btn-outline-light flex-grow-1">Log in</a>
+        </div>
+
+        <!-- Certificate image -->
+        <div class="mt-3 mb-4 rounded overflow-hidden">
+          <img src="/assets/images/man-holding-a-cert.png" alt="Person holding certificate" class="img-fluid rounded" />
+        </div>
+      </div>
+
+      <!-- Registration form -->
+      <div class="col-md-7 p-4 p-md-5">
+        <div class="d-none d-md-flex justify-content-end mb-4">
+          <a href="register.html" class="btn btn-success">Register</a>
+        </div>
+
+        <h2 class="fs-4 fw-bold mb-4">
+          Hello there! Please enter your details to get started
+        </h2>
+        <div class="d-flex justify-content-center gap-3 mt-4">
+          <div class="d-flex align-items-center">
+            <div class="progress-indicator rounded me-2 active" id="step1-indicator"></div>
+            <span class="small text-success" id="step1-text">Personal info.</span>
           </div>
-
-          <h2 class="fs-3 fw-bold mb-2">Benue State Integrated</h2>
-          <h2 class="fs-3 fw-bold mb-1">Citizenship and Resident Identity</h2>
-          <h2 class="fs-3 fw-bold mb-1">Registration Management System</h2>
-
-          <!-- Mobile buttons -->
-          <div class="d-flex d-md-none gap-3 mb-4 w-100">
-            <a
-              href="register.html"
-              class="btn btn-light text-success flex-grow-1"
-              >Register</a
-            >
-            <a href="login.html" class="btn btn-outline-light flex-grow-1"
-              >Log in</a
-            >
-          </div>
-
-          <!-- Certificate image -->
-          <div class="mt-3 mb-4 rounded overflow-hidden">
-            <img
-              src="/assets/images/man-holding-a-cert.png"
-              alt="Person holding certificate"
-              class="img-fluid rounded"
-            />
+          <div class="d-flex align-items-center">
+            <div class="progress-indicator rounded me-2 inactive" id="step2-indicator"></div>
+            <span class="small text-muted" id="step2-text">Personal info</span>
           </div>
         </div>
 
-        <!-- Registration form -->
-        <div class="col-md-7 p-4 p-md-5">
-          <div class="d-none d-md-flex justify-content-end mb-4">
-            <a href="register.html" class="btn btn-success">Register</a>
-          </div>
+        <form id="signUpForm">
+          <div id="step1" class="step-content">
+            <div class="row g-3">
+              <!-- NIN -->
+              <div class="col-md-4">
+                <label for="nin" class="form-label">NIN</label>
+                <input type="text" class="form-control" id="NIN" name="NIN" maxlength="11" minlength="11" required
+                  inputmode="numeric" pattern="\d{11}" aria-describedby="ninHelp" autocomplete="on" />
+                <small id="ninHelp" class="form-text text-muted">
+                  Enter your 11-digit NIN
+                </small>
+                <div id="ninStatus" class="mt-1 text-sm text-info"></div>
+              </div>
+              <!-- First name -->
+              <div class="col-md-4">
+                <label for="firstname" class="form-label">First name</label>
+                <input type="text" class="form-control" id="firstname" required name="firstname"
+                  aria-describedby="firstnameHelp" />
+                <small id="firstnameHelp" class="form-text text-muted">
+                  Enter your first name
+                </small>
+              </div>
 
-          <h2 class="fs-4 fw-bold mb-4">
-            Hello there! Please enter your details to get started
-          </h2>
-          <div class="d-flex justify-content-center gap-3 mt-4">
-            <div class="d-flex align-items-center">
-              <div
-                class="progress-indicator rounded me-2 active"
-                id="step1-indicator"
-              ></div>
-              <span class="small text-success" id="step1-text"
-                >Personal info.</span
-              >
-            </div>
-            <div class="d-flex align-items-center">
-              <div
-                class="progress-indicator rounded me-2 inactive"
-                id="step2-indicator"
-              ></div>
-              <span class="small text-muted" id="step2-text"
-                >Personal info</span
-              >
-            </div>
-          </div>
+              <!-- Last name -->
+              <div class="col-md-4">
+                <label for="lastname" class="form-label">Last name</label>
+                <input type="text" class="form-control" id="lastname" required aria-describedby="lastnameHelp" />
+                <small id="lastnameHelp" class="form-text text-muted">
+                  Enter your last name
+                </small>
+              </div>
 
-          <form id="signUpForm">
-            <div id="step1" class="step-content">
-              <div class="row g-3">
-                <!-- NIN -->
-                <div class="col-md-4">
-                  <label for="nin" class="form-label">NIN</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="NIN"
-                    name="NIN"
-                    maxlength="11"
-                    minlength="11"
-                    required
-                    inputmode="numeric"
-                    pattern="\d{11}"
-                    aria-describedby="ninHelp"
-                    autocomplete="on"
-                  />
-                  <small id="ninHelp" class="form-text text-muted">
-                    Enter your 11-digit NIN
-                  </small>
-                  <div id="ninStatus" class="mt-1 text-sm text-info"></div>
-                </div>
-                <!-- First name -->
-                <div class="col-md-4">
-                  <label for="firstname" class="form-label">First name</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="firstname"
-                    required
-                    name="firstname"
-                    aria-describedby="firstnameHelp"
-                  />
-                  <small id="firstnameHelp" class="form-text text-muted">
-                    Enter your first name
-                  </small>
-                </div>
-
-                <!-- Last name -->
-                <div class="col-md-4">
-                  <label for="lastname" class="form-label">Last name</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="lastname"
-                    required
-                    aria-describedby="lastnameHelp"
-                  />
-                  <small id="lastnameHelp" class="form-text text-muted">
-                    Enter your last name
-                  </small>
-                </div>
-
-                <!-- Email -->
-                <div class="col-md-6">
-                  <label for="email" class="form-label">Email</label>
-                  <input
-                    type="email"
-                    class="form-control"
-                    id="email"
-                    required
-                    aria-describedby="emailHelp"
-                  />
-                  <small id="emailHelp" class="form-text text-muted">
-                    Enter a valid email address
-                  </small>
-                </div>
-                <div class="col-md-6">
-                  <label for="phone" class="form-label">Phone number</label>
-                  <input
-                    type="tel"
-                    class="form-control"
-                    id="phone"
-                    maxlength="11"
-                    pattern="^0[7-9][0-1]\d{8}$"
-                    required
-                    autocomplete="tel-national"
-                    aria-describedby="phoneHelp"
-                  />
-                  <small id="phoneHelp" class="form-text text-muted">
-                    Enter a valid Nigerian phone number
-                  </small>
-                </div>
-                <button
-                  type="button"
-                  class="btn btn-success w-100 mb-3"
-                  id="nextButton"
-                >
+              <!-- Email -->
+              <div class="col-md-6">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" required aria-describedby="emailHelp" />
+                <small id="emailHelp" class="form-text text-muted">
+                  Enter a valid email address
+                </small>
+              </div>
+              <div class="col-md-6">
+                <label for="phone" class="form-label">Phone number</label>
+                <input type="tel" class="form-control" id="phone" maxlength="11" pattern="^0[7-9][0-1]\d{8}$" required
+                  autocomplete="tel-national" aria-describedby="phoneHelp" />
+                <small id="phoneHelp" class="form-text text-muted">
+                  Enter a valid Nigerian phone number
+                </small>
+              </div>
+              <div class="step-buttons">
+                <button type="button" class="btn btn-success" id="nextButton">
                   Next
                 </button>
               </div>
             </div>
+          </div>
 
-            <!-- Phone number -->
+          <!-- Phone number -->
 
-            <div id="step2" class="step-content d-none">
-              <div class="row g-3">
-                <!-- State -->
-                <div class="col-md-6">
-                  <label for="stateOfOrigin" class="form-label">State</label>
-                  <!-- onchange="updateLocalGovernmentsOfOrigin()" -->
-                  <select
-                    id="stateOfOrigin"
-                    name="stateOfOrigin"
-                    class="form-control"
-                    required
-                    aria-describedby="stateHelp"
-                    onchange="updateLocalGovernmentsOfOrigin()"
-                  >
-                    <option value="">Select State</option>
-                    <option value="abia">Abia</option>
-                    <option value="adamawa">Adamawa</option>
-                    <option value="akwa_ibom">Akwa Ibom</option>
-                    <option value="anambra">Anambra</option>
-                    <option value="bauchi">Bauchi</option>
-                    <option value="bayelsa">Bayelsa</option>
-                    <option value="benue">Benue</option>
-                    <option value="borno">Borno</option>
-                    <option value="cross_river">Cross River</option>
-                    <option value="delta">Delta</option>
-                    <option value="ebonyi">Ebonyi</option>
-                    <option value="edo">Edo</option>
-                    <option value="ekiti">Ekiti</option>
-                    <option value="enugu">Enugu</option>
-                    <option value="gombe">Gombe</option>
-                    <option value="imo">Imo</option>
-                    <option value="jigawa">Jigawa</option>
-                    <option value="kaduna">Kaduna</option>
-                    <option value="kano">Kano</option>
-                    <option value="katsina">Katsina</option>
-                    <option value="kebbi">Kebbi</option>
-                    <option value="kogi">Kogi</option>
-                    <option value="kwara">Kwara</option>
-                    <option value="lagos">Lagos</option>
-                    <option value="nasarawa">Nasarawa</option>
-                    <option value="niger">Niger</option>
-                    <option value="ogun">Ogun</option>
-                    <option value="ondo">Ondo</option>
-                    <option value="osun">Osun</option>
-                    <option value="oyo">Oyo</option>
-                    <option value="plateau">Plateau</option>
-                    <option value="rivers">Rivers</option>
-                    <option value="sokoto">Sokoto</option>
-                    <option value="taraba">Taraba</option>
-                    <option value="yobe">Yobe</option>
-                    <option value="zamfara">Zamfara</option>
-                    <option value="abuja">Abuja (FCT)</option>
-                  </select>
+          <div id="step2" class="step-content d-none">
+            <div class="row g-3">
+              <!-- State -->
+              <div class="col-md-6">
+                <label for="stateOfOrigin" class="form-label">State</label>
+                <!-- onchange="updateLocalGovernmentsOfOrigin()" -->
+                <select id="stateOfOrigin" name="stateOfOrigin" class="form-control" required
+                  aria-describedby="stateHelp" onchange="updateLocalGovernmentsOfOrigin()">
+                  <option value="">Select State</option>
+                  <option value="abia">Abia</option>
+                  <option value="adamawa">Adamawa</option>
+                  <option value="akwa_ibom">Akwa Ibom</option>
+                  <option value="anambra">Anambra</option>
+                  <option value="bauchi">Bauchi</option>
+                  <option value="bayelsa">Bayelsa</option>
+                  <option value="benue">Benue</option>
+                  <option value="borno">Borno</option>
+                  <option value="cross_river">Cross River</option>
+                  <option value="delta">Delta</option>
+                  <option value="ebonyi">Ebonyi</option>
+                  <option value="edo">Edo</option>
+                  <option value="ekiti">Ekiti</option>
+                  <option value="enugu">Enugu</option>
+                  <option value="gombe">Gombe</option>
+                  <option value="imo">Imo</option>
+                  <option value="jigawa">Jigawa</option>
+                  <option value="kaduna">Kaduna</option>
+                  <option value="kano">Kano</option>
+                  <option value="katsina">Katsina</option>
+                  <option value="kebbi">Kebbi</option>
+                  <option value="kogi">Kogi</option>
+                  <option value="kwara">Kwara</option>
+                  <option value="lagos">Lagos</option>
+                  <option value="nasarawa">Nasarawa</option>
+                  <option value="niger">Niger</option>
+                  <option value="ogun">Ogun</option>
+                  <option value="ondo">Ondo</option>
+                  <option value="osun">Osun</option>
+                  <option value="oyo">Oyo</option>
+                  <option value="plateau">Plateau</option>
+                  <option value="rivers">Rivers</option>
+                  <option value="sokoto">Sokoto</option>
+                  <option value="taraba">Taraba</option>
+                  <option value="yobe">Yobe</option>
+                  <option value="zamfara">Zamfara</option>
+                  <option value="abuja">Abuja (FCT)</option>
+                </select>
+              </div>
+
+              <!-- LGA -->
+              <div class="col-md-6">
+                <label for="lgaOfOrigin" class="form-label">LGA</label>
+                <select id="lgaOfOrigin" name="lgaOfOrigin" class="form-control">
+                  <option value="">Select Local Government</option>
+                </select>
+              </div>
+
+              <!-- Password -->
+              <div class="col-md-6">
+                <label for="password" class="form-label">Password</label>
+                <div class="input-group">
+                  <input type="password" class="form-control" id="password" required aria-describedby="passwordHelp" />
+                  <button class="btn btn-outline-secondary password-toggle" type="button" data-target="#password">
+                    <i class="fa fa-eye-slash"></i>
+                  </button>
                 </div>
+                <small id="passwordHelp" class="form-text text-muted">
+                  Enter a strong password
+                </small>
+              </div>
 
-                <!-- LGA -->
-                <div class="col-md-6">
-                  <label for="lgaOfOrigin" class="form-label">LGA</label>
-                  <select
-                    id="lgaOfOrigin"
-                    name="lgaOfOrigin"
-                    class="form-control"
-                  >
-                    <option value="">Select Local Government</option>
-                  </select>
+              <!-- Confirm Password -->
+              <div class="col-md-6">
+                <label for="re_password" class="form-label">Confirm password</label>
+                <div class="input-group">
+                  <input type="password" class="form-control" id="re_password" name="re_password" required
+                    autocomplete="new-password" aria-describedby="rePasswordHelp" />
+                  <button class="btn btn-outline-secondary password-toggle" type="button" data-target="#re_password">
+                    <i class="fa fa-eye-slash"></i>
+                  </button>
                 </div>
+                <small id="rePasswordHelp" class="form-text text-muted">
+                  Re-type your password
+                </small>
+              </div>
 
-                <!-- Password -->
-                <div class="col-md-6">
-                  <label for="password" class="form-label">Password</label>
-                  <div class="input-group">
-                    <input
-                      type="password"
-                      class="form-control"
-                      id="password"
-                      required
-                      aria-describedby="passwordHelp"
-                    />
-                    <button
-                      class="btn btn-outline-secondary password-toggle"
-                      type="button"
-                      data-target="#password"
-                    >
-                      <i class="fa fa-eye-slash"></i>
-                    </button>
-                  </div>
-                  <small id="passwordHelp" class="form-text text-muted">
-                    Enter a strong password
-                  </small>
+              <!-- Password validation -->
+              <div class="password-validation d-flex flex-wrap gap-2 mt-2">
+                <div class="d-flex align-items-center small">
+                  <i class="fas fa-check-circle me-1 invalid" id="lengthCheck"></i>
+                  <span class="invalid" id="lengthText">8 Characters</span>
                 </div>
-
-                <!-- Confirm Password -->
-                <div class="col-md-6">
-                  <label for="re_password" class="form-label"
-                    >Confirm password</label
-                  >
-                  <div class="input-group">
-                    <input
-                      type="password"
-                      class="form-control"
-                      id="re_password"
-                      name="re_password"
-                      required
-                      autocomplete="new-password"
-                      aria-describedby="rePasswordHelp"
-                    />
-                    <button
-                      class="btn btn-outline-secondary password-toggle"
-                      type="button"
-                      data-target="#re_password"
-                    >
-                      <i class="fa fa-eye-slash"></i>
-                    </button>
-                  </div>
-                  <small id="rePasswordHelp" class="form-text text-muted">
-                    Re-type your password
-                  </small>
+                <div class="d-flex align-items-center small">
+                  <i class="fas fa-check-circle me-1 invalid" id="symbolCheck"></i>
+                  <span class="invalid" id="symbolText">One symbol</span>
                 </div>
-
-                <!-- Password validation -->
-                <div class="password-validation d-flex flex-wrap gap-2 mt-2">
-                  <div class="d-flex align-items-center small">
-                    <i
-                      class="fas fa-check-circle me-1 invalid"
-                      id="lengthCheck"
-                    ></i>
-                    <span class="invalid" id="lengthText">8 Characters</span>
-                  </div>
-                  <div class="d-flex align-items-center small">
-                    <i
-                      class="fas fa-check-circle me-1 invalid"
-                      id="symbolCheck"
-                    ></i>
-                    <span class="invalid" id="symbolText">One symbol</span>
-                  </div>
-                  <div class="d-flex align-items-center small">
-                    <i
-                      class="fas fa-check-circle me-1 invalid"
-                      id="capitalCheck"
-                    ></i>
-                    <span class="invalid" id="capitalText"
-                      >One capital letter</span
-                    >
-                  </div>
-                  <div class="d-flex align-items-center small">
-                    <i
-                      class="fas fa-check-circle me-1 invalid"
-                      id="numberCheck"
-                    ></i>
-                    <span class="invalid" id="numberText">One number</span>
-                  </div>
+                <div class="d-flex align-items-center small">
+                  <i class="fas fa-check-circle me-1 invalid" id="capitalCheck"></i>
+                  <span class="invalid" id="capitalText">One capital letter</span>
+                </div>
+                <div class="d-flex align-items-center small">
+                  <i class="fas fa-check-circle me-1 invalid" id="numberCheck"></i>
+                  <span class="invalid" id="numberText">One number</span>
                 </div>
               </div>
-              <button
-                type="button"
-                class="btn btn-success w-100 mb-3"
-                id="proceedButton"
-              >
+            </div>
+            <div class="step-buttons">
+              <button type="button" class="btn btn-outline-secondary" id="previousButton">
+                Previous
+              </button>
+              <button type="button" class="btn btn-success" id="proceedButton">
                 Proceed
               </button>
             </div>
-          </form>
-
-          <!-- Login link -->
-          <div class="text-center mt-4">
-            Already have an account?
-            <a href="login.html" class="text-success fw-medium">Login</a>
           </div>
+        </form>
 
-          <div class="copyright">
-            Powered By BDIC <br />© 2025 All Rights Reserved
-          </div>
+        <!-- Login link -->
+        <div class="text-center mt-4">
+          Already have an account?
+          <a href="login.html" class="text-success fw-medium">Login</a>
+        </div>
+
+        <div class="copyright">
+          Powered By BDIC <br />© 2025 All Rights Reserved
         </div>
       </div>
     </div>
-    <!-- Bootstrap 5.3.0 JS and dependencies -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-    <!-- jQuery (if still needed) -->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <!-- SweetAlert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-      $(document).ready(function () {
-        // Form data object that matches the API structure
-        const formData = {
-          firstname: "",
-          lastname: "",
-          email: "",
-          password: "",
-          phone: "",
-          NIN: "",
-          lgaOfOrigin: "",
-          stateOfOrigin: "",
-          confirmPassword: "",
-        };
-        let currentStep = 1;
+  </div>
+  <!-- Bootstrap 5.3.0 JS and dependencies -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+  <!-- jQuery (if still needed) -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    $(document).ready(function () {
+      // Form data object that matches the API structure
+      const formData = {
+        firstname: "",
+        lastname: "",
+        email: "",
+        password: "",
+        phone: "",
+        NIN: "",
+        lgaOfOrigin: "",
+        stateOfOrigin: "",
+        confirmPassword: "",
+      };
+      let currentStep = 1;
 
-        $(".password-toggle").click(function () {
-          const targetSelector = $(this).data("target");
-          const input = $(targetSelector);
-          const type = input.attr("type") === "password" ? "text" : "password";
-          input.attr("type", type);
-          $(this).find("i").toggleClass("fa-eye fa-eye-slash");
-        });
+      $(".password-toggle").click(function () {
+        const targetSelector = $(this).data("target");
+        const input = $(targetSelector);
+        const type = input.attr("type") === "password" ? "text" : "password";
+        input.attr("type", type);
+        $(this).find("i").toggleClass("fa-eye fa-eye-slash");
+      });
 
-        // Password validation
-        $("#password").on("input", function () {
-          const password = $(this).val();
-          formData.password = password;
+      // Password validation
+      $("#password").on("input", function () {
+        const password = $(this).val();
+        formData.password = password;
 
-          // Validation checks
-          const lengthValid = password.length >= 8;
-          const symbolValid = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-          const capitalValid = /[A-Z]/.test(password);
-          const numberValid = /\d/.test(password);
+        // Validation checks
+        const lengthValid = password.length >= 8;
+        const symbolValid = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+        const capitalValid = /[A-Z]/.test(password);
+        const numberValid = /\d/.test(password);
 
-          // Update UI
-          updateValidationIcon("#lengthCheck", "#lengthText", lengthValid);
-          updateValidationIcon("#symbolCheck", "#symbolText", symbolValid);
-          updateValidationIcon("#capitalCheck", "#capitalText", capitalValid);
-          updateValidationIcon("#numberCheck", "#numberText", numberValid);
-        });
+        // Update UI
+        updateValidationIcon("#lengthCheck", "#lengthText", lengthValid);
+        updateValidationIcon("#symbolCheck", "#symbolText", symbolValid);
+        updateValidationIcon("#capitalCheck", "#capitalText", capitalValid);
+        updateValidationIcon("#numberCheck", "#numberText", numberValid);
+      });
 
-        function updateValidationIcon(iconId, textId, isValid) {
-          if (isValid) {
-            $(iconId).removeClass("invalid").addClass("valid");
-            $(textId).removeClass("invalid").addClass("valid");
-          } else {
-            $(iconId).removeClass("valid").addClass("invalid");
-            $(textId).removeClass("valid").addClass("invalid");
-          }
+      function updateValidationIcon(iconId, textId, isValid) {
+        if (isValid) {
+          $(iconId).removeClass("invalid").addClass("valid");
+          $(textId).removeClass("invalid").addClass("valid");
+        } else {
+          $(iconId).removeClass("valid").addClass("invalid");
+          $(textId).removeClass("valid").addClass("invalid");
+        }
+      }
+
+      // Helper function to display error messages
+      const showError = (input, message) => {
+        const formGroup = input.closest(".col-md-6");
+        const errorElement = formGroup.querySelector(".error-message");
+
+        if (!errorElement) {
+          const errorDiv = document.createElement("div");
+          errorDiv.className = "error-message text-danger mt-1";
+          errorDiv.innerText = message;
+          formGroup.appendChild(errorDiv);
+        } else {
+          errorElement.innerText = message;
         }
 
-        // Helper function to display error messages
-        const showError = (input, message) => {
-          const formGroup = input.closest(".col-md-6");
-          const errorElement = formGroup.querySelector(".error-message");
+        input.classList.add("is-invalid");
+      };
 
-          if (!errorElement) {
-            const errorDiv = document.createElement("div");
-            errorDiv.className = "error-message text-danger mt-1";
-            errorDiv.innerText = message;
-            formGroup.appendChild(errorDiv);
-          } else {
-            errorElement.innerText = message;
-          }
+      // Helper function to display error messages
+      const showNINError = (input, message) => {
+        const formGroup = input.closest(".col-md-4");
+        const errorElement = formGroup.querySelector(".error-message");
 
-          input.classList.add("is-invalid");
-        };
+        if (!errorElement) {
+          const errorDiv = document.createElement("div");
+          errorDiv.className = "error-message text-danger mt-1";
+          errorDiv.innerText = message;
+          formGroup.appendChild(errorDiv);
+        } else {
+          errorElement.innerText = message;
+        }
 
-        // Helper function to display error messages
-        const showNINError = (input, message) => {
-          const formGroup = input.closest(".col-md-4");
-          const errorElement = formGroup.querySelector(".error-message");
+        input.classList.add("is-invalid");
+      };
 
-          if (!errorElement) {
-            const errorDiv = document.createElement("div");
-            errorDiv.className = "error-message text-danger mt-1";
-            errorDiv.innerText = message;
-            formGroup.appendChild(errorDiv);
-          } else {
-            errorElement.innerText = message;
-          }
+      // Helper function to clear error messages
+      const clearError = (input) => {
+        const formGroup = input.closest(".col-md-6");
+        const errorElement = formGroup.querySelector(".error-message");
 
-          input.classList.add("is-invalid");
-        };
+        if (errorElement) {
+          errorElement.remove();
+        }
 
-        // Helper function to clear error messages
-        const clearError = (input) => {
-          const formGroup = input.closest(".col-md-6");
-          const errorElement = formGroup.querySelector(".error-message");
+        input.classList.remove("is-invalid");
+      };
 
-          if (errorElement) {
-            errorElement.remove();
-          }
+      const clearNINError = (input) => {
+        const formGroup = input.closest(".col-md-4");
+        const errorElement = formGroup.querySelector(".error-message");
 
-          input.classList.remove("is-invalid");
-        };
+        if (errorElement) {
+          errorElement.remove();
+        }
 
-        const clearNINError = (input) => {
-          const formGroup = input.closest(".col-md-4");
-          const errorElement = formGroup.querySelector(".error-message");
+        input.classList.remove("is-invalid");
+      };
 
-          if (errorElement) {
-            errorElement.remove();
-          }
+      // Validation functions for each field
+      const validateFirstName = (input) => {
+        const value = input.value.trim();
+        if (!value) {
+          showNINError(input, "First name is required.");
+          return false;
+        } else if (!/^[a-zA-Z]+$/.test(value)) {
+          showNINError(input, "First name should contain only letters.");
+          return false;
+        } else {
+          clearNINError(input);
+          return true;
+        }
+      };
 
-          input.classList.remove("is-invalid");
-        };
+      const validateLastName = (input) => {
+        const value = input.value.trim();
+        if (!value) {
+          showNINError(input, "Last name is required.");
+          return false;
+        } else if (!/^[a-zA-Z]+$/.test(value)) {
+          showNINError(input, "Last name should contain only letters.");
+          return false;
+        } else {
+          clearNINError(input);
+          return true;
+        }
+      };
 
-        // Validation functions for each field
-        const validateFirstName = (input) => {
-          const value = input.value.trim();
-          if (!value) {
-            showNINError(input, "First name is required.");
-            return false;
-          } else if (!/^[a-zA-Z]+$/.test(value)) {
-            showNINError(input, "First name should contain only letters.");
-            return false;
-          } else {
-            clearNINError(input);
-            return true;
-          }
-        };
+      const validateEmail = (input) => {
+        const value = input.value.trim();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!value) {
+          showError(input, "Email is required.");
+          return false;
+        } else if (!emailRegex.test(value)) {
+          showError(input, "Please enter a valid email address.");
+          return false;
+        } else {
+          clearError(input);
+          return true;
+        }
+      };
 
-        const validateLastName = (input) => {
-          const value = input.value.trim();
-          if (!value) {
-            showNINError(input, "Last name is required.");
-            return false;
-          } else if (!/^[a-zA-Z]+$/.test(value)) {
-            showNINError(input, "Last name should contain only letters.");
-            return false;
-          } else {
-            clearNINError(input);
-            return true;
-          }
-        };
+      const validatePhone = (input) => {
+        const value = input.value.trim();
+        const phoneRegex = /^0[7-9][0-1]\d{8}$/;
+        if (!value) {
+          showError(input, "Phone number is required.");
+          return false;
+        } else if (!phoneRegex.test(value)) {
+          showError(input, "Please enter a valid Nigerian phone number.");
+          return false;
+        } else {
+          clearError(input);
+          return true;
+        }
+      };
 
-        const validateEmail = (input) => {
-          const value = input.value.trim();
-          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          if (!value) {
-            showError(input, "Email is required.");
-            return false;
-          } else if (!emailRegex.test(value)) {
-            showError(input, "Please enter a valid email address.");
-            return false;
-          } else {
-            clearError(input);
-            return true;
-          }
-        };
+      const validatePassword = (input) => {
+        const value = input.value.trim();      
+        const passwordRegex =
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
 
-        const validatePhone = (input) => {
-          const value = input.value.trim();
-          const phoneRegex = /^0[7-9][0-1]\d{8}$/;
-          if (!value) {
-            showError(input, "Phone number is required.");
-            return false;
-          } else if (!phoneRegex.test(value)) {
-            showError(input, "Please enter a valid Nigerian phone number.");
-            return false;
-          } else {
-            clearError(input);
-            return true;
-          }
-        };
-
-        const validatePassword = (input) => {
-          const value = input.value.trim();
-          const passwordRegex =
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
-
-          if (!value) {
-            showError(input, "Password is required.");
-            return false;
-          } else if (!passwordRegex.test(value)) {
-            showError(
-              input,
-              "Password must include uppercase, lowercase, number, and special character."
-            );
-            return false;
-          } else {
-            clearError(input);
-            return true;
-          }
-        };
-
-        const validateConfirmPassword = (input) => {
-          const value = input.value.trim();
-          const password = $("#password").val().trim();
-
-          if (!value) {
-            showError(input, "Please confirm your password.");
-            return false;
-          } else if (value !== password) {
-            showError(input, "Passwords do not match.");
-            return false;
-          } else {
-            clearError(input);
-            return true;
-          }
-        };
-
-        const validateNIN = (input) => {
-          const value = input.value.trim();
-          if (!value) {
-            showNINError(input, "NIN is required.");
-            return false;
-          } else if (!/^\d{11}$/.test(value)) {
-            showNINError(
-              input,
-              "NIN should contain only numbers and be exactly 11 digits long."
-            );
-            return false;
-          } else {
-            clearNINError(input);
-            return true;
-          }
-        };
-
-        // Attach event listeners for real-time validation
-        $("#firstname").on("input blur", function () {
-          validateFirstName(this);
-        });
-
-        $("#lastname").on("input blur", function () {
-          validateLastName(this);
-        });
-
-        $("#email").on("input blur", function () {
-          validateEmail(this);
-        });
-
-        $("#phone").on("input blur", function () {
-          validatePhone(this);
-        });
-
-        $("#password").on("input blur", function () {
-          validatePassword(this);
-        });
-
-        $("#re_password").on("input blur", function () {
-          validateConfirmPassword(this);
-        });
-
-        $("#NIN").on("input blur", function () {
-          validateNIN(this);
-        });
-
-        $("#NIN").on("blur", async function () {
-          const nin = $(this).val().trim();
-          if (/^\d{11}$/.test(nin)) {
-            try {
-              $("#ninStatus").html(
-                '<span class="text-info">Verifying NIN...</span>'
-              );
-
-              const response = await $.ajax({
-                url: `${BACKEND_URL}/auth/verify`, // Replace with your endpoint
-                type: "POST",
-                contentType: "application/json",
-                data: JSON.stringify({ nin }),
-              });
-
-              if (response.success && response.data) {
-                const { fullName, dob, phone, stateOfOrigin, lga } =
-                  response.data;
-
-                const nameParts = fullName.trim().split(" ");
-                const firstname = nameParts[0];
-                const lastname = nameParts.slice(1).join(" ");
-
-                $("#firstname").val(firstname).prop("readonly", true);
-                $("#lastname").val(lastname).prop("readonly", true);
-                $("#dob").val(dob).prop("readonly", true);
-                $("#phone").val(phone).prop("readonly", true);
-
-                // Populate state of origin
-                if (stateOfOrigin) {
-                  // Convert stateOfOrigin to match your select options
-                  let formattedState = stateOfOrigin
-                    .toLowerCase()
-                    .replace(/\s+/g, "_");
-
-                  // Set the value and trigger change to update LGA dropdown
-                  $("#stateOfOrigin")
-                    .val(formattedState)
-                    .trigger("change")
-                    .prop("disabled", true);
-
-                  // If you're using Bootstrap selectpicker
-                  if ($("#stateOfOrigin").hasClass("selectpicker")) {
-                    $("#stateOfOrigin").selectpicker("refresh");
-                  }
-                  // Populate LGA after a small delay to ensure state change is processed
-                  setTimeout(() => {
-                    if (lga) {
-                      $("#lgaOfOrigin")
-                        .val(lga)
-                        .trigger("change")
-                        .prop("disabled", true);
-
-                      if ($("#lgaOfOrigin").hasClass("selectpicker")) {
-                        $("#lgaOfOrigin").selectpicker("refresh");
-                      }
-                    }
-                  }, 200);
-                }
-
-                $("#ninStatus").html(
-                  '<span class="text-success">NIN Verified ✅</span>'
-                );
-              } else {
-                $("#ninStatus").html(
-                  '<span class="text-danger">NIN not found.</span>'
-                );
-              }
-            } catch (error) {
-              $("#ninStatus").html(
-                `<span class="text-danger">${
-                  error.responseJSON?.message || "Verification failed."
-                }</span>`
-              );
-            }
-          }
-        });
-
-        // Form submission handler
-        // $("#signUpForm").on("submit", function (e) {
-        //   e.preventDefault();
-
-        $("#nextButton").click(function () {
-          console.log("click");
-          const isFirstNameValid = validateFirstName($("#firstname")[0]);
-          const isLastNameValid = validateLastName($("#lastname")[0]);
-          const isEmailValid = validateEmail($("#email")[0]);
-          const isPhoneValid = validatePhone($("#phone")[0]);
-          // const isPasswordValid = validatePassword($("#password")[0]);
-          // const isConfirmPasswordValid = validateConfirmPassword(
-          //   $("#re_password")[0]
-          // );
-          const isNINValid = validateNIN($("#NIN")[0]);
-
-          if (
-            // isPasswordValid &&
-            isFirstNameValid &&
-            isLastNameValid &&
-            isEmailValid &&
-            isPhoneValid &&
-            // isConfirmPasswordValid &&
-            isNINValid
-          ) {
-           
-
-            formData.firstname = $("#firstname").val().trim();
-            formData.lastname = $("#lastname").val().trim();
-            formData.email = $("#email").val().trim();
-            formData.phone = $("#phone").val().trim();
-            formData.NIN = $("#NIN").val().trim();
-
-            // submitForm(formData);
-            // Proceed to next step
-            currentStep = 2;
-            updateStepUI();
-          }
-        });
-        $("#proceedButton").click(function () {
-          const isPasswordValid = validatePassword($("#password")[0]);
-          const isConfirmPasswordValid = validateConfirmPassword(
-            $("#re_password")[0]
+        if (!value) {
+          showError(input, "Password is required.");
+          return false;
+        } else if (!passwordRegex.test(value)) {
+          showError(
+            input,
+            "Password must include uppercase, lowercase, number, and special character."
           );
+          return false;
+        } else {
+          clearError(input);
+          return true;
+        }
+      };
 
-          if (isPasswordValid && isConfirmPasswordValid) {
-            formData.stateOfOrigin = $("#stateOfOrigin").val().trim();
-            formData.lgaOfOrigin = $("#lgaOfOrigin").val().trim();
-            formData.confirmPassword = $("#re_password").val().trim();
-            formData.password = $("#password").val().trim();
+      const validateConfirmPassword = (input) => {
+        const value = input.value.trim();
+        const password = $("#password").val().trim();
 
-            const apiData = {
-              firstname: formData.firstname,
-              lastname: formData.lastname,
-              email: formData.email,
-              password: formData.password,
-              phone: formData.phone,
-              NIN: formData.NIN,
-              lgaOfOrigin: formData.lgaOfOrigin,
-              stateOfOrigin: formData.stateOfOrigin,
-            };
+        if (!value) {
+          showError(input, "Please confirm your password.");
+          return false;
+        } else if (value !== password) {
+          showError(input, "Passwords do not match.");
+          return false;
+        } else {
+          clearError(input);
+          return true;
+        }
+      };
 
-            submitForm(apiData);
-          }
-        });
+      const validateNIN = (input) => {
+        const value = input.value.trim();
+        if (!value) {
+          showNINError(input, "NIN is required.");
+          return false;
+        } else if (!/^\d{11}$/.test(value)) {
+          showNINError(
+            input,
+            "NIN should contain only numbers and be exactly 11 digits long."
+          );
+          return false;
+        } else {
+          clearNINError(input);
+          return true;
+        }
+      };
 
-        // Submit form to backend
-        const submitForm = async (formData) => {
+      // Attach event listeners for real-time validation
+      $("#firstname").on("input blur", function () {
+        validateFirstName(this);
+      });
+
+      $("#lastname").on("input blur", function () {
+        validateLastName(this);
+      });
+
+      $("#email").on("input blur", function () {
+        validateEmail(this);
+      });
+
+      $("#phone").on("input blur", function () {
+        validatePhone(this);
+      });
+
+      $("#password").on("input blur", function () {
+        validatePassword(this);
+      });
+
+      $("#re_password").on("input blur", function () {
+        validateConfirmPassword(this);
+      });
+
+      $("#NIN").on("input blur", function () {
+        validateNIN(this);
+      });
+
+      $("#NIN").on("blur", async function () {
+        const nin = $(this).val().trim();
+        if (/^\d{11}$/.test(nin)) {
           try {
-            $("#submitbtn")
-              .html('<i class="fa fa-spinner fa-spin"></i>')
-              .prop("disabled", true);
+            $("#ninStatus").html(
+              '<span class="text-info">Verifying NIN...</span>'
+            );
 
             const response = await $.ajax({
+              url: `${BACKEND_URL}/auth/verify`, // Replace with your endpoint
               type: "POST",
-              url: `${BACKEND_URL}/auth/signup`,
               contentType: "application/json",
-              data: JSON.stringify(formData),
+              data: JSON.stringify({ nin }),
             });
 
-            Swal.fire(
-              "Welcome",
-              "Please check your email to activate your account. Click OK to continue.",
-              "success"
-            ).then(() => {
-              window.location.href = "../auth/login.html";
-            });
+            if (response.success && response.data) {
+              const { fullName, dob, phone, stateOfOrigin, lga } =
+                response.data;
+
+              const nameParts = fullName.trim().split(" ");
+              const firstname = nameParts[0];
+              const lastname = nameParts.slice(1).join(" ");
+
+              $("#firstname").val(firstname).prop("readonly", true);
+              $("#lastname").val(lastname).prop("readonly", true);
+              $("#dob").val(dob).prop("readonly", true);
+              $("#phone").val(phone).prop("readonly", true);
+
+              // Populate state of origin
+              if (stateOfOrigin) {
+                // Convert stateOfOrigin to match your select options
+                let formattedState = stateOfOrigin
+                  .toLowerCase()
+                  .replace(/\s+/g, "_");
+
+                // Set the value and trigger change to update LGA dropdown
+                $("#stateOfOrigin")
+                  .val(formattedState)
+                  .trigger("change")
+                  .prop("disabled", true);
+
+                // If you're using Bootstrap selectpicker
+                if ($("#stateOfOrigin").hasClass("selectpicker")) {
+                  $("#stateOfOrigin").selectpicker("refresh");
+                }
+                // Populate LGA after a small delay to ensure state change is processed
+                setTimeout(() => {
+                  if (lga) {
+                    $("#lgaOfOrigin")
+                      .val(lga)
+                      .trigger("change")
+                      .prop("disabled", true);
+
+                    if ($("#lgaOfOrigin").hasClass("selectpicker")) {
+                      $("#lgaOfOrigin").selectpicker("refresh");
+                    }
+                  }
+                }, 200);
+              }
+
+              $("#ninStatus").html(
+                '<span class="text-success">NIN Verified ✅</span>'
+              );
+            } else {
+              $("#ninStatus").html(
+                '<span class="text-danger">NIN not found.</span>'
+              );
+            }
           } catch (error) {
-            Swal.fire(
-              "Oops...",
-              error.responseJSON?.message || "An error occurred.",
-              "error"
+            $("#ninStatus").html(
+              `<span class="text-danger">${error.responseJSON?.message || "Verification failed."
+              }</span>`
             );
-          } finally {
-            $("#submitbtn").html("Sign Up").attr("disabled", false);
-          }
-        };
-        // Update step UI
-        function updateStepUI() {
-          if (currentStep === 1) {
-            $("#step1").removeClass("d-none");
-            $("#step2").addClass("d-none");
-            $("#step1-indicator").addClass("active").removeClass("inactive");
-            $("#step2-indicator").addClass("inactive").removeClass("active");
-            $("#step1-text").addClass("text-success").removeClass("text-muted");
-            $("#step2-text").addClass("text-muted").removeClass("text-success");
-          } else {
-            $("#step1").addClass("d-none");
-            $("#step2").removeClass("d-none");
-            $("#step1-indicator").addClass("active").removeClass("inactive");
-            $("#step2-indicator").addClass("active").removeClass("inactive");
-            $("#step1-text").addClass("text-success").removeClass("text-muted");
-            $("#step2-text").addClass("text-success").removeClass("text-muted");
           }
         }
       });
-    </script>
-    <script>
-      const nigerData = {
-        adamawa: [
-          "Demsa",
-          "Fufure",
-          "Ganye",
-          "Gayuk",
-          "Gombi",
-          "Grie",
-          "Hong",
-          "Jada",
-          "Larmurde",
-          "Madagali",
-          "Maiha",
-          "Mayo Belwa",
-          "Michika",
-          "Mubi North",
-          "Mubi South",
-          "Numan",
-          "Shelleng",
-          "Song",
-          "Toungo",
-          "Yola North",
-          "Yola South",
-        ],
-        akwa_ibom: [
-          "Abak",
-          "Eastern Obolo",
-          "Eket",
-          "Esit Eket",
-          "Essien Udim",
-          "Etim Ekpo",
-          "Etinan",
-          "Ibeno",
-          "Ibesikpo Asutan",
-          "Ibiono-Ibom",
-          "Ikot Abasi",
-          "Ika",
-          "Ikono",
-          "Ikot Ekpene",
-          "Ini",
-          "Mkpat-Enin",
-          "Itu",
-          "Mbo",
-          "Nsit-Atai",
-          "Nsit-Ibom",
-          "Nsit-Ubium",
-          "Obot Akara",
-          "Okobo",
-          "Onna",
-          "Oron",
-          "Udung-Uko",
-          "Ukanafun",
-          "Oruk Anam",
-          "Uruan",
-          "Urue-Offong/Oruko",
-          "Uyo",
-        ],
-        anambra: [
-          "Aguata",
-          "Anambra East",
-          "Anaocha",
-          "Awka North",
-          "Anambra West",
-          "Awka South",
-          "Ayamelum",
-          "Dunukofia",
-          "Ekwusigo",
-          "Idemili North",
-          "Idemili South",
-          "Ihiala",
-          "Njikoka",
-          "Nnewi North",
-          "Nnewi South",
-          "Ogbaru",
-          "Onitsha North",
-          "Onitsha South",
-          "Orumba North",
-          "Orumba South",
-          "Oyi",
-        ],
-        abia: [
-          "Aba North",
-          "Arochukwu",
-          "Aba South",
-          "Bende",
-          "Isiala Ngwa North",
-          "Ikwuano",
-          "Isiala Ngwa South",
-          "Isuikwuato",
-          "Obi Ngwa",
-          "Ohafia",
-          "Osisioma",
-          "Ugwunagbo",
-          "Ukwa East",
-          "Ukwa West",
-          "Umuahia North",
-          "Umuahia South",
-          "Umu Nneochi",
-        ],
-        bauchi: [
-          "Alkaleri",
-          "Bauchi",
-          "Bogoro",
-          "Damban",
-          "Darazo",
-          "Dass",
-          "Gamawa",
-          "Ganjuwa",
-          "Giade",
-          "Itas/Gadau",
-          "Jama'are",
-          "Katagum",
-          "Kirfi",
-          "Misau",
-          "Ningi",
-          "Shira",
-          "Tafawa Balewa",
-          "Toro",
-          "Warji",
-          "Zaki",
-        ],
-        benue: [
-          "Agatu",
-          "Apa",
-          "Ado",
-          "Buruku",
-          "Gboko",
-          "Guma",
-          "Gwer East",
-          "Gwer West",
-          "Katsina-Ala",
-          "Konshisha",
-          "Kwande",
-          "Logo",
-          "Makurdi",
-          "Obi",
-          "Ogbadibo",
-          "Ohimini",
-          "Oju",
-          "Okpokwu",
-          "Oturkpo",
-          "Tarka",
-          "Ukum",
-          "Ushongo",
-          "Vandeikya",
-        ],
-        borno: [
-          "Abadam",
-          "Askira/Uba",
-          "Bama",
-          "Bayo",
-          "Biu",
-          "Chibok",
-          "Damboa",
-          "Dikwa",
-          "Guzamala",
-          "Gubio",
-          "Hawul",
-          "Gwoza",
-          "Jere",
-          "Kaga",
-          "Kala/Balge",
-          "Konduga",
-          "Kukawa",
-          "Kwaya Kusar",
-          "Mafa",
-          "Magumeri",
-          "Maiduguri",
-          "Mobbar",
-          "Marte",
-          "Monguno",
-          "Ngala",
-          "Nganzai",
-          "Shani",
-        ],
-        bayelsa: [
-          "Brass",
-          "Ekeremor",
-          "Kolokuma/Opokuma",
-          "Nembe",
-          "Ogbia",
-          "Sagbama",
-          "Southern Ijaw",
-          "Yenagoa",
-        ],
-        cross_river: [
-          "Abi",
-          "Akamkpa",
-          "Akpabuyo",
-          "Bakassi",
-          "Bekwarra",
-          "Biase",
-          "Boki",
-          "Calabar Municipal",
-          "Calabar South",
-          "Etung",
-          "Ikom",
-          "Obanliku",
-          "Obubra",
-          "Obudu",
-          "Odukpani",
-          "Ogoja",
-          "Yakuur",
-          "Yala",
-        ],
-        delta: [
-          "Aniocha North",
-          "Aniocha South",
-          "Bomadi",
-          "Burutu",
-          "Ethiope West",
-          "Ethiope East",
-          "Ika North East",
-          "Ika South",
-          "Isoko North",
-          "Isoko South",
-          "Ndokwa East",
-          "Ndokwa West",
-          "Okpe",
-          "Oshimili North",
-          "Oshimili South",
-          "Patani",
-          "Sapele",
-          "Udu",
-          "Ughelli North",
-          "Ukwuani",
-          "Ughelli South",
-          "Uvwie",
-          "Warri North",
-          "Warri South",
-          "Warri South West",
-        ],
-        ebonyi: [
-          "Abakaliki",
-          "Afikpo North",
-          "Ebonyi",
-          "Afikpo South",
-          "Ezza North",
-          "Ikwo",
-          "Ezza South",
-          "Ivo",
-          "Ishielu",
-          "Izzi",
-          "Ohaozara",
-          "Ohaukwu",
-          "Onicha",
-        ],
-        edo: [
-          "Akoko-Edo",
-          "Egor",
-          "Esan Central",
-          "Esan North-East",
-          "Esan South-East",
-          "Esan West",
-          "Etsako Central",
-          "Etsako East",
-          "Etsako West",
-          "Igueben",
-          "Ikpoba Okha",
-          "Orhionmwon",
-          "Oredo",
-          "Ovia North-East",
-          "Ovia South-West",
-          "Owan East",
-          "Owan West",
-          "Uhunmwonde",
-        ],
-        ekiti: [
-          "Ado Ekiti",
-          "Efon",
-          "Ekiti East",
-          "Ekiti South-West",
-          "Ekiti West",
-          "Emure",
-          "Gbonyin",
-          "Ido Osi",
-          "Ijero",
-          "Ikere",
-          "Ilejemeje",
-          "Irepodun/Ifelodun",
-          "Ikole",
-          "Ise/Orun",
-          "Moba",
-          "Oye",
-        ],
-        enugu: [
-          "Awgu",
-          "Aninri",
-          "Enugu East",
-          "Enugu North",
-          "Ezeagu",
-          "Enugu South",
-          "Igbo Etiti",
-          "Igbo Eze North",
-          "Igbo Eze South",
-          "Isi Uzo",
-          "Nkanu East",
-          "Nkanu West",
-          "Nsukka",
-          "Udenu",
-          "Oji River",
-          "Uzo Uwani",
-          "Udi",
-        ],
-        abuja: [
-          "Abaji",
-          "Bwari",
-          "Gwagwalada",
-          "Kuje",
-          "Kwali",
-          "Municipal Area Council",
-        ],
-        gombe: [
-          "Akko",
-          "Balanga",
-          "Billiri",
-          "Dukku",
-          "Funakaye",
-          "Gombe",
-          "Kaltungo",
-          "Kwami",
-          "Nafada",
-          "Shongom",
-          "Yamaltu/Deba",
-        ],
-        jigawa: [
-          "Auyo",
-          "Babura",
-          "Buji",
-          "Biriniwa",
-          "Birnin Kudu",
-          "Dutse",
-          "Gagarawa",
-          "Garki",
-          "Gumel",
-          "Guri",
-          "Gwaram",
-          "Gwiwa",
-          "Hadejia",
-          "Jahun",
-          "Kafin Hausa",
-          "Kazaure",
-          "Kiri Kasama",
-          "Kiyawa",
-          "Kaugama",
-          "Maigatari",
-          "Malam Madori",
-          "Miga",
-          "Sule Tankarkar",
-          "Roni",
-          "Ringim",
-          "Yankwashi",
-          "Taura",
-        ],
-        lagos: [
-          "Agege",
-          "Ajeromi-Ifelodun",
-          "Alimosho",
-          "Amuwo-Odofin",
-          "Badagry",
-          "Apapa",
-          "Epe",
-          "Eti Osa",
-          "Ibeju-Lekki",
-          "Ifako-Ijaiye",
-          "Ikeja",
-          "Ikorodu",
-          "Kosofe",
-          "Lagos Island",
-          "Mushin",
-          "Lagos Mainland",
-          "Ojo",
-          "Oshodi-Isolo",
-          "Shomolu",
-          "Surulere Lagos State",
-        ],
-        oyo: [
-          "Afijio",
-          "Akinyele",
-          "Atiba",
-          "Atisbo",
-          "Egbeda",
-          "Ibadan North",
-          "Ibadan North-East",
-          "Ibadan North-West",
-          "Ibadan South-East",
-          "Ibarapa Central",
-          "Ibadan South-West",
-          "Ibarapa East",
-          "Ido",
-          "Ibarapa North",
-          "Irepo",
-          "Iseyin",
-          "Itesiwaju",
-          "Iwajowa",
-          "Kajola",
-          "Lagelu",
-          "Ogbomosho North",
-          "Ogbomosho South",
-          "Ogo Oluwa",
-          "Olorunsogo",
-          "Oluyole",
-          "Ona Ara",
-          "Orelope",
-          "Ori Ire",
-          "Oyo",
-          "Oyo East",
-          "Saki East",
-          "Saki West",
-          "Surulere Oyo State",
-        ],
-        imo: [
-          "Aboh Mbaise",
-          "Ahiazu Mbaise",
-          "Ehime Mbano",
-          "Ezinihitte",
-          "Ideato North",
-          "Ideato South",
-          "Ihitte/Uboma",
-          "Ikeduru",
-          "Isiala Mbano",
-          "Mbaitoli",
-          "Isu",
-          "Ngor Okpala",
-          "Njaba",
-          "Nkwerre",
-          "Nwangele",
-          "Obowo",
-          "Oguta",
-          "Ohaji/Egbema",
-          "Okigwe",
-          "Orlu",
-          "Orsu",
-          "Oru East",
-          "Oru West",
-          "Owerri Municipal",
-          "Owerri North",
-          "Unuimo",
-          "Owerri West",
-        ],
-        kaduna: [
-          "Birnin Gwari",
-          "Chikun",
-          "Giwa",
-          "Ikara",
-          "Igabi",
-          "Jaba",
-          "Jema'a",
-          "Kachia",
-          "Kaduna North",
-          "Kaduna South",
-          "Kagarko",
-          "Kajuru",
-          "Kaura",
-          "Kauru",
-          "Kubau",
-          "Kudan",
-          "Lere",
-          "Makarfi",
-          "Sabon Gari",
-          "Sanga",
-          "Soba",
-          "Zangon Kataf",
-          "Zaria",
-        ],
-        kebbi: [
-          "Aleiro",
-          "Argungu",
-          "Arewa Dandi",
-          "Augie",
-          "Bagudo",
-          "Birnin Kebbi",
-          "Bunza",
-          "Dandi",
-          "Fakai",
-          "Gwandu",
-          "Jega",
-          "Kalgo",
-          "Koko/Besse",
-          "Maiyama",
-          "Ngaski",
-          "Shanga",
-          "Suru",
-          "Sakaba",
-          "Wasagu/Danko",
-          "Yauri",
-          "Zuru",
-        ],
-        kano: [
-          "Ajingi",
-          "Albasu",
-          "Bagwai",
-          "Bebeji",
-          "Bichi",
-          "Bunkure",
-          "Dala",
-          "Dambatta",
-          "Dawakin Kudu",
-          "Dawakin Tofa",
-          "Doguwa",
-          "Fagge",
-          "Gabasawa",
-          "Garko",
-          "Garun Mallam",
-          "Gezawa",
-          "Gaya",
-          "Gwale",
-          "Gwarzo",
-          "Kabo",
-          "Kano Municipal",
-          "Karaye",
-          "Kibiya",
-          "Kiru",
-          "Kumbotso",
-          "Kunchi",
-          "Kura",
-          "Madobi",
-          "Makoda",
-          "Minjibir",
-          "Nasarawa",
-          "Rano",
-          "Rimin Gado",
-          "Rogo",
-          "Shanono",
-          "Takai",
-          "Sumaila",
-          "Tarauni",
-          "Tofa",
-          "Tsanyawa",
-          "Tudun Wada",
-          "Ungogo",
-          "Warawa",
-          "Wudil",
-        ],
-        kogi: [
-          "Ajaokuta",
-          "Adavi",
-          "Ankpa",
-          "Bassa",
-          "Dekina",
-          "Ibaji",
-          "Idah",
-          "Igalamela Odolu",
-          "Ijumu",
-          "Kogi",
-          "Kabba/Bunu",
-          "Lokoja",
-          "Ofu",
-          "Mopa Muro",
-          "Ogori/Magongo",
-          "Okehi",
-          "Okene",
-          "Olamaboro",
-          "Omala",
-          "Yagba East",
-          "Yagba West",
-        ],
-        osun: [
-          "Aiyedire",
-          "Atakunmosa West",
-          "Atakunmosa East",
-          "Aiyedaade",
-          "Boluwaduro",
-          "Boripe",
-          "Ife East",
-          "Ede South",
-          "Ife North",
-          "Ede North",
-          "Ife South",
-          "Ejigbo",
-          "Ife Central",
-          "Ifedayo",
-          "Egbedore",
-          "Ila",
-          "Ifelodun",
-          "Ilesa East",
-          "Ilesa West",
-          "Irepodun",
-          "Irewole",
-          "Isokan",
-          "Iwo",
-          "Obokun",
-          "Odo Otin",
-          "Ola Oluwa",
-          "Olorunda",
-          "Oriade",
-          "Orolu",
-          "Osogbo",
-        ],
-        sokoto: [
-          "Gudu",
-          "Gwadabawa",
-          "Illela",
-          "Isa",
-          "Kebbe",
-          "Kware",
-          "Rabah",
-          "Sabon Birni",
-          "Shagari",
-          "Silame",
-          "Sokoto North",
-          "Sokoto South",
-          "Tambuwal",
-          "Tangaza",
-          "Tureta",
-          "Wamako",
-          "Wurno",
-          "Yabo",
-          "Binji",
-          "Bodinga",
-          "Dange Shuni",
-          "Goronyo",
-          "Gada",
-        ],
-        plateau: [
-          "Bokkos",
-          "Barkin Ladi",
-          "Bassa",
-          "Jos East",
-          "Jos North",
-          "Jos South",
-          "Kanam",
-          "Kanke",
-          "Langtang South",
-          "Langtang North",
-          "Mangu",
-          "Mikang",
-          "Pankshin",
-          "Qua'an Pan",
-          "Riyom",
-          "Shendam",
-          "Wase",
-        ],
-        taraba: [
-          "Ardo Kola",
-          "Bali",
-          "Donga",
-          "Gashaka",
-          "Gassol",
-          "Ibi",
-          "Jalingo",
-          "Karim Lamido",
-          "Kumi",
-          "Lau",
-          "Sardauna",
-          "Takum",
-          "Ussa",
-          "Wukari",
-          "Yorro",
-          "Zing",
-        ],
-        yobe: [
-          "Bade",
-          "Bursari",
-          "Damaturu",
-          "Fika",
-          "Fune",
-          "Geidam",
-          "Gujba",
-          "Gulani",
-          "Jakusko",
-          "Karasuwa",
-          "Machina",
-          "Nangere",
-          "Nguru",
-          "Potiskum",
-          "Tarmuwa",
-          "Yunusari",
-          "Yusufari",
-        ],
-        zamfara: [
-          "Anka",
-          "Birnin Magaji/Kiyaw",
-          "Bakura",
-          "Bukkuyum",
-          "Bungudu",
-          "Gummi",
-          "Gusau",
-          "Kaura Namoda",
-          "Maradun",
-          "Shinkafi",
-          "Maru",
-          "Talata Mafara",
-          "Tsafe",
-          "Zurmi",
-        ],
-        katsina: [
-          "Bakori",
-          "Batagarawa",
-          "Batsari",
-          "Baure",
-          "Bindawa",
-          "Charanchi",
-          "Danja",
-          "Dandume",
-          "Dan Musa",
-          "Daura",
-          "Dutsi",
-          "Dutsin Ma",
-          "Faskari",
-          "Funtua",
-          "Ingawa",
-          "Jibia",
-          "Kafur",
-          "Kaita",
-          "Kankara",
-          "Kankia",
-          "Katsina",
-          "Kurfi",
-          "Kusada",
-          "Mai'Adua",
-          "Malumfashi",
-          "Mani",
-          "Mashi",
-          "Matazu",
-          "Musawa",
-          "Rimi",
-          "Sabuwa",
-          "Safana",
-          "Sandamu",
-          "Zango",
-        ],
-        kwara: [
-          "Asa",
-          "Baruten",
-          "Edu",
-          "Ilorin East",
-          "Ifelodun",
-          "Ilorin South",
-          "Ekiti Kwara State",
-          "Ilorin West",
-          "Irepodun",
-          "Isin",
-          "Kaiama",
-          "Moro",
-          "Offa",
-          "Oke Ero",
-          "Oyun",
-          "Pategi",
-        ],
-        nasarawa: [
-          "Akwanga",
-          "Awe",
-          "Doma",
-          "Karu",
-          "Keana",
-          "Keffi",
-          "Lafia",
-          "Kokona",
-          "Nasarawa Egon",
-          "Nasarawa",
-          "Obi",
-          "Toto",
-          "Wamba",
-        ],
-        niger: [
-          "Agaie",
-          "Agwara",
-          "Bida",
-          "Borgu",
-          "Bosso",
-          "Chanchaga",
-          "Edati",
-          "Gbako",
-          "Gurara",
-          "Katcha",
-          "Kontagora",
-          "Lapai",
-          "Lavun",
-          "Mariga",
-          "Magama",
-          "Mokwa",
-          "Mashegu",
-          "Moya",
-          "Paikoro",
-          "Rafi",
-          "Rijau",
-          "Shiroro",
-          "Suleja",
-          "Tafa",
-          "Wushishi",
-        ],
-        rivers: [
-          "Abua/Odual",
-          "Ahoada East",
-          "Ahoada West",
-          "Andoni",
-          "Akuku-Toru",
-          "Asari-Toru",
-          "Bonny",
-          "Degema",
-          "Emuoha",
-          "Eleme",
-          "Ikwerre",
-          "Etche",
-          "Gokana",
-          "Khana",
-          "Obio/Akpor",
-          "Ogba/Egbema/Ndoni",
-          "Ogu/Bolo",
-          "Okrika",
-          "Omuma",
-          "Opobo/Nkoro",
-          "Oyigbo",
-          "Port Harcourt",
-          "Tai",
-        ],
+
+      // Next button click handler
+      $("#nextButton").click(function () {
+        console.log("click");
+        const isFirstNameValid = validateFirstName($("#firstname")[0]);
+        const isLastNameValid = validateLastName($("#lastname")[0]);
+        const isEmailValid = validateEmail($("#email")[0]);
+        const isPhoneValid = validatePhone($("#phone")[0]);
+        const isNINValid = validateNIN($("#NIN")[0]);
+
+        if (
+          isFirstNameValid &&
+          isLastNameValid &&
+          isEmailValid &&
+          isPhoneValid &&
+          isNINValid
+        ) {
+          formData.firstname = $("#firstname").val().trim();
+          formData.lastname = $("#lastname").val().trim();
+          formData.email = $("#email").val().trim();
+          formData.phone = $("#phone").val().trim();
+          formData.NIN = $("#NIN").val().trim();
+
+          currentStep = 2;
+          updateStepUI();
+        }
+      });
+
+      // Previous button click handler
+      $("#previousButton").click(function () {
+        currentStep = 1;
+        updateStepUI();
+      });
+
+      // Proceed button click handler
+      $("#proceedButton").click(function () {
+        const isPasswordValid = validatePassword($("#password")[0]);
+        const isConfirmPasswordValid = validateConfirmPassword(
+          $("#re_password")[0]
+        );
+
+        if (isPasswordValid && isConfirmPasswordValid) {
+          formData.stateOfOrigin = $("#stateOfOrigin").val().trim();
+          formData.lgaOfOrigin = $("#lgaOfOrigin").val().trim();
+          formData.confirmPassword = $("#re_password").val().trim();
+          formData.password = $("#password").val().trim();
+
+          const apiData = {
+            firstname: formData.firstname,
+            lastname: formData.lastname,
+            email: formData.email,
+            password: formData.password,
+            phone: formData.phone,
+            NIN: formData.NIN,
+            lgaOfOrigin: formData.lgaOfOrigin,
+            stateOfOrigin: formData.stateOfOrigin,
+          };
+
+          submitForm(apiData);
+        }
+      });
+
+      // Submit form to backend
+      const submitForm = async (formData) => {
+        try {
+          $("#submitbtn")
+            .html('<i class="fa fa-spinner fa-spin"></i>')
+            .prop("disabled", true);
+
+          const response = await $.ajax({
+            type: "POST",
+            url: `${BACKEND_URL}/auth/signup`,
+            contentType: "application/json",
+            data: JSON.stringify(formData),
+          });
+
+          Swal.fire(
+            "Welcome",
+            "Please check your email to activate your account. Click OK to continue.",
+            "success"
+          ).then(() => {
+            window.location.href = "../auth/login.html";
+          });
+        } catch (error) {
+          Swal.fire(
+            "Oops...",
+            error.responseJSON?.message || "An error occurred.",
+            "error"
+          );
+        } finally {
+          $("#submitbtn").html("Sign Up").attr("disabled", false);
+        }
       };
 
-      function updateLocalGovernmentsOfOrigin() {
-        const stateSelect = document.getElementById("stateOfOrigin");
-        const lgaSelect = document.getElementById("lgaOfOrigin");
-        const selectedState = stateSelect.value;
-
-        // Clear previous options
-        lgaSelect.innerHTML =
-          '<option value="">Select Local Government</option>';
-
-        if (nigerData[selectedState]) {
-          nigerData[selectedState].forEach((lga) => {
-            const option = document.createElement("option");
-            option.value = lga;
-            option.textContent = lga;
-            lgaSelect.appendChild(option);
-          });
+      // Update step UI
+      function updateStepUI() {
+        if (currentStep === 1) {
+          $("#step1").removeClass("d-none");
+          $("#step2").addClass("d-none");
+          $("#step1-indicator").addClass("active").removeClass("inactive");
+          $("#step2-indicator").addClass("inactive").removeClass("active");
+          $("#step1-text").addClass("text-success").removeClass("text-muted");
+          $("#step2-text").addClass("text-muted").removeClass("text-success");
+        } else {
+          $("#step1").addClass("d-none");
+          $("#step2").removeClass("d-none");
+          $("#step1-indicator").addClass("active").removeClass("inactive");
+          $("#step2-indicator").addClass("active").removeClass("inactive");
+          $("#step1-text").addClass("text-success").removeClass("text-muted");
+          $("#step2-text").addClass("text-success").removeClass("text-muted");
         }
       }
-    </script>
+    });
+  </script>
+  <script>
+    const nigerData = {
+      adamawa: [
+        "Demsa",
+        "Fufure",
+        "Ganye",
+        "Gayuk",
+        "Gombi",
+        "Grie",
+        "Hong",
+        "Jada",
+        "Larmurde",
+        "Madagali",
+        "Maiha",
+        "Mayo Belwa",
+        "Michika",
+        "Mubi North",
+        "Mubi South",
+        "Numan",
+        "Shelleng",
+        "Song",
+        "Toungo",
+        "Yola North",
+        "Yola South",
+      ],
+      akwa_ibom: [
+        "Abak",
+        "Eastern Obolo",
+        "Eket",
+        "Esit Eket",
+        "Essien Udim",
+        "Etim Ekpo",
+        "Etinan",
+        "Ibeno",
+        "Ibesikpo Asutan",
+        "Ibiono-Ibom",
+        "Ikot Abasi",
+        "Ika",
+        "Ikono",
+        "Ikot Ekpene",
+        "Ini",
+        "Mkpat-Enin",
+        "Itu",
+        "Mbo",
+        "Nsit-Atai",
+        "Nsit-Ibom",
+        "Nsit-Ubium",
+        "Obot Akara",
+        "Okobo",
+        "Onna",
+        "Oron",
+        "Udung-Uko",
+        "Ukanafun",
+        "Oruk Anam",
+        "Uruan",
+        "Urue-Offong/Oruko",
+        "Uyo",
+      ],
+      anambra: [
+        "Aguata",
+        "Anambra East",
+        "Anaocha",
+        "Awka North",
+        "Anambra West",
+        "Awka South",
+        "Ayamelum",
+        "Dunukofia",
+        "Ekwusigo",
+        "Idemili North",
+        "Idemili South",
+        "Ihiala",
+        "Njikoka",
+        "Nnewi North",
+        "Nnewi South",
+        "Ogbaru",
+        "Onitsha North",
+        "Onitsha South",
+        "Orumba North",
+        "Orumba South",
+        "Oyi",
+      ],
+      abia: [
+        "Aba North",
+        "Arochukwu",
+        "Aba South",
+        "Bende",
+        "Isiala Ngwa North",
+        "Ikwuano",
+        "Isiala Ngwa South",
+        "Isuikwuato",
+        "Obi Ngwa",
+        "Ohafia",
+        "Osisioma",
+        "Ugwunagbo",
+        "Ukwa East",
+        "Ukwa West",
+        "Umuahia North",
+        "Umuahia South",
+        "Umu Nneochi",
+      ],
+      bauchi: [
+        "Alkaleri",
+        "Bauchi",
+        "Bogoro",
+        "Damban",
+        "Darazo",
+        "Dass",
+        "Gamawa",
+        "Ganjuwa",
+        "Giade",
+        "Itas/Gadau",
+        "Jama'are",
+        "Katagum",
+        "Kirfi",
+        "Misau",
+        "Ningi",
+        "Shira",
+        "Tafawa Balewa",
+        "Toro",
+        "Warji",
+        "Zaki",
+      ],
+      benue: [
+        "Agatu",
+        "Apa",
+        "Ado",
+        "Buruku",
+        "Gboko",
+        "Guma",
+        "Gwer East",
+        "Gwer West",
+        "Katsina-Ala",
+        "Konshisha",
+        "Kwande",
+        "Logo",
+        "Makurdi",
+        "Obi",
+        "Ogbadibo",
+        "Ohimini",
+        "Oju",
+        "Okpokwu",
+        "Oturkpo",
+        "Tarka",
+        "Ukum",
+        "Ushongo",
+        "Vandeikya",
+      ],
+      borno: [
+        "Abadam",
+        "Askira/Uba",
+        "Bama",
+        "Bayo",
+        "Biu",
+        "Chibok",
+        "Damboa",
+        "Dikwa",
+        "Guzamala",
+        "Gubio",
+        "Hawul",
+        "Gwoza",
+        "Jere",
+        "Kaga",
+        "Kala/Balge",
+        "Konduga",
+        "Kukawa",
+        "Kwaya Kusar",
+        "Mafa",
+        "Magumeri",
+        "Maiduguri",
+        "Mobbar",
+        "Marte",
+        "Monguno",
+        "Ngala",
+        "Nganzai",
+        "Shani",
+      ],
+      bayelsa: [
+        "Brass",
+        "Ekeremor",
+        "Kolokuma/Opokuma",
+        "Nembe",
+        "Ogbia",
+        "Sagbama",
+        "Southern Ijaw",
+        "Yenagoa",
+      ],
+      cross_river: [
+        "Abi",
+        "Akamkpa",
+        "Akpabuyo",
+        "Bakassi",
+        "Bekwarra",
+        "Biase",
+        "Boki",
+        "Calabar Municipal",
+        "Calabar South",
+        "Etung",
+        "Ikom",
+        "Obanliku",
+        "Obubra",
+        "Obudu",
+        "Odukpani",
+        "Ogoja",
+        "Yakuur",
+        "Yala",
+      ],
+      delta: [
+        "Aniocha North",
+        "Aniocha South",
+        "Bomadi",
+        "Burutu",
+        "Ethiope West",
+        "Ethiope East",
+        "Ika North East",
+        "Ika South",
+        "Isoko North",
+        "Isoko South",
+        "Ndokwa East",
+        "Ndokwa West",
+        "Okpe",
+        "Oshimili North",
+        "Oshimili South",
+        "Patani",
+        "Sapele",
+        "Udu",
+        "Ughelli North",
+        "Ukwuani",
+        "Ughelli South",
+        "Uvwie",
+        "Warri North",
+        "Warri South",
+        "Warri South West",
+      ],
+      ebonyi: [
+        "Abakaliki",
+        "Afikpo North",
+        "Ebonyi",
+        "Afikpo South",
+        "Ezza North",
+        "Ikwo",
+        "Ezza South",
+        "Ivo",
+        "Ishielu",
+        "Izzi",
+        "Ohaozara",
+        "Ohaukwu",
+        "Onicha",
+      ],
+      edo: [
+        "Akoko-Edo",
+        "Egor",
+        "Esan Central",
+        "Esan North-East",
+        "Esan South-East",
+        "Esan West",
+        "Etsako Central",
+        "Etsako East",
+        "Etsako West",
+        "Igueben",
+        "Ikpoba Okha",
+        "Orhionmwon",
+        "Oredo",
+        "Ovia North-East",
+        "Ovia South-West",
+        "Owan East",
+        "Owan West",
+        "Uhunmwonde",
+      ],
+      ekiti: [
+        "Ado Ekiti",
+        "Efon",
+        "Ekiti East",
+        "Ekiti South-West",
+        "Ekiti West",
+        "Emure",
+        "Gbonyin",
+        "Ido Osi",
+        "Ijero",
+        "Ikere",
+        "Ilejemeje",
+        "Irepodun/Ifelodun",
+        "Ikole",
+        "Ise/Orun",
+        "Moba",
+        "Oye",
+      ],
+      enugu: [
+        "Awgu",
+        "Aninri",
+        "Enugu East",
+        "Enugu North",
+        "Ezeagu",
+        "Enugu South",
+        "Igbo Etiti",
+        "Igbo Eze North",
+        "Igbo Eze South",
+        "Isi Uzo",
+        "Nkanu East",
+        "Nkanu West",
+        "Nsukka",
+        "Udenu",
+        "Oji River",
+        "Uzo Uwani",
+        "Udi",
+      ],
+      abuja: [
+        "Abaji",
+        "Bwari",
+        "Gwagwalada",
+        "Kuje",
+        "Kwali",
+        "Municipal Area Council",
+      ],
+      gombe: [
+        "Akko",
+        "Balanga",
+        "Billiri",
+        "Dukku",
+        "Funakaye",
+        "Gombe",
+        "Kaltungo",
+        "Kwami",
+        "Nafada",
+        "Shongom",
+        "Yamaltu/Deba",
+      ],
+      jigawa: [
+        "Auyo",
+        "Babura",
+        "Buji",
+        "Biriniwa",
+        "Birnin Kudu",
+        "Dutse",
+        "Gagarawa",
+        "Garki",
+        "Gumel",
+        "Guri",
+        "Gwaram",
+        "Gwiwa",
+        "Hadejia",
+        "Jahun",
+        "Kafin Hausa",
+        "Kazaure",
+        "Kiri Kasama",
+        "Kiyawa",
+        "Kaugama",
+        "Maigatari",
+        "Malam Madori",
+        "Miga",
+        "Sule Tankarkar",
+        "Roni",
+        "Ringim",
+        "Yankwashi",
+        "Taura",
+      ],
+      lagos: [
+        "Agege",
+        "Ajeromi-Ifelodun",
+        "Alimosho",
+        "Amuwo-Odofin",
+        "Badagry",
+        "Apapa",
+        "Epe",
+        "Eti Osa",
+        "Ibeju-Lekki",
+        "Ifako-Ijaiye",
+        "Ikeja",
+        "Ikorodu",
+        "Kosofe",
+        "Lagos Island",
+        "Mushin",
+        "Lagos Mainland",
+        "Ojo",
+        "Oshodi-Isolo",
+        "Shomolu",
+        "Surulere Lagos State",
+      ],
+      oyo: [
+        "Afijio",
+        "Akinyele",
+        "Atiba",
+        "Atisbo",
+        "Egbeda",
+        "Ibadan North",
+        "Ibadan North-East",
+        "Ibadan North-West",
+        "Ibadan South-East",
+        "Ibarapa Central",
+        "Ibadan South-West",
+        "Ibarapa East",
+        "Ido",
+        "Ibarapa North",
+        "Irepo",
+        "Iseyin",
+        "Itesiwaju",
+        "Iwajowa",
+        "Kajola",
+        "Lagelu",
+        "Ogbomosho North",
+        "Ogbomosho South",
+        "Ogo Oluwa",
+        "Olorunsogo",
+        "Oluyole",
+        "Ona Ara",
+        "Orelope",
+        "Ori Ire",
+        "Oyo",
+        "Oyo East",
+        "Saki East",
+        "Saki West",
+        "Surulere Oyo State",
+      ],
+      imo: [
+        "Aboh Mbaise",
+        "Ahiazu Mbaise",
+        "Ehime Mbano",
+        "Ezinihitte",
+        "Ideato North",
+        "Ideato South",
+        "Ihitte/Uboma",
+        "Ikeduru",
+        "Isiala Mbano",
+        "Mbaitoli",
+        "Isu",
+        "Ngor Okpala",
+        "Njaba",
+        "Nkwerre",
+        "Nwangele",
+        "Obowo",
+        "Oguta",
+        "Ohaji/Egbema",
+        "Okigwe",
+        "Orlu",
+        "Orsu",
+        "Oru East",
+        "Oru West",
+        "Owerri Municipal",
+        "Owerri North",
+        "Unuimo",
+        "Owerri West",
+      ],
+      kaduna: [
+        "Birnin Gwari",
+        "Chikun",
+        "Giwa",
+        "Ikara",
+        "Igabi",
+        "Jaba",
+        "Jema'a",
+        "Kachia",
+        "Kaduna North",
+        "Kaduna South",
+        "Kagarko",
+        "Kajuru",
+        "Kaura",
+        "Kauru",
+        "Kubau",
+        "Kudan",
+        "Lere",
+        "Makarfi",
+        "Sabon Gari",
+        "Sanga",
+        "Soba",
+        "Zangon Kataf",
+        "Zaria",
+      ],
+      kebbi: [
+        "Aleiro",
+        "Argungu",
+        "Arewa Dandi",
+        "Augie",
+        "Bagudo",
+        "Birnin Kebbi",
+        "Bunza",
+        "Dandi",
+        "Fakai",
+        "Gwandu",
+        "Jega",
+        "Kalgo",
+        "Koko/Besse",
+        "Maiyama",
+        "Ngaski",
+        "Shanga",
+        "Suru",
+        "Sakaba",
+        "Wasagu/Danko",
+        "Yauri",
+        "Zuru",
+      ],
+      kano: [
+        "Ajingi",
+        "Albasu",
+        "Bagwai",
+        "Bebeji",
+        "Bichi",
+        "Bunkure",
+        "Dala",
+        "Dambatta",
+        "Dawakin Kudu",
+        "Dawakin Tofa",
+        "Doguwa",
+        "Fagge",
+        "Gabasawa",
+        "Garko",
+        "Garun Mallam",
+        "Gezawa",
+        "Gaya",
+        "Gwale",
+        "Gwarzo",
+        "Kabo",
+        "Kano Municipal",
+        "Karaye",
+        "Kibiya",
+        "Kiru",
+        "Kumbotso",
+        "Kunchi",
+        "Kura",
+        "Madobi",
+        "Makoda",
+        "Minjibir",
+        "Nasarawa",
+        "Rano",
+        "Rimin Gado",
+        "Rogo",
+        "Shanono",
+        "Takai",
+        "Sumaila",
+        "Tarauni",
+        "Tofa",
+        "Tsanyawa",
+        "Tudun Wada",
+        "Ungogo",
+        "Warawa",
+        "Wudil",
+      ],
+      kogi: [
+        "Ajaokuta",
+        "Adavi",
+        "Ankpa",
+        "Bassa",
+        "Dekina",
+        "Ibaji",
+        "Idah",
+        "Igalamela Odolu",
+        "Ijumu",
+        "Kogi",
+        "Kabba/Bunu",
+        "Lokoja",
+        "Ofu",
+        "Mopa Muro",
+        "Ogori/Magongo",
+        "Okehi",
+        "Okene",
+        "Olamaboro",
+        "Omala",
+        "Yagba East",
+        "Yagba West",
+      ],
+      osun: [
+        "Aiyedire",
+        "Atakunmosa West",
+        "Atakunmosa East",
+        "Aiyedaade",
+        "Boluwaduro",
+        "Boripe",
+        "Ife East",
+        "Ede South",
+        "Ife North",
+        "Ede North",
+        "Ife South",
+        "Ejigbo",
+        "Ife Central",
+        "Ifedayo",
+        "Egbedore",
+        "Ila",
+        "Ifelodun",
+        "Ilesa East",
+        "Ilesa West",
+        "Irepodun",
+        "Irewole",
+        "Isokan",
+        "Iwo",
+        "Obokun",
+        "Odo Otin",
+        "Ola Oluwa",
+        "Olorunda",
+        "Oriade",
+        "Orolu",
+        "Osogbo",
+      ],
+      sokoto: [
+        "Gudu",
+        "Gwadabawa",
+        "Illela",
+        "Isa",
+        "Kebbe",
+        "Kware",
+        "Rabah",
+        "Sabon Birni",
+        "Shagari",
+        "Silame",
+        "Sokoto North",
+        "Sokoto South",
+        "Tambuwal",
+        "Tangaza",
+        "Tureta",
+        "Wamako",
+        "Wurno",
+        "Yabo",
+        "Binji",
+        "Bodinga",
+        "Dange Shuni",
+        "Goronyo",
+        "Gada",
+      ],
+      plateau: [
+        "Bokkos",
+        "Barkin Ladi",
+        "Bassa",
+        "Jos East",
+        "Jos North",
+        "Jos South",
+        "Kanam",
+        "Kanke",
+        "Langtang South",
+        "Langtang North",
+        "Mangu",
+        "Mikang",
+        "Pankshin",
+        "Qua'an Pan",
+        "Riyom",
+        "Shendam",
+        "Wase",
+      ],
+      taraba: [
+        "Ardo Kola",
+        "Bali",
+        "Donga",
+        "Gashaka",
+        "Gassol",
+        "Ibi",
+        "Jalingo",
+        "Karim Lamido",
+        "Kumi",
+        "Lau",
+        "Sardauna",
+        "Takum",
+        "Ussa",
+        "Wukari",
+        "Yorro",
+        "Zing",
+      ],
+      yobe: [
+        "Bade",
+        "Bursari",
+        "Damaturu",
+        "Fika",
+        "Fune",
+        "Geidam",
+        "Gujba",
+        "Gulani",
+        "Jakusko",
+        "Karasuwa",
+        "Machina",
+        "Nangere",
+        "Nguru",
+        "Potiskum",
+        "Tarmuwa",
+        "Yunusari",
+        "Yusufari",
+      ],
+      zamfara: [
+        "Anka",
+        "Birnin Magaji/Kiyaw",
+        "Bakura",
+        "Bukkuyum",
+        "Bungudu",
+        "Gummi",
+        "Gusau",
+        "Kaura Namoda",
+        "Maradun",
+        "Shinkafi",
+        "Maru",
+        "Talata Mafara",
+        "Tsafe",
+        "Zurmi",
+      ],
+      katsina: [
+        "Bakori",
+        "Batagarawa",
+        "Batsari",
+        "Baure",
+        "Bindawa",
+        "Charanchi",
+        "Danja",
+        "Dandume",
+        "Dan Musa",
+        "Daura",
+        "Dutsi",
+        "Dutsin Ma",
+        "Faskari",
+        "Funtua",
+        "Ingawa",
+        "Jibia",
+        "Kafur",
+        "Kaita",
+        "Kankara",
+        "Kankia",
+        "Katsina",
+        "Kurfi",
+        "Kusada",
+        "Mai'Adua",
+        "Malumfashi",
+        "Mani",
+        "Mashi",
+        "Matazu",
+        "Musawa",
+        "Rimi",
+        "Sabuwa",
+        "Safana",
+        "Sandamu",
+        "Zango",
+      ],
+      kwara: [
+        "Asa",
+        "Baruten",
+        "Edu",
+        "Ilorin East",
+        "Ifelodun",
+        "Ilorin South",
+        "Ekiti Kwara State",
+        "Ilorin West",
+        "Irepodun",
+        "Isin",
+        "Kaiama",
+        "Moro",
+        "Offa",
+        "Oke Ero",
+        "Oyun",
+        "Pategi",
+      ],
+      nasarawa: [
+        "Akwanga",
+        "Awe",
+        "Doma",
+        "Karu",
+        "Keana",
+        "Keffi",
+        "Lafia",
+        "Kokona",
+        "Nasarawa Egon",
+        "Nasarawa",
+        "Obi",
+        "Toto",
+        "Wamba",
+      ],
+      niger: [
+        "Agaie",
+        "Agwara",
+        "Bida",
+        "Borgu",
+        "Bosso",
+        "Chanchaga",
+        "Edati",
+        "Gbako",
+        "Gurara",
+        "Katcha",
+        "Kontagora",
+        "Lapai",
+        "Lavun",
+        "Mariga",
+        "Magama",
+        "Mokwa",
+        "Mashegu",
+        "Moya",
+        "Paikoro",
+        "Rafi",
+        "Rijau",
+        "Shiroro",
+        "Suleja",
+        "Tafa",
+        "Wushishi",
+      ],
+      rivers: [
+        "Abua/Odual",
+        "Ahoada East",
+        "Ahoada West",
+        "Andoni",
+        "Akuku-Toru",
+        "Asari-Toru",
+        "Bonny",
+        "Degema",
+        "Emuoha",
+        "Eleme",
+        "Ikwerre",
+        "Etche",
+        "Gokana",
+        "Khana",
+        "Obio/Akpor",
+        "Ogba/Egbema/Ndoni",
+        "Ogu/Bolo",
+        "Okrika",
+        "Omuma",
+        "Opobo/Nkoro",
+        "Oyigbo",
+        "Port Harcourt",
+        "Tai",
+      ],
+    };
 
-    <!-- jQuery and Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  </body>
+    function updateLocalGovernmentsOfOrigin() {
+      const stateSelect = document.getElementById("stateOfOrigin");
+      const lgaSelect = document.getElementById("lgaOfOrigin");
+      const selectedState = stateSelect.value;
+
+      // Clear previous options
+      lgaSelect.innerHTML =
+        '<option value="">Select Local Government</option>';
+
+      if (nigerData[selectedState]) {
+        nigerData[selectedState].forEach((lga) => {
+          const option = document.createElement("option");
+          option.value = lga;
+          option.textContent = lga;
+          lgaSelect.appendChild(option);
+        });
+      }
+    }
+  </script>
+
+  <!-- jQuery and Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
 </html>
