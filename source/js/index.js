@@ -3301,7 +3301,7 @@ function updateHeaderTitle() {
   const pageTitle = titleMap[page] || "Dashboard";
   document.title =
     pageTitle +
-    " | Benue State Integrated Residents/Citizens Identity/Indigeneship Registration and Card Issuance Management System";
+    " | Benue State Integrated Citizenship and Resident Identity Registration Management System";
   document.querySelector(".dashboard_bar").textContent = pageTitle;
 }
 
