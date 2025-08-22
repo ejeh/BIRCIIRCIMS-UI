@@ -122,8 +122,8 @@ function loadPDFJ(blobUrl, container) {
 
 $(document).ready(function () {
   const userRole = user.role || "";
-
   $("#header-user-label").text(user.firstname);
+ 
 
   // Sidebar label
   $("#sidebar-user-label").text(
@@ -220,6 +220,25 @@ $(document).ready(function () {
       Authorization: `Bearer ${token}`,
     },
     success: function (data) {
+      // $("#lga-headquaters").text(
+      //   data.lga?.headquaters ? `Headquarters ${data.lga.headquaters}` : ""
+      // );
+      
+      // $("#lga-name").text(data.lga?.name ?? "")
+
+      if (data.lga?.name) {
+        $("#lga-info").show();
+        $("#lga-name").text(data.lga.name);
+        if (data.lga.headquaters) {
+          $("#lga-headquaters").text(data.lga.headquaters);
+        } else {
+          $("#lga-headquaters").text("").hide(); // hide if no HQ
+        }
+      } else {
+        $("#lga-info").hide(); // hide entire block if no name
+      }
+      
+      
       // Check if healthInfo exists and is an array
       if (
         data.healthInfo &&
@@ -429,24 +448,19 @@ $(document).ready(function () {
   const updateTable = (data, page) => {
     const tableBody = $("#table-body");
     tableBody.empty(); // Clear existing table rows
-{/* <td>
-            <button class="btn btn-sm btn-success update-role-btn" 
-                    data-id="${item._id}" title="Update Role"
-                    data-role="${item.role}">
-              <i class="fas fa-user-edit me-1"></i> 
-            </button>
-          </td> */}
     data.forEach((item, index) => {
+
       const rowHtml = `
         <tr class="align-middle">
           <td class="fw-semibold">${(page - 1) * pageSize + index + 1}</td>
           <td>${item.firstname} ${item.lastname}</td>
-          <td>${item.phone}</td>
-          <td>${item.email}</td>
+          <td>${item.stateOfOrigin}</td>
+          <td>${item.lgaOfOrigin}</td>
+          <td>${item.lga?.name ?? "Not Assigned"}</td>
           <td>
             <span class="badge bg-secondary text-capitalize">${item.role}</span>
           </td>
-          <td>${item.stateOfOrigin}</td>
+     
           
           <td>
             <button class="btn btn-sm btn-primary view-user-btn" 
@@ -462,7 +476,7 @@ $(document).ready(function () {
   // Fetch user data for the current page
   const fetchData = (page) => {
     const url = `${BACKEND_URL}/users?page=${page}&limit=${pageSize}`;
-    const headers = { Authorization: `Bearer ${token}` };
+    const headers = { Authorization: `Bearer ${token}` }
 
     apiRequest(url, "GET", headers, null, (response) => {
       const { data, hasNextPage } = response;
@@ -472,11 +486,12 @@ $(document).ready(function () {
       $("#prev-btn-users").prop("disabled", page <= 1);
       $("#next-btn-users").prop("disabled", !hasNextPage);
       $("#usercount").text(data.length);
+
     });
   };
 
   // Update the role of a specific user to any valid role
-const updateRole = (userId, newRole) => {
+const updateRole = (userId, newRole, lgaId = null) => {
   if (!userId || !newRole) {
     alert("Invalid user ID or role.");
     return;
@@ -487,7 +502,7 @@ const updateRole = (userId, newRole) => {
     Authorization: `Bearer ${token}`,
     "Content-Type": "application/json",
   };
-  const data = JSON.stringify({ role: newRole });
+  const data = JSON.stringify({ role: newRole,  lgaId: lgaId || null  });
 
   apiRequest(
     url,
@@ -503,67 +518,153 @@ const updateRole = (userId, newRole) => {
 };
 
 // Fetch and display user details in a modern profile modal
+// const viewDetails = (userId) => {
+//   const url = `${BACKEND_URL}/users/${userId}`;
+//   const headers = { Authorization: `Bearer ${token}` };
+
+//   apiRequest(url, "GET", headers, null, (response) => {
+//     const roleOptions = ["user", "support_admin", "super_admin", "kindred_head"];
+//     const roleSelect = `
+//       <select id="new-role" class="form-select">
+//         ${roleOptions
+//           .map(
+//             (role) =>
+//               `<option value="${role}" ${
+//                 role === response.role ? "selected" : ""
+//               }>${role}</option>`
+//           )
+//           .join("")}
+//       </select>
+//       <button class="btn btn-primary mt-2 update-role-modal-btn" data-id="${userId}">
+//         Update Role
+//       </button>
+//     `;
+
+//     const details = `
+//       <div class="user-profile">
+//         <div class="profile-header">
+//           <img 
+//             src="${response.passportPhoto || "/assets/images/avatar.jpeg"}" 
+//             alt="Passport Photo" 
+//             class="profile-photo" 
+//             crossOrigin="anonymous"
+//           >
+//           <h2 class="profile-name">${response.firstname} ${response.lastname}</h2>
+//           <p class="profile-role">Current Role: ${response.role}</p>
+//         </div>
+//         <div class="profile-details">
+//           <p><strong>Email:</strong> ${response.email}</p>
+//           <p><strong>Phone:</strong> ${response.phone}</p>
+//         </div>
+//         <div class="profile-role-update mt-3">
+//           ${roleSelect}
+//         </div>
+//       </div>
+//     `;
+
+//     $("#details-modal .modal-body").html(details);
+//     $("#details-modal").modal("show");
+//   });
+// };
+
+// // Handle role update from modal dropdown
+// $("#details-modal").on("click", ".update-role-modal-btn", function () {
+//   const userId = $(this).data("id");
+//   const newRole = $("#new-role").val();
+//   updateRole(userId, newRole);
+// });
 const viewDetails = (userId) => {
   const url = `${BACKEND_URL}/users/${userId}`;
   const headers = { Authorization: `Bearer ${token}` };
 
   apiRequest(url, "GET", headers, null, (response) => {
     const roleOptions = ["user", "support_admin", "super_admin", "kindred_head"];
-    const roleSelect = `
-      <select id="new-role" class="form-select">
-        ${roleOptions
-          .map(
-            (role) =>
-              `<option value="${role}" ${
-                role === response.role ? "selected" : ""
-              }>${role}</option>`
-          )
-          .join("")}
-      </select>
-      <button class="btn btn-primary mt-2 update-role-modal-btn" data-id="${userId}">
-        Update Role
-      </button>
-    `;
 
-    const details = `
-      <div class="user-profile">
-        <div class="profile-header">
-          <img 
-            src="${response.passportPhoto || "/assets/images/avatar.jpeg"}" 
-            alt="Passport Photo" 
-            class="profile-photo" 
-            crossOrigin="anonymous"
-          >
-          <h2 class="profile-name">${response.firstname} ${response.lastname}</h2>
-          <p class="profile-role">Current Role: ${response.role}</p>
-        </div>
-        <div class="profile-details">
-          <p><strong>Email:</strong> ${response.email}</p>
-          <p><strong>Phone:</strong> ${response.phone}</p>
-        </div>
-        <div class="profile-role-update mt-3">
-          ${roleSelect}
-        </div>
-      </div>
-    `;
+    // Fetch LGAs dynamically
+    apiRequest(`${BACKEND_URL}/lgas`, "GET", headers, null, (lgas) => {
+      const {data} = lgas
+      const lgaSelect = `
+        <select id="lga-select" class="form-select mt-2" style="display:none;">
+          <option value="">-- Select LGA --</option>
+          ${data
+            .map(
+              (lga) =>
+                `<option value="${lga._id}" ${
+                  response.lga && response.lga._id === lga._id ? "selected" : ""
+                }>${lga.name}</option>`
+            )
+            .join("")}
+        </select>
+      `;
 
-    $("#details-modal .modal-body").html(details);
-    $("#details-modal").modal("show");
+      const roleSelect = `
+        <select id="new-role" class="form-select">
+          ${roleOptions
+            .map(
+              (role) =>
+                `<option value="${role}" ${
+                  role === response.role ? "selected" : ""
+                }>${role}</option>`
+            )
+            .join("")}
+        </select>
+        ${lgaSelect}
+        <button class="btn btn-primary mt-2 update-role-modal-btn" data-id="${userId}">
+          Update Role
+        </button>
+      `;
+
+      const details = `
+        <div class="user-profile">
+          <div class="profile-header">
+            <img 
+              src="${response.passportPhoto || "/assets/images/avatar.jpeg"}" 
+              alt="Passport Photo" 
+              class="profile-photo" 
+              crossOrigin="anonymous"
+            >
+            <h2 class="profile-name">${response.firstname} ${response.lastname}</h2>
+            <p class="profile-role">Current Role: ${response.role}</p>
+          </div>
+          <div class="profile-details">
+            <p><strong>Email:</strong> ${response.email}</p>
+            <p><strong>Phone:</strong> ${response.phone}</p>
+          </div>
+          <div class="profile-role-update mt-3">
+            ${roleSelect}
+          </div>
+        </div>
+      `;
+
+      $("#details-modal .modal-body").html(details);
+      $("#details-modal").modal("show");
+
+      // Show/hide LGA select based on role selection
+      $("#new-role").on("change", function () {
+        if ($(this).val() === "support_admin") {
+          $("#lga-select").show();
+        } else {
+          $("#lga-select").hide().val("");
+        }
+      });
+
+      // If already support_admin, show LGA select
+      if (response.role === "support_admin") {
+        $("#lga-select").show();
+      }
+    });
   });
 };
 
-// Trigger viewDetails on .view-details-btn
-// $("#table-body").on("click", ".view-details-btn", function () {
-//   const userId = $(this).data("id");
-//   viewDetails(userId);
-// });
-
-// Handle role update from modal dropdown
+// Handle role + LGA update
 $("#details-modal").on("click", ".update-role-modal-btn", function () {
   const userId = $(this).data("id");
   const newRole = $("#new-role").val();
-  updateRole(userId, newRole);
+  const lgaId = $("#lga-select").val();
+
+  updateRole(userId, newRole, lgaId);
 });
+
 
 
   // Handle view details button clicks
@@ -3363,7 +3464,6 @@ function fetchUserKindred(page) {
       tableBody.empty();
 
       data.forEach((data, index) => {
-        console.log("data", data);
         tableBody.append(`
           <tr>
             <td>${(page - 1) * pageSize + index + 1}</td>
@@ -3529,7 +3629,7 @@ $(document).on("click", ".update-user-btn", function () {
   handleUpdate(userData);
 });
 
-// Sign up kindred
+
 $(document).ready(function () {
   // Initial data load
   fetchAllKindred(currentPageAll);
@@ -4245,4 +4345,202 @@ $(document).ready(function () {
       $(this).addClass("active");
     }
   });
+});
+
+//Fetch kindred by userId
+function fetchAllLga(page) {
+  $.ajax({
+    url: `${BACKEND_URL}/lgas?page=${page}&limit=${pageSize}`,
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    success: function (response) {
+      const { data, hasNextPage } = response;
+      const tableBody = $("#lga-table");
+      tableBody.empty();
+
+      data.forEach((data, index) => {
+        tableBody.append(`
+          <tr>
+            <td>${(page - 1) * pageSize + index + 1}</td>
+            <td>${data.name} 
+            <td>${data.headquaters}</td>
+            
+            <td>
+              <div class="dropdown">
+                <button class="btn btn-xs btn-action dropdown-toggle" data-bs-toggle="dropdown">
+                  <i class="fas fa-ellipsis-v"></i>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <button class="dropdown-item update-lga-btn" data-id="${
+                      data._id
+                    }" data-info='${JSON.stringify(data)}'>
+                      Update User
+                    </button>
+                  </li>
+                  <li>
+                    <button class="dropdown-item delete-lga-btn" data-id="${
+                      data._id
+                    }" style="color: red;">
+                      Delete User
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </td>
+          </tr>
+        `);
+      });
+
+      $("#btnPrevUser").prop("disabled", page === 1);
+      $("#btnNextUser").prop("disabled", !hasNextPage);
+    },
+    error: function (error) {
+      console.error("Error fetching user kindred:", error);
+    },
+  });
+}
+$(document).ready(function () {
+  fetchAllLga(currentPageAll);
+});
+
+// Handle Delete User
+function handleDeleteLga(userId) {
+  Swal.fire({
+    title: "Are you sure?",
+    text: "This action cannot be undone!",
+    // icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "Yes, delete it!",
+  }).then((result) => {
+    if (result.value === true) {
+      $.ajax({
+        url: `${BACKEND_URL}/lgas/${userId}`,
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        success: function () {
+          Swal.fire("Deleted!", "User has been deleted.", "success");
+          fetchAllLga(currentPageUser);
+        },
+        error: function (error) {
+          Swal.fire("Error!", "Failed to delete user.", "error");
+          console.error("Error deleting request:", error);
+        },
+      });
+    }
+  });
+}
+
+// Handle Update User
+function handleUpdateLga(userData) {
+  Swal.fire({
+    title: "Update User",
+    html: `
+       <select id="updateName" name="lga"  class="swal2-input">
+            <option value="${userData.name}">${userData.name}</option>
+            <option value="Agatu">Agatu</option>
+            <option value="Apa">Apa</option>
+            <option value="Ado">Ado</option>
+            <option value="Buruku">Buruku</option>
+            <option value="Gboko">Gboko</option>
+            <option value="Guma">Guma</option>
+            <option value="Gwer East">Gwer East</option>
+            <option value="Gwer West">Gwer West</option>
+            <option value="Katsina-Ala">Katsina-Ala</option>
+            <option value="Konshisha">Konshisha</option>
+            <option value="Kwande">Kwande</option>
+            <option value="Logo">Logo</option>
+            <option value="Makurdi">Makurdi</option>
+            <option value="Obi">Obi</option>
+            <option value="Ogbadibo">Ogbadibo</option>
+            <option value="Ohimini">Ohimini</option>
+            <option value="Oju">Oju</option>
+            <option value="Okpokwu">Okpokwu</option>
+            <option value="Oturkpo">Oturkpo</option>
+            <option value="Tarka">Tarka</option>
+            <option value="Ukum">Ukum</option>
+            <option value="Ushongo">Ushongo</option>
+            <option value="Vandeikya">Vandeikya</option>
+
+        </select>
+      <select id="updateLgaHeadqtrs" class="swal2-input" placeholder="LGA Headquaters">
+              <option value="${userData.headquaters}">${userData.headquaters}</option>
+            <option value="Obagaji">Obagaji</option>
+            <option value="Ugbokpo">Ugbokpo</option>
+            <option value="Igumale">Igumale</option>
+            <option value="Buruku">Buruku</option>
+            <option value="Gboko">Gboko</option>
+            <option value="Gbajimba">Gbajimba</option>
+            <option value="Aliade">Aliade</option>
+            <option value="Naka">Naka</option>
+            <option value="Katsina-Ala">Katsina-Ala</option>
+            <option value="Tse-Agberagba">Tse-Agberagba</option>
+            <option value="Adikpo">Adikpo</option>
+            <option value="Ugba">Ugba</option>
+            <option value="Makurdi">Makurdi</option>
+            <option value="Obarike-Ito">Obarike-Ito</option>
+            <option value="Otukpa">Otukpa</option>
+            <option value="Idekpa">Idekpa</option>
+            <option value="Oju">Oju</option>
+            <option value="Okpoga">Okpoga</option>
+            <option value="Oturkpo">Oturkpo</option>
+            <option value="Wannune">Wannune</option>
+            <option value="Sankera">Sankera</option>
+            <option value="Lessel">Lessel</option>
+            <option value="Vandeikya">Vandeikya</option>
+
+        </select>
+    `,
+    showCancelButton: true,
+    confirmButtonText: "Update",
+    preConfirm: () => {
+      return {
+        name: $("#updateName").val().trim(),
+        headquaters: $("#updateLgaHeadqtrs").val().trim(), 
+      };
+    },
+  }).then((result) => {
+    if (result.value) {
+      $.ajax({
+        url: `${BACKEND_URL}/lgas/${userData._id}`,
+        method: "PATCH",
+        contentType: "application/json",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: JSON.stringify(result.value),
+        success: function () {
+          Swal.fire(
+            "Updated!",
+            "User details updated successfully.",
+            "success"
+          );
+          fetchAllLga(currentPageUser);
+        },
+        error: function (error) {
+          Swal.fire("Error!", "Failed to update user.", "error");
+          console.error("Error updating user:", error);
+        },
+      });
+    }
+  });
+}
+
+
+
+// Event Delegation for Delete & Update Buttons
+$(document).on("click", ".delete-lga-btn", function () {
+  const userId = $(this).data("id");
+  handleDeleteLga(userId);
+});
+
+$(document).on("click", ".update-lga-btn", function () {
+  const userData = $(this).data("info");
+  handleUpdateLga(userData);
 });

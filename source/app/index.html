@@ -120,6 +120,7 @@
                   <span> Dashboard</span>
                 </a>
               </li>
+              
               <li class="nav-item super-admin-menu">
                 <a
                   href="approvals.html"
@@ -156,17 +157,14 @@
                   <span>Certificate Requests</span>
                 </a>
               </li>
-
-              <!-- Support_addmin menu -->
               <li class="nav-item support-admin-menu">
-                <a
-                  href="user-kindred.html"
-                  class="nav-link d-flex align-items-center"
-                >
+                <a href="user-kindred.html" class="nav-link d-flex align-items-center">
                   <i class="bi bi-file-text text-secondary me-3 fs-5"></i>
                   <span>Kindreds</span>
                 </a>
               </li>
+              
+  
               <li class="nav-item support-admin-menu">
                 <a
                   href="support-admin-lga.html"
@@ -183,6 +181,12 @@
                 >
                   <i class="bi bi-credit-card text-secondary me-3 fs-5"></i>
                   <span>Card Requests</span>
+                </a>
+              </li>
+              <li class="nav-item super-admin-menu">
+                <a href="lgas.html" class="nav-link d-flex align-items-center">
+                  <i class="bi bi-file-text text-secondary me-3 fs-5"></i>
+                  <span>LGAs</span>
                 </a>
               </li>
 
@@ -254,14 +258,25 @@
           <button class="btn d-lg-none" id="sidebarToggle">
             <i class="fas fa-bars"></i>
           </button>
-
           <div class="d-none d-md-block align-items-center">
             <h5 class="mb-0 me-2 dashboard_bar">Dashboard</h5>
             <small class="text-muted"
-              >Welcome back, <span id="header-user-label"> User </span>
-            </small>
+            >Welcome back, <span id="header-user-label"> User </span>
+          </small>
           </div>
-
+          <!-- <div class="ms-auto d-flex align-items-center"> -->
+            <div class="ms-auto d-flex d-none d-md-block align-items-center">
+            <div class="text-end" id="lga-info">
+              <h5 class="mb-1 fw-bold text-primary d-flex align-items-center ">
+                <i class="fas fa-landmark me-2 text-secondary"></i>
+                <span id="lga-name">Dashboard</span>
+              </h5>
+              <small class="text-muted">
+                Headquater<span id="lga-headquaters" class="fw-semibold text-dark"></span>
+              </small>
+            </div>
+          </div>
+          
           <div class="ms-auto d-flex align-items-center">
             <div class="d-none d-md-flex position-relative me-3">
               <i
