@@ -518,9 +518,10 @@
                 if (!value) {
                     showError(input, "LGA heaquaters is required.");
                     return false;
-                } else if (!/^[a-zA-Z]+$/.test(value)) {
-                    showError(input, "LGA heaquaters should contain only letters.");
-                    return false;
+                // }
+                //  else if (!/^[a-zA-Z]+$/.test(value)) {
+                //     showError(input, "LGA heaquaters should contain only letters.");
+                //     return false;
                 } else {
                     clearError(input);
                     return true;
@@ -554,7 +555,7 @@
                     const formData = {
                         name: $("#lga").val().trim(),
                         headquaters: $("#lgaHequaters").val().trim(),
-                        // userId: user?.id, // Ensure user is defined
+                 
                     };
 
                     submitForm(formData);
@@ -597,7 +598,7 @@
                         "error"
                     );
                 } finally {
-                    $("#submitbtn").html("Sign Up").attr("disabled", false);
+                    $("#submitbtn").html("Save changes").attr("disabled", false);
                 }
             };
         });

@@ -583,20 +583,31 @@ const viewDetails = (userId) => {
     // Fetch LGAs dynamically
     apiRequest(`${BACKEND_URL}/lgas`, "GET", headers, null, (lgas) => {
       const {data} = lgas
-      const lgaSelect = `
-        <select id="lga-select" class="form-select mt-2" style="display:none;">
-          <option value="">-- Select LGA --</option>
-          ${data
-            .map(
-              (lga) =>
-                `<option value="${lga._id}" ${
-                  response.lga && response.lga._id === lga._id ? "selected" : ""
-                }>${lga.name}</option>`
-            )
-            .join("")}
-        </select>
-      `;
 
+       // Find the LGA object that matches the user's lgaOfOrigin
+       const originLga = data.find(lga => lga.name.toLowerCase() === response.lgaOfOrigin?.toLowerCase());
+
+       
+      // const lgaSelect = `
+      //   <select id="lga-select" class="form-select mt-2" style="display:none;">
+      //     <option value="">-- Select LGA --</option>
+      //     ${data
+      //       .map(
+      //         (lga) =>
+      //           `<option value="${lga._id}" ${
+      //             response.lga && response.lga._id === lga._id ? "selected" : ""
+      //           }>${lga.name}</option>`
+      //       )
+      //       .join("")}
+      //   </select>
+      // `;
+      const lgaSelect = originLga ? `
+      <select id="lga-select" class="form-select mt-2" style="display:none;">
+        <option value="${originLga._id}" selected>${originLga.name}</option>
+      </select>
+    ` : `
+      <p class="text-danger mt-2">No matching LGA of origin found!</p>
+    `;
       const roleSelect = `
         <select id="new-role" class="form-select">
           ${roleOptions
@@ -4428,9 +4439,11 @@ function handleDeleteLga(userId) {
           Swal.fire("Deleted!", "User has been deleted.", "success");
           fetchAllLga(currentPageUser);
         },
-        error: function (error) {
-          Swal.fire("Error!", "Failed to delete user.", "error");
-          console.error("Error deleting request:", error);
+        error: function (xhr) {
+          const errorMessage =
+            xhr.responseJSON?.message || "Failed to delete LGA.";
+          Swal.fire("Error!", errorMessage, "error");
+
         },
       });
     }
