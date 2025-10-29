@@ -679,3 +679,65 @@
     <script src="assets/js/main.js"></script>
   </body>
 </html>
+
+// Robust createNeighborItem function createNeighborItem(neighbor) { const id =
+neighbor?.id || neighbor?._id || ""; const statusClass =
+getStatusClass(neighbor?.status); const statusText =
+getStatusText(neighbor?.status); const expiry = neighbor?.verificationExpiresAt
+|| neighbor?.verification_expires_at || ""; const expiryInfo = expiry ? `<small
+  class="text-muted"
+  >Expires: ${formatDate(expiry)}</small
+>` : ""; const neighborItem = $(`
+<div class="neighbor-item mb-3" data-id="${id}">
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Neighbor Reference</h5>
+      <span class="verification-status ${statusClass}">${statusText}</span>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <label class="form-label">Name</label>
+          <input type="text" class="form-control neighbor-name"
+          value="${neighbor?.name || ""}">
+        </div>
+        <div class="col-md-4 mb-3">
+          <label class="form-label">Phone</label>
+          <input type="tel" class="form-control neighbor-phone"
+          value="${neighbor?.phone || ""}">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 mb-3">
+          <label class="form-label">Address</label>
+          <input type="text" class="form-control neighbor-address"
+          value="${neighbor?.address || ""}">
+        </div>
+      </div>
+      ${expiryInfo ? `
+      <div class="row"><div class="col-12">${expiryInfo}</div></div>
+      ` : ""}
+      <div class="verification-actions">
+        ${neighbor?.status === "pending" ? `<button
+          type="button"
+          class="btn btn-sm btn-outline-primary resend-verification"
+        >
+          <i class="bi bi-send"></i> Resend</button
+        >` : ""} ${neighbor?.status === "verified" ? `<button
+          type="button"
+          class="btn btn-sm btn-outline-info view-history"
+        >
+          <i class="bi bi-clock-history"></i> History</button
+        >` : ""}
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-danger remove-neighbor"
+        >
+          <i class="bi bi-trash"></i> Remove
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+ 

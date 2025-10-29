@@ -34,20 +34,6 @@
         background: #f9f9f9;
         font-family: "Times New Roman", serif;
       }
-      /* .certificate {
-        width: 100vw;
-        height: 100vh;
-        padding: 40px;
-        background: url("/assets/images/cert-bg.jpg") no-repeat center;
-        background-size: 100% 100%;
-        text-align: center;
-        position: relative;
-        box-sizing: border-box;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        text-transform: capitalize;
-      } */
 
       .certificate {
         width: 148mm; /* A5 width */
@@ -283,7 +269,7 @@
         if (certificateId) {
           // Make the AJAX request
           $.ajax({
-            url: `${BACKEND_URL}/indigene/certificate/${certificateId}/get`,
+            url: `${BACKEND_URL}/indigene/certificate/${user.id}`,
             method: "GET",
             headers: {
               Authorization: `Bearer ${token}`,

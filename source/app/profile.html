@@ -277,7 +277,10 @@
                 </a>
               </li>
               <li class="nav-item user-menu">
-                <a href="certificate.html" class="nav-link d-flex align-items-center">
+                <a
+                  href="certificate.html"
+                  class="nav-link d-flex align-items-center"
+                >
                   <i class="bi bi-file-text text-primary me-3 fs-5"></i>
                   <span>Request state of origin certificate</span>
                 </a>
@@ -393,12 +396,15 @@
           </div>
           <div class="ms-auto d-flex d-none d-md-block align-items-center">
             <div class="text-end" id="lga-info">
-              <h5 class="mb-1 fw-bold text-primary d-flex align-items-center ">
+              <h5 class="mb-1 fw-bold text-primary d-flex align-items-center">
                 <i class="fas fa-landmark me-2 text-secondary"></i>
                 <span id="lga-name">Dashboard</span>
               </h5>
               <small class="text-muted">
-                Headquater<span id="lga-headquaters" class="fw-semibold text-dark"></span>
+                Headquater<span
+                  id="lga-headquaters"
+                  class="fw-semibold text-dark"
+                ></span>
               </small>
             </div>
           </div>
@@ -3767,22 +3773,6 @@
             return hasValidNeighbors && hasValidFamily;
           }
 
-          // Update verification button state
-          //       function updateVerificationButtonState() {
-          //         const isValid = allReferencesValid();
-          //         $("#initiate-verification").prop("disabled", !isValid);
-
-          //         if (!isValid) {
-          //           $("#verification-status").html(`
-          //   <div class="alert alert-warning">
-          //     <i class="bi bi-exclamation-triangle me-2"></i>
-          //     All references must have both name and phone to initiate verification.
-          //   </div>
-          // `);
-          //         } else {
-          //           $("#verification-status").empty();
-          //         }
-          //       }
           function updateVerificationButtonState() {
             const isValid = allReferencesValid();
             const hasPendingReference =
@@ -4026,14 +4016,6 @@
               }
 
               const result = await response.json();
-
-              //       // Show success message
-              //       $("#verification-status").html(`
-              //   <div class="alert alert-success">
-              //     <i class="bi bi-check-circle me-2"></i>
-              //     Verification initiated successfully! Reference contacts will receive verification messages.
-              //   </div>
-              // `);
 
               // Show success message
               const successMessage = `

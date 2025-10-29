@@ -1,0 +1,5697 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Support Admin Dashboard - BICRIRMS System</title>
+
+    <link
+      rel="icon"
+      type="image/png"
+      href="/assets/images/benue-state-logo.png"
+      sizes="16x16"
+    />
+
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"
+    />
+    <!-- DataTables CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css"
+    />
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- jsPDF for PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- SheetJS for Excel export -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <style>
+      :root {
+        --sidebar-width: 260px;
+        --sidebar-bg: #1a1d29;
+        --sidebar-text: #a0a9c9;
+        --sidebar-active: #4c5fd5;
+        --header-height: 60px;
+        --header-bg: #ffffff;
+        --main-bg: #f5f6fa;
+        --card-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+        --primary-color: #4c5fd5;
+        --success-color: #10b981;
+        --warning-color: #f59e0b;
+        --danger-color: #ef4444;
+        --info-color: #3b82f6;
+      }
+
+      [data-theme="dark"] {
+        --sidebar-bg: #0f0f14;
+        --sidebar-text: #8892b0;
+        --sidebar-active: #6366f1;
+        --header-bg: #1a1d29;
+        --main-bg: #111318;
+        --card-bg: #1a1d29;
+        --text-color: #e6e6e6;
+        --border-color: #2a2d3a;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--main-bg);
+        color: var(--text-color);
+        transition: all 0.3s ease;
+      }
+
+      /* Sidebar Styles */
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: var(--sidebar-width);
+        background-color: var(--sidebar-bg);
+        z-index: 1000;
+        transition: all 0.3s ease;
+        overflow-y: auto;
+      }
+
+      .sidebar-header {
+        padding: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .sidebar-menu {
+        padding: 20px 0;
+      }
+
+      .sidebar-menu .nav-link {
+        color: var(--sidebar-text);
+        padding: 12px 20px;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s ease;
+        border-radius: 0;
+      }
+
+      .sidebar-menu .nav-link:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+        color: #fff;
+      }
+
+      .sidebar-menu .nav-link.active {
+        background-color: var(--sidebar-active);
+        color: #fff;
+      }
+
+      .sidebar-menu .nav-link i {
+        margin-right: 10px;
+        font-size: 18px;
+      }
+
+      .sidebar-menu .nav-link .badge {
+        margin-left: auto;
+      }
+
+      /* Header Styles */
+      .header {
+        position: fixed;
+        top: 0;
+        left: var(--sidebar-width);
+        right: 0;
+        height: var(--header-height);
+        background-color: var(--header-bg);
+        z-index: 999;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        display: flex;
+        align-items: center;
+        padding: 0 20px;
+        transition: all 0.3s ease;
+      }
+
+      .header .search-bar {
+        flex: 1;
+        max-width: 400px;
+      }
+
+      .header .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      /* Main Content */
+      .main-content {
+        margin-left: var(--sidebar-width);
+        margin-top: var(--header-height);
+        padding: 20px;
+        min-height: calc(100vh - var(--header-height));
+        transition: all 0.3s ease;
+      }
+
+      /* Card Styles */
+      .card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: var(--card-shadow);
+        margin-bottom: 20px;
+        background-color: var(--card-bg);
+        transition: all 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .card-header {
+        background-color: transparent;
+        border-bottom: 1px solid var(--border-color);
+        padding: 15px 20px;
+        font-weight: 600;
+      }
+
+      .card-body {
+        padding: 20px;
+      }
+
+      /* KPI Cards */
+      .kpi-card {
+        border-radius: 10px;
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+        color: #fff;
+      }
+
+      .kpi-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100px;
+        height: 100px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        transform: translate(30px, -30px);
+      }
+
+      .kpi-card.primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+
+      .kpi-card.success {
+        background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+      }
+
+      .kpi-card.warning {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      }
+
+      .kpi-card.info {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      }
+
+      .kpi-card .kpi-value {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 5px;
+      }
+
+      .kpi-card .kpi-label {
+        font-size: 14px;
+        opacity: 0.8;
+      }
+
+      .kpi-card .kpi-icon {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 40px;
+        opacity: 0.3;
+      }
+
+      /* Dark Mode Toggle */
+      .theme-toggle {
+        position: relative;
+        width: 50px;
+        height: 26px;
+        background-color: #ccc;
+        border-radius: 34px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .theme-toggle.active {
+        background-color: var(--primary-color);
+      }
+
+      .theme-toggle-slider {
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 20px;
+        height: 20px;
+        background-color: white;
+        border-radius: 50%;
+        transition: transform 0.3s;
+      }
+
+      .theme-toggle.active .theme-toggle-slider {
+        transform: translateX(24px);
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .sidebar {
+          transform: translateX(-100%);
+        }
+
+        .sidebar.show {
+          transform: translateX(0);
+        }
+
+        .header {
+          left: 0;
+        }
+
+        .main-content {
+          margin-left: 0;
+        }
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+
+      /* Table Styles */
+      .dataTables_wrapper .dataTables_filter input {
+        border: 1px solid var(--border-color);
+        border-radius: 5px;
+        padding: 5px 10px;
+      }
+
+      .dataTables_wrapper .dataTables_length select {
+        border: 1px solid var(--border-color);
+        border-radius: 5px;
+        padding: 5px;
+      }
+
+      /* Chart Container */
+      .chart-container {
+        position: relative;
+        height: 300px;
+        margin-bottom: 20px;
+      }
+
+      /* Activity Timeline */
+      .activity-timeline {
+        position: relative;
+        padding-left: 30px;
+      }
+
+      .activity-timeline::before {
+        content: "";
+        position: absolute;
+        left: 10px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background-color: var(--border-color);
+      }
+
+      .activity-item {
+        position: relative;
+        margin-bottom: 20px;
+      }
+
+      .activity-item::before {
+        content: "";
+        position: absolute;
+        left: -24px;
+        top: 5px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: var(--sidebar-active);
+      }
+
+      .activity-item .activity-time {
+        font-size: 12px;
+        color: var(--sidebar-text);
+        margin-bottom: 5px;
+      }
+
+      .activity-item .activity-content {
+        font-size: 14px;
+      }
+
+      /* Loading Spinner */
+      .spinner-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 200px;
+      }
+
+      .spinner-border {
+        width: 3rem;
+        height: 3rem;
+      }
+
+      /* Export Buttons */
+      .export-buttons {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+      }
+
+      .export-buttons button {
+        padding: 5px 10px;
+        font-size: 14px;
+        border-radius: 5px;
+        border: 1px solid var(--border-color);
+        background-color: transparent;
+        color: var(--text-color);
+      }
+
+      .export-buttons button:hover {
+        background-color: var(--sidebar-active);
+        color: white;
+      }
+
+      /* Role Badge Styles */
+      .role-badge {
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .role-badge.global-admin {
+        background-color: #ef4444;
+        color: white;
+      }
+
+      .role-badge.support-admin {
+        background-color: #f59e0b;
+        color: white;
+      }
+
+      .role-badge.kindred-head {
+        background-color: #3b82f6;
+        color: white;
+      }
+
+      .role-badge.user {
+        background-color: #10b981;
+        color: white;
+      }
+
+      /* Status Badge Styles */
+      .status-badge {
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .status-badge.approved {
+        background-color: #10b981;
+        color: white;
+      }
+
+      .status-badge.pending {
+        background-color: #f59e0b;
+        color: white;
+      }
+
+      .status-badge.rejected {
+        background-color: #ef4444;
+        color: white;
+      }
+
+      /* LGA Info Card */
+      .lga-info-card {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color) 0%,
+          #764ba2 100%
+        );
+        color: white;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+
+      .lga-info-card h3 {
+        margin-bottom: 10px;
+      }
+
+      .lga-info-card p {
+        margin-bottom: 5px;
+        opacity: 0.9;
+      }
+      .password-validation .valid {
+        color: #198754;
+      }
+
+      .password-validation .invalid {
+        color: #6c757d;
+      }
+
+      /* Print Styles */
+      @media print {
+        .sidebar,
+        .header,
+        .export-buttons,
+        .btn-group,
+        .dataTables_paginate,
+        .dataTables_info,
+        .dataTables_length,
+        .dataTables_filter {
+          display: none !important;
+        }
+
+        .main-content {
+          margin-left: 0 !important;
+          margin-top: 0 !important;
+        }
+
+        .card {
+          break-inside: avoid;
+        }
+
+        /* Loading Indicator Styles */
+        #loadingIndicator {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(
+            255,
+            255,
+            255,
+            0.8
+          ); /* Semi-transparent white background */
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 1000; /* Ensure it's on top of other elements */
+        }
+        .loader {
+          border: 8px solid #f3f3f3; /* Light grey */
+          border-top: 8px solid #3498db; /* Blue */
+          border-radius: 50%;
+          width: 60px;
+          height: 60px;
+          animation: spin 1s linear infinite; /* Spin animation */
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="d-flex align-items-center">
+          <img
+            src="/assets/images/benue-state-logo.png"
+            alt="Benue State Logo"
+            class="me-3"
+            width="40"
+          />
+          <div>
+            <h4 class="mb-0 fw-bold text-white">BICRIRMS</h4>
+            <small class="text-white" style="font-size: 0.8rem">
+              Certificate of Origin
+              <br />
+              Management
+            </small>
+          </div>
+        </div>
+      </div>
+      <nav class="sidebar-menu">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link active" href="#" data-page="dashboard">
+              <i class="bi bi-speedometer2"></i>
+              Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-page="users">
+              <i class="bi bi-people"></i>
+              Users/Applicants
+              <span class="badge bg-primary" id="usersCount">0</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-page="requests">
+              <i class="bi bi-file-earmark-text"></i>
+              Requests
+              <span class="badge bg-warning" id="pendingCount">0</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-page="analytics">
+              <i class="bi bi-graph-up"></i>
+              Analytics
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-page="reports">
+              <i class="bi bi-file-earmark-bar-graph"></i>
+              Reports
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-page="profile">
+              <i class="bi bi-person-circle"></i>
+              Profile
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Header -->
+    <header class="header">
+      <button class="btn btn-light d-md-none me-3" id="sidebarToggle">
+        <i class="bi bi-list"></i>
+      </button>
+
+      <div class="search-bar">
+        <div class="input-group">
+          <span class="input-group-text bg-transparent border-end-0">
+            <i class="bi bi-search"></i>
+          </span>
+          <input
+            type="text"
+            class="form-control border-start-0"
+            placeholder="Search users, requests..."
+          />
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <div class="dropdown">
+          <button
+            class="btn btn-light position-relative"
+            type="button"
+            data-bs-toggle="dropdown"
+          >
+            <i class="bi bi-bell"></i>
+            <span
+              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+            >
+              <span id="notificationCount">5</span>
+            </span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><h6 class="dropdown-header">Notifications</h6></li>
+            <li>
+              <a class="dropdown-item" href="#"
+                >New identity card request from John Doe</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="#"
+                >Certificate approved for Sarah Johnson</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="#"
+                >System maintenance scheduled for tonight</a
+              >
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <a class="dropdown-item" href="#">View all notifications</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="dropdown">
+          <button
+            class="btn btn-light d-flex align-items-center"
+            type="button"
+            data-bs-toggle="dropdown"
+          >
+            <img
+              id="userProfilePic"
+              src="https://picsum.photos/seed/admin/40/40.jpg"
+              class="rounded-circle me-2 img-fluid profile-avatar"
+              alt="Admin"
+              style="width: 40px; height: 40px; object-fit: cover"
+            />
+            <span id="currentUser">Support Admin</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li>
+              <a class="dropdown-item" href="#" data-page="profile"
+                ><i class="bi bi-person me-2"></i>Profile</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="#"
+                ><i class="bi bi-gear me-2"></i>Settings</a
+              >
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <a class="dropdown-item" href="#" id="logoutBtn"
+                ><i class="bi bi-box-arrow-right me-2"></i>Logout</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div class="theme-toggle" id="themeToggle">
+          <div class="theme-toggle-slider"></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- LGA Info Card -->
+      <div class="lga-info-card">
+        <div class="row">
+          <div class="col-md-8">
+            <h3>
+              <i class="bi bi-geo-alt me-2"></i
+              ><span id="currentLGA">Otukpo</span> Local Government Area
+            </h3>
+            <p>
+              <i class="bi bi-people me-2"></i>Total Population:
+              <span id="lgaPopulation">125,000</span>
+            </p>
+            <p>
+              <i class="bi bi-map me-2"></i>State:
+              <span id="lgaState">Benue</span>
+            </p>
+          </div>
+          <div class="col-md-4 text-end">
+            <button class="btn btn-light" id="switchLGA">
+              <i class="bi bi-arrow-repeat me-2"></i>Switch LGA
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dashboard Page -->
+      <div id="dashboard-page" class="page-content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2 class="mb-0">Dashboard Overview</h2>
+          <div>
+            <button class="btn btn-primary me-2" id="refreshDashboard">
+              <i class="bi bi-arrow-clockwise me-2"></i>Refresh
+            </button>
+            <button class="btn btn-outline-primary" id="exportDashboard">
+              <i class="bi bi-download me-2"></i>Export Report
+            </button>
+          </div>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="row mb-4">
+          <div class="col-xl-3 col-md-6 mb-3">
+            <div class="kpi-card primary">
+              <div class="kpi-value" id="totalUsers">0</div>
+              <div class="kpi-label">Total Users</div>
+              <div class="kpi-icon"><i class="bi bi-people-fill"></i></div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-md-6 mb-3">
+            <div class="kpi-card success">
+              <div class="kpi-value" id="totalRequests">0</div>
+              <div class="kpi-label">Total Requests</div>
+              <div class="kpi-icon">
+                <i class="bi bi-file-earmark-text-fill"></i>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-md-6 mb-3">
+            <div class="kpi-card warning">
+              <div class="kpi-value" id="pendingApprovals">0</div>
+              <div class="kpi-label">Pending Approvals</div>
+              <div class="kpi-icon"><i class="bi bi-clock-history"></i></div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-md-6 mb-3">
+            <div class="kpi-card info">
+              <div class="kpi-value" id="certificatesIssued">0</div>
+              <div class="kpi-label">Certificates Issued</div>
+              <div class="kpi-icon"><i class="bi bi-award-fill"></i></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="row mb-4">
+          <div class="col-lg-6 mb-3">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0">Request Trends</h5>
+              </div>
+              <div class="card-body">
+                <div class="chart-container">
+                  <canvas id="requestTrendChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 mb-3">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0">Age & Gender Distribution</h5>
+              </div>
+              <div class="card-body">
+                <div class="chart-container">
+                  <canvas id="demographicsChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="row">
+          <div class="col-lg-6 mb-3">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0">Recent Activity</h5>
+              </div>
+              <div class="card-body">
+                <div class="activity-timeline" id="activityTimeline">
+                  <!-- Activity items will be populated by JavaScript -->
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 mb-3">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0">Most Active Kindreds</h5>
+              </div>
+              <div class="card-body">
+                <div class="chart-container">
+                  <canvas id="kindredActivityChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Users Page -->
+      <div id="users-page" class="page-content d-none">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2 class="mb-0">User Management</h2>
+          <button
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#addUserModal"
+          >
+            <i class="bi bi-plus-circle me-2"></i>Add New User/Applicant
+          </button>
+        </div>
+
+        <!-- User Stats Cards -->
+        <div class="row mb-4">
+          <div class="col-md-3 mb-3">
+            <div class="card">
+              <div class="card-body text-center">
+                <h3 class="text-primary" id="totalUsersCard">0</h3>
+                <p class="mb-0">Total Users</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 mb-3">
+            <div class="card">
+              <div class="card-body text-center">
+                <h3 class="text-success" id="activeUsersCard">0</h3>
+                <p class="mb-0">Active Users</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 mb-3">
+            <div class="card">
+              <div class="card-body text-center">
+                <h3 class="text-warning" id="kindredHeadsCard">0</h3>
+                <p class="mb-0">Kindred Heads</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 mb-3">
+            <div class="card">
+              <div class="card-body text-center">
+                <h3 class="text-info" id="newUsersCard">0</h3>
+                <p class="mb-0">New This Month</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Users Table -->
+        <div class="card">
+          <div
+            class="card-header d-flex justify-content-between align-items-center"
+          >
+            <h5 class="mb-0">All Users</h5>
+            <div class="export-buttons">
+              <button onclick="exportTable('csv', 'usersTable')">
+                <i class="bi bi-file-earmark-csv me-1"></i>CSV
+              </button>
+              <button onclick="exportTable('pdf', 'usersTable')">
+                <i class="bi bi-file-earmark-pdf me-1"></i>PDF
+              </button>
+              <button onclick="window.print()">
+                <i class="bi bi-printer me-1"></i>Print
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <table id="usersTable" class="table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Age</th>
+                  <th>Sex</th>
+                  <th>Is Active</th>
+                  <th>Is Verified</th>
+                  <th>Kindred</th>
+                  <!-- <th>Registered</th> -->
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Table data will be populated by JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Requests Page -->
+      <div id="requests-page" class="page-content d-none">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2 class="mb-0">Request Management</h2>
+          <div>
+            <button class="btn btn-outline-primary me-2" id="filterRequests">
+              <i class="bi bi-funnel me-2"></i>Filter
+            </button>
+            <button class="btn btn-primary" id="exportRequests">
+              <i class="bi bi-download me-2"></i>Export Report
+            </button>
+          </div>
+        </div>
+
+        <!-- Request Tabs -->
+        <ul class="nav nav-tabs mb-4" id="requestTabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button
+              class="nav-link active"
+              id="idcard-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#idcard"
+              type="button"
+              role="tab"
+            >
+              Identity Cards
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button
+              class="nav-link"
+              id="certificate-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#certificate"
+              type="button"
+              role="tab"
+            >
+              Certificates of Origin
+            </button>
+          </li>
+        </ul>
+
+        <div class="tab-content" id="requestTabsContent">
+          <!-- Identity Card Requests -->
+          <div class="tab-pane fade show active" id="idcard" role="tabpanel">
+            <div class="card">
+              <div
+                class="card-header d-flex justify-content-between align-items-center"
+              >
+                <h5 class="mb-0">Identity Card Requests</h5>
+                <div class="export-buttons">
+                  <button onclick="exportTable('csv', 'idcardsTable')">
+                    <i class="bi bi-file-earmark-csv me-1"></i>CSV
+                  </button>
+                  <button onclick="exportTable('pdf', 'idcardsTable')">
+                    <i class="bi bi-file-earmark-pdf me-1"></i>PDF
+                  </button>
+                  <button onclick="window.print()">
+                    <i class="bi bi-printer me-1"></i>Print
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                <table
+                  id="idcardsTable"
+                  class="table table-striped table-hover"
+                >
+                  <thead>
+                    <tr>
+                      <th>Request ID</th>
+                      <th>User</th>
+                      <th>Kindred</th>
+                      <th>Status</th>
+                      <th>Request Date</th>
+                      <!-- <th>Actions</th> -->
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Table data will be populated by JavaScript -->
+                  </tbody>
+                </table>
+                <div
+                  id="pdf-loader"
+                  style="
+                    display: none;
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    z-index: 9999;
+                    transform: translate(-50%, -50%);
+                  "
+                >
+                  <div
+                    class="spinner-border text-primary"
+                    role="status"
+                    style="width: 3rem; height: 3rem"
+                  >
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Certificate Requests -->
+          <div class="tab-pane fade" id="certificate" role="tabpanel">
+            <div class="card">
+              <div
+                class="card-header d-flex justify-content-between align-items-center"
+              >
+                <h5 class="mb-0">Certificate of Origin Requests</h5>
+                <div class="export-buttons">
+                  <button onclick="exportTable('csv', 'certificatesTable')">
+                    <i class="bi bi-file-earmark-csv me-1"></i>CSV
+                  </button>
+                  <button onclick="exportTable('pdf', 'certificatesTable')">
+                    <i class="bi bi-file-earmark-pdf me-1"></i>PDF
+                  </button>
+                  <button onclick="window.print()">
+                    <i class="bi bi-printer me-1"></i>Print
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                <table
+                  id="certificatesTable"
+                  class="table table-striped table-hover"
+                >
+                  <thead>
+                    <tr>
+                      <th>User</th>
+                      <th>Kindred</th>
+                      <th>Status</th>
+                      <th>Request Date</th>
+                      <th>State</th>
+                      <th>LGA</th>
+                      <th>IsProfileCompleted</th>
+                      <th>ApprovedBy</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Table data will be populated by JavaScript -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Analytics Page -->
+      <div id="analytics-page" class="page-content d-none">
+        <!-- In your analytics-page HTML -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2 class="mb-0">Analytics & Insights</h2>
+          <div>
+            <button
+              class="btn btn-outline-primary me-2"
+              id="analyticsDateRangeBtn"
+              data-bs-toggle="modal"
+              data-bs-target="#dateRangeModal"
+            >
+              <i class="bi bi-calendar3 me-2"></i>Date Range
+            </button>
+            <button class="btn btn-primary" id="refreshAnalytics">
+              <i class="bi bi-arrow-clockwise me-2"></i>Refresh
+            </button>
+          </div>
+        </div>
+
+        <!-- Analytics Charts -->
+        <div class="row mb-4">
+          <div class="col-lg-6 mb-3">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0">Age Distribution</h5>
+              </div>
+              <div class="card-body">
+                <div class="chart-container">
+                  <canvas id="ageDistributionChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 mb-3">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0">Gender Distribution</h5>
+              </div>
+              <div class="card-body">
+                <div class="chart-container">
+                  <canvas id="genderDistributionChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-4">
+          <div class="col-lg-6 mb-3">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0">Request Trends by Day</h5>
+              </div>
+              <div class="card-body">
+                <div class="chart-container">
+                  <canvas id="dayTrendChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 mb-3">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0">Request Trends by Time</h5>
+              </div>
+              <div class="card-body">
+                <div class="chart-container">
+                  <canvas id="timeTrendChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-4">
+          <div class="col-lg-6 mb-3">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0">Total Transactions</h5>
+              </div>
+              <div class="card-body">
+                <div class="chart-container">
+                  <canvas id="transactionsChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 mb-3">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0">LGA Request Trends</h5>
+              </div>
+              <div class="card-body">
+                <div class="chart-container">
+                  <canvas id="lgaTrendChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reports Page -->
+      <div id="reports-page" class="page-content d-none">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2 class="mb-0">Reports</h2>
+          <div>
+            <button class="btn btn-outline-primary me-2" id="generateReport">
+              <i class="bi bi-file-earmark-text me-2"></i>Generate Report
+            </button>
+            <button class="btn btn-primary" id="scheduleReport">
+              <i class="bi bi-calendar-check me-2"></i>Schedule Report
+            </button>
+          </div>
+        </div>
+
+        <!-- Report Templates -->
+        <div class="row mb-4">
+          <div class="col-md-4 mb-3">
+            <div class="card">
+              <div class="card-body text-center">
+                <i
+                  class="bi bi-file-earmark-pdf text-danger"
+                  style="font-size: 48px"
+                ></i>
+                <h5 class="mt-3">Monthly Report</h5>
+                <p class="text-muted">
+                  Comprehensive monthly statistics and trends
+                </p>
+                <button
+                  class="btn btn-outline-primary"
+                  onclick="handleGenerateReport('monthly')"
+                >
+                  Generate
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <div class="card">
+              <div class="card-body text-center">
+                <i
+                  class="bi bi-file-earmark-pdf text-danger"
+                  style="font-size: 48px"
+                ></i>
+                <h5 class="mt-3">Quarterly Report</h5>
+                <p class="text-muted">Quarterly performance and analysis</p>
+                <button
+                  class="btn btn-outline-primary"
+                  onclick="handleGenerateReport('quarterly')"
+                >
+                  Generate
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <div class="card">
+              <div class="card-body text-center">
+                <i
+                  class="bi bi-file-earmark-pdf text-danger"
+                  style="font-size: 48px"
+                ></i>
+                <h5 class="mt-3">Annual Report</h5>
+                <p class="text-muted">Yearly summary and projections</p>
+                <button
+                  class="btn btn-outline-primary"
+                  onclick="handleGenerateReport('annual')"
+                >
+                  Generate
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Reports -->
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">Recent Reports</h5>
+          </div>
+          <div class="card-body">
+            <table id="reportsTable" class="table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th>Report Name</th>
+                  <th>Type</th>
+                  <th>Generated Date</th>
+                  <th>Generated By</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Table data will be populated by JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile Page -->
+      <div id="profile-page" class="page-content d-none">
+        <div class="row">
+          <div class="col-md-4 mb-4">
+            <div class="card">
+              <div class="card-body text-center">
+                <img
+                  src="https://picsum.photos/seed/admin/150/150.jpg"
+                  class="rounded-circle mb-3"
+                  alt="Profile"
+                />
+                <h4 id="profileName">Support Admin</h4>
+                <p class="text-muted" id="profileRole">
+                  Support Admin - Otukpo LGA
+                </p>
+                <p class="text-muted" id="profileEmail">admin@otukpo.gov.ng</p>
+                <button
+                  class="btn btn-primary"
+                  data-bs-toggle="modal"
+                  data-bs-target="#editProfileModal"
+                >
+                  <i class="bi bi-pencil me-2"></i>Edit Profile
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-8 mb-4">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0">Profile Information</h5>
+              </div>
+              <div class="card-body">
+                <table class="table table-borderless">
+                  <tr>
+                    <td><strong>Full Name:</strong></td>
+                    <td id="profileFullName">John Doe</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Email:</strong></td>
+                    <td id="profileEmailFull">admin@otukpo.gov.ng</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Phone:</strong></td>
+                    <td id="profilePhone">+234 803 123 4567</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Role:</strong></td>
+                    <td>
+                      <span class="role-badge support-admin"
+                        >Support Admin</span
+                      >
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>Assigned LGA:</strong></td>
+                    <td id="profileLGA">Otukpo, Benue State</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Date Joined:</strong></td>
+                    <td id="profileDateJoined">January 15, 2023</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Last Login:</strong></td>
+                    <td id="profileLastLogin">Today, 09:30 AM</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0">Security Settings</h5>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <button
+                      class="btn btn-outline-primary w-100"
+                      id="changePasswordBtn"
+                    >
+                      <i class="bi bi-key me-2"></i>Change Password
+                    </button>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <button
+                      class="btn btn-outline-primary w-100"
+                      id="enable2FABtn"
+                    >
+                      <i class="bi bi-shield-check me-2"></i>Enable Two-Factor
+                      Authentication
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Change Password Modal -->
+    <div
+      class="modal fade"
+      id="changePasswordModal"
+      tabindex="-1"
+      aria-labelledby="changePasswordModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="changePasswordModalLabel">
+              Change Password
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="changePasswordForm">
+              <div class="mb-3">
+                <label for="currentPassword" class="form-label"
+                  >Current Password</label
+                >
+                <input
+                  type="password"
+                  class="form-control"
+                  id="currentPassword"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="newPassword" class="form-label">New Password</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="newPassword"
+                  required
+                />
+                <div class="password-strength" id="passwordStrength"></div>
+                <div class="form-text" id="passwordStrengthText"></div>
+              </div>
+              <div class="mb-3">
+                <label for="confirmPassword" class="form-label"
+                  >Confirm New Password</label
+                >
+                <input
+                  type="password"
+                  class="form-control"
+                  id="confirmPassword"
+                  required
+                />
+                <div class="invalid-feedback" id="passwordMatchFeedback">
+                  Passwords do not match.
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button type="button" class="btn btn-primary" id="savePasswordBtn">
+              Save Changes
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enable 2FA Modal -->
+    <div
+      class="modal fade"
+      id="enable2FAModal"
+      tabindex="-1"
+      aria-labelledby="enable2FAModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="enable2FAModalLabel">
+              Enable Two-Factor Authentication
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div id="2faSetupStep1">
+              <p>
+                Two-factor authentication adds an extra layer of security to
+                your account. Once enabled, you'll need to enter a verification
+                code in addition to your password when signing in.
+              </p>
+              <p>Click "Continue" to set up two-factor authentication.</p>
+            </div>
+
+            <div id="2faSetupStep2" style="display: none">
+              <h6>Step 1: Scan the QR code</h6>
+              <p>
+                Use your authenticator app (like Google Authenticator, Authy, or
+                Microsoft Authenticator) to scan the QR code below:
+              </p>
+              <div class="qr-code">
+                <img
+                  src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=otpauth://totp/Example:demo@example.com?secret=JBSWY3DPEHPK3PXP&issuer=Example"
+                  alt="QR Code"
+                />
+              </div>
+              <p class="text-center mt-2">
+                Or manually enter this code: <strong>JBSWY3DPEHPK3PXP</strong>
+              </p>
+
+              <h6 class="mt-4">Step 2: Enter verification code</h6>
+              <p>Enter the 6-digit code from your authenticator app:</p>
+              <div class="mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="verificationCode"
+                  placeholder="000000"
+                  maxlength="6"
+                  pattern="[0-9]{6}"
+                />
+              </div>
+            </div>
+
+            <div id="2faSetupStep3" style="display: none">
+              <h6>Save your backup codes</h6>
+              <p>
+                These backup codes can be used to access your account if you
+                lose your device. Save them somewhere safe.
+              </p>
+              <div class="backup-codes">
+                <code>12345678</code>
+                <code>23456789</code>
+                <code>34567890</code>
+                <code>45678901</code>
+                <code>56789012</code>
+                <code>67890123</code>
+                <code>78901234</code>
+                <code>89012345</code>
+                <code>90123456</code>
+                <code>01234567</code>
+              </div>
+              <div class="form-check mt-3">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="backupCodesSaved"
+                />
+                <label class="form-check-label" for="backupCodesSaved">
+                  I have saved my backup codes
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button type="button" class="btn btn-primary" id="2faContinueBtn">
+              Continue
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="2faVerifyBtn"
+              style="display: none"
+            >
+              Verify
+            </button>
+            <button
+              type="button"
+              class="btn btn-success"
+              id="2faFinishBtn"
+              style="display: none"
+            >
+              Finish Setup
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add User Modal -->
+    <div
+      class="modal fade"
+      id="addUserModal"
+      tabindex="-1"
+      aria-labelledby="addUserModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addUserModalLabel">Add New User</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="addUserForm">
+              <div class="mb-3">
+                <label for="userNIN" class="form-label">NIN</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="userNIN"
+                  maxlength="11"
+                  minlength="11"
+                  autocomplete="on"
+                  inputmode="numeric"
+                  pattern="\d{11}"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="firstname" class="form-label">First Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="firstname"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="lastname" class="form-label">Last Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="lastname"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="userEmail" class="form-label">Email Address</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="userEmail"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="userPhone" class="form-label">Phone Number</label>
+                <input
+                  type="tel"
+                  class="form-control"
+                  id="userPhone"
+                  maxlength="11"
+                  minlength="11"
+                  placeholder="e.g., 08012345678"
+                  autocomplete="on"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <div class="input-group">
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="password"
+                    required
+                  />
+                  <button
+                    class="btn btn-outline-secondary password-toggle"
+                    type="button"
+                    data-target="#password"
+                  >
+                    <i class="fa fa-eye-slash"></i>
+                  </button>
+                </div>
+                <small id="passwordHelp" class="form-text text-muted">
+                  Enter a strong password
+                </small>
+              </div>
+              <div class="mb-3">
+                <label for="confirmPass" class="form-label"
+                  >Confirm Password</label
+                >
+                <div class="input-group">
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="confirmPass"
+                    required
+                  />
+                  <button
+                    class="btn btn-outline-secondary password-toggle"
+                    type="button"
+                    data-target="confirmPass"
+                  >
+                    <i class="fa fa-eye-slash"></i>
+                  </button>
+                </div>
+                <small id="rePasswordHelp" class="form-text text-muted">
+                  Re-type your password
+                </small>
+              </div>
+              <!-- Password validation -->
+              <div class="password-validation d-flex flex-wrap gap-2 mt-2">
+                <div class="d-flex align-items-center small">
+                  <i
+                    class="fas fa-check-circle me-1 invalid"
+                    id="lengthCheck"
+                  ></i>
+                  <span class="invalid" id="lengthText">8 Characters</span>
+                </div>
+                <div class="d-flex align-items-center small">
+                  <i
+                    class="fas fa-check-circle me-1 invalid"
+                    id="symbolCheck"
+                  ></i>
+                  <span class="invalid" id="symbolText">One symbol</span>
+                </div>
+                <div class="d-flex align-items-center small">
+                  <i
+                    class="fas fa-check-circle me-1 invalid"
+                    id="capitalCheck"
+                  ></i>
+                  <span class="invalid" id="capitalText"
+                    >One capital letter</span
+                  >
+                </div>
+                <div class="d-flex align-items-center small">
+                  <i
+                    class="fas fa-check-circle me-1 invalid"
+                    id="numberCheck"
+                  ></i>
+                  <span class="invalid" id="numberText">One number</span>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button type="button" class="btn btn-primary" id="saveUserBtn">
+              Add User
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Change Role Modal -->
+    <div
+      class="modal fade"
+      id="changeRoleModal"
+      tabindex="-1"
+      aria-labelledby="changeRoleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="changeRoleModalLabel">
+              Change User Role
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="changeRoleForm">
+              <div class="mb-3">
+                <label for="changeRoleUser" class="form-label">User</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="changeRoleUser"
+                  readonly
+                />
+              </div>
+              <div class="mb-3">
+                <label for="changeRoleNew" class="form-label">New Role</label>
+                <select class="form-select" id="changeRoleNew" required>
+                  <option value="kindred_head">Kindred Head</option>
+                  <option value="user">User</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="changeRoleReason" class="form-label"
+                  >Reason for Change</label
+                >
+                <textarea
+                  class="form-control"
+                  id="changeRoleReason"
+                  rows="3"
+                ></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button type="button" class="btn btn-primary" id="updateRoleBtn">
+              Update Role
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Request Action Modal -->
+    <div
+      class="modal fade"
+      id="requestActionModal"
+      tabindex="-1"
+      aria-labelledby="requestActionModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="requestActionModalLabel">
+              Request Action
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="requestActionForm">
+              <div class="mb-3">
+                <label for="requestActionType" class="form-label">Action</label>
+                <select class="form-select" id="requestActionType" required>
+                  <option value="approve">Approve</option>
+                  <option value="reject">Reject</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="requestActionReason" class="form-label"
+                  >Reason</label
+                >
+                <textarea
+                  class="form-control"
+                  id="requestActionReason"
+                  rows="3"
+                ></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="submitRequestActionBtn"
+            >
+              Submit
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div
+      class="modal fade"
+      id="editProfileModal"
+      tabindex="-1"
+      aria-labelledby="editProfileModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="editProfileForm">
+              <div class="mb-3">
+                <label for="editProfileFirstName" class="form-label"
+                  >First Name</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="editProfileFirstName"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label for="editProfileLastName" class="form-label"
+                  >Last Name</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="editProfileLastName"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label for="editProfileEmail" class="form-label"
+                  >Email Address</label
+                >
+                <input
+                  type="email"
+                  class="form-control"
+                  id="editProfileEmail"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="editProfilePhone" class="form-label"
+                  >Phone Number</label
+                >
+                <input
+                  type="tel"
+                  class="form-control"
+                  id="editProfilePhone"
+                  required
+                />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button type="button" class="btn btn-primary" id="saveProfileBtn">
+              Save Changes
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Switch LGA Modal -->
+    <div
+      class="modal fade"
+      id="switchLGAModal"
+      tabindex="-1"
+      aria-labelledby="switchLGAModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="switchLGAModalLabel">Switch LGA</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="switchLGAForm">
+              <div class="mb-3">
+                <label for="selectLGA" class="form-label">Select LGA</label>
+                <select class="form-select" id="selectLGA" required>
+                  <option value="Otukpo" selected>Otukpo</option>
+                  <option value="Ohimini">Ohimini</option>
+                  <option value="Oju">Oju</option>
+                  <option value="Obi">Obi</option>
+                  <option value="Gwer East">Gwer East</option>
+                  <option value="Gwer West">Gwer West</option>
+                </select>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button type="button" class="btn btn-primary" id="switchLGABtn">
+              Switch LGA
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 📝 Edit User Modal -->
+    <div class="modal fade" id="editUserModal" tabindex="-1">
+      <div class="modal-dialog">
+        <form id="editUserForm" class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit User</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <input type="hidden" id="editUserId" />
+            <div class="mb-3">
+              <label>First Name</label>
+              <input
+                type="text"
+                class="form-control"
+                id="editFirstname"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label>Last Name</label>
+              <input
+                type="text"
+                class="form-control"
+                id="editLastname"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label>Email</label>
+              <input
+                type="email"
+                class="form-control"
+                id="editEmail"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label>Phone</label>
+              <input type="text" class="form-control" id="editPhone" />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- View Cert Requet Modal -->
+    <div
+      class="modal fade"
+      id="viewRequestModal"
+      tabindex="-1"
+      aria-labelledby="viewCertRequestModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title" id="viewCertRequestModalLabel">
+              User Request Details
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div id="viewCertRequestContent" class="p-3">
+              <div class="text-center">
+                <div class="spinner-border text-primary" role="status"></div>
+                <p class="mt-2">Loading request details...</p>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- View Modal -->
+    <div
+      id="viewModal"
+      class="modal fade"
+      tabindex="-1"
+      role="dialog"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">User Details</h5>
+            <button
+              type="button"
+              data-bs-dismiss="modal"
+              class="close"
+              aria-label="Close"
+              onclick="closeModal('details-modal')"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <!-- User details will be loaded here -->
+          </div>
+          <div class="modal-footer">
+            <button
+              data-bs-dismiss="modal"
+              type="button"
+              class="btn btn-secondary"
+              onclick="closeModal('details-modal')"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Generate Report Modal -->
+    <div class="modal fade" id="generateReportModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Generate New Report</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>Select the type of report you want to generate.</p>
+            <div class="d-grid gap-2">
+              <button
+                class="btn btn-outline-primary"
+                onclick="handleGenerateReport('monthly')"
+              >
+                Monthly Report
+              </button>
+              <button
+                class="btn btn-outline-primary"
+                onclick="handleGenerateReport('quarterly')"
+              >
+                Quarterly Report
+              </button>
+              <button
+                class="btn btn-outline-primary"
+                onclick="handleGenerateReport('annual')"
+              >
+                Annual Report
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Schedule Report Modal -->
+    <div class="modal fade" id="scheduleReportModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Schedule Recurring Report</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="scheduleReportForm">
+              <div class="mb-3">
+                <label for="scheduleName" class="form-label">Report Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="scheduleName"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="scheduleFrequency" class="form-label"
+                  >Frequency</label
+                >
+                <select class="form-select" id="scheduleFrequency" required>
+                  <option value="">Select Frequency</option>
+                  <option value="monthly">Monthly</option>
+                  <option value="quarterly">Quarterly</option>
+                  <option value="annual">Annual</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="scheduleLGA" class="form-label">LGA</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="scheduleLGA"
+                  required
+                />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              onclick="handleScheduleReport()"
+            >
+              Schedule Report
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="modal fade"
+      id="dateRangeModal"
+      tabindex="-1"
+      aria-labelledby="dateRangeModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="dateRangeModalLabel">
+              Select Date Range
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="dateRangeForm">
+              <div class="mb-3">
+                <label for="startDate" class="form-label">Start Date</label>
+                <input type="date" class="form-control" id="startDate" />
+              </div>
+              <div class="mb-3">
+                <label for="endDate" class="form-label">End Date</label>
+                <input type="date" class="form-control" id="endDate" />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              id="applyDateRangeBtn"
+              class="btn btn-primary"
+            >
+              Apply
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white text-center text-lg-start mt-auto shadow-sm">
+      <div class="text-center p-3">© 2025 BDIC. All rights reserved.</div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <!-- Add these in the <head> section -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+      // Mock API Data
+      const mockAPI = {
+        // Current user info
+        currentUser: {
+          id: 1,
+          name: "John Doe",
+          email: "admin@otukpo.gov.ng",
+          phone: "+234 803 123 4567",
+          role: "support_admin",
+          lga: "Otukpo",
+          state: "Benue",
+          dateJoined: "2023-01-15",
+          lastLogin: new Date(),
+        },
+
+        // Users data
+        users: [
+          {
+            id: 1,
+            name: "John Doe",
+            email: "john.doe@example.com",
+            role: "kindred_head",
+            age: 45,
+            sex: "Male",
+            isActive: true,
+            isVerified: true,
+            kindred: "Adoka",
+            registeredAt: "2023-01-15",
+          },
+          {
+            id: 2,
+            name: "Sarah Johnson",
+            email: "sarah.j@example.com",
+            role: "user",
+            age: 32,
+            sex: "Female",
+            isActive: true,
+            isVerified: true,
+            kindred: "Akpa",
+            registeredAt: "2023-02-20",
+          },
+          {
+            id: 3,
+            name: "Michael Brown",
+            email: "michael.b@example.com",
+            role: "user",
+            age: 28,
+            sex: "Male",
+            isActive: true,
+            isVerified: false,
+            kindred: "Otukpo Town",
+            registeredAt: "2023-03-10",
+          },
+          {
+            id: 4,
+            name: "Emily Davis",
+            email: "emily.d@example.com",
+            role: "kindred_head",
+            age: 38,
+            sex: "Female",
+            isActive: true,
+            isVerified: true,
+            kindred: "Ugboju",
+            registeredAt: "2023-01-05",
+          },
+          {
+            id: 5,
+            name: "Robert Wilson",
+            email: "robert.w@example.com",
+            role: "user",
+            age: 24,
+            sex: "Male",
+            isActive: false,
+            isVerified: true,
+            kindred: "Adoka",
+            registeredAt: "2023-02-28",
+          },
+          {
+            id: 6,
+            name: "Lisa Anderson",
+            email: "lisa.a@example.com",
+            role: "user",
+            age: 31,
+            sex: "Female",
+            isActive: true,
+            isVerified: true,
+            kindred: "Akpa",
+            registeredAt: "2023-03-12",
+          },
+          {
+            id: 7,
+            name: "David Martinez",
+            email: "david.m@example.com",
+            role: "user",
+            age: 29,
+            sex: "Male",
+            isActive: true,
+            isVerified: false,
+            kindred: "Otukpo Town",
+            registeredAt: "2023-01-18",
+          },
+          {
+            id: 8,
+            name: "Jennifer Taylor",
+            email: "jennifer.t@example.com",
+            role: "kindred_head",
+            age: 42,
+            sex: "Female",
+            isActive: true,
+            isVerified: true,
+            kindred: "Ugboju",
+            registeredAt: "2023-02-14",
+          },
+          {
+            id: 9,
+            name: "James Thomas",
+            email: "james.t@example.com",
+            role: "user",
+            age: 35,
+            sex: "Male",
+            isActive: true,
+            isVerified: true,
+            kindred: "Adoka",
+            registeredAt: "2023-03-05",
+          },
+          {
+            id: 10,
+            name: "Maria Garcia",
+            email: "maria.g@example.com",
+            role: "user",
+            age: 26,
+            sex: "Female",
+            isActive: true,
+            isVerified: false,
+            kindred: "Akpa",
+            registeredAt: "2023-02-25",
+          },
+        ],
+
+        // ID Card requests
+        idcardRequests: [
+          {
+            id: "ID2023001",
+            user: "John Doe",
+            kindred: "Adoka",
+            status: "pending",
+            requestDate: "2023-04-15",
+          },
+          {
+            id: "ID2023002",
+            user: "Sarah Johnson",
+            kindred: "Akpa",
+            status: "approved",
+            requestDate: "2023-04-10",
+          },
+          {
+            id: "ID2023003",
+            user: "Michael Brown",
+            kindred: "Otukpo Town",
+            status: "pending",
+            requestDate: "2023-04-12",
+          },
+          {
+            id: "ID2023004",
+            user: "Emily Davis",
+            kindred: "Ugboju",
+            status: "rejected",
+            requestDate: "2023-04-08",
+          },
+          {
+            id: "ID2023005",
+            user: "Robert Wilson",
+            kindred: "Adoka",
+            status: "approved",
+            requestDate: "2023-04-05",
+          },
+          {
+            id: "ID2023006",
+            user: "Lisa Anderson",
+            kindred: "Akpa",
+            status: "pending",
+            requestDate: "2023-04-14",
+          },
+          {
+            id: "ID2023007",
+            user: "David Martinez",
+            kindred: "Otukpo Town",
+            status: "approved",
+            requestDate: "2023-04-03",
+          },
+          {
+            id: "ID2023008",
+            user: "Jennifer Taylor",
+            kindred: "Ugboju",
+            status: "pending",
+            requestDate: "2023-04-13",
+          },
+        ],
+
+        // Certificate requests
+        certificateRequests: [
+          {
+            id: "CERT2023001",
+            user: "John Doe",
+            kindred: "Adoka",
+            status: "pending",
+            requestDate: "2023-04-15",
+          },
+          {
+            id: "CERT2023002",
+            user: "Sarah Johnson",
+            kindred: "Akpa",
+            status: "approved",
+            requestDate: "2023-04-10",
+          },
+          {
+            id: "CERT2023003",
+            user: "Michael Brown",
+            kindred: "Otukpo Town",
+            status: "pending",
+            requestDate: "2023-04-12",
+          },
+          {
+            id: "CERT2023004",
+            user: "Emily Davis",
+            kindred: "Ugboju",
+            status: "approved",
+            requestDate: "2023-04-08",
+          },
+          {
+            id: "CERT2023005",
+            user: "Robert Wilson",
+            kindred: "Adoka",
+            status: "rejected",
+            requestDate: "2023-04-05",
+          },
+          {
+            id: "CERT2023006",
+            user: "Lisa Anderson",
+            kindred: "Akpa",
+            status: "pending",
+            requestDate: "2023-04-14",
+          },
+          {
+            id: "CERT2023007",
+            user: "David Martinez",
+            kindred: "Otukpo Town",
+            status: "approved",
+            requestDate: "2023-04-03",
+          },
+          {
+            id: "CERT2023008",
+            user: "Jennifer Taylor",
+            kindred: "Ugboju",
+            status: "pending",
+            requestDate: "2023-04-13",
+          },
+        ],
+
+        // Analytics data
+        analytics: {
+          ageDistribution: {
+            "18-25": 15,
+            "26-35": 35,
+            "36-45": 30,
+            "46-55": 15,
+            "56+": 5,
+          },
+          genderDistribution: {
+            Male: 55,
+            Female: 45,
+          },
+          dayTrend: {
+            Monday: 12,
+            Tuesday: 15,
+            Wednesday: 18,
+            Thursday: 22,
+            Friday: 25,
+            Saturday: 8,
+            Sunday: 5,
+          },
+          timeTrend: {
+            "8AM-12PM": 25,
+            "12PM-4PM": 40,
+            "4PM-8PM": 30,
+            "8PM-12AM": 5,
+          },
+          transactions: {
+            Jan: 45,
+            Feb: 52,
+            Mar: 68,
+            Apr: 75,
+          },
+          lgaTrend: {
+            Otukpo: 120,
+            Ohimini: 85,
+            Oju: 92,
+            Obi: 78,
+            "Gwer East": 65,
+            "Gwer West": 58,
+          },
+          kindredActivity: {
+            Adoka: 35,
+            Akpa: 28,
+            "Otukpo Town": 42,
+            Ugboju: 25,
+          },
+        },
+
+        // Reports data
+        reports: [
+          {
+            id: 1,
+            name: "Monthly Report - April 2023",
+            type: "Monthly",
+            generatedDate: "2023-05-01",
+            generatedBy: "John Doe",
+          },
+          {
+            id: 2,
+            name: "Quarterly Report - Q1 2023",
+            type: "Quarterly",
+            generatedDate: "2023-04-05",
+            generatedBy: "John Doe",
+          },
+          {
+            id: 3,
+            name: "Annual Report - 2022",
+            type: "Annual",
+            generatedDate: "2023-01-15",
+            generatedBy: "John Doe",
+          },
+        ],
+
+        // Activity data
+        activities: [
+          {
+            time: "2 hours ago",
+            content: "New identity card request from Michael Brown",
+          },
+          {
+            time: "4 hours ago",
+            content: "Certificate approved for Sarah Johnson",
+          },
+          {
+            time: "6 hours ago",
+            content: "New user registered: David Martinez",
+          },
+          { time: "8 hours ago", content: "Role updated for Robert Wilson" },
+          {
+            time: "12 hours ago",
+            content: "System maintenance completed successfully",
+          },
+        ],
+      };
+
+      // Initialize DataTables
+      let usersTable, idcardsTable, certificatesTable, reportsTable;
+
+      // Initialize Charts
+      let requestTrendChart, demographicsChart, kindredActivityChart;
+      let ageDistributionChart,
+        genderDistributionChart,
+        dayTrendChart,
+        timeTrendChart;
+      let transactionsChart, lgaTrendChart;
+
+      // Current LGA
+      let currentLGA = "Otukpo";
+
+      // Authentication token (simulated JWT)
+      let authToken = localStorage.getItem("token") || generateMockToken();
+
+      // Flag to track unsaved changes on profile page
+      let profileHasUnsavedChanges = false;
+
+      // Add this to your script to store the current date range
+      let currentDashboardFilters = {
+        startDate: null,
+        endDate: null,
+      };
+
+      let currentAnalyticsFilters = {
+        startDate: null,
+        endDate: null,
+      };
+
+      // Page Navigation
+      $(document).ready(function () {
+        // Load saved profile data before initializing
+        loadProfileFormData();
+
+        $(".password-toggle").click(function () {
+          const targetSelector = $(this).data("target");
+          const input = $(targetSelector);
+          const type = input.attr("type") === "password" ? "text" : "password";
+          input.attr("type", type);
+          $(this).find("i").toggleClass("fa-eye fa-eye-slash");
+        });
+
+        // Password validation
+        $("#password").on("input", function () {
+          const password = $(this).val();
+
+          // Validation checks
+          const lengthValid = password.length >= 8;
+          const symbolValid = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+          const capitalValid = /[A-Z]/.test(password);
+          const numberValid = /\d/.test(password);
+
+          // Update UI
+          updateValidationIcon("#lengthCheck", "#lengthText", lengthValid);
+          updateValidationIcon("#symbolCheck", "#symbolText", symbolValid);
+          updateValidationIcon("#capitalCheck", "#capitalText", capitalValid);
+          updateValidationIcon("#numberCheck", "#numberText", numberValid);
+        });
+        function updateValidationIcon(iconId, textId, isValid) {
+          if (isValid) {
+            $(iconId).removeClass("invalid").addClass("valid");
+            $(textId).removeClass("invalid").addClass("valid");
+          } else {
+            $(iconId).removeClass("valid").addClass("invalid");
+            $(textId).removeClass("valid").addClass("invalid");
+          }
+        }
+
+        // Check authentication
+        checkAuthentication();
+
+        // Initialize dashboard
+        initializeDashboard();
+
+        // Sidebar navigation
+        $(".sidebar-menu .nav-link").on("click", function (e) {
+          e.preventDefault();
+          const page = $(this).data("page");
+          showPage(page);
+
+          // Update active state
+          $(".sidebar-menu .nav-link").removeClass("active");
+          $(this).addClass("active");
+        });
+
+        // Toggle sidebar on small screens
+        $("#sidebarToggle").on("click", function (e) {
+          e.stopPropagation(); // Prevent the click from bubbling to document
+          $("#sidebar").toggleClass("show");
+        });
+
+        // Prevent clicks inside the sidebar from closing it
+        $(".sidebar").on("click", function (e) {
+          e.stopPropagation();
+        });
+
+        // Hide sidebar when clicking outside
+        $(document).on("click", function () {
+          $(".sidebar").removeClass("show");
+        });
+
+        // Theme toggle
+        $("#themeToggle").on("click", function () {
+          $(this).toggleClass("active");
+          $("body").attr(
+            "data-theme",
+            $(this).hasClass("active") ? "dark" : "light"
+          );
+          localStorage.setItem(
+            "theme",
+            $(this).hasClass("active") ? "dark" : "light"
+          );
+        });
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem("theme");
+        if (savedTheme === "dark") {
+          $("#themeToggle").addClass("active");
+          $("body").attr("data-theme", "dark");
+        }
+
+        // Logout button
+        $("#logoutBtn").on("click", function (e) {
+          e.preventDefault();
+          logout();
+        });
+
+        // Switch LGA button
+        $("#switchLGA").on("click", function () {
+          $("#switchLGAModal").modal("show");
+        });
+
+        // Switch LGA form submission
+        $("#switchLGABtn").on("click", function () {
+          const selectedLGA = $("#selectLGA").val();
+          switchLGA(selectedLGA);
+          $("#switchLGAModal").modal("hide");
+        });
+
+        // Add user form submission
+        $("#saveUserBtn").on("click", function () {
+          addUser();
+        });
+
+        // Change role form submission
+        $("#updateRoleBtn").on("click", function () {
+          updateUserRole();
+        });
+
+        // Request action form submission
+        $("#submitRequestActionBtn").on("click", function () {
+          submitRequestAction();
+        });
+
+        // Edit profile form submission
+        $("#saveProfileBtn").on("click", function () {
+          updateProfile();
+        });
+
+        // Refresh dashboard button
+        $("#refreshDashboard").on("click", function () {
+          refreshDashboard();
+        });
+
+        // Export dashboard button
+        $("#exportDashboard").on("click", function () {
+          exportDashboardReport();
+        });
+
+        // Refresh analytics button
+        $("#refreshAnalytics").on("click", function () {
+          refreshAnalytics();
+        });
+
+        // Generate report button
+        $("#generateReport").on("click", function () {
+          $("#reports-page").removeClass("d-none");
+          showPage("reports");
+        });
+
+        // Schedule report button
+        $("#scheduleReport").on("click", function () {
+          showNotification("Report scheduling feature coming soon", "info");
+        });
+
+        // Filter requests button
+        $("#filterRequests").on("click", function () {
+          showNotification("Filter feature coming soon", "info");
+        });
+
+        // Export requests button
+        $("#exportRequests").on("click", function () {
+          exportRequestsReport();
+        });
+
+        // Date range button
+        $("#dateRange").on("click", function () {
+          showNotification("Date range selector coming soon", "info");
+        });
+
+        // Profile form change tracking
+        $(
+          "#editProfileFirstName, #editProfileLastName, #editProfileEmail, #editProfilePhone"
+        ).on("input change", function () {
+          profileHasUnsavedChanges = true;
+          saveProfileFormData();
+        });
+
+        // Handle page unload only for profile page
+        $(window).on("beforeunload", function (e) {
+          // Check if we're on the profile page
+          if ($("#profile-page").is(":visible") && profileHasUnsavedChanges) {
+            const message = "Changes you made may not be saved.";
+            e.returnValue = message;
+            return message;
+          }
+        });
+
+        // Report Page Listeners
+        $("#generateReport").on("click", () =>
+          $("#generateReportModal").modal("show")
+        );
+        $("#scheduleReport").on("click", () =>
+          $("#scheduleReportModal").modal("show")
+        );
+        // Analytics Page Listeners
+        $("#analyticsDateRangeBtn").on("click", function () {
+          // Pre-fill the modal with current analytics filters
+          $("#startDate").val(currentAnalyticsFilters.startDate || "");
+          $("#endDate").val(currentAnalyticsFilters.endDate || "");
+        });
+
+        // The "Apply" button listener is already in your document ready block.
+        // We just need to make sure it also re-initializes the analytics page.
+        $("#applyDateRangeBtn").on("click", async function () {
+          // Update the filter object for the dashboard
+          currentDashboardFilters.startDate = $("#startDate").val();
+          currentDashboardFilters.endDate = $("#endDate").val();
+
+          // Also update the filter object for analytics
+          currentAnalyticsFilters.startDate = $("#startDate").val();
+          currentAnalyticsFilters.endDate = $("#endDate").val();
+
+          $("#dateRangeModal").modal("hide");
+
+          // Re-initialize both pages
+          await initializeDashboard();
+          await initializeAnalyticsPage();
+        });
+
+        // Refresh Analytics Button
+        $("#refreshAnalytics").on("click", function () {
+          initializeAnalyticsPage();
+        });
+      });
+
+      // Save profile form data to localStorage
+      function saveProfileFormData() {
+        const profileData = {
+          firstname: $("#editProfileFirstName").val(),
+          lastname: $("#editProfileLastName").val(),
+          email: $("#editProfileEmail").val(),
+          phone: $("#editProfilePhone").val(),
+        };
+
+        localStorage.setItem("profileFormData", JSON.stringify(profileData));
+      }
+
+      // Load profile form data from localStorage
+      function loadProfileFormData() {
+        const savedData = localStorage.getItem("profileFormData");
+        if (savedData) {
+          const profileData = JSON.parse(savedData);
+
+          // Populate form fields
+          $("#editProfileFirstName").val(profileData.firstname || "");
+          $("#editProfileLastName").val(profileData.lastname || "");
+          $("#editProfileEmail").val(profileData.email || "");
+          $("#editProfilePhone").val(profileData.phone || "");
+
+          return true;
+        }
+        return false;
+      }
+
+      function checkAuthentication() {
+        // In a real implementation, this would validate the JWT token
+        // For now, we'll simulate authentication
+        if (!authToken) {
+          // Redirect to login page
+          window.location.href = "login.html";
+        }
+
+        // Set current user info
+        updateCurrentUserDisplay();
+      }
+
+      function generateMockToken() {
+        // Generate a mock JWT token
+        const token =
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+        localStorage.setItem("token", token);
+        return token;
+      }
+
+      function logout() {
+        // Clear authentication token
+        localStorage.removeItem("token");
+
+        // Clear profile form data on logout
+        localStorage.removeItem("profileFormData");
+
+        // Redirect to login page
+        window.location.href = "./auth/login.html";
+      }
+
+      async function updateCurrentUserDisplay() {
+        try {
+          const response = await $.ajax({
+            url: `${BACKEND_URL}/users/me`,
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
+
+          const user = response; // expected user object from backend
+
+          // Update user display
+          $("#currentUser").text(user.firstname + " " + user.lastname);
+          // ✅ Update user profile picture dynamically
+          const profilePicUrl = user.passportPhoto
+            ? user.passportPhoto
+            : "https://picsum.photos/seed/user/40/40.jpg";
+
+          $("#userProfilePic")
+            .attr("src", profilePicUrl)
+            .addClass("img-fluid rounded-circle profile-avatar");
+
+          $("#currentUser").text(`${user.firstname} ${user.lastname}` || "N/A");
+          $("#currentLGA").text(user.lgaOfOrigin || "N/A");
+          $("#lgaState").text(user.stateOfOrigin.toUpperCase() || "N/A");
+          $("#profileName").text(user.lastname || "N/A");
+          $("#profileRole").text(
+            `${user.role || "User"} - ${user.lgaOfOrigin || ""} LGA`
+          );
+          $("#profileEmail").text(user.email || "N/A");
+          $("#profileFullName").text(
+            `${user.firstname} ${user.lastname}` || "N/A"
+          );
+          $("#profileEmailFull").text(user.email || "N/A");
+          $("#profilePhone").text(user.phone || "N/A");
+          $("#profileLGA").text(
+            `${user.lgaOfOrigin || ""}, ${user.stateOfOrigin || ""} State`
+          );
+          $("#profileDateJoined").text(
+            user.created_at
+              ? new Date(user.created_at).toLocaleDateString()
+              : "N/A"
+          );
+          $("#profileLastLogin").text(
+            user.lastLogin ? new Date(user.lastLogin).toLocaleString() : "N/A"
+          );
+
+          // Pre-fill edit profile form
+          $("#editProfileFirstName").val(user.firstname || "");
+          $("#editProfileLastName").val(user.lastname || "");
+
+          $("#editProfileEmail").val(user.email || "");
+          $("#editProfilePhone").val(user.phone || "");
+
+          // Save current profile data to localStorage
+          saveProfileFormData();
+        } catch (error) {
+          console.error("Failed to fetch current user:", error);
+          showNotification(
+            "Unable to load user profile. Please refresh or log in again.",
+            "danger"
+          );
+
+          // If server load fails, try to load from localStorage
+          const hasLocalData = loadProfileFormData();
+          if (!hasLocalData) {
+            showNotification(
+              "No local data available. Please check your connection.",
+              "warning"
+            );
+          }
+        }
+      }
+
+      function showPage(pageName) {
+        // Hide all pages
+        $(".page-content").addClass("d-none");
+
+        // Show selected page
+        $(`#${pageName}-page`).removeClass("d-none");
+
+        // Initialize page-specific components
+        switch (pageName) {
+          case "dashboard":
+            initializeDashboard();
+            break;
+          case "users":
+            initializeUsersPage();
+            break;
+          case "requests":
+            initializeRequestsPage();
+            break;
+          case "analytics":
+            initializeAnalyticsPage();
+            break;
+          case "reports":
+            initializeReportsPage();
+            break;
+
+          case "profile":
+            // Profile page doesn't need special initialization
+            // check2FAStatus();
+            // Load profile form data when navigating to profile page
+            loadProfileFormData();
+            break;
+        }
+      }
+
+      async function initializeDashboard() {
+        if (!token) {
+          toastr.error("You are not logged in.");
+          return;
+        }
+
+        try {
+          // Update KPI cards
+          updateKPICards();
+          // Step 1️⃣: Get current logged-in user info
+          const userRes = await $.ajax({
+            url: `${BACKEND_URL}/users/me`,
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
+
+          const currentLGA = userRes?.lgaOfOrigin || "Unknown LGA";
+          localStorage.setItem("userLGA", currentLGA); // cache it for later use
+
+          // 1️⃣ Fetch analytics data from backend
+          const [trendRes, demographicsRes, kindredRes, activityRes] =
+            await Promise.all([
+              $.ajax({
+                url: `${BACKEND_URL}/users/trends?lga=${encodeURIComponent(
+                  currentLGA
+                )}`,
+                headers: { Authorization: `Bearer ${token}` },
+              }),
+              $.ajax({
+                url: `${BACKEND_URL}/users/demographics?lga=${encodeURIComponent(
+                  currentLGA
+                )}`,
+                headers: { Authorization: `Bearer ${token}` },
+              }),
+              $.ajax({
+                url: `${BACKEND_URL}/users/kindred-activity?lga=${encodeURIComponent(
+                  currentLGA
+                )}`,
+                headers: { Authorization: `Bearer ${token}` },
+              }),
+              $.ajax({
+                url: `${BACKEND_URL}/users/recent-activities?lga=${encodeURIComponent(
+                  currentLGA
+                )}`,
+                headers: { Authorization: `Bearer ${token}` },
+              }),
+            ]);
+
+          // 2️⃣ Request Trends (Line Chart)
+          if (!requestTrendChart) {
+            const ctx1 = document
+              .getElementById("requestTrendChart")
+              .getContext("2d");
+            requestTrendChart = new Chart(ctx1, {
+              type: "line",
+              data: {
+                labels: trendRes.monthly.labels || [],
+                datasets: [
+                  {
+                    label: "ID Card Requests",
+                    data: trendRes.monthly.idCardRequests || [],
+                    borderColor: "#4c5fd5",
+                    backgroundColor: "rgba(76, 95, 213, 0.1)",
+                    tension: 0.4,
+                    fill: true,
+                  },
+                  {
+                    label: "Certificate Requests",
+                    data: trendRes.monthly.certificateRequests || [],
+                    borderColor: "#10b981",
+                    backgroundColor: "rgba(16, 185, 129, 0.1)",
+                    tension: 0.4,
+                    fill: true,
+                  },
+                ],
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: "bottom" } },
+                scales: { y: { beginAtZero: true } },
+              },
+            });
+          }
+
+          // 3️⃣ Demographics (Doughnut Chart)
+          if (!demographicsChart) {
+            const ctx2 = document
+              .getElementById("demographicsChart")
+              .getContext("2d");
+            demographicsChart = new Chart(ctx2, {
+              type: "doughnut",
+              data: {
+                labels: demographicsRes.combinedGroups.labels || [],
+                datasets: [
+                  {
+                    data: demographicsRes.combinedGroups.values || [],
+                    backgroundColor: [
+                      "#4c5fd5",
+                      "#ec4899",
+                      "#3b82f6",
+                      "#10b981",
+                    ],
+                  },
+                ],
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: "bottom" } },
+              },
+            });
+          }
+
+          // 4️⃣ Kindred Activity (Bar Chart)
+          if (!kindredActivityChart) {
+            const ctx3 = document
+              .getElementById("kindredActivityChart")
+              .getContext("2d");
+            kindredActivityChart = new Chart(ctx3, {
+              type: "bar",
+              data: {
+                labels: Object.keys(kindredRes.activity || {}),
+                datasets: [
+                  {
+                    label: "Activity Score",
+                    data: Object.values(kindredRes.activity || {}),
+                    backgroundColor: "#4c5fd5",
+                  },
+                ],
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true } },
+              },
+            });
+          }
+
+          // 5️⃣ Update Activity Timeline
+          updateActivityTimeline(activityRes);
+        } catch (error) {
+          console.error("Dashboard initialization error:", error);
+        }
+      }
+
+      async function updateKPICards() {
+        if (!token) {
+          toastr.error("You are not logged in.");
+          return;
+        }
+
+        try {
+          // Step 1️⃣: Get current logged-in user info
+          const userRes = await $.ajax({
+            url: `${BACKEND_URL}/users/me`,
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
+
+          const currentLGA = userRes?.lgaOfOrigin || "Unknown LGA";
+          localStorage.setItem("userLGA", currentLGA); // cache it for later use
+
+          // Step 2️⃣: Fetch related data in parallel
+          const [usersRes, idcardRes, certRes] = await Promise.all([
+            $.ajax({
+              url: `${BACKEND_URL}/users/by-lga?lga=${encodeURIComponent(
+                currentLGA
+              )}`,
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+            }),
+            $.ajax({
+              url: `${BACKEND_URL}/idcard/requests?lga=${encodeURIComponent(
+                currentLGA
+              )}`,
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+            }),
+            $.ajax({
+              url: `${BACKEND_URL}/indigene/certificate/by-lga?lga=${encodeURIComponent(
+                currentLGA
+              )}`,
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+            }),
+          ]);
+
+          // Step 3️⃣: Calculate KPI metrics
+          const users = Array.isArray(usersRes) ? usersRes : [];
+          const idcardRequests = Array.isArray(idcardRes) ? idcardRes : [];
+          const certificateRequests = Array.isArray(certRes) ? certRes : [];
+
+          const totalUsers = users.length;
+          const totalRequests =
+            idcardRequests.length + certificateRequests.length;
+          const pendingApprovals =
+            idcardRequests.filter((r) => r.status === "Pending").length +
+            certificateRequests.filter((r) => r.status === "Pending").length;
+          const certificatesIssued = certificateRequests.filter(
+            (r) => r.status === "Approved" && r.downloaded === true
+          ).length;
+
+          // Step 4️⃣: Update dashboard KPIs
+          $("#totalUsers").text(totalUsers);
+          $("#totalRequests").text(totalRequests);
+          $("#pendingApprovals").text(pendingApprovals);
+          $("#certificatesIssued").text(certificatesIssued);
+
+          // Optional: Update header badges
+          $("#usersCount").text(totalUsers);
+          $("#pendingCount").text(pendingApprovals);
+          $("#notificationCount").text(pendingApprovals);
+        } catch (error) {
+          console.error("❌ Failed to load KPI data:", error || error);
+          toastr.error(
+            "Unable to load KPI data. Please check your network or login status."
+          );
+        }
+      }
+
+      function updateActivityTimeline(activityData) {
+        const timeline = $("#activityTimeline");
+        timeline.empty();
+
+        activityData.forEach((activity) => {
+          const item = $(`
+                            <div class="activity-item">
+                                <div class="activity-time">${activity.time}</div>
+                                <div class="activity-content">${activity.content}</div>
+                            </div>
+                        `);
+          timeline.append(item);
+        });
+      }
+
+      async function initializeUsersPage() {
+        try {
+          // Step 1: Fetch the currently logged-in user (to get LGA)
+          const currentUserResponse = await $.ajax({
+            url: `${BACKEND_URL}/users/me`,
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
+
+          const currentLGA = currentUserResponse.lgaOfOrigin || "Unknown LGA";
+
+          // Step 2: Fetch all users for this LGA
+          const usersResponse = await $.ajax({
+            url: `${BACKEND_URL}/users/by-lga?lga=${encodeURIComponent(
+              currentLGA
+            )}`,
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
+
+          const users = Array.isArray(usersResponse) ? usersResponse : [];
+
+          // Step 3: Initialize DataTable with fetched users
+          if ($.fn.DataTable.isDataTable("#usersTable")) {
+            $("#usersTable").DataTable().clear().rows.add(users).draw();
+          } else {
+            usersTable = $("#usersTable").DataTable({
+              data: users,
+              columns: [
+                {
+                  data: null,
+                  render: function (row) {
+                    return `${row.firstname || ""} ${row.middlename || ""}
+                            `;
+                  },
+                },
+                { data: "email" },
+                {
+                  data: "role",
+                  render: function (data) {
+                    let badgeClass = "role-badge user";
+                    if (data === "kindred_head")
+                      badgeClass = "role-badge kindred-head";
+                    else if (data === "support_admin")
+                      badgeClass = "role-badge support-admin";
+                    else if (data === "global_admin")
+                      badgeClass = "role-badge global-admin";
+                    return `<span class="${badgeClass}">${data
+                      .replace("_", " ")
+                      .toUpperCase()}</span>`;
+                  },
+                },
+                {
+                  data: null,
+                  render: function (row) {
+                    return row.DOB ? new Date(row.DOB).toDateString() : "N/A";
+                  },
+                },
+                {
+                  data: null,
+                  render: function (row) {
+                    return `${row.gender || "N/A"}
+                            `;
+                  },
+                },
+                {
+                  data: "isActive",
+                  render: function (data) {
+                    const badgeClass = data
+                      ? "status-badge approved"
+                      : "status-badge rejected";
+                    const text = data ? "Active" : "Inactive";
+                    return `<span class="${badgeClass}">${text}</span>`;
+                  },
+                },
+                {
+                  data: "isVerified",
+                  render: function (data) {
+                    const badgeClass = data
+                      ? "status-badge approved"
+                      : "status-badge pending";
+                    const text = data ? "Verified" : "Not Verified";
+                    return `<span class="${badgeClass}">${text}</span>`;
+                  },
+                },
+                {
+                  data: null,
+                  render: function (row) {
+                    return `${row.kindred || "N/A"}
+                            `;
+                  },
+                },
+                // {
+                //   data: "created_at",
+                //   render: (data) => new Date(data).toLocaleDateString(),
+                // },
+                {
+                  data: null,
+                  render: function (data, type, row) {
+                    return `
+                                <div class="btn-group">
+                                    <button class="btn btn-sm btn-outline-primary edit-user-btn" data-id="${row._id}">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-warning change-role-btn" data-id="${row._id}" data-user="${row.lastname} ${row.lastname}" data-bs-toggle="modal" data-bs-target="#changeRoleModal">
+                                        <i class="bi bi-person-badge"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger deactivate-user-btn" data-id="${row._id}">
+                                        <i class="bi bi-person-x"></i>
+                                    </button>
+                                </div>
+                            `;
+                  },
+                },
+              ],
+              responsive: true,
+              pageLength: 10,
+            });
+          }
+
+          // Step 4: Update KPI cards dynamically
+          const totalUsers = users.length;
+          const activeUsers = users.filter((u) => u.isActive).length;
+          const kindredHeads = users.filter(
+            (u) => u.role === "kindred_head"
+          ).length;
+          const newUsers = users.filter((u) => {
+            const regDate = new Date(u.created_at);
+            const currentDate = new Date();
+            return (
+              regDate.getMonth() === currentDate.getMonth() &&
+              regDate.getFullYear() === currentDate.getFullYear()
+            );
+          }).length;
+
+          $("#totalUsersCard").text(totalUsers);
+          $("#activeUsersCard").text(activeUsers);
+          $("#kindredHeadsCard").text(kindredHeads);
+          $("#newUsersCard").text(newUsers);
+        } catch (error) {
+          console.error("Error initializing users page:", error);
+          alert(
+            "Failed to load users data. Please check your network or try again later."
+          );
+        }
+      }
+
+      async function initializeRequestsPage() {
+        const currentUserResponse = await $.ajax({
+          url: `${BACKEND_URL}/users/me`,
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        const currentLGA = currentUserResponse.lgaOfOrigin || "Unknown LGA";
+
+        try {
+          // Fetch ID Card Requests for current LGA
+          const idcardResponse = await $.ajax({
+            url: `${BACKEND_URL}/idcard/requests?lga=${encodeURIComponent(
+              currentLGA
+            )}`,
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
+
+          // Fetch Certificate Requests for current LGA
+          const certificateResponse = await $.ajax({
+            url: `${BACKEND_URL}/indigene/certificate/by-lga?lga=${encodeURIComponent(
+              currentLGA
+            )}`,
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
+
+          // Initialize ID Card Requests Table
+          if (!idcardsTable) {
+            idcardsTable = $("#idcardsTable").DataTable({
+              data: idcardResponse,
+              columns: [
+                { data: "_id" },
+                {
+                  data: null,
+                  render: function (row) {
+                    return `${row.firstname || ""} ${row.lastname || ""}
+                            `;
+                  },
+                },
+                {
+                  data: null,
+                  render: function (row) {
+                    return `${row.kindred || "N/A"}
+                            `;
+                  },
+                },
+                {
+                  data: "status",
+                  render: function (data) {
+                    let badgeClass = "status-badge pending";
+                    if (data === "Approved")
+                      badgeClass = "status-badge approved";
+                    else if (data === "Rejected")
+                      badgeClass = "status-badge rejected";
+                    return `<span class="${badgeClass}">${data.toUpperCase()}</span>`;
+                  },
+                },
+                {
+                  data: "created_at",
+                  render: (data) => new Date(data).toLocaleDateString(),
+                },
+                // {
+                //   data: null,
+                //   render: function (data, type, row) {
+                //     return `
+                //         <div class="btn-group">
+                //           <button class="btn btn-sm btn-outline-primary view-request-btn" data-id="${row._id}" data-type="idcard">
+                //             <i class="bi bi-eye"></i>
+                //           </button>
+                //           <button class="btn btn-sm btn-outline-success approve-request-btn" data-id="${row._id}" data-type="idcard" data-bs-toggle="modal" data-bs-target="#requestActionModal">
+                //             <i class="bi bi-check-circle"></i>
+                //           </button>
+                //           <button class="btn btn-sm btn-outline-danger reject-request-btn" data-id="${row._id}" data-type="idcard" data-bs-toggle="modal" data-bs-target="#requestActionModal">
+                //             <i class="bi bi-x-circle"></i>
+                //           </button>
+                //            <button class="btn btn-sm btn-outline-danger btn-card-download" data-id="${row._id}">
+                //               <i class="bi bi-download"></i>
+                //           </button>
+                //         </div>
+                //       `;
+                //   },
+                // },
+              ],
+              responsive: true,
+              pageLength: 10,
+            });
+          } else {
+            idcardsTable.clear();
+            idcardsTable.rows.add(idcardResponse);
+            idcardsTable.draw();
+          }
+
+          // Initialize Certificate Requests Table
+          if (!certificatesTable) {
+            certificatesTable = $("#certificatesTable").DataTable({
+              data: certificateResponse,
+              columns: [
+                {
+                  data: null,
+                  render: function (row) {
+                    return `${row.firstname || ""} ${row.lastname || ""}
+                            `;
+                  },
+                },
+
+                {
+                  data: null,
+                  render: function (row) {
+                    return `${row.kindred || "N/A"}
+                            `;
+                  },
+                },
+                {
+                  data: "status",
+                  render: function (data) {
+                    let badgeClass = "status-badge pending";
+                    if (data === "Approved")
+                      badgeClass = "status-badge approved";
+                    else if (data === "Rejected")
+                      badgeClass = "status-badge rejected";
+                    return `<span class="${badgeClass}">${data.toUpperCase()}</span>`;
+                  },
+                },
+                {
+                  data: "created_at",
+                  render: (data) => new Date(data).toLocaleDateString(),
+                },
+                {
+                  data: null,
+                  render: function (row) {
+                    return `${row.stateOfOrigin || "N/A"}
+                            `;
+                  },
+                },
+
+                {
+                  data: null,
+                  render: function (row) {
+                    return `${row.lgaOfOrigin || "N/A"}
+                            `;
+                  },
+                },
+
+                {
+                  data: null,
+                  render: function (row) {
+                    return `${row.IsProfileCompleted || "N/A"}
+                            `;
+                  },
+                },
+
+                {
+                  data: null,
+                  render: (row) => {
+                    const fullName = `${row.approvedBy?.firstname || ""} ${
+                      row.approvedBy?.lastname || ""
+                    }`.trim();
+                    return fullName || "N/A";
+                  },
+                },
+                {
+                  data: null,
+                  render: function (data, type, row) {
+                    let actionButtons = "";
+                    let downloadButton = "";
+
+                    // Show action buttons only for pending requests
+                    if (row.status === "Pending") {
+                      actionButtons = `
+        <button class="btn btn-sm btn-outline-success approve-request-btn" data-id="${row._id}" data-type="certificate" data-bs-toggle="modal" data-bs-target="#requestActionModal">
+          <i class="bi bi-check-circle"></i>
+        </button>
+        <button class="btn btn-sm btn-outline-danger reject-request-btn" data-id="${row._id}" data-type="certificate" data-bs-toggle="modal" data-bs-target="#requestActionModal">
+          <i class="bi bi-x-circle"></i>
+        </button>
+      `;
+                    }
+
+                    // Show download button only for approved requests
+                    if (row.status === "Approved") {
+                      downloadButton = `
+        <button class="btn btn-sm btn-outline-danger btn-cert-download" data-id="${row._id}">
+          <i class="bi bi-download"></i>
+        </button>
+      `;
+                    }
+
+                    return `
+        <div class="btn-group">
+          <button class="btn btn-sm btn-outline-primary btn-cert-view" data-id="${row._id}">
+            <i class="bi bi-eye"></i>
+          </button>
+          ${actionButtons}
+          ${downloadButton}
+        </div>
+      `;
+                  },
+                },
+              ],
+              responsive: true,
+              pageLength: 10,
+            });
+          } else {
+            certificatesTable.clear();
+            certificatesTable.rows.add(certificateResponse);
+            certificatesTable.draw();
+          }
+        } catch (error) {
+          console.error("Error loading requests:", error);
+          showNotification(
+            "Failed to load requests. Please check your connection or credentials.",
+            "danger"
+          );
+        }
+      }
+
+      async function initializeAnalyticsPage() {
+        try {
+          $("#analyticsLoader").show();
+
+          const userRes = await $.ajax({
+            url: `${BACKEND_URL}/users/me`,
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
+
+          const currentLGA = userRes?.lgaOfOrigin || "Unknown LGA";
+          localStorage.setItem("userLGA", currentLGA);
+
+          // --- START: ADD DATE FILTERS TO API CALLS ---
+          // Construct the query string from analytics filters
+          const queryParams = new URLSearchParams();
+          if (currentAnalyticsFilters.startDate)
+            queryParams.append("startDate", currentAnalyticsFilters.startDate);
+          if (currentAnalyticsFilters.endDate)
+            queryParams.append("endDate", currentAnalyticsFilters.endDate);
+          const filterString = queryParams.toString();
+          // --- END: ADD DATE FILTERS TO API CALLS ---
+
+          // Step 2: Fetch analytics data concurrently
+          const [demographics, trends, transactions, lgaTrendData] =
+            await Promise.all([
+              $.ajax({
+                // url: `${BACKEND_URL}/users/demographics?lga=${encodeURIComponent(
+                //   currentLGA
+                // )}`,
+                url: `${BACKEND_URL}/users/demographics?lga=${encodeURIComponent(
+                  currentLGA
+                )}&${filterString}`,
+                method: "GET",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  "Content-Type": "application/json",
+                },
+              }),
+              $.ajax({
+                // url: `${BACKEND_URL}/users/trends?lga=${encodeURIComponent(
+                //   currentLGA
+                // )}`,
+                url: `${BACKEND_URL}/users/trends?lga=${encodeURIComponent(
+                  currentLGA
+                )}&${filterString}`,
+                method: "GET",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  "Content-Type": "application/json",
+                },
+              }),
+
+              $.ajax({
+                // url: `${BACKEND_URL}/transaction/by-lga?lga=${encodeURIComponent(
+                //   currentLGA
+                // )}`,
+                url: `${BACKEND_URL}/transaction/by-lga?lga=${encodeURIComponent(
+                  currentLGA
+                )}&${filterString}`,
+                method: "GET",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  "Content-Type": "application/json",
+                },
+              }),
+
+              $.ajax({
+                // url: `${BACKEND_URL}/users/lga-trends`,
+                url: `${BACKEND_URL}/users/lga-trends?${filterString}`,
+                method: "GET",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  "Content-Type": "application/json",
+                },
+              }),
+            ]);
+
+          // Step 3: Extract data safely
+          const ageData = demographics?.ageDistribution?.labels || {};
+          const genderData = demographics?.genderDistribution?.labels || {};
+          const lgaData = trends?.lgaTrend || {};
+
+          // Step 4: Utility to safely get canvas context
+          const getCtx = (id) => {
+            const el = document.getElementById(id);
+            if (!el) {
+              console.warn(`Canvas with ID '${id}' not found.`);
+              return null;
+            }
+            return el.getContext("2d");
+          };
+
+          // Step 5: Reusable function to update/create chart
+          const createOrUpdateChart = (chartRef, ctx, configFn) => {
+            if (!ctx) return chartRef;
+            if (!chartRef) return new Chart(ctx, configFn());
+            chartRef.data = configFn().data;
+            chartRef.update();
+            return chartRef;
+          };
+
+          // === AGE DISTRIBUTION ===
+          ageDistributionChart = createOrUpdateChart(
+            ageDistributionChart,
+            getCtx("ageDistributionChart"),
+            () => ({
+              type: "bar",
+              data: {
+                labels: ageData,
+                datasets: [
+                  {
+                    label: "Users",
+                    data: demographics.ageDistribution.values,
+                    backgroundColor: "#4c5fd5",
+                  },
+                ],
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true } },
+              },
+            })
+          );
+
+          // === GENDER DISTRIBUTION ===
+          genderDistributionChart = createOrUpdateChart(
+            genderDistributionChart,
+            getCtx("genderDistributionChart"),
+            () => ({
+              type: "pie",
+              data: {
+                labels: genderData,
+                datasets: [
+                  {
+                    data: demographics.genderDistribution.values,
+                    backgroundColor: ["#4c5fd5", "#ec4899"],
+                  },
+                ],
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: "bottom" } },
+              },
+            })
+          );
+
+          // === DAY TREND (by date) ===
+          dayTrendChart = createOrUpdateChart(
+            dayTrendChart,
+            getCtx("dayTrendChart"),
+            () => ({
+              type: "bar",
+              data: {
+                labels: trends?.daily?.labels || [],
+                datasets: [
+                  {
+                    label: "ID Card Requests",
+
+                    data: trends?.daily?.idCardRequests || [],
+                    backgroundColor: "rgba(76,95,213,0.8)",
+                  },
+                  {
+                    label: "Certificate Requests",
+                    data: trends?.daily?.certificateRequests || [],
+                    backgroundColor: "rgba(236,72,153,0.8)",
+                  },
+                ],
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: { position: "bottom" },
+                  tooltip: {
+                    callbacks: {
+                      label: function (context) {
+                        const dataset = context.dataset;
+                        const total = dataset.data.reduce((a, b) => a + b, 0);
+                        const value = context.parsed.y;
+                        const percent =
+                          total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                        return `${dataset.label}: ${value} (${percent}%)`;
+                      },
+                    },
+                  },
+                },
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    title: { display: true, text: "Requests" },
+                  },
+                  x: { title: { display: true, text: "Date" } },
+                },
+              },
+            })
+          );
+
+          // === TIME TREND (hourly) ===
+          timeTrendChart = createOrUpdateChart(
+            timeTrendChart,
+            getCtx("timeTrendChart"),
+            () => ({
+              type: "line",
+              data: {
+                labels: trends?.hourly?.labels || [],
+                datasets: [
+                  {
+                    label: "ID Card Requests",
+                    // ✅ Correctly access the pre-aligned data array
+                    data: trends?.hourly?.idCardRequests || [],
+                    borderColor: "#4c5fd5",
+                    backgroundColor: "rgba(76,95,213,0.1)",
+                    tension: 0.3,
+                    fill: true,
+                    pointRadius: 3,
+                  },
+                  {
+                    label: "Certificate Requests",
+                    // ✅ Correctly access the pre-aligned data array
+                    data: trends?.hourly?.certificateRequests || [],
+                    borderColor: "#ec4899",
+                    backgroundColor: "rgba(236,72,153,0.1)",
+                    tension: 0.3,
+                    fill: true,
+                    pointRadius: 3,
+                  },
+                ],
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: { position: "bottom" },
+                  tooltip: {
+                    mode: "index",
+                    intersect: false,
+                    callbacks: {
+                      label: function (context) {
+                        const dataset = context.dataset;
+                        const total = dataset.data.reduce((a, b) => a + b, 0);
+                        const value = context.parsed.y;
+                        const percent =
+                          total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                        return `${dataset.label}: ${value} (${percent}%)`;
+                      },
+                    },
+                  },
+                },
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    title: { display: true, text: "Requests" },
+                  },
+                  x: { title: { display: true, text: "Hour of Day" } },
+                },
+                interaction: { mode: "index", intersect: false },
+              },
+            })
+          );
+
+          const transactionsObject =
+            processTransactionsForMonthlyChart(transactions);
+
+          transactionsChart = createOrUpdateChart(
+            transactionsChart,
+            getCtx("transactionsChart"),
+            () => ({
+              type: "line",
+              data: {
+                labels: Object.keys(transactionsObject),
+                datasets: [
+                  {
+                    label: "Monthly Transactions",
+
+                    data: Object.values(transactionsObject),
+                    borderColor: "#10b981",
+                    backgroundColor: "rgba(16, 185, 129, 0.1)",
+                    tension: 0.4,
+                    fill: true,
+                  },
+                ],
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: {
+                    display: false,
+                  },
+                  title: {
+                    display: false,
+                  },
+                },
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    title: {
+                      display: true,
+                      text: "Number of Transactions",
+                    },
+                  },
+                  x: {
+                    title: {
+                      display: true,
+                      text: "Month",
+                    },
+                  },
+                },
+              },
+            })
+          );
+
+          // Use the createOrUpdateChart pattern for consistency
+          lgaTrendChart = createOrUpdateChart(
+            lgaTrendChart,
+            getCtx("lgaTrendChart"),
+            () => ({
+              type: "bar",
+              data: {
+                // ✅ Use the keys (LGA names) for labels
+                labels: Object.keys(lgaTrendData),
+                datasets: [
+                  {
+                    label: "Total Requests",
+                    // ✅ Use the values (counts) for data
+                    data: Object.values(lgaTrendData),
+                    backgroundColor: "rgba(76, 95, 213, 0.7)", // A nice blue color
+                    borderColor: "rgba(76, 95, 213, 1)",
+                    borderWidth: 1,
+                  },
+                ],
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: {
+                    display: false, // Hide legend as there's only one dataset
+                  },
+                  title: {
+                    display: false, // Title is in the card header
+                  },
+                },
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    title: {
+                      display: true,
+                      text: "Total Number of Requests",
+                    },
+                  },
+                  x: {
+                    title: {
+                      display: true,
+                      text: "Local Government Area (LGA)",
+                    },
+                  },
+                },
+              },
+            })
+          );
+          // Step 6: Done
+          $("#analyticsLoader").hide();
+          showNotification("Analytics loaded successfully", "success");
+        } catch (error) {
+          console.error("Error fetching analytics:", error);
+          showNotification("Failed to load analytics data", "danger");
+          $("#analyticsLoader").hide();
+        }
+      }
+
+      /**
+       * Processes an array of transactions to aggregate counts by month name.
+       * @param {Array<Object>} transactions - The array of transaction objects.
+       * @returns {Object} An object with monthly counts, e.g., { Jan: 45, Feb: 52, ... }.
+       */
+      const processTransactionsForMonthlyChart = (transactions) => {
+        // If the input is not a valid array, return an empty object.
+        if (!Array.isArray(transactions)) {
+          console.warn("Input is not an array. Returning empty object.");
+          return {};
+        }
+
+        const monthOrder = [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ];
+
+        const monthlyCounts = monthOrder.reduce((acc, month) => {
+          acc[month] = 0;
+          return acc;
+        }, {});
+
+        if (transactions.length === 0) {
+          return monthlyCounts;
+        }
+
+        // Iterate over transactions with robust error handling
+        transactions.forEach((tx) => {
+          // 1. Check if the transaction object and its createdAt property exist
+          if (tx && tx.createdAt) {
+            const date = new Date(tx.createdAt);
+
+            // 2. Check if the created date is a valid date object
+            // isNaN(date.getTime()) is the standard way to check for an invalid date
+            if (!isNaN(date.getTime())) {
+              const monthIndex = date.getMonth(); // This will be 0-11
+
+              // 3. Check if the month index is valid before using it
+              if (monthIndex >= 0 && monthIndex < 12) {
+                const monthName = monthOrder[monthIndex];
+                monthlyCounts[monthName] += 1;
+              }
+            }
+          }
+        });
+
+        return monthlyCounts;
+      };
+
+      async function handleGenerateReport(type) {
+        $("#generateReportModal").modal("hide");
+        showNotification(`Generating ${type} report...`, "info");
+
+        try {
+          const response = await $.ajax({
+            url: `${BACKEND_URL}/reports/generate/${type}`,
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            data: JSON.stringify({
+              generatedBy: user.firstname + " " + user.lastname,
+            }),
+          });
+
+          showNotification(response.message, "success");
+          initializeReportsPage(); // Refresh the table
+        } catch (error) {
+          showNotification("Failed to generate report.", "error");
+        }
+      }
+
+      async function handleScheduleReport() {
+        const formData = {
+          name: $("#scheduleName").val(),
+          frequency: $("#scheduleFrequency").val(),
+          lga: $("#scheduleLGA").val(),
+          createdBy: user.id,
+        };
+
+        if (!formData.name || !formData.frequency || !formData.lga) {
+          showNotification("Please fill out all fields.", "warning");
+          return;
+        }
+
+        $("#scheduleReportModal").modal("hide");
+        showNotification("Scheduling report...", "info");
+
+        try {
+          await $.ajax({
+            url: `${BACKEND_URL}/reports/schedule`,
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            data: JSON.stringify(formData),
+          });
+
+          showNotification("Report scheduled successfully!", "success");
+          $("#scheduleReportForm")[0].reset();
+        } catch (error) {
+          showNotification("Failed to schedule report.", "error");
+        }
+      }
+
+      /**
+       * Downloads a report file using authentication.
+       * @param {string} reportId The ID of the report to download.
+       */
+      async function downloadReport(reportId) {
+        const url = `${BACKEND_URL}/reports/${reportId}/download`;
+
+        try {
+          showNotification("Preparing download...", "info");
+
+          const response = await fetch(url, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(
+              errorData.message || `HTTP error! status: ${response.status}`
+            );
+          }
+
+          // Get the report name from the response headers if available, otherwise use a default
+          const contentDisposition = response.headers.get(
+            "content-disposition"
+          );
+          let filename = `report_${reportId}.pdf`;
+          if (contentDisposition) {
+            const filenameMatch = contentDisposition.match(/filename="(.+)"/);
+            if (filenameMatch.length === 2) {
+              filename = filenameMatch[1];
+            }
+          }
+
+          // Get the response as a Blob
+          const blob = await response.blob();
+
+          // Create a temporary link to trigger the download
+          const link = document.createElement("a");
+          const downloadUrl = URL.createObjectURL(blob);
+          link.href = downloadUrl;
+          link.setAttribute("download", filename);
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+
+          // Clean up the object URL
+          URL.revokeObjectURL(downloadUrl);
+
+          showNotification("Report downloaded successfully!", "success");
+        } catch (error) {
+          console.error("Download failed:", error);
+          showNotification(
+            `Failed to download report: ${error.message}`,
+            "error"
+          );
+        }
+      }
+
+      // function initializeReportsPage() {
+      //   if (!reportsTable) {
+      //     reportsTable = $("#reportsTable").DataTable({
+      //       data: mockAPI.reports,
+      //       columns: [
+      //         { data: "name" },
+      //         { data: "type" },
+      //         { data: "generatedDate" },
+      //         { data: "generatedBy" },
+      //         {
+      //           data: null,
+      //           render: function (data, type, row) {
+      //             return `
+      //                               <div class="btn-group">
+      //                                   <button class="btn btn-sm btn-outline-primary download-report-btn" data-id="${row.id}">
+      //                                       <i class="bi bi-download"></i>
+      //                                   </button>
+      //                                   <button class="btn btn-sm btn-outline-danger delete-report-btn" data-id="${row.id}">
+      //                                       <i class="bi bi-trash"></i>
+      //                                   </button>
+      //                               </div>
+      //                           `;
+      //           },
+      //         },
+      //       ],
+      //       responsive: true,
+      //       pageLength: 10,
+      //     });
+      //   }
+      // }
+
+      // Function to initialize the reports page table
+      async function initializeReportsPage() {
+        try {
+          const reports = await $.ajax({
+            url: `${BACKEND_URL}/reports`,
+            method: "GET",
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          if (!reportsTable) {
+            reportsTable = $("#reportsTable").DataTable({
+              data: reports,
+              columns: [
+                { data: "name" },
+                { data: "type" },
+                {
+                  data: "generatedAt",
+                  render: (data) => new Date(data).toLocaleDateString(),
+                },
+                { data: "generatedBy" },
+
+                {
+                  data: null,
+                  orderable: false,
+                  render: (data, type, row) => `
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-primary" onclick="downloadReport('${row._id}')">
+                                    <i class="bi bi-download"></i> Download
+                                </button>
+                            </div>
+                        `,
+                },
+              ],
+            });
+          } else {
+            reportsTable.clear().rows.add(reports).draw();
+          }
+        } catch (error) {
+          console.error("Failed to load reports:", error);
+        }
+      }
+
+      async function addUser() {
+        const firstname = $("#firstname").val();
+        const lastname = $("#lastname").val().trim();
+        const name = `${firstname} ${lastname}`.trim();
+        const email = $("#userEmail").val().trim();
+        const phone = $("#userPhone").val().trim();
+        const password = $("#password").val();
+        const NIN = $("#userNIN").val().trim();
+
+        const confirmPassword = $("#confirmPass").val();
+        if (password !== confirmPassword) {
+          showNotification("Passwords do not match", "warning");
+          return;
+        }
+
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!emailPattern.test(email)) {
+          showNotification("Please enter a valid email address", "warning");
+          return;
+        }
+
+        const pattern = /^0[7-9][0-1]\d{8}$/; // Nigerian phone number pattern
+        const phonePattern = new RegExp(pattern);
+        if (!phonePattern.test(phone)) {
+          showNotification(
+            "Please enter a valid Nigerian phone number",
+            "warning"
+          );
+          return;
+        }
+
+        // Validate required fields
+        if (!name || !email || !phone || !password || !NIN) {
+          showNotification("Please fill all required fields", "warning");
+          return;
+        }
+
+        const userRes = await $.ajax({
+          url: `${BACKEND_URL}/users/me`,
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        const currentLGA = userRes?.lgaOfOrigin || "Unknown LGA";
+        const currentState = userRes?.stateOfOrigin || "Unknown State";
+        localStorage.setItem("userLGA", currentLGA); // cache it for later use
+
+        // Build request body
+        const newUser = {
+          firstname,
+          lastname,
+          password,
+          email,
+          phone,
+          lgaOfOrigin: currentLGA,
+          stateOfOrigin: currentState,
+          NIN,
+        };
+
+        try {
+          // Send POST request to create user
+          const response = await $.ajax({
+            url: `${BACKEND_URL}/auth/signup`,
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            data: JSON.stringify(newUser),
+          });
+
+          // If successful, refresh table
+          showNotification("User added successfully", "success");
+
+          // Reload users specific to current LGA
+          initializeUsersPage();
+          // Update KPI cards
+          updateKPICards();
+
+          // Close modal and reset form
+          $("#addUserModal").modal("hide");
+          $("#addUserForm")[0].reset();
+        } catch (error) {
+          console.error("Error adding user:", error);
+          const message =
+            error.responseJSON?.message ||
+            "Failed to add user. Please try again.";
+          showNotification(message, "danger");
+        }
+      }
+
+      function updateUserRole() {
+        // Get form values
+        const userId = $("#changeRoleModal").data("userId");
+        const newRole = $("#changeRoleNew").val();
+        const reason = $("#changeRoleReason").val();
+
+        $.ajax({
+          url: `${BACKEND_URL}/users/${userId}/role`,
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          data: JSON.stringify({ role: newRole }),
+          success: function () {
+            $("#changeRoleModal").modal("hide");
+
+            initializeUsersPage();
+            showNotification(
+              "Success",
+              "User role updated successfully",
+              "success"
+            );
+          },
+          error: function (xhr) {
+            showNotification(
+              xhr.responseJSON.message || "Failed to change role",
+              "danger"
+            );
+          },
+        });
+      }
+
+      function submitRequestAction() {
+        const requestId = $("#requestActionModal").data("requestId");
+        const requestType = $("#requestActionModal").data("requestType");
+        const action = $("#requestActionType").val(); // "approve" or "reject"
+        const reason = $("#requestActionReason").val();
+
+        if (!requestId || !action) {
+          showNotification("Invalid request. Please try again.", "danger");
+          return;
+        }
+
+        // Determine endpoint based on request type
+        let endpoint = "";
+        if (requestType === "idcard") {
+          endpoint = `${BACKEND_URL}/idcard/${requestId}/${action}`;
+        } else if (requestType === "certificate") {
+          endpoint = `${BACKEND_URL}/indigene/certificate/${requestId}/${action}`;
+        } else {
+          showNotification("Unknown request type.", "danger");
+          return;
+        }
+
+        // Disable submit button to prevent multiple clicks
+        $("#submitActionBtn").prop("disabled", true).text("Processing...");
+
+        // ✅ Real API call
+        $.ajax({
+          url: endpoint,
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          data: JSON.stringify({
+            rejectionReason: reason,
+            approvedBy: user.id,
+          }),
+          success: function (response) {
+            // Close modal and reset
+            $("#requestActionModal").modal("hide");
+            $("#requestActionForm")[0].reset();
+
+            // Refresh requests table
+            initializeRequestsPage();
+
+            // Refresh dashboard
+            initializeDashboard();
+
+            // Update KPI cards
+            updateKPICards();
+
+            // Show success message
+            showNotification(`Request ${action}d successfully`, "success");
+          },
+          error: function (xhr) {
+            console.error("Error:", xhr.responseText);
+            showNotification(
+              xhr.responseJSON?.message || `Failed to ${action} request.`,
+              "danger"
+            );
+          },
+          complete: function () {
+            $("#submitActionBtn").prop("disabled", false).text("Submit");
+          },
+        });
+      }
+
+      function updateProfile() {
+        const firstname = $("#editProfileFirstName").val().trim();
+        const lastname = $("#editProfileLastName").val().trim();
+
+        const email = $("#editProfileEmail").val().trim();
+        const phone = $("#editProfilePhone").val().trim();
+
+        if (!firstname || !lastname || !email || !phone) {
+          showNotification("All fields are required.", "danger");
+          return;
+        }
+
+        // Disable button to prevent double submission
+        $("#saveProfileBtn").prop("disabled", true).text("Saving...");
+
+        $.ajax({
+          url: `${BACKEND_URL}/users/${user.id}`,
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          data: JSON.stringify({ firstname, lastname, email, phone }),
+          success: function (response) {
+            // ✅ Update UI with new data
+            $("#currentUser").text(
+              `${response.firstname} ${response.lastname}` || firstname
+            );
+            $("#currentUserEmail").text(response.email || email);
+            $("#currentUserPhone").text(response.phone || phone);
+
+            // Close modal
+            $("#editProfileModal").modal("hide");
+
+            // Update display
+            updateCurrentUserDisplay();
+
+            // Show success message
+            showNotification("Profile updated successfully", "success");
+
+            // Clear saved form data after successful save
+            localStorage.removeItem("profileFormData");
+
+            // Reset the form change tracking after successful save
+            profileHasUnsavedChanges = false;
+          },
+          error: function (xhr) {
+            console.error("Error updating profile:", xhr.responseText);
+            const message =
+              xhr.responseJSON?.message || "Failed to update profile.";
+            showNotification(message, "danger");
+          },
+          complete: function () {
+            $("#saveProfileBtn").prop("disabled", false).text("Save Changes");
+          },
+        });
+      }
+
+      function switchLGA(lga) {
+        // Update current LGA
+        currentLGA = lga;
+        mockAPI.currentUser.lga = lga;
+
+        // Update display
+        $("#currentLGA").text(lga);
+        $("#profileLGA").text(`${lga}, ${mockAPI.currentUser.state} State`);
+
+        // Refresh dashboard
+        refreshDashboard();
+
+        // Show notification
+        showNotification(`Switched to ${lga} LGA`, "success");
+
+        // In a real implementation, this would make an API call
+        // GET /api/support-admin/analytics/lga/:lgaId
+        console.log("API Call: GET /api/support-admin/analytics/lga/" + lga);
+      }
+
+      function refreshDashboard() {
+        // In a real implementation, this would fetch fresh data from the API
+        // GET /api/support-admin/analytics/lga/:lgaId
+        console.log(
+          "API Call: GET /api/support-admin/analytics/lga/" + currentLGA
+        );
+
+        // Simulate API delay
+        showNotification("Refreshing dashboard...", "info");
+
+        setTimeout(() => {
+          // Update KPI cards
+          updateKPICards();
+
+          // Update activity timeline
+          updateActivityTimeline();
+
+          // Show notification
+          showNotification("Dashboard refreshed successfully", "success");
+        }, 1000);
+      }
+
+      /**
+       * Calls the backend to fetch fresh analytics data and updates all charts.
+      //  */
+
+      async function refreshAnalytics() {
+        showNotification("Refreshing analytics...", "info");
+
+        try {
+          // Get the current LGA from the user's profile
+          const userRes = await $.ajax({
+            url: `${BACKEND_URL}/users/me`,
+            method: "GET",
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          const currentLGA = userRes?.lgaOfOrigin || "Unknown LGA";
+
+          // Construct the query string from analytics filters
+          const queryParams = new URLSearchParams();
+          if (currentAnalyticsFilters.startDate)
+            queryParams.append("startDate", currentAnalyticsFilters.startDate);
+          if (currentAnalyticsFilters.endDate)
+            queryParams.append("endDate", currentAnalyticsFilters.endDate);
+          const filterString = queryParams.toString();
+
+          // --- 1. Call the main analytics endpoint ---
+          const analyticsResponse = await $.ajax({
+            url: `${BACKEND_URL}/users/refresh-analytics?lga=${encodeURIComponent(
+              currentLGA
+            )}&${filterString}`,
+            method: "GET",
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          const { demographics, trends, lgaTrends } = analyticsResponse;
+
+          // --- 2. Call the separate transaction endpoint ---
+          // NOTE: We assume this endpoint returns an ARRAY of raw transaction objects.
+          const transactionsArray = await $.ajax({
+            url: `${BACKEND_URL}/transaction/by-lga?lga=${encodeURIComponent(
+              currentLGA
+            )}&${filterString}`,
+            method: "GET",
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          // --- Update charts with the new data ---
+
+          // Age & Gender Distribution Charts
+          ageDistributionChart.data.datasets[0].data = Object.values(
+            demographics.ageDistribution.values
+          );
+          ageDistributionChart.update();
+          genderDistributionChart.data.datasets[0].data = Object.values(
+            demographics.genderDistribution.values
+          );
+          genderDistributionChart.update();
+
+          // Day & Time Trend Charts
+          dayTrendChart.data.datasets[0].data = Object.values(
+            trends.daily.idCardRequests
+          );
+          dayTrendChart.data.datasets[1].data = Object.values(
+            trends.daily.certificateRequests
+          );
+          dayTrendChart.update();
+          timeTrendChart.data.datasets[0].data = Object.values(
+            trends.hourly.idCardRequests
+          );
+          timeTrendChart.data.datasets[1].data = Object.values(
+            trends.hourly.certificateRequests
+          );
+          timeTrendChart.update();
+
+          // --- 3. Process and Update Transactions Chart ---
+          // Use the helper function to process the ARRAY from the second API call
+          const processedTransactions =
+            processTransactionsForMonthlyChart(transactionsArray);
+
+          // The result is an object like { 'Jan': 10, 'Feb': 15, ... }
+          const transactionLabels = Object.keys(processedTransactions);
+          const transactionValues = Object.values(processedTransactions);
+
+          transactionsChart.data.labels = transactionLabels;
+          transactionsChart.data.datasets[0].data = transactionValues;
+          transactionsChart.update();
+
+          // LGA Trend Chart
+          lgaTrendChart.data.datasets[0].data = Object.values(lgaTrends);
+          lgaTrendChart.update();
+
+          showNotification("Analytics refreshed successfully!", "success");
+        } catch (error) {
+          console.error("Failed to refresh analytics:", error);
+          showNotification("Failed to refresh analytics data", "error");
+        }
+      }
+
+      /**
+       * Calls the backend to generate and download a PDF report of the dashboard.
+       */
+      async function exportDashboardReport() {
+        showNotification("Generating dashboard report, please wait...", "info");
+
+        const queryParams = new URLSearchParams();
+        if (currentDashboardFilters.startDate)
+          queryParams.append("startDate", currentDashboardFilters.startDate);
+        if (currentDashboardFilters.endDate)
+          queryParams.append("endDate", currentDashboardFilters.endDate);
+        const url = `${BACKEND_URL}/reports/export/dashboard/pdf?${queryParams.toString()}`;
+
+        try {
+          const response = await fetch(url, {
+            method: "GET",
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(
+              errorData.message || `HTTP error! status: ${response.status}`
+            );
+          }
+
+          const blob = await response.blob();
+          const link = document.createElement("a");
+          const downloadUrl = URL.createObjectURL(blob);
+          link.href = downloadUrl;
+          link.setAttribute(
+            "download",
+            `dashboard_report_${new Date().toISOString().slice(0, 10)}.pdf`
+          );
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(downloadUrl);
+
+          showNotification(
+            "Dashboard report exported successfully!",
+            "success"
+          );
+        } catch (error) {
+          console.error("Export failed:", error);
+          showNotification(
+            `Failed to export report: ${error.message}`,
+            "error"
+          );
+        }
+      }
+
+      /**
+       * Calls the backend to generate and download a PDF report of all requests.
+       */
+      async function exportRequestsReport() {
+        showNotification("Generating requests report, please wait...", "info");
+        const url = `${BACKEND_URL}/reports/export/requests/pdf`; // No date filter for now, but can be added
+
+        try {
+          const response = await fetch(url, {
+            method: "GET",
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(
+              errorData.message || `HTTP error! status: ${response.status}`
+            );
+          }
+
+          const blob = await response.blob();
+          const link = document.createElement("a");
+          const downloadUrl = URL.createObjectURL(blob);
+          link.href = downloadUrl;
+          link.setAttribute(
+            "download",
+            `requests_report_${new Date().toISOString().slice(0, 10)}.pdf`
+          );
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(downloadUrl);
+
+          showNotification("Requests report exported successfully!", "success");
+        } catch (error) {
+          console.error("Export failed:", error);
+          showNotification(
+            `Failed to export report: ${error.message}`,
+            "error"
+          );
+        }
+      }
+
+      function showNotification(message, type = "info") {
+        const alertClass =
+          type === "success"
+            ? "alert-success"
+            : type === "error"
+            ? "alert-danger"
+            : type === "warning"
+            ? "alert-warning"
+            : "alert-info";
+
+        const notification = $(`
+                        <div class="alert ${alertClass} alert-dismissible fade show position-fixed" style="top: 80px; right: 20px; z-index: 9999; min-width: 300px;">
+                            ${message}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    `);
+
+        $("body").append(notification);
+
+        setTimeout(() => {
+          notification.alert("close");
+        }, 5000);
+      }
+
+      // Export Table Function
+      function exportTable(format, tableId) {
+        showNotification(
+          `Exporting table as ${format.toUpperCase()}...`,
+          "info"
+        );
+
+        // Get table data
+        const table = $("#" + tableId).DataTable();
+        const data = table.data().toArray();
+        const columns = table.settings().init().columns;
+
+        // Get headers
+        const headers = columns
+          .map((col) => col.title)
+          .filter((title) => title !== "Actions");
+
+        // Prepare data for export
+        const exportData = data.map((row) => {
+          const exportRow = {};
+          headers.forEach((header, index) => {
+            exportRow[header] = row[Object.keys(row)[index]];
+          });
+          return exportRow;
+        });
+
+        if (format === "csv") {
+          exportToCSV(exportData, headers, tableId);
+        } else if (format === "pdf") {
+          exportToPDF(exportData, headers, tableId);
+        }
+
+        // In a real implementation, this would make an API call
+        // GET /api/reports/lga/:lgaId/export?format=csv|pdf
+        console.log(
+          "API Call: GET /api/reports/lga/" +
+            currentLGA +
+            "/export?format=" +
+            format
+        );
+      }
+
+      function exportToCSV(data, headers, filename) {
+        // Create CSV content
+        let csvContent = headers.join(",") + "\n";
+
+        data.forEach((row) => {
+          const values = headers.map((header) => {
+            const value = row[header] || "";
+            // Escape quotes and wrap in quotes if contains comma
+            return typeof value === "string" && value.includes(",")
+              ? `"${value.replace(/"/g, '""')}"`
+              : value;
+          });
+          csvContent += values.join(",") + "\n";
+        });
+
+        // Create blob and download
+        const blob = new Blob([csvContent], {
+          type: "text/csv;charset=utf-8;",
+        });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute(
+          "download",
+          filename + "_" + new Date().toISOString().split("T")[0] + ".csv"
+        );
+        link.style.visibility = "hidden";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        showNotification(`Table exported successfully as CSV`, "success");
+      }
+
+      function exportToPDF(data, headers, filename) {
+        // Create PDF content
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        // Add title
+        doc.setFontSize(18);
+        doc.text(
+          filename.replace(/([A-Z])/g, " $1").trim() + " Report",
+          14,
+          22
+        );
+
+        // Add date
+        doc.setFontSize(12);
+        doc.text("Generated on: " + new Date().toLocaleDateString(), 14, 32);
+
+        // Add table
+        doc.setFontSize(10);
+        let yPosition = 42;
+
+        // Add headers
+        headers.forEach((header, index) => {
+          doc.text(header, 14 + index * 30, yPosition);
+        });
+
+        yPosition += 10;
+
+        // Add data
+        data.forEach((row) => {
+          headers.forEach((header, index) => {
+            const value = row[header] || "";
+            doc.text(value.toString(), 14 + index * 30, yPosition);
+          });
+          yPosition += 10;
+
+          // Add new page if needed
+          if (yPosition > 270) {
+            doc.addPage();
+            yPosition = 20;
+          }
+        });
+
+        // Save PDF
+        doc.save(
+          filename + "_" + new Date().toISOString().split("T")[0] + ".pdf"
+        );
+
+        showNotification(`Table exported successfully as PDF`, "success");
+      }
+
+      // Event delegation for dynamically created elements
+      $(document).on("click", ".change-role-btn", function () {
+        const userId = $(this).data("id");
+        const userName = $(this).data("user");
+
+        $("#changeRoleUser").val(userName);
+        $("#changeRoleModal").data("userId", userId);
+      });
+
+      $(document).on("click", ".download-report-btn", function () {
+        const reportId = $(this).data("id");
+        const report = mockAPI.reports.find((r) => r.id === reportId);
+
+        if (report) {
+          showNotification(`Downloading ${report.name}...`, "info");
+
+          // Simulate download delay
+          setTimeout(() => {
+            showNotification(
+              `${report.name} downloaded successfully`,
+              "success"
+            );
+          }, 1000);
+        }
+      });
+
+      $(document).on("click", ".delete-report-btn", function () {
+        const reportId = $(this).data("id");
+        const reportIndex = mockAPI.reports.findIndex((r) => r.id === reportId);
+
+        if (reportIndex !== -1) {
+          // Remove from mock data
+          mockAPI.reports.splice(reportIndex, 1);
+
+          // Refresh table
+          reportsTable.clear();
+          reportsTable.rows.add(mockAPI.reports);
+          reportsTable.draw();
+
+          showNotification("Report deleted successfully", "success");
+        }
+      });
+
+      $(document).on("click", ".edit-user-btn", function () {
+        const userId = $(this).data("id");
+
+        $.ajax({
+          url: `${BACKEND_URL}/users/${userId}`,
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          success: function (user) {
+            // Populate edit user form
+            $("#editUserId").val(user._id);
+            $("#editFirstname").val(user.firstname);
+            $("#editLastname").val(user.lastname);
+            $("#editEmail").val(user.email);
+            $("#editPhone").val(user.phone || "");
+
+            // Show modal
+            $("#editUserModal").modal("show");
+          },
+          error: function (xhr) {
+            console.error("Failed to fetch user details:", xhr.responseText);
+          },
+        });
+      });
+
+      // 🔹 Handle Edit User form submission
+      $("#editUserForm").on("submit", function (e) {
+        e.preventDefault();
+        const userId = $("#editUserId").val();
+        const payload = {
+          firstname: $("#editFirstname").val(),
+          lastname: $("#editLastname").val(),
+          email: $("#editEmail").val(),
+          phoneNumber: $("#editPhone").val(),
+        };
+
+        $.ajax({
+          url: `${BACKEND_URL}/users/${userId}/user-details`,
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          data: JSON.stringify(payload),
+          success: function () {
+            $("#editUserModal").modal("hide");
+            initializeUsersPage(); // refresh list
+            showNotification(
+              "Updated!",
+              "User details updated successfully.",
+              "success"
+            );
+          },
+          error: function (xhr) {
+            showNotification(
+              "Error",
+              xhr.responseText || "Failed to update user",
+              "danger"
+            );
+          },
+        });
+      });
+
+      $(document).on("click", ".deactivate-user-btn", function () {
+        const userId = $(this).data("id");
+
+        Swal.fire({
+          title: "Are you sure?",
+          text: "This will toggle the user's active status.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Yes, proceed",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            $.ajax({
+              url: `${BACKEND_URL}/users/${userId}/toggle-status`,
+              method: "PATCH",
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+              success: function () {
+                initializeUsersPage();
+                // Update KPI cards
+                updateKPICards();
+
+                showNotification("Done! User status updated.", "success");
+              },
+              error: function (xhr) {
+                showNotification(
+                  xhr.responseJSON.message || "Failed to update user status",
+                  "danger"
+                );
+              },
+            });
+          }
+        });
+      });
+
+      $(document).on("click", ".view-request-btn", async function () {
+        const requestId = $(this).data("id");
+        const requestType = $(this).data("type");
+
+        const endpoint =
+          requestType === "idcard"
+            ? `${BACKEND_URL}/idcard/${requestId}/request`
+            : `${BACKEND_URL}/indigene/certificate/${requestId}/request`;
+
+        // Show loading state
+        $("#viewRequestModal .modal-body").html(`
+                <div class="text-center py-5 text-muted">
+                  <div class="spinner-border text-primary" role="status"></div>
+                  <p class="mt-3">Fetching request details...</p>
+                </div>
+          `);
+        $("#viewRequestModal").modal("show");
+
+        try {
+          const response = await $.ajax({
+            url: endpoint,
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
+
+          const request = response;
+
+          // Build dynamic content
+          const detailsHtml = `
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <strong>ID:</strong> ${request._id || "N/A"}
+                </div>
+                <div class="col-md-6 mb-3">
+                  <strong>Status:</strong>
+                  <span class="badge bg-${
+                    request.status === "Approved"
+                      ? "success"
+                      : request.status === "Rejected"
+                      ? "danger"
+                      : "warning"
+                  } text-uppercase">${request.status}</span>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <strong>User:</strong> ${request.firstname || ""} ${
+            request.lastname || ""
+          }
+                </div>
+                <div class="col-md-6 mb-3">
+                  <strong>Kindred:</strong> ${request.kindred || "N/A"}
+                </div>
+                <div class="col-md-6 mb-3">
+                  <strong>Request Type:</strong> ${requestType.toUpperCase()}
+                </div>
+                <div class="col-md-6 mb-3">
+                  <strong>Request Date:</strong> ${new Date(
+                    request.created_at
+                  ).toLocaleString()}
+                </div>
+                <div class="col-12 mt-3">
+                  <strong>Additional Info:</strong><br>
+                  <p class="text-muted mb-0">${
+                    request.reason || "No additional info provided"
+                  }</p>
+                </div>
+              </div>
+            `;
+
+          $("#viewRequestModal .modal-body").html(detailsHtml);
+        } catch (error) {
+          console.error("Error fetching request:", error);
+          $("#viewRequestModal .modal-body").html(`
+              <div class="alert alert-danger text-center">
+                <i class="fa fa-exclamation-circle"></i> Failed to fetch request details.
+              </div>
+            `);
+        }
+      });
+
+      $(document).on(
+        "click",
+        ".approve-request-btn, .reject-request-btn",
+        function () {
+          const requestId = $(this).data("id");
+          const requestType = $(this).data("type");
+          const action = $(this).hasClass("approve-request-btn")
+            ? "approve"
+            : "reject";
+
+          $("#requestActionType").val(action);
+          $("#requestActionModal").data("requestId", requestId);
+          $("#requestActionModal").data("requestType", requestType);
+        }
+      );
+      //
+    </script>
+
+    <script>
+      $(document).ready(function () {
+        // Initialize modals
+        const changePasswordModal = new bootstrap.Modal(
+          document.getElementById("changePasswordModal")
+        );
+        const enable2FAModal = new bootstrap.Modal(
+          document.getElementById("enable2FAModal")
+        );
+
+        // Change Password Button Click
+        $("#changePasswordBtn").click(function () {
+          changePasswordModal.show();
+        });
+
+        // Enable 2FA Button Click
+        $("#enable2FABtn").click(function () {
+          enable2FAModal.show();
+          reset2FASetup();
+          setup2FA(); // This is the missing call
+        });
+
+        // Password strength checker
+        $("#newPassword").on("input", function () {
+          const password = $(this).val();
+          let strength = 0;
+          let strengthText = "";
+
+          if (password.length >= 8) strength++;
+          if (password.match(/[a-z]+/)) strength++;
+          if (password.match(/[A-Z]+/)) strength++;
+          if (password.match(/[0-9]+/)) strength++;
+          if (password.match(/[$@#&!]+/)) strength++;
+
+          const strengthBar = $("#passwordStrength");
+          const strengthTextElement = $("#passwordStrengthText");
+
+          strengthBar.removeClass();
+          strengthTextElement.removeClass();
+
+          if (password.length === 0) {
+            strengthBar.hide();
+            strengthTextElement.text("");
+          } else if (strength < 3) {
+            strengthBar.addClass("password-strength strength-weak");
+            strengthTextElement.text("Weak password").addClass("text-danger");
+          } else if (strength === 3 || strength === 4) {
+            strengthBar.addClass("password-strength strength-medium");
+            strengthTextElement
+              .text("Medium strength")
+              .addClass("text-warning");
+          } else {
+            strengthBar.addClass("password-strength strength-strong");
+            strengthTextElement
+              .text("Strong password")
+              .addClass("text-success");
+          }
+        });
+
+        // Confirm password validation
+        $("#confirmPassword").on("input", function () {
+          const newPassword = $("#newPassword").val();
+          const confirmPassword = $(this).val();
+
+          if (newPassword !== confirmPassword) {
+            $(this).addClass("is-invalid");
+            $("#passwordMatchFeedback").show();
+          } else {
+            $(this).removeClass("is-invalid");
+            $("#passwordMatchFeedback").hide();
+          }
+        });
+
+        // Save Password Button Click
+        $("#savePasswordBtn").click(function () {
+          const currentPassword = $("#currentPassword").val();
+          const newPassword = $("#newPassword").val();
+          const confirmPassword = $("#confirmPassword").val();
+
+          // Validate form
+          if (!currentPassword || !newPassword || !confirmPassword) {
+            showNotification("Please fill in all fields", "danger");
+            return;
+          }
+
+          if (newPassword !== confirmPassword) {
+            showNotification("Passwords do not match", "danger");
+            return;
+          }
+
+          // Disable button to prevent multiple submissions
+          $(this).prop("disabled", true).text("Processing...");
+
+          // Make the API call
+          $.ajax({
+            url: `${BACKEND_URL}/auth/change-password`,
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            data: JSON.stringify({
+              currentPassword: currentPassword,
+              newPassword: newPassword,
+            }),
+            success: function (response) {
+              showNotification("Password changed successfully", "success");
+              changePasswordModal.hide();
+              $("#changePasswordForm")[0].reset();
+            },
+            error: function (xhr) {
+              const errorMessage = xhr.responseJSON
+                ? xhr.responseJSON.message
+                : "Failed to change password";
+              showNotification(errorMessage, "danger");
+            },
+            complete: function () {
+              // Re-enable the button
+              $("#savePasswordBtn")
+                .prop("disabled", false)
+                .text("Save Changes");
+            },
+          });
+        });
+
+        // 2FA Setup Process
+        $("#2faContinueBtn").click(function () {
+          $("#2faSetupStep1").hide();
+          $("#2faSetupStep2").show();
+          $(this).hide();
+          $("#2faVerifyBtn").show();
+        });
+
+        $("#2faVerifyBtn").click(function () {
+          const verificationCode = $("#verificationCode").val();
+
+          if (!verificationCode || verificationCode.length !== 6) {
+            showNotification(
+              "Please enter a valid 6-digit verification code",
+              "danger"
+            );
+            return;
+          }
+
+          // Disable button to prevent multiple submissions
+          $(this).prop("disabled", true).text("Verifying...");
+
+          // API call to verify code
+          $.ajax({
+            url: `${BACKEND_URL}/auth/2fa/verify`,
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            data: JSON.stringify({ code: verificationCode }),
+            success: function (response) {
+              $("#2faSetupStep2").hide();
+              $("#2faSetupStep3").show();
+              $("#2faVerifyBtn").hide();
+              $("#2faFinishBtn").show();
+
+              // Store backup codes if provided
+              if (response.backupCodes && response.backupCodes.length > 0) {
+                const backupCodesHtml = response.backupCodes
+                  .map((code) => `<code>${code}</code>`)
+                  .join("");
+                $(".backup-codes").html(backupCodesHtml);
+              }
+            },
+            error: function (xhr) {
+              const errorMessage = xhr.responseJSON
+                ? xhr.responseJSON.message
+                : "Invalid verification code";
+              showNotification(errorMessage, "danger");
+            },
+            complete: function () {
+              // Re-enable the button
+              $("#2faVerifyBtn").prop("disabled", false).text("Verify");
+            },
+          });
+        });
+
+        $("#2faFinishBtn").click(function () {
+          if (!$("#backupCodesSaved").is(":checked")) {
+            showNotification(
+              "Please confirm you have saved your backup codes",
+              "warning"
+            );
+            return;
+          }
+
+          // Disable button to prevent multiple submissions
+          $(this).prop("disabled", true).text("Enabling...");
+
+          // API call to enable 2FA
+          $.ajax({
+            url: `${BACKEND_URL}/auth/2fa/enable`,
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            success: function (response) {
+              showNotification(
+                "Two-factor authentication enabled successfully",
+                "success"
+              );
+              enable2FAModal.hide();
+              $("#enable2FABtn").html(
+                '<i class="bi bi-shield-check me-2"></i>Disable Two-Factor Authentication'
+              );
+              $("#enable2FABtn")
+                .removeClass("btn-outline-primary")
+                .addClass("btn-outline-danger");
+              $("#enable2FABtn")
+                .off("click")
+                .click(function () {
+                  disable2FA();
+                });
+            },
+            error: function (xhr) {
+              const errorMessage = xhr.responseJSON
+                ? xhr.responseJSON.message
+                : "Failed to enable two-factor authentication";
+              showNotification(errorMessage, "danger");
+            },
+            complete: function () {
+              // Re-enable the button
+              $("#2faFinishBtn").prop("disabled", false).text("Finish Setup");
+            },
+          });
+        });
+
+        // Function to setup 2FA
+        function setup2FA() {
+          // Show loading state
+          $("#2faSetupStep1").html(`
+            <div class="text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2">Setting up two-factor authentication...</p>
+            </div>
+        `);
+
+          // Fetch 2FA setup data from the server
+          $.ajax({
+            url: `${BACKEND_URL}/auth/2fa/setup`,
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            success: function (response) {
+              console.log("2FA setup response:", response);
+
+              // Check 2FA status to ensure the secret was stored
+              $.ajax({
+                url: `${BACKEND_URL}/auth/2fa/status`,
+                method: "GET",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  "Content-Type": "application/json",
+                },
+                success: function (statusResponse) {
+                  console.log("2FA status after setup:", statusResponse);
+
+                  if (!statusResponse.hasSecret) {
+                    showNotification(
+                      "Failed to setup 2FA. Please try again.",
+                      "danger"
+                    );
+                    $("#2faSetupStep1").html(`
+                                <div class="alert alert-danger">
+                                    <i class="bi bi-exclamation-triangle me-2"></i>
+                                    Failed to setup 2FA. Please try again.
+                                </div>
+                            `);
+                    return;
+                  }
+
+                  // Reset step 1 content
+                  $("#2faSetupStep1").html(`
+                            <p>Two-factor authentication adds an extra layer of security to your account. Once enabled, you'll need to enter a verification code in addition to your password when signing in.</p>
+                            <p>Click "Continue" to set up two-factor authentication.</p>
+                        `);
+
+                  // Update QR code with the URL from the server
+                  $(".qr-code img").attr(
+                    "src",
+                    `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(
+                      response.qrCodeUrl
+                    )}`
+                  );
+
+                  // Update the manual entry code
+                  $(".qr-code p strong").text(response.secret);
+                },
+                error: function (xhr) {
+                  console.error("Error checking 2FA status:", xhr);
+                  showNotification(
+                    "Failed to verify 2FA setup. Please try again.",
+                    "danger"
+                  );
+                },
+              });
+            },
+            error: function (xhr) {
+              console.error("Error setting up 2FA:", xhr);
+              const errorMessage = xhr.responseJSON
+                ? xhr.responseJSON.message
+                : "Failed to setup 2FA";
+              showNotification(errorMessage, "danger");
+
+              // Reset step 1 content with error message
+              $("#2faSetupStep1").html(`
+                    <div class="alert alert-danger">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        ${errorMessage}
+                    </div>
+                    <p>Please try again later or contact support if the issue persists.</p>
+                `);
+            },
+          });
+        }
+
+        function reset2FASetup() {
+          $("#2faSetupStep1").show();
+          $("#2faSetupStep2").hide();
+          $("#2faSetupStep3").hide();
+          $("#2faContinueBtn").show();
+          $("#2faVerifyBtn").show();
+          $("#2faFinishBtn").hide();
+          $("#verificationCode").val("");
+          $("#backupCodesSaved").prop("checked", false);
+
+          // Reset QR code to placeholder
+          $(".qr-code img").attr(
+            "src",
+            "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=otpauth://totp/Example:demo@example.com?secret=JBSWY3DPEHPK3PXP&issuer=Example"
+          );
+          $(".qr-code p strong").text("JBSWY3DPEHPK3PXP");
+        }
+
+        function disable2FA() {
+          if (
+            confirm(
+              "Are you sure you want to disable two-factor authentication? This will make your account less secure."
+            )
+          ) {
+            // API call to disable 2FA
+            $.ajax({
+              url: `${BACKEND_URL}/auth/2fa/disable`,
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+              success: function (response) {
+                showNotification(
+                  "Two-factor authentication disabled",
+                  "success"
+                );
+                $("#enable2FABtn").html(
+                  '<i class="bi bi-shield-check me-2"></i>Enable Two-Factor Authentication'
+                );
+                $("#enable2FABtn")
+                  .removeClass("btn-outline-danger")
+                  .addClass("btn-outline-primary");
+                $("#enable2FABtn")
+                  .off("click")
+                  .click(function () {
+                    enable2FAModal.show();
+                    reset2FASetup();
+                    setup2FA();
+                  });
+              },
+              error: function (xhr) {
+                const errorMessage = xhr.responseJSON
+                  ? xhr.responseJSON.message
+                  : "Failed to disable two-factor authentication";
+                showNotification(errorMessage, "danger");
+              },
+            });
+          }
+        }
+
+        // Function to check 2FA status on page load
+        function check2FAStatus() {
+          $.ajax({
+            url: `${BACKEND_URL}/auth/2fa/status`,
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            success: function (response) {
+              console.log("2FA Status:", response);
+
+              // Update the button based on 2FA status
+              if (response.isEnabled) {
+                $("#enable2FABtn").html(
+                  '<i class="bi bi-shield-check me-2"></i>Disable Two-Factor Authentication'
+                );
+                $("#enable2FABtn")
+                  .removeClass("btn-outline-primary")
+                  .addClass("btn-outline-danger");
+                $("#enable2FABtn")
+                  .off("click")
+                  .click(function () {
+                    disable2FA();
+                  });
+              } else {
+                $("#enable2FABtn").html(
+                  '<i class="bi bi-shield-check me-2"></i>Enable Two-Factor Authentication'
+                );
+                $("#enable2FABtn")
+                  .removeClass("btn-outline-danger")
+                  .addClass("btn-outline-primary");
+                $("#enable2FABtn")
+                  .off("click")
+                  .click(function () {
+                    enable2FAModal.show();
+                    reset2FASetup();
+                    setup2FA();
+                  });
+              }
+            },
+            error: function (xhr) {
+              console.error("Error checking 2FA status:", xhr);
+            },
+          });
+        }
+
+        // Check 2FA status when the profile page is loaded
+        if (
+          window.location.hash === "#profile" ||
+          document.getElementById("profile-page").classList.contains("active")
+        ) {
+          check2FAStatus();
+        }
+      });
+    </script>
+
+    <script type="text/javascript" src="../js/index.js"></script>
+  </body>
+</html>

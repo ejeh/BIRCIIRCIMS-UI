@@ -430,7 +430,7 @@
         if (idCardId) {
           // Make the AJAX request
           $.ajax({
-            url: `${BACKEND_URL}/idcard/${idCardId}/get`,
+            url: `${BACKEND_URL}/idcard/${user.id}`,
             method: "GET",
             headers: {
               Authorization: `Bearer ${token}`,

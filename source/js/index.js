@@ -1,13 +1,12 @@
 const isDevelopment = window.location.hostname === "127.0.0.1";
 
 const BACKEND_URL = isDevelopment
-? "http://localhost:5000/api"
-: "https://api.citizenship.benuestate.gov.ng/api";
-
+  ? "http://localhost:5000/api"
+  : "https://api.citizenship.benuestate.gov.ng/api";
 
 const FRONTEND_URL = isDevelopment
-? "http://127.0.0.1:5503"
-: "https://citizenship.benuestate.gov.ng";
+  ? "http://127.0.0.1:5503"
+  : "https://citizenship.benuestate.gov.ng";
 
 // Get user info from localStorage
 const userData = JSON.parse(localStorage.getItem("token") || "{}");
@@ -15,70 +14,71 @@ const { token, user } = userData;
 
 function loadPDFJ(blobUrl, container) {
   const loader = document.getElementById("pdf-loader");
-  if (typeof pdfjsLib === 'undefined') {
-      container.innerHTML = `<iframe src="${blobUrl}" width="100%" height="100%"></iframe>`;
-      return;
+  if (typeof pdfjsLib === "undefined") {
+    container.innerHTML = `<iframe src="${blobUrl}" width="100%" height="100%"></iframe>`;
+    return;
   }
 
   // Use the same version as loaded in HTML
-  pdfjsLib.GlobalWorkerOptions.workerSrc = 
-      "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js";
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js";
 
   let pdfDoc = null;
   let pageNum = 1;
   let scale = 1.2;
 
   const renderPage = (num) => {
-      loader.style.display = "block";
+    loader.style.display = "block";
 
-      pdfDoc.getPage(num).then((page) => {
-          const viewport = page.getViewport({ scale });
-          const canvas = document.createElement("canvas");
-          const context = canvas.getContext("2d");
+    pdfDoc.getPage(num).then((page) => {
+      const viewport = page.getViewport({ scale });
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
 
-          // Make canvas responsive
-          canvas.style.width = "100%";
-          canvas.style.height = "auto";
-          
-          // Set canvas dimensions for rendering
-          const presentationSize = {
-              width: container.clientWidth,
-              height: container.clientWidth * (viewport.height / viewport.width)
-          };
-          
-          canvas.width = presentationSize.width;
-          canvas.height = presentationSize.height;
-          
-          // Adjust viewport to container size
-          const scaledViewport = page.getViewport({
-              scale: presentationSize.width / viewport.width
-          });
+      // Make canvas responsive
+      canvas.style.width = "100%";
+      canvas.style.height = "auto";
 
-          const renderContext = {
-              canvasContext: context,
-              viewport: scaledViewport,
-          };
+      // Set canvas dimensions for rendering
+      const presentationSize = {
+        width: container.clientWidth,
+        height: container.clientWidth * (viewport.height / viewport.width),
+      };
 
-          container.innerHTML = "";
-          container.appendChild(canvas);
+      canvas.width = presentationSize.width;
+      canvas.height = presentationSize.height;
 
-          page.render(renderContext).promise.finally(() => {
-              loader.style.display = "none";
-          });
+      // Adjust viewport to container size
+      const scaledViewport = page.getViewport({
+        scale: presentationSize.width / viewport.width,
       });
+
+      const renderContext = {
+        canvasContext: context,
+        viewport: scaledViewport,
+      };
+
+      container.innerHTML = "";
+      container.appendChild(canvas);
+
+      page.render(renderContext).promise.finally(() => {
+        loader.style.display = "none";
+      });
+    });
   };
 
   loader.style.display = "block";
 
-  pdfjsLib.getDocument(blobUrl).promise
-      .then((pdf) => {
-          pdfDoc = pdf;
-          renderPage(pageNum);
-      })
-      .catch((error) => {
-          loader.style.display = "none";
-          console.error("Error rendering PDF:", error);
-          container.innerHTML = `
+  pdfjsLib
+    .getDocument(blobUrl)
+    .promise.then((pdf) => {
+      pdfDoc = pdf;
+      renderPage(pageNum);
+    })
+    .catch((error) => {
+      loader.style.display = "none";
+      console.error("Error rendering PDF:", error);
+      container.innerHTML = `
               <div class="alert alert-danger">
                   Failed to render PDF: ${error.message}
                   <div class="mt-2">
@@ -86,44 +86,39 @@ function loadPDFJ(blobUrl, container) {
                   </div>
               </div>
           `;
-      });
+    });
 }
 
-
-  function downloadPDF(button) {
-    const url = button.getAttribute("data-url");
-    fetch(url, {
-      headers: {
-         Authorization: `Bearer ${token}`,
-      },
+function downloadPDF(button) {
+  const url = button.getAttribute("data-url");
+  fetch(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error("Download failed");
+      return res.blob();
     })
-      .then((res) => {
-        if (!res.ok) throw new Error("Download failed");
-        return res.blob();
-      })
-      .then((blob) => {
-        const blobUrl = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = blobUrl;
-        a.download = `document-${Date.now()}.pdf`;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(blobUrl);
-      })
-      .catch((err) => {
-        console.error("Download error:", err.message);
-        alert("Failed to download the document.");
-      });
-  }
-  
-  
-
+    .then((blob) => {
+      const blobUrl = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = blobUrl;
+      a.download = `document-${Date.now()}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(blobUrl);
+    })
+    .catch((err) => {
+      console.error("Download error:", err.message);
+      alert("Failed to download the document.");
+    });
+}
 
 $(document).ready(function () {
   const userRole = user.role || "";
   $("#header-user-label").text(user.firstname);
- 
 
   // Sidebar label
   $("#sidebar-user-label").text(
@@ -223,7 +218,7 @@ $(document).ready(function () {
       // $("#lga-headquaters").text(
       //   data.lga?.headquaters ? `Headquarters ${data.lga.headquaters}` : ""
       // );
-      
+
       // $("#lga-name").text(data.lga?.name ?? "")
 
       if (data.lga?.name) {
@@ -237,8 +232,7 @@ $(document).ready(function () {
       } else {
         $("#lga-info").hide(); // hide entire block if no name
       }
-      
-      
+
       // Check if healthInfo exists and is an array
       if (
         data.healthInfo &&
@@ -263,7 +257,6 @@ $(document).ready(function () {
         if (disabilityStatus) {
           $("#disabilityStatus").val(disabilityStatus).change();
         }
-
       }
 
       // Handle identification type (including 'others')
@@ -449,7 +442,6 @@ $(document).ready(function () {
     const tableBody = $("#table-body");
     tableBody.empty(); // Clear existing table rows
     data.forEach((item, index) => {
-
       const rowHtml = `
         <tr class="align-middle">
           <td class="fw-semibold">${(page - 1) * pageSize + index + 1}</td>
@@ -474,141 +466,113 @@ $(document).ready(function () {
   };
 
   // Fetch user data for the current page
-  const fetchData = (page) => {
+  const fetchUsersData = (page) => {
     const url = `${BACKEND_URL}/users?page=${page}&limit=${pageSize}`;
-    const headers = { Authorization: `Bearer ${token}` }
+    const headers = { Authorization: `Bearer ${token}` };
 
     apiRequest(url, "GET", headers, null, (response) => {
       const { data, hasNextPage } = response;
+      const now = new Date();
+      const currentMonth = now.getMonth();
+      const currentYear = now.getFullYear();
+
+      const { activeCount, inactiveCount, newThisMonthCount } = data.reduce(
+        (acc, user) => {
+          // Count active/inactive users
+          if (user.isActive) {
+            acc.activeCount++;
+          } else {
+            acc.inactiveCount++;
+          }
+
+          // Count users created this month
+          const createdAt = new Date(user.created_at);
+          if (
+            createdAt.getMonth() === currentMonth &&
+            createdAt.getFullYear() === currentYear
+          ) {
+            acc.newThisMonthCount++;
+          }
+
+          return acc;
+        },
+        { activeCount: 0, inactiveCount: 0, newThisMonthCount: 0 }
+      );
 
       updateTable(data, page);
-
       $("#prev-btn-users").prop("disabled", page <= 1);
       $("#next-btn-users").prop("disabled", !hasNextPage);
       $("#usercount").text(data.length);
-
+      $(".usercount").text(data.length);
+      $(".isActive").text(activeCount);
+      $("#inActive").text(inactiveCount);
+      $("#new-this-month").text(newThisMonthCount);
     });
   };
+  // })
 
   // Update the role of a specific user to any valid role
-const updateRole = (userId, newRole, lgaId = null) => {
-  if (!userId || !newRole) {
-    alert("Invalid user ID or role.");
-    return;
-  }
+  const updateRole = (userId, newRole, lgaId = null) => {
+    if (!userId || !newRole) {
+      alert("Invalid user ID or role.");
+      return;
+    }
 
-  const url = `${BACKEND_URL}/users/${userId}/role`;
-  const headers = {
-    Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
+    const url = `${BACKEND_URL}/users/${userId}/role`;
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    };
+    const data = JSON.stringify({ role: newRole, lgaId: lgaId || null });
+
+    apiRequest(
+      url,
+      "PATCH",
+      headers,
+      data,
+      () => {
+        alert("Role updated successfully!");
+        fetchUsersData(currentPage.value);
+      },
+      () => alert("Failed to update role.")
+    );
   };
-  const data = JSON.stringify({ role: newRole,  lgaId: lgaId || null  });
+  $(document).ready(function () {
+    fetchUsersData();
+  });
 
-  apiRequest(
-    url,
-    "PATCH",
-    headers,
-    data,
-    () => {
-      alert("Role updated successfully!");
-      fetchData(currentPage.value);
-    },
-    () => alert("Failed to update role.")
-  );
-};
+  const viewDetails = (userId) => {
+    const url = `${BACKEND_URL}/users/${userId}`;
+    const headers = { Authorization: `Bearer ${token}` };
 
-// Fetch and display user details in a modern profile modal
-// const viewDetails = (userId) => {
-//   const url = `${BACKEND_URL}/users/${userId}`;
-//   const headers = { Authorization: `Bearer ${token}` };
+    apiRequest(url, "GET", headers, null, (response) => {
+      const roleOptions = [
+        "user",
+        "support_admin",
+        "super_admin",
+        "kindred_head",
+      ];
 
-//   apiRequest(url, "GET", headers, null, (response) => {
-//     const roleOptions = ["user", "support_admin", "super_admin", "kindred_head"];
-//     const roleSelect = `
-//       <select id="new-role" class="form-select">
-//         ${roleOptions
-//           .map(
-//             (role) =>
-//               `<option value="${role}" ${
-//                 role === response.role ? "selected" : ""
-//               }>${role}</option>`
-//           )
-//           .join("")}
-//       </select>
-//       <button class="btn btn-primary mt-2 update-role-modal-btn" data-id="${userId}">
-//         Update Role
-//       </button>
-//     `;
+      // Fetch LGAs dynamically
+      apiRequest(`${BACKEND_URL}/lgas`, "GET", headers, null, (lgas) => {
+        const { data } = lgas;
 
-//     const details = `
-//       <div class="user-profile">
-//         <div class="profile-header">
-//           <img 
-//             src="${response.passportPhoto || "/assets/images/avatar.jpeg"}" 
-//             alt="Passport Photo" 
-//             class="profile-photo" 
-//             crossOrigin="anonymous"
-//           >
-//           <h2 class="profile-name">${response.firstname} ${response.lastname}</h2>
-//           <p class="profile-role">Current Role: ${response.role}</p>
-//         </div>
-//         <div class="profile-details">
-//           <p><strong>Email:</strong> ${response.email}</p>
-//           <p><strong>Phone:</strong> ${response.phone}</p>
-//         </div>
-//         <div class="profile-role-update mt-3">
-//           ${roleSelect}
-//         </div>
-//       </div>
-//     `;
+        // Find the LGA object that matches the user's lgaOfOrigin
+        const originLga = data.find(
+          (lga) =>
+            lga.name.toLowerCase() === response.lgaOfOrigin?.toLowerCase()
+        );
 
-//     $("#details-modal .modal-body").html(details);
-//     $("#details-modal").modal("show");
-//   });
-// };
-
-// // Handle role update from modal dropdown
-// $("#details-modal").on("click", ".update-role-modal-btn", function () {
-//   const userId = $(this).data("id");
-//   const newRole = $("#new-role").val();
-//   updateRole(userId, newRole);
-// });
-const viewDetails = (userId) => {
-  const url = `${BACKEND_URL}/users/${userId}`;
-  const headers = { Authorization: `Bearer ${token}` };
-
-  apiRequest(url, "GET", headers, null, (response) => {
-    const roleOptions = ["user", "support_admin", "super_admin", "kindred_head"];
-
-    // Fetch LGAs dynamically
-    apiRequest(`${BACKEND_URL}/lgas`, "GET", headers, null, (lgas) => {
-      const {data} = lgas
-
-       // Find the LGA object that matches the user's lgaOfOrigin
-       const originLga = data.find(lga => lga.name.toLowerCase() === response.lgaOfOrigin?.toLowerCase());
-
-       
-      // const lgaSelect = `
-      //   <select id="lga-select" class="form-select mt-2" style="display:none;">
-      //     <option value="">-- Select LGA --</option>
-      //     ${data
-      //       .map(
-      //         (lga) =>
-      //           `<option value="${lga._id}" ${
-      //             response.lga && response.lga._id === lga._id ? "selected" : ""
-      //           }>${lga.name}</option>`
-      //       )
-      //       .join("")}
-      //   </select>
-      // `;
-      const lgaSelect = originLga ? `
+        const lgaSelect = originLga
+          ? `
       <select id="lga-select" class="form-select mt-2" style="display:none;">
         <option value="${originLga._id}" selected>${originLga.name}</option>
       </select>
-    ` : `
+    `
+          : `
       <p class="text-danger mt-2">No matching LGA of origin found!</p>
     `;
-      const roleSelect = `
+        const roleSelect = `
         <select id="new-role" class="form-select">
           ${roleOptions
             .map(
@@ -625,7 +589,7 @@ const viewDetails = (userId) => {
         </button>
       `;
 
-      const details = `
+        const details = `
         <div class="user-profile">
           <div class="profile-header">
             <img 
@@ -634,7 +598,9 @@ const viewDetails = (userId) => {
               class="profile-photo" 
               crossOrigin="anonymous"
             >
-            <h2 class="profile-name">${response.firstname} ${response.lastname}</h2>
+            <h2 class="profile-name">${response.firstname} ${
+          response.lastname
+        }</h2>
             <p class="profile-role">Current Role: ${response.role}</p>
           </div>
           <div class="profile-details">
@@ -647,36 +613,34 @@ const viewDetails = (userId) => {
         </div>
       `;
 
-      $("#details-modal .modal-body").html(details);
-      $("#details-modal").modal("show");
+        $("#details-modal .modal-body").html(details);
+        $("#details-modal").modal("show");
 
-      // Show/hide LGA select based on role selection
-      $("#new-role").on("change", function () {
-        if ($(this).val() === "support_admin") {
+        // Show/hide LGA select based on role selection
+        $("#new-role").on("change", function () {
+          if ($(this).val() === "support_admin") {
+            $("#lga-select").show();
+          } else {
+            $("#lga-select").hide().val("");
+          }
+        });
+
+        // If already support_admin, show LGA select
+        if (response.role === "support_admin") {
           $("#lga-select").show();
-        } else {
-          $("#lga-select").hide().val("");
         }
       });
-
-      // If already support_admin, show LGA select
-      if (response.role === "support_admin") {
-        $("#lga-select").show();
-      }
     });
+  };
+
+  // Handle role + LGA update
+  $("#details-modal").on("click", ".update-role-modal-btn", function () {
+    const userId = $(this).data("id");
+    const newRole = $("#new-role").val();
+    const lgaId = $("#lga-select").val();
+
+    updateRole(userId, newRole, lgaId);
   });
-};
-
-// Handle role + LGA update
-$("#details-modal").on("click", ".update-role-modal-btn", function () {
-  const userId = $(this).data("id");
-  const newRole = $("#new-role").val();
-  const lgaId = $("#lga-select").val();
-
-  updateRole(userId, newRole, lgaId);
-});
-
-
 
   // Handle view details button clicks
   $("#table-body").on("click", ".view-user-btn", function () {
@@ -973,144 +937,29 @@ $(document).ready(function () {
     });
   }
 
-  // Handle cert view
-  // function handleView(requestId) {
-  //   $.ajax({
-  //     url: `${BACKEND_URL}/indigene/certificate/${requestId}/request`,
-  //     method: "GET",
-  //     headers: apiHeaders,
-  //     success: function (response) {
-  //       const documentPaths = [
-  //         response.birthCertificate,
-  //         response.idCard,
-  //       ].filter(Boolean);
-  //       const documentTitles = ["Identity Card", "Birth Certificate"];
-
-  //       let modalContent = `
-  //         <div class="container-fluid">
-  //           <div class="row mb-3">
-  //             <div class="col-md-3 text-center">
-  //               <img 
-  //                 src="${
-  //                   response.passportPhoto || "/assets/images/avatar.jpeg"
-  //                 }" 
-  //                 alt="Passport Photo" 
-  //                 class="img-fluid rounded shadow-sm profile-photo"
-  //                 style="max-height: 150px;"
-  //                 crossOrigin="anonymous"
-  //               >
-  //             </div>
-  //             <div class="col-md-9">
-  //               <h5 class="fw-bold mb-2">${response.firstname} ${
-  //         response.lastname
-  //       }</h5>
-  //               <p class="mb-1"><strong>Phone:</strong> ${response.phone}</p>
-  //               <p class="mb-1"><strong>Email:</strong> ${response.email}</p>
-  //               <p class="mb-1"><strong>Status:</strong> <span class="badge bg-info">${
-  //                 response.status
-  //               }</span></p>
-  //               <p><strong>State:</strong> ${response.stateOfOrigin}</p>
-  //               <p><strong>LGA:</strong> ${response.lgaOfOrigin}</p>
-  //               <p><strong>Kindred:</strong> ${response.kindred}</p>
-  //               <p><strong>isProfileCompleted:</strong> ${
-  //                 response.userId?.isProfileCompleted
-  //               }</p>
-
-  //             </div>
-  //           </div>
-  
-  //           <hr class="my-3">
-  //           <h6 class="text-primary">Uploaded Documents</h6>
-  //       `;
-
-  //       if (documentPaths.length === 0) {
-  //         modalContent += `<p class="text-muted">No documents uploaded.</p>`;
-  //       }
-
-  //       documentPaths.forEach((doc, index) => {
-  //         // const filename = doc?.split("/").pop();
-  //         // const fileUrl = `${BACKEND_URL}/indigene/certificate/pdf/${filename}`;
-  //         const encodedUrl = encodeURIComponent(doc);
-  //         const fileUrl = `${BACKEND_URL}/indigene/certificate/pdf/${encodedUrl}`;
-
-  //         modalContent += `
-  //           <div class="card my-3 shadow-sm">
-  //             <div class="card-header bg-light fw-semibold">
-  //               ${documentTitles[index] || `Document ${index + 1}`}
-  //             </div>
-  //             <div class="card-body">
-  //               <div id="pdf-viewer-container-${index}" style="width:100%; height:400px;" class="border rounded bg-white"></div>
-  //               <div class="text-end mt-2">
-  //                 <a href="${fileUrl}" target="_blank" class="btn btn-sm btn-outline-primary me-2">Open in New Tab</a>
-  //                 <a href="${fileUrl}" download class="btn btn-sm btn-outline-secondary">Download</a>
-  //               </div>
-  //             </div>
-  //           </div>
-  //         `;
-  //       });
-
-  //       modalContent += `</div>`;
-
-  //       $("#viewModal .modal-body").html(modalContent);
-  //       $("#viewModal").modal("show");
-
-  //       // Load PDFs securely
-  //       documentPaths.forEach((doc, index) => {
-  //         // const filename = doc?.split("/").pop();
-  //         // const fileUrl = `${BACKEND_URL}/indigene/certificate/pdf/${filename}`;
-
-  //         const encodedUrl = encodeURIComponent(doc);
-  //         const fileUrl = `${BACKEND_URL}/indigene/certificate/pdf/${encodedUrl}`;
-
-  //         fetch(fileUrl, {
-  //           headers: {
-  //             Authorization: apiHeaders.Authorization,
-  //           },
-  //         })
-  //           .then((res) => {
-  //             if (!res.ok) throw new Error("Failed to fetch PDF");
-  //             return res.blob();
-  //           })
-  //           .then((blob) => {
-  //             const blobUrl = URL.createObjectURL(blob);
-  //             loadPDFJS(
-  //               blobUrl,
-  //               document.getElementById(`pdf-viewer-container-${index}`)
-  //             );
-  //           })
-  //           .catch((err) => {
-  //             console.error("Error loading secure PDF:", err.message);
-  //             $(`#pdf-viewer-container-${index}`).html(
-  //               "<p class='text-danger'>Failed to load document.</p>"
-  //             );
-  //           });
-  //       });
-  //     },
-  //     error: function (error) {
-  //       console.error("Error fetching request details:", error);
-  //     },
-  //   });
-  // }
   function handleView(requestId) {
     $.ajax({
-        url: `${BACKEND_URL}/indigene/certificate/${requestId}/request`,
-        method: "GET",
-        headers: apiHeaders,
-        success: function (response) {
-            const docTypes = ["idCard", "birthCertificate"];
-            const documentTitles = ["Identity Card", "Birth Certificate"];
-            
-            // Filter documents that actually exist in response
-            const validDocuments = docTypes
-                .map((key, index) => ({ key, title: documentTitles[index] }))
-                .filter(doc => response[doc.key]);  // Check if document exists
-  
-            let modalContent = `
+      url: `${BACKEND_URL}/indigene/certificate/${requestId}/request`,
+      method: "GET",
+      headers: apiHeaders,
+      success: function (response) {
+        const docTypes = ["idCard", "birthCertificate"];
+        const documentTitles = ["Identity Card", "Birth Certificate"];
+
+        // Filter documents that actually exist in response
+        const validDocuments = docTypes
+          .map((key, index) => ({ key, title: documentTitles[index] }))
+          .filter((doc) => response[doc.key]); // Check if document exists
+
+        let modalContent = `
                 <div class="container-fluid">
                     <div class="row mb-3">
                         <div class="col-md-3 text-center">
                             <img 
-                                src="${response.passportPhoto || "/assets/images/avatar.jpeg"}" 
+                                src="${
+                                  response.passportPhoto ||
+                                  "/assets/images/avatar.jpeg"
+                                }" 
                                 alt="Passport Photo" 
                                 class="img-fluid rounded shadow-sm profile-photo"
                                 style="max-height: 150px;"
@@ -1118,14 +967,26 @@ $(document).ready(function () {
                             >
                         </div>
                         <div class="col-md-9">
-                            <h5 class="fw-bold mb-2">${response.firstname} ${response.lastname}</h5>
-                            <p class="mb-1"><strong>Phone:</strong> ${response.phone}</p>
-                            <p class="mb-1"><strong>Email:</strong> ${response.email}</p>
-                            <p class="mb-1"><strong>Status:</strong> <span class="badge bg-info">${response.status}</span></p>
-                            <p><strong>State:</strong> ${response.stateOfOrigin}</p>
+                            <h5 class="fw-bold mb-2">${response.firstname} ${
+          response.lastname
+        }</h5>
+                            <p class="mb-1"><strong>Phone:</strong> ${
+                              response.phone
+                            }</p>
+                            <p class="mb-1"><strong>Email:</strong> ${
+                              response.email
+                            }</p>
+                            <p class="mb-1"><strong>Status:</strong> <span class="badge bg-info">${
+                              response.status
+                            }</span></p>
+                            <p><strong>State:</strong> ${
+                              response.stateOfOrigin
+                            }</p>
                             <p><strong>LGA:</strong> ${response.lgaOfOrigin}</p>
                             <p><strong>Kindred:</strong> ${response.kindred}</p>
-                            <p><strong>isProfileCompleted:</strong> ${response.userId?.isProfileCompleted}</p>
+                            <p><strong>isProfileCompleted:</strong> ${
+                              response.userId?.isProfileCompleted
+                            }</p>
                         </div>
                     </div>
   
@@ -1133,15 +994,15 @@ $(document).ready(function () {
                     <h6 class="text-primary">Uploaded Documents</h6>
             `;
 
-            if (validDocuments.length === 0) {
-                modalContent += `<p class="text-muted">No documents uploaded.</p>`;
-            }
-  
-            // Generate HTML for each existing document
-            validDocuments.forEach((doc, index) => {
-                const fileUrl = `${BACKEND_URL}/indigene/certificate/${requestId}/document/${doc.key}`;
-                
-                modalContent += `
+        if (validDocuments.length === 0) {
+          modalContent += `<p class="text-muted">No documents uploaded.</p>`;
+        }
+
+        // Generate HTML for each existing document
+        validDocuments.forEach((doc, index) => {
+          const fileUrl = `${BACKEND_URL}/indigene/certificate/${requestId}/document/${doc.key}`;
+
+          modalContent += `
                     <div class="card my-3 shadow-sm">
                         <div class="card-header bg-light fw-semibold">
                             ${doc.title}
@@ -1155,44 +1016,44 @@ $(document).ready(function () {
                         </div>
                     </div>
                 `;
-            });
-            
-            modalContent += `</div>`;
-            $("#viewModal .modal-body").html(modalContent);
-            $("#viewModal").modal("show");
-  
-            // Load PDFs with authorization
-            validDocuments.forEach((doc, index) => {
-                const fileUrl = `${BACKEND_URL}/indigene/certificate/${requestId}/document/${doc.key}`;
-                // Show loader while fetching
-                $(`#pdf-viewer-container-${index}`).html(`
+        });
+
+        modalContent += `</div>`;
+        $("#viewModal .modal-body").html(modalContent);
+        $("#viewModal").modal("show");
+
+        // Load PDFs with authorization
+        validDocuments.forEach((doc, index) => {
+          const fileUrl = `${BACKEND_URL}/indigene/certificate/${requestId}/document/${doc.key}`;
+          // Show loader while fetching
+          $(`#pdf-viewer-container-${index}`).html(`
                     <div class="d-flex justify-content-center align-items-center h-100">
                         <div class="spinner-border text-primary" role="status">
                             <span class="visually-hidden">Loading...</span>
                         </div>
                     </div>
                 `);
-                
-                // Fetch document with authorization
-                fetch(fileUrl, {
-                    headers: {
-                        Authorization: apiHeaders.Authorization
-                    }
-                })
-                .then(res => {
-                    if (!res.ok) throw new Error("Failed to fetch PDF");
-                    return res.blob();
-                })
-                .then(blob => {
-                    const blobUrl = URL.createObjectURL(blob);
-                    loadPDFJ(
-                        blobUrl,
-                        document.getElementById(`pdf-viewer-container-${index}`)
-                    );
-                })
-                .catch(err => {
-                    console.error(`Error loading PDF [${doc.key}]:`, err);
-                    $(`#pdf-viewer-container-${index}`).html(`
+
+          // Fetch document with authorization
+          fetch(fileUrl, {
+            headers: {
+              Authorization: apiHeaders.Authorization,
+            },
+          })
+            .then((res) => {
+              if (!res.ok) throw new Error("Failed to fetch PDF");
+              return res.blob();
+            })
+            .then((blob) => {
+              const blobUrl = URL.createObjectURL(blob);
+              loadPDFJ(
+                blobUrl,
+                document.getElementById(`pdf-viewer-container-${index}`)
+              );
+            })
+            .catch((err) => {
+              console.error(`Error loading PDF [${doc.key}]:`, err);
+              $(`#pdf-viewer-container-${index}`).html(`
                         <div class="alert alert-danger">
                             Failed to load document: ${err.message}
                             <div class="mt-2">
@@ -1200,13 +1061,13 @@ $(document).ready(function () {
                             </div>
                         </div>
                     `);
-                });
             });
-        },
-        error: function (error) {
-            console.error("Error fetching request details:", error);
-            alert("Failed to fetch request details.");
-        },
+        });
+      },
+      error: function (error) {
+        console.error("Error fetching request details:", error);
+        alert("Failed to fetch request details.");
+      },
     });
   }
 
@@ -1225,7 +1086,7 @@ $(document).ready(function () {
     $("#rejectionModal").modal("show");
   });
 
-  $("#dataTable").on("click", ".btn-cert-view", function () {
+  $("#certificatesTable").on("click", ".btn-cert-view", function () {
     const requestId = $(this).data("id");
     handleView(requestId);
   });
@@ -1424,7 +1285,7 @@ $(document).ready(function () {
         }
 
         // Attach click event to view-cert-btn
-        $(document).on("click", ".view-cert-btn", function () {
+        $(document).on("click", ".download-btn", function () {
           const certificateId = $(this).data("id");
           window.location.href = `cert-temp.html?id=${certificateId}`;
         });
@@ -1520,6 +1381,7 @@ $(document).ready(function () {
         // Add click event listeners for download buttons
         $(document).on("click", ".btn-cert-download", function () {
           const certificateId = $(this).data("id");
+          console.log("certificateId", certificateId);
           const button = $(this);
 
           if (certificateId) {
@@ -1941,851 +1803,850 @@ $(document).ready(function () {
 });
 
 // LGA Data for Nigeria
-const nigeriaData = {
-  adamawa: [
-    "Demsa",
-    "Fufure",
-    "Ganye",
-    "Gayuk",
-    "Gombi",
-    "Grie",
-    "Hong",
-    "Jada",
-    "Larmurde",
-    "Madagali",
-    "Maiha",
-    "Mayo Belwa",
-    "Michika",
-    "Mubi North",
-    "Mubi South",
-    "Numan",
-    "Shelleng",
-    "Song",
-    "Toungo",
-    "Yola North",
-    "Yola South",
-  ],
-  akwa_ibom: [
-    "Abak",
-    "Eastern Obolo",
-    "Eket",
-    "Esit Eket",
-    "Essien Udim",
-    "Etim Ekpo",
-    "Etinan",
-    "Ibeno",
-    "Ibesikpo Asutan",
-    "Ibiono-Ibom",
-    "Ikot Abasi",
-    "Ika",
-    "Ikono",
-    "Ikot Ekpene",
-    "Ini",
-    "Mkpat-Enin",
-    "Itu",
-    "Mbo",
-    "Nsit-Atai",
-    "Nsit-Ibom",
-    "Nsit-Ubium",
-    "Obot Akara",
-    "Okobo",
-    "Onna",
-    "Oron",
-    "Udung-Uko",
-    "Ukanafun",
-    "Oruk Anam",
-    "Uruan",
-    "Urue-Offong/Oruko",
-    "Uyo",
-  ],
-  anambra: [
-    "Aguata",
-    "Anambra East",
-    "Anaocha",
-    "Awka North",
-    "Anambra West",
-    "Awka South",
-    "Ayamelum",
-    "Dunukofia",
-    "Ekwusigo",
-    "Idemili North",
-    "Idemili South",
-    "Ihiala",
-    "Njikoka",
-    "Nnewi North",
-    "Nnewi South",
-    "Ogbaru",
-    "Onitsha North",
-    "Onitsha South",
-    "Orumba North",
-    "Orumba South",
-    "Oyi",
-  ],
-  abia: [
-    "Aba North",
-    "Arochukwu",
-    "Aba South",
-    "Bende",
-    "Isiala Ngwa North",
-    "Ikwuano",
-    "Isiala Ngwa South",
-    "Isuikwuato",
-    "Obi Ngwa",
-    "Ohafia",
-    "Osisioma",
-    "Ugwunagbo",
-    "Ukwa East",
-    "Ukwa West",
-    "Umuahia North",
-    "Umuahia South",
-    "Umu Nneochi",
-  ],
-  bauchi: [
-    "Alkaleri",
-    "Bauchi",
-    "Bogoro",
-    "Damban",
-    "Darazo",
-    "Dass",
-    "Gamawa",
-    "Ganjuwa",
-    "Giade",
-    "Itas/Gadau",
-    "Jama'are",
-    "Katagum",
-    "Kirfi",
-    "Misau",
-    "Ningi",
-    "Shira",
-    "Tafawa Balewa",
-    "Toro",
-    "Warji",
-    "Zaki",
-  ],
-  benue: [
-    "Agatu",
-    "Apa",
-    "Ado",
-    "Buruku",
-    "Gboko",
-    "Guma",
-    "Gwer East",
-    "Gwer West",
-    "Katsina-Ala",
-    "Konshisha",
-    "Kwande",
-    "Logo",
-    "Makurdi",
-    "Obi",
-    "Ogbadibo",
-    "Ohimini",
-    "Oju",
-    "Okpokwu",
-    "Oturkpo",
-    "Tarka",
-    "Ukum",
-    "Ushongo",
-    "Vandeikya",
-  ],
-  borno: [
-    "Abadam",
-    "Askira/Uba",
-    "Bama",
-    "Bayo",
-    "Biu",
-    "Chibok",
-    "Damboa",
-    "Dikwa",
-    "Guzamala",
-    "Gubio",
-    "Hawul",
-    "Gwoza",
-    "Jere",
-    "Kaga",
-    "Kala/Balge",
-    "Konduga",
-    "Kukawa",
-    "Kwaya Kusar",
-    "Mafa",
-    "Magumeri",
-    "Maiduguri",
-    "Mobbar",
-    "Marte",
-    "Monguno",
-    "Ngala",
-    "Nganzai",
-    "Shani",
-  ],
-  bayelsa: [
-    "Brass",
-    "Ekeremor",
-    "Kolokuma/Opokuma",
-    "Nembe",
-    "Ogbia",
-    "Sagbama",
-    "Southern Ijaw",
-    "Yenagoa",
-  ],
-  cross_river: [
-    "Abi",
-    "Akamkpa",
-    "Akpabuyo",
-    "Bakassi",
-    "Bekwarra",
-    "Biase",
-    "Boki",
-    "Calabar Municipal",
-    "Calabar South",
-    "Etung",
-    "Ikom",
-    "Obanliku",
-    "Obubra",
-    "Obudu",
-    "Odukpani",
-    "Ogoja",
-    "Yakuur",
-    "Yala",
-  ],
-  delta: [
-    "Aniocha North",
-    "Aniocha South",
-    "Bomadi",
-    "Burutu",
-    "Ethiope West",
-    "Ethiope East",
-    "Ika North East",
-    "Ika South",
-    "Isoko North",
-    "Isoko South",
-    "Ndokwa East",
-    "Ndokwa West",
-    "Okpe",
-    "Oshimili North",
-    "Oshimili South",
-    "Patani",
-    "Sapele",
-    "Udu",
-    "Ughelli North",
-    "Ukwuani",
-    "Ughelli South",
-    "Uvwie",
-    "Warri North",
-    "Warri South",
-    "Warri South West",
-  ],
-  ebonyi: [
-    "Abakaliki",
-    "Afikpo North",
-    "Ebonyi",
-    "Afikpo South",
-    "Ezza North",
-    "Ikwo",
-    "Ezza South",
-    "Ivo",
-    "Ishielu",
-    "Izzi",
-    "Ohaozara",
-    "Ohaukwu",
-    "Onicha",
-  ],
-  edo: [
-    "Akoko-Edo",
-    "Egor",
-    "Esan Central",
-    "Esan North-East",
-    "Esan South-East",
-    "Esan West",
-    "Etsako Central",
-    "Etsako East",
-    "Etsako West",
-    "Igueben",
-    "Ikpoba Okha",
-    "Orhionmwon",
-    "Oredo",
-    "Ovia North-East",
-    "Ovia South-West",
-    "Owan East",
-    "Owan West",
-    "Uhunmwonde",
-  ],
-  ekiti: [
-    "Ado Ekiti",
-    "Efon",
-    "Ekiti East",
-    "Ekiti South-West",
-    "Ekiti West",
-    "Emure",
-    "Gbonyin",
-    "Ido Osi",
-    "Ijero",
-    "Ikere",
-    "Ilejemeje",
-    "Irepodun/Ifelodun",
-    "Ikole",
-    "Ise/Orun",
-    "Moba",
-    "Oye",
-  ],
-  enugu: [
-    "Awgu",
-    "Aninri",
-    "Enugu East",
-    "Enugu North",
-    "Ezeagu",
-    "Enugu South",
-    "Igbo Etiti",
-    "Igbo Eze North",
-    "Igbo Eze South",
-    "Isi Uzo",
-    "Nkanu East",
-    "Nkanu West",
-    "Nsukka",
-    "Udenu",
-    "Oji River",
-    "Uzo Uwani",
-    "Udi",
-  ],
-  abuja: [
-    "Abaji",
-    "Bwari",
-    "Gwagwalada",
-    "Kuje",
-    "Kwali",
-    "Municipal Area Council",
-  ],
-  gombe: [
-    "Akko",
-    "Balanga",
-    "Billiri",
-    "Dukku",
-    "Funakaye",
-    "Gombe",
-    "Kaltungo",
-    "Kwami",
-    "Nafada",
-    "Shongom",
-    "Yamaltu/Deba",
-  ],
-  jigawa: [
-    "Auyo",
-    "Babura",
-    "Buji",
-    "Biriniwa",
-    "Birnin Kudu",
-    "Dutse",
-    "Gagarawa",
-    "Garki",
-    "Gumel",
-    "Guri",
-    "Gwaram",
-    "Gwiwa",
-    "Hadejia",
-    "Jahun",
-    "Kafin Hausa",
-    "Kazaure",
-    "Kiri Kasama",
-    "Kiyawa",
-    "Kaugama",
-    "Maigatari",
-    "Malam Madori",
-    "Miga",
-    "Sule Tankarkar",
-    "Roni",
-    "Ringim",
-    "Yankwashi",
-    "Taura",
-  ],
-  lagos: [
-    "Agege",
-    "Ajeromi-Ifelodun",
-    "Alimosho",
-    "Amuwo-Odofin",
-    "Badagry",
-    "Apapa",
-    "Epe",
-    "Eti Osa",
-    "Ibeju-Lekki",
-    "Ifako-Ijaiye",
-    "Ikeja",
-    "Ikorodu",
-    "Kosofe",
-    "Lagos Island",
-    "Mushin",
-    "Lagos Mainland",
-    "Ojo",
-    "Oshodi-Isolo",
-    "Shomolu",
-    "Surulere Lagos State",
-  ],
-  oyo: [
-    "Afijio",
-    "Akinyele",
-    "Atiba",
-    "Atisbo",
-    "Egbeda",
-    "Ibadan North",
-    "Ibadan North-East",
-    "Ibadan North-West",
-    "Ibadan South-East",
-    "Ibarapa Central",
-    "Ibadan South-West",
-    "Ibarapa East",
-    "Ido",
-    "Ibarapa North",
-    "Irepo",
-    "Iseyin",
-    "Itesiwaju",
-    "Iwajowa",
-    "Kajola",
-    "Lagelu",
-    "Ogbomosho North",
-    "Ogbomosho South",
-    "Ogo Oluwa",
-    "Olorunsogo",
-    "Oluyole",
-    "Ona Ara",
-    "Orelope",
-    "Ori Ire",
-    "Oyo",
-    "Oyo East",
-    "Saki East",
-    "Saki West",
-    "Surulere Oyo State",
-  ],
-  imo: [
-    "Aboh Mbaise",
-    "Ahiazu Mbaise",
-    "Ehime Mbano",
-    "Ezinihitte",
-    "Ideato North",
-    "Ideato South",
-    "Ihitte/Uboma",
-    "Ikeduru",
-    "Isiala Mbano",
-    "Mbaitoli",
-    "Isu",
-    "Ngor Okpala",
-    "Njaba",
-    "Nkwerre",
-    "Nwangele",
-    "Obowo",
-    "Oguta",
-    "Ohaji/Egbema",
-    "Okigwe",
-    "Orlu",
-    "Orsu",
-    "Oru East",
-    "Oru West",
-    "Owerri Municipal",
-    "Owerri North",
-    "Unuimo",
-    "Owerri West",
-  ],
-  kaduna: [
-    "Birnin Gwari",
-    "Chikun",
-    "Giwa",
-    "Ikara",
-    "Igabi",
-    "Jaba",
-    "Jema'a",
-    "Kachia",
-    "Kaduna North",
-    "Kaduna South",
-    "Kagarko",
-    "Kajuru",
-    "Kaura",
-    "Kauru",
-    "Kubau",
-    "Kudan",
-    "Lere",
-    "Makarfi",
-    "Sabon Gari",
-    "Sanga",
-    "Soba",
-    "Zangon Kataf",
-    "Zaria",
-  ],
-  kebbi: [
-    "Aleiro",
-    "Argungu",
-    "Arewa Dandi",
-    "Augie",
-    "Bagudo",
-    "Birnin Kebbi",
-    "Bunza",
-    "Dandi",
-    "Fakai",
-    "Gwandu",
-    "Jega",
-    "Kalgo",
-    "Koko/Besse",
-    "Maiyama",
-    "Ngaski",
-    "Shanga",
-    "Suru",
-    "Sakaba",
-    "Wasagu/Danko",
-    "Yauri",
-    "Zuru",
-  ],
-  kano: [
-    "Ajingi",
-    "Albasu",
-    "Bagwai",
-    "Bebeji",
-    "Bichi",
-    "Bunkure",
-    "Dala",
-    "Dambatta",
-    "Dawakin Kudu",
-    "Dawakin Tofa",
-    "Doguwa",
-    "Fagge",
-    "Gabasawa",
-    "Garko",
-    "Garun Mallam",
-    "Gezawa",
-    "Gaya",
-    "Gwale",
-    "Gwarzo",
-    "Kabo",
-    "Kano Municipal",
-    "Karaye",
-    "Kibiya",
-    "Kiru",
-    "Kumbotso",
-    "Kunchi",
-    "Kura",
-    "Madobi",
-    "Makoda",
-    "Minjibir",
-    "Nasarawa",
-    "Rano",
-    "Rimin Gado",
-    "Rogo",
-    "Shanono",
-    "Takai",
-    "Sumaila",
-    "Tarauni",
-    "Tofa",
-    "Tsanyawa",
-    "Tudun Wada",
-    "Ungogo",
-    "Warawa",
-    "Wudil",
-  ],
-  kogi: [
-    "Ajaokuta",
-    "Adavi",
-    "Ankpa",
-    "Bassa",
-    "Dekina",
-    "Ibaji",
-    "Idah",
-    "Igalamela Odolu",
-    "Ijumu",
-    "Kogi",
-    "Kabba/Bunu",
-    "Lokoja",
-    "Ofu",
-    "Mopa Muro",
-    "Ogori/Magongo",
-    "Okehi",
-    "Okene",
-    "Olamaboro",
-    "Omala",
-    "Yagba East",
-    "Yagba West",
-  ],
-  osun: [
-    "Aiyedire",
-    "Atakunmosa West",
-    "Atakunmosa East",
-    "Aiyedaade",
-    "Boluwaduro",
-    "Boripe",
-    "Ife East",
-    "Ede South",
-    "Ife North",
-    "Ede North",
-    "Ife South",
-    "Ejigbo",
-    "Ife Central",
-    "Ifedayo",
-    "Egbedore",
-    "Ila",
-    "Ifelodun",
-    "Ilesa East",
-    "Ilesa West",
-    "Irepodun",
-    "Irewole",
-    "Isokan",
-    "Iwo",
-    "Obokun",
-    "Odo Otin",
-    "Ola Oluwa",
-    "Olorunda",
-    "Oriade",
-    "Orolu",
-    "Osogbo",
-  ],
-  sokoto: [
-    "Gudu",
-    "Gwadabawa",
-    "Illela",
-    "Isa",
-    "Kebbe",
-    "Kware",
-    "Rabah",
-    "Sabon Birni",
-    "Shagari",
-    "Silame",
-    "Sokoto North",
-    "Sokoto South",
-    "Tambuwal",
-    "Tangaza",
-    "Tureta",
-    "Wamako",
-    "Wurno",
-    "Yabo",
-    "Binji",
-    "Bodinga",
-    "Dange Shuni",
-    "Goronyo",
-    "Gada",
-  ],
-  plateau: [
-    "Bokkos",
-    "Barkin Ladi",
-    "Bassa",
-    "Jos East",
-    "Jos North",
-    "Jos South",
-    "Kanam",
-    "Kanke",
-    "Langtang South",
-    "Langtang North",
-    "Mangu",
-    "Mikang",
-    "Pankshin",
-    "Qua'an Pan",
-    "Riyom",
-    "Shendam",
-    "Wase",
-  ],
-  taraba: [
-    "Ardo Kola",
-    "Bali",
-    "Donga",
-    "Gashaka",
-    "Gassol",
-    "Ibi",
-    "Jalingo",
-    "Karim Lamido",
-    "Kumi",
-    "Lau",
-    "Sardauna",
-    "Takum",
-    "Ussa",
-    "Wukari",
-    "Yorro",
-    "Zing",
-  ],
-  yobe: [
-    "Bade",
-    "Bursari",
-    "Damaturu",
-    "Fika",
-    "Fune",
-    "Geidam",
-    "Gujba",
-    "Gulani",
-    "Jakusko",
-    "Karasuwa",
-    "Machina",
-    "Nangere",
-    "Nguru",
-    "Potiskum",
-    "Tarmuwa",
-    "Yunusari",
-    "Yusufari",
-  ],
-  zamfara: [
-    "Anka",
-    "Birnin Magaji/Kiyaw",
-    "Bakura",
-    "Bukkuyum",
-    "Bungudu",
-    "Gummi",
-    "Gusau",
-    "Kaura Namoda",
-    "Maradun",
-    "Shinkafi",
-    "Maru",
-    "Talata Mafara",
-    "Tsafe",
-    "Zurmi",
-  ],
-  katsina: [
-    "Bakori",
-    "Batagarawa",
-    "Batsari",
-    "Baure",
-    "Bindawa",
-    "Charanchi",
-    "Danja",
-    "Dandume",
-    "Dan Musa",
-    "Daura",
-    "Dutsi",
-    "Dutsin Ma",
-    "Faskari",
-    "Funtua",
-    "Ingawa",
-    "Jibia",
-    "Kafur",
-    "Kaita",
-    "Kankara",
-    "Kankia",
-    "Katsina",
-    "Kurfi",
-    "Kusada",
-    "Mai'Adua",
-    "Malumfashi",
-    "Mani",
-    "Mashi",
-    "Matazu",
-    "Musawa",
-    "Rimi",
-    "Sabuwa",
-    "Safana",
-    "Sandamu",
-    "Zango",
-  ],
-  kwara: [
-    "Asa",
-    "Baruten",
-    "Edu",
-    "Ilorin East",
-    "Ifelodun",
-    "Ilorin South",
-    "Ekiti Kwara State",
-    "Ilorin West",
-    "Irepodun",
-    "Isin",
-    "Kaiama",
-    "Moro",
-    "Offa",
-    "Oke Ero",
-    "Oyun",
-    "Pategi",
-  ],
-  nasarawa: [
-    "Akwanga",
-    "Awe",
-    "Doma",
-    "Karu",
-    "Keana",
-    "Keffi",
-    "Lafia",
-    "Kokona",
-    "Nasarawa Egon",
-    "Nasarawa",
-    "Obi",
-    "Toto",
-    "Wamba",
-  ],
-  niger: [
-    "Agaie",
-    "Agwara",
-    "Bida",
-    "Borgu",
-    "Bosso",
-    "Chanchaga",
-    "Edati",
-    "Gbako",
-    "Gurara",
-    "Katcha",
-    "Kontagora",
-    "Lapai",
-    "Lavun",
-    "Mariga",
-    "Magama",
-    "Mokwa",
-    "Mashegu",
-    "Moya",
-    "Paikoro",
-    "Rafi",
-    "Rijau",
-    "Shiroro",
-    "Suleja",
-    "Tafa",
-    "Wushishi",
-  ],
-  rivers: [
-    "Abua/Odual",
-    "Ahoada East",
-    "Ahoada West",
-    "Andoni",
-    "Akuku-Toru",
-    "Asari-Toru",
-    "Bonny",
-    "Degema",
-    "Emuoha",
-    "Eleme",
-    "Ikwerre",
-    "Etche",
-    "Gokana",
-    "Khana",
-    "Obio/Akpor",
-    "Ogba/Egbema/Ndoni",
-    "Ogu/Bolo",
-    "Okrika",
-    "Omuma",
-    "Opobo/Nkoro",
-    "Oyigbo",
-    "Port Harcourt",
-    "Tai",
-  ],
-};
+// const nigeriaData = {
+//   adamawa: [
+//     "Demsa",
+//     "Fufure",
+//     "Ganye",
+//     "Gayuk",
+//     "Gombi",
+//     "Grie",
+//     "Hong",
+//     "Jada",
+//     "Larmurde",
+//     "Madagali",
+//     "Maiha",
+//     "Mayo Belwa",
+//     "Michika",
+//     "Mubi North",
+//     "Mubi South",
+//     "Numan",
+//     "Shelleng",
+//     "Song",
+//     "Toungo",
+//     "Yola North",
+//     "Yola South",
+//   ],
+//   akwa_ibom: [
+//     "Abak",
+//     "Eastern Obolo",
+//     "Eket",
+//     "Esit Eket",
+//     "Essien Udim",
+//     "Etim Ekpo",
+//     "Etinan",
+//     "Ibeno",
+//     "Ibesikpo Asutan",
+//     "Ibiono-Ibom",
+//     "Ikot Abasi",
+//     "Ika",
+//     "Ikono",
+//     "Ikot Ekpene",
+//     "Ini",
+//     "Mkpat-Enin",
+//     "Itu",
+//     "Mbo",
+//     "Nsit-Atai",
+//     "Nsit-Ibom",
+//     "Nsit-Ubium",
+//     "Obot Akara",
+//     "Okobo",
+//     "Onna",
+//     "Oron",
+//     "Udung-Uko",
+//     "Ukanafun",
+//     "Oruk Anam",
+//     "Uruan",
+//     "Urue-Offong/Oruko",
+//     "Uyo",
+//   ],
+//   anambra: [
+//     "Aguata",
+//     "Anambra East",
+//     "Anaocha",
+//     "Awka North",
+//     "Anambra West",
+//     "Awka South",
+//     "Ayamelum",
+//     "Dunukofia",
+//     "Ekwusigo",
+//     "Idemili North",
+//     "Idemili South",
+//     "Ihiala",
+//     "Njikoka",
+//     "Nnewi North",
+//     "Nnewi South",
+//     "Ogbaru",
+//     "Onitsha North",
+//     "Onitsha South",
+//     "Orumba North",
+//     "Orumba South",
+//     "Oyi",
+//   ],
+//   abia: [
+//     "Aba North",
+//     "Arochukwu",
+//     "Aba South",
+//     "Bende",
+//     "Isiala Ngwa North",
+//     "Ikwuano",
+//     "Isiala Ngwa South",
+//     "Isuikwuato",
+//     "Obi Ngwa",
+//     "Ohafia",
+//     "Osisioma",
+//     "Ugwunagbo",
+//     "Ukwa East",
+//     "Ukwa West",
+//     "Umuahia North",
+//     "Umuahia South",
+//     "Umu Nneochi",
+//   ],
+//   bauchi: [
+//     "Alkaleri",
+//     "Bauchi",
+//     "Bogoro",
+//     "Damban",
+//     "Darazo",
+//     "Dass",
+//     "Gamawa",
+//     "Ganjuwa",
+//     "Giade",
+//     "Itas/Gadau",
+//     "Jama'are",
+//     "Katagum",
+//     "Kirfi",
+//     "Misau",
+//     "Ningi",
+//     "Shira",
+//     "Tafawa Balewa",
+//     "Toro",
+//     "Warji",
+//     "Zaki",
+//   ],
+//   benue: [
+//     "Agatu",
+//     "Apa",
+//     "Ado",
+//     "Buruku",
+//     "Gboko",
+//     "Guma",
+//     "Gwer East",
+//     "Gwer West",
+//     "Katsina-Ala",
+//     "Konshisha",
+//     "Kwande",
+//     "Logo",
+//     "Makurdi",
+//     "Obi",
+//     "Ogbadibo",
+//     "Ohimini",
+//     "Oju",
+//     "Okpokwu",
+//     "Oturkpo",
+//     "Tarka",
+//     "Ukum",
+//     "Ushongo",
+//     "Vandeikya",
+//   ],
+//   borno: [
+//     "Abadam",
+//     "Askira/Uba",
+//     "Bama",
+//     "Bayo",
+//     "Biu",
+//     "Chibok",
+//     "Damboa",
+//     "Dikwa",
+//     "Guzamala",
+//     "Gubio",
+//     "Hawul",
+//     "Gwoza",
+//     "Jere",
+//     "Kaga",
+//     "Kala/Balge",
+//     "Konduga",
+//     "Kukawa",
+//     "Kwaya Kusar",
+//     "Mafa",
+//     "Magumeri",
+//     "Maiduguri",
+//     "Mobbar",
+//     "Marte",
+//     "Monguno",
+//     "Ngala",
+//     "Nganzai",
+//     "Shani",
+//   ],
+//   bayelsa: [
+//     "Brass",
+//     "Ekeremor",
+//     "Kolokuma/Opokuma",
+//     "Nembe",
+//     "Ogbia",
+//     "Sagbama",
+//     "Southern Ijaw",
+//     "Yenagoa",
+//   ],
+//   cross_river: [
+//     "Abi",
+//     "Akamkpa",
+//     "Akpabuyo",
+//     "Bakassi",
+//     "Bekwarra",
+//     "Biase",
+//     "Boki",
+//     "Calabar Municipal",
+//     "Calabar South",
+//     "Etung",
+//     "Ikom",
+//     "Obanliku",
+//     "Obubra",
+//     "Obudu",
+//     "Odukpani",
+//     "Ogoja",
+//     "Yakuur",
+//     "Yala",
+//   ],
+//   delta: [
+//     "Aniocha North",
+//     "Aniocha South",
+//     "Bomadi",
+//     "Burutu",
+//     "Ethiope West",
+//     "Ethiope East",
+//     "Ika North East",
+//     "Ika South",
+//     "Isoko North",
+//     "Isoko South",
+//     "Ndokwa East",
+//     "Ndokwa West",
+//     "Okpe",
+//     "Oshimili North",
+//     "Oshimili South",
+//     "Patani",
+//     "Sapele",
+//     "Udu",
+//     "Ughelli North",
+//     "Ukwuani",
+//     "Ughelli South",
+//     "Uvwie",
+//     "Warri North",
+//     "Warri South",
+//     "Warri South West",
+//   ],
+//   ebonyi: [
+//     "Abakaliki",
+//     "Afikpo North",
+//     "Ebonyi",
+//     "Afikpo South",
+//     "Ezza North",
+//     "Ikwo",
+//     "Ezza South",
+//     "Ivo",
+//     "Ishielu",
+//     "Izzi",
+//     "Ohaozara",
+//     "Ohaukwu",
+//     "Onicha",
+//   ],
+//   edo: [
+//     "Akoko-Edo",
+//     "Egor",
+//     "Esan Central",
+//     "Esan North-East",
+//     "Esan South-East",
+//     "Esan West",
+//     "Etsako Central",
+//     "Etsako East",
+//     "Etsako West",
+//     "Igueben",
+//     "Ikpoba Okha",
+//     "Orhionmwon",
+//     "Oredo",
+//     "Ovia North-East",
+//     "Ovia South-West",
+//     "Owan East",
+//     "Owan West",
+//     "Uhunmwonde",
+//   ],
+//   ekiti: [
+//     "Ado Ekiti",
+//     "Efon",
+//     "Ekiti East",
+//     "Ekiti South-West",
+//     "Ekiti West",
+//     "Emure",
+//     "Gbonyin",
+//     "Ido Osi",
+//     "Ijero",
+//     "Ikere",
+//     "Ilejemeje",
+//     "Irepodun/Ifelodun",
+//     "Ikole",
+//     "Ise/Orun",
+//     "Moba",
+//     "Oye",
+//   ],
+//   enugu: [
+//     "Awgu",
+//     "Aninri",
+//     "Enugu East",
+//     "Enugu North",
+//     "Ezeagu",
+//     "Enugu South",
+//     "Igbo Etiti",
+//     "Igbo Eze North",
+//     "Igbo Eze South",
+//     "Isi Uzo",
+//     "Nkanu East",
+//     "Nkanu West",
+//     "Nsukka",
+//     "Udenu",
+//     "Oji River",
+//     "Uzo Uwani",
+//     "Udi",
+//   ],
+//   abuja: [
+//     "Abaji",
+//     "Bwari",
+//     "Gwagwalada",
+//     "Kuje",
+//     "Kwali",
+//     "Municipal Area Council",
+//   ],
+//   gombe: [
+//     "Akko",
+//     "Balanga",
+//     "Billiri",
+//     "Dukku",
+//     "Funakaye",
+//     "Gombe",
+//     "Kaltungo",
+//     "Kwami",
+//     "Nafada",
+//     "Shongom",
+//     "Yamaltu/Deba",
+//   ],
+//   jigawa: [
+//     "Auyo",
+//     "Babura",
+//     "Buji",
+//     "Biriniwa",
+//     "Birnin Kudu",
+//     "Dutse",
+//     "Gagarawa",
+//     "Garki",
+//     "Gumel",
+//     "Guri",
+//     "Gwaram",
+//     "Gwiwa",
+//     "Hadejia",
+//     "Jahun",
+//     "Kafin Hausa",
+//     "Kazaure",
+//     "Kiri Kasama",
+//     "Kiyawa",
+//     "Kaugama",
+//     "Maigatari",
+//     "Malam Madori",
+//     "Miga",
+//     "Sule Tankarkar",
+//     "Roni",
+//     "Ringim",
+//     "Yankwashi",
+//     "Taura",
+//   ],
+//   lagos: [
+//     "Agege",
+//     "Ajeromi-Ifelodun",
+//     "Alimosho",
+//     "Amuwo-Odofin",
+//     "Badagry",
+//     "Apapa",
+//     "Epe",
+//     "Eti Osa",
+//     "Ibeju-Lekki",
+//     "Ifako-Ijaiye",
+//     "Ikeja",
+//     "Ikorodu",
+//     "Kosofe",
+//     "Lagos Island",
+//     "Mushin",
+//     "Lagos Mainland",
+//     "Ojo",
+//     "Oshodi-Isolo",
+//     "Shomolu",
+//     "Surulere Lagos State",
+//   ],
+//   oyo: [
+//     "Afijio",
+//     "Akinyele",
+//     "Atiba",
+//     "Atisbo",
+//     "Egbeda",
+//     "Ibadan North",
+//     "Ibadan North-East",
+//     "Ibadan North-West",
+//     "Ibadan South-East",
+//     "Ibarapa Central",
+//     "Ibadan South-West",
+//     "Ibarapa East",
+//     "Ido",
+//     "Ibarapa North",
+//     "Irepo",
+//     "Iseyin",
+//     "Itesiwaju",
+//     "Iwajowa",
+//     "Kajola",
+//     "Lagelu",
+//     "Ogbomosho North",
+//     "Ogbomosho South",
+//     "Ogo Oluwa",
+//     "Olorunsogo",
+//     "Oluyole",
+//     "Ona Ara",
+//     "Orelope",
+//     "Ori Ire",
+//     "Oyo",
+//     "Oyo East",
+//     "Saki East",
+//     "Saki West",
+//     "Surulere Oyo State",
+//   ],
+//   imo: [
+//     "Aboh Mbaise",
+//     "Ahiazu Mbaise",
+//     "Ehime Mbano",
+//     "Ezinihitte",
+//     "Ideato North",
+//     "Ideato South",
+//     "Ihitte/Uboma",
+//     "Ikeduru",
+//     "Isiala Mbano",
+//     "Mbaitoli",
+//     "Isu",
+//     "Ngor Okpala",
+//     "Njaba",
+//     "Nkwerre",
+//     "Nwangele",
+//     "Obowo",
+//     "Oguta",
+//     "Ohaji/Egbema",
+//     "Okigwe",
+//     "Orlu",
+//     "Orsu",
+//     "Oru East",
+//     "Oru West",
+//     "Owerri Municipal",
+//     "Owerri North",
+//     "Unuimo",
+//     "Owerri West",
+//   ],
+//   kaduna: [
+//     "Birnin Gwari",
+//     "Chikun",
+//     "Giwa",
+//     "Ikara",
+//     "Igabi",
+//     "Jaba",
+//     "Jema'a",
+//     "Kachia",
+//     "Kaduna North",
+//     "Kaduna South",
+//     "Kagarko",
+//     "Kajuru",
+//     "Kaura",
+//     "Kauru",
+//     "Kubau",
+//     "Kudan",
+//     "Lere",
+//     "Makarfi",
+//     "Sabon Gari",
+//     "Sanga",
+//     "Soba",
+//     "Zangon Kataf",
+//     "Zaria",
+//   ],
+//   kebbi: [
+//     "Aleiro",
+//     "Argungu",
+//     "Arewa Dandi",
+//     "Augie",
+//     "Bagudo",
+//     "Birnin Kebbi",
+//     "Bunza",
+//     "Dandi",
+//     "Fakai",
+//     "Gwandu",
+//     "Jega",
+//     "Kalgo",
+//     "Koko/Besse",
+//     "Maiyama",
+//     "Ngaski",
+//     "Shanga",
+//     "Suru",
+//     "Sakaba",
+//     "Wasagu/Danko",
+//     "Yauri",
+//     "Zuru",
+//   ],
+//   kano: [
+//     "Ajingi",
+//     "Albasu",
+//     "Bagwai",
+//     "Bebeji",
+//     "Bichi",
+//     "Bunkure",
+//     "Dala",
+//     "Dambatta",
+//     "Dawakin Kudu",
+//     "Dawakin Tofa",
+//     "Doguwa",
+//     "Fagge",
+//     "Gabasawa",
+//     "Garko",
+//     "Garun Mallam",
+//     "Gezawa",
+//     "Gaya",
+//     "Gwale",
+//     "Gwarzo",
+//     "Kabo",
+//     "Kano Municipal",
+//     "Karaye",
+//     "Kibiya",
+//     "Kiru",
+//     "Kumbotso",
+//     "Kunchi",
+//     "Kura",
+//     "Madobi",
+//     "Makoda",
+//     "Minjibir",
+//     "Nasarawa",
+//     "Rano",
+//     "Rimin Gado",
+//     "Rogo",
+//     "Shanono",
+//     "Takai",
+//     "Sumaila",
+//     "Tarauni",
+//     "Tofa",
+//     "Tsanyawa",
+//     "Tudun Wada",
+//     "Ungogo",
+//     "Warawa",
+//     "Wudil",
+//   ],
+//   kogi: [
+//     "Ajaokuta",
+//     "Adavi",
+//     "Ankpa",
+//     "Bassa",
+//     "Dekina",
+//     "Ibaji",
+//     "Idah",
+//     "Igalamela Odolu",
+//     "Ijumu",
+//     "Kogi",
+//     "Kabba/Bunu",
+//     "Lokoja",
+//     "Ofu",
+//     "Mopa Muro",
+//     "Ogori/Magongo",
+//     "Okehi",
+//     "Okene",
+//     "Olamaboro",
+//     "Omala",
+//     "Yagba East",
+//     "Yagba West",
+//   ],
+//   osun: [
+//     "Aiyedire",
+//     "Atakunmosa West",
+//     "Atakunmosa East",
+//     "Aiyedaade",
+//     "Boluwaduro",
+//     "Boripe",
+//     "Ife East",
+//     "Ede South",
+//     "Ife North",
+//     "Ede North",
+//     "Ife South",
+//     "Ejigbo",
+//     "Ife Central",
+//     "Ifedayo",
+//     "Egbedore",
+//     "Ila",
+//     "Ifelodun",
+//     "Ilesa East",
+//     "Ilesa West",
+//     "Irepodun",
+//     "Irewole",
+//     "Isokan",
+//     "Iwo",
+//     "Obokun",
+//     "Odo Otin",
+//     "Ola Oluwa",
+//     "Olorunda",
+//     "Oriade",
+//     "Orolu",
+//     "Osogbo",
+//   ],
+//   sokoto: [
+//     "Gudu",
+//     "Gwadabawa",
+//     "Illela",
+//     "Isa",
+//     "Kebbe",
+//     "Kware",
+//     "Rabah",
+//     "Sabon Birni",
+//     "Shagari",
+//     "Silame",
+//     "Sokoto North",
+//     "Sokoto South",
+//     "Tambuwal",
+//     "Tangaza",
+//     "Tureta",
+//     "Wamako",
+//     "Wurno",
+//     "Yabo",
+//     "Binji",
+//     "Bodinga",
+//     "Dange Shuni",
+//     "Goronyo",
+//     "Gada",
+//   ],
+//   plateau: [
+//     "Bokkos",
+//     "Barkin Ladi",
+//     "Bassa",
+//     "Jos East",
+//     "Jos North",
+//     "Jos South",
+//     "Kanam",
+//     "Kanke",
+//     "Langtang South",
+//     "Langtang North",
+//     "Mangu",
+//     "Mikang",
+//     "Pankshin",
+//     "Qua'an Pan",
+//     "Riyom",
+//     "Shendam",
+//     "Wase",
+//   ],
+//   taraba: [
+//     "Ardo Kola",
+//     "Bali",
+//     "Donga",
+//     "Gashaka",
+//     "Gassol",
+//     "Ibi",
+//     "Jalingo",
+//     "Karim Lamido",
+//     "Kumi",
+//     "Lau",
+//     "Sardauna",
+//     "Takum",
+//     "Ussa",
+//     "Wukari",
+//     "Yorro",
+//     "Zing",
+//   ],
+//   yobe: [
+//     "Bade",
+//     "Bursari",
+//     "Damaturu",
+//     "Fika",
+//     "Fune",
+//     "Geidam",
+//     "Gujba",
+//     "Gulani",
+//     "Jakusko",
+//     "Karasuwa",
+//     "Machina",
+//     "Nangere",
+//     "Nguru",
+//     "Potiskum",
+//     "Tarmuwa",
+//     "Yunusari",
+//     "Yusufari",
+//   ],
+//   zamfara: [
+//     "Anka",
+//     "Birnin Magaji/Kiyaw",
+//     "Bakura",
+//     "Bukkuyum",
+//     "Bungudu",
+//     "Gummi",
+//     "Gusau",
+//     "Kaura Namoda",
+//     "Maradun",
+//     "Shinkafi",
+//     "Maru",
+//     "Talata Mafara",
+//     "Tsafe",
+//     "Zurmi",
+//   ],
+//   katsina: [
+//     "Bakori",
+//     "Batagarawa",
+//     "Batsari",
+//     "Baure",
+//     "Bindawa",
+//     "Charanchi",
+//     "Danja",
+//     "Dandume",
+//     "Dan Musa",
+//     "Daura",
+//     "Dutsi",
+//     "Dutsin Ma",
+//     "Faskari",
+//     "Funtua",
+//     "Ingawa",
+//     "Jibia",
+//     "Kafur",
+//     "Kaita",
+//     "Kankara",
+//     "Kankia",
+//     "Katsina",
+//     "Kurfi",
+//     "Kusada",
+//     "Mai'Adua",
+//     "Malumfashi",
+//     "Mani",
+//     "Mashi",
+//     "Matazu",
+//     "Musawa",
+//     "Rimi",
+//     "Sabuwa",
+//     "Safana",
+//     "Sandamu",
+//     "Zango",
+//   ],
+//   kwara: [
+//     "Asa",
+//     "Baruten",
+//     "Edu",
+//     "Ilorin East",
+//     "Ifelodun",
+//     "Ilorin South",
+//     "Ekiti Kwara State",
+//     "Ilorin West",
+//     "Irepodun",
+//     "Isin",
+//     "Kaiama",
+//     "Moro",
+//     "Offa",
+//     "Oke Ero",
+//     "Oyun",
+//     "Pategi",
+//   ],
+//   nasarawa: [
+//     "Akwanga",
+//     "Awe",
+//     "Doma",
+//     "Karu",
+//     "Keana",
+//     "Keffi",
+//     "Lafia",
+//     "Kokona",
+//     "Nasarawa Egon",
+//     "Nasarawa",
+//     "Obi",
+//     "Toto",
+//     "Wamba",
+//   ],
+//   niger: [
+//     "Agaie",
+//     "Agwara",
+//     "Bida",
+//     "Borgu",
+//     "Bosso",
+//     "Chanchaga",
+//     "Edati",
+//     "Gbako",
+//     "Gurara",
+//     "Katcha",
+//     "Kontagora",
+//     "Lapai",
+//     "Lavun",
+//     "Mariga",
+//     "Magama",
+//     "Mokwa",
+//     "Mashegu",
+//     "Moya",
+//     "Paikoro",
+//     "Rafi",
+//     "Rijau",
+//     "Shiroro",
+//     "Suleja",
+//     "Tafa",
+//     "Wushishi",
+//   ],
+//   rivers: [
+//     "Abua/Odual",
+//     "Ahoada East",
+//     "Ahoada West",
+//     "Andoni",
+//     "Akuku-Toru",
+//     "Asari-Toru",
+//     "Bonny",
+//     "Degema",
+//     "Emuoha",
+//     "Eleme",
+//     "Ikwerre",
+//     "Etche",
+//     "Gokana",
+//     "Khana",
+//     "Obio/Akpor",
+//     "Ogba/Egbema/Ndoni",
+//     "Ogu/Bolo",
+//     "Okrika",
+//     "Omuma",
+//     "Opobo/Nkoro",
+//     "Oyigbo",
+//     "Port Harcourt",
+//     "Tai",
+//   ],
+// };
 
-function updateLocalGovernmentsOfOrigin() {
-  console.log("cool");
-  const stateSelect = document.getElementById("stateOfOrigin");
-  const lgaSelect = document.getElementById("lgaOfOrigin");
-  const selectedState = stateSelect.value;
+// function updateLocalGovernmentsOfOrigin() {
+//   const stateSelect = document.getElementById("stateOfOrigin");
+//   const lgaSelect = document.getElementById("lgaOfOrigin");
+//   const selectedState = stateSelect.value;
 
-  // Clear previous options
-  lgaSelect.innerHTML = '<option value="">Select Local Government</option>';
+//   // Clear previous options
+//   lgaSelect.innerHTML = '<option value="">Select Local Government</option>';
 
-  if (nigeriaData[selectedState]) {
-    nigeriaData[selectedState].forEach((lga) => {
-      const option = document.createElement("option");
-      option.value = lga;
-      option.textContent = lga;
-      lgaSelect.appendChild(option);
-    });
-  }
-}
+//   if (nigeriaData[selectedState]) {
+//     nigeriaData[selectedState].forEach((lga) => {
+//       const option = document.createElement("option");
+//       option.value = lga;
+//       option.textContent = lga;
+//       lgaSelect.appendChild(option);
+//     });
+//   }
+// }
 
-function updateLocalGovernmentsOfResidence() {
-  const stateSelect = document.getElementById("stateOfResidence");
-  const lgaSelect = document.getElementById("lgaOfResidence");
-  const selectedState = stateSelect.value;
+// function updateLocalGovernmentsOfResidence() {
+//   const stateSelect = document.getElementById("stateOfResidence");
+//   const lgaSelect = document.getElementById("lgaOfResidence");
+//   const selectedState = stateSelect.value;
 
-  // Clear previous options
-  lgaSelect.innerHTML = '<option value="">Select Local Government</option>';
+//   // Clear previous options
+//   lgaSelect.innerHTML = '<option value="">Select Local Government</option>';
 
-  if (nigeriaData[selectedState]) {
-    nigeriaData[selectedState].forEach((lga) => {
-      const option = document.createElement("option");
-      option.value = lga;
-      option.textContent = lga;
-      lgaSelect.appendChild(option);
-    });
-  }
-}
+//   if (nigeriaData[selectedState]) {
+//     nigeriaData[selectedState].forEach((lga) => {
+//       const option = document.createElement("option");
+//       option.value = lga;
+//       option.textContent = lga;
+//       lgaSelect.appendChild(option);
+//     });
+//   }
+// }
 
 // Select country of residence
 $(document).ready(function () {
@@ -3329,14 +3190,22 @@ $(document).ready(function () {
 
       const totalAmountNaira = totalAmountKobo / 100; // Convert to Naira
 
-      // Format as ₦ with commas (e.g., ₦500,000.00)
-      const formattedAmount = new Intl.NumberFormat("en-NG", {
-        style: "currency",
-        currency: "NGN",
-      }).format(totalAmountNaira);
+      // Function to format numbers as ₦ with K, M, B
+      function formatCurrencyShort(amount) {
+        if (amount >= 1_000_000_000) {
+          return "₦" + (amount / 1_000_000_000).toFixed(1) + "B";
+        } else if (amount >= 1_000_000) {
+          return "₦" + (amount / 1_000_000).toFixed(1) + "M";
+        } else if (amount >= 1_000) {
+          return "₦" + (amount / 1_000).toFixed(1) + "K";
+        } else {
+          return "₦" + amount.toFixed(0);
+        }
+      }
+      const formattedAmount = formatCurrencyShort(totalAmountNaira);
       $("#btnPrevTran").prop("disabled", page === 1);
       $("#btnNextTran").prop("disabled", !hasNextPage);
-      $("#trans").text(formattedAmount); // Display as ₦500,000.00
+      $("#transaction").text(formattedAmount); // Display the total amount
     });
   };
 
@@ -3639,7 +3508,6 @@ $(document).on("click", ".update-user-btn", function () {
   const userData = $(this).data("info");
   handleUpdate(userData);
 });
-
 
 $(document).ready(function () {
   // Initial data load
@@ -4064,8 +3932,6 @@ $(document).ready(function () {
     });
   }
 
-  
-
   // Handle card Approval
   function handleApproval(requestId) {
     $.ajax({
@@ -4111,29 +3977,31 @@ $(document).ready(function () {
       },
     });
   }
-  
 
-// Handle View Modal Function
-function handleView(requestId) {
-  $.ajax({
+  // Handle View Modal Function
+  function handleView(requestId) {
+    $.ajax({
       url: `${BACKEND_URL}/idcard/${requestId}/request`,
       method: "GET",
       headers: apiHeaders,
       success: function (response) {
-          const docTypes = ["utilityBill", "ref_letter"];
-          const documentTitles = ["Utility Bill", "Reference Letter"];
-          
-          // Filter documents that actually exist in response
-          const validDocuments = docTypes
-              .map((key, index) => ({ key, title: documentTitles[index] }))
-              .filter(doc => response[doc.key]);  // Check if document exists
+        const docTypes = ["utilityBill", "ref_letter"];
+        const documentTitles = ["Utility Bill", "Reference Letter"];
 
-          let modalContent = `
+        // Filter documents that actually exist in response
+        const validDocuments = docTypes
+          .map((key, index) => ({ key, title: documentTitles[index] }))
+          .filter((doc) => response[doc.key]); // Check if document exists
+
+        let modalContent = `
               <div class="container-fluid">
                   <div class="row mb-3">
                       <div class="col-md-3 text-center">
                           <img 
-                              src="${response.userId?.passportPhoto || "/assets/images/avatar.jpeg"}" 
+                              src="${
+                                response.userId?.passportPhoto ||
+                                "/assets/images/avatar.jpeg"
+                              }" 
                               alt="Passport Photo" 
                               class="img-fluid rounded shadow-sm profile-photo"
                               style="max-height: 150px;"
@@ -4141,13 +4009,27 @@ function handleView(requestId) {
                           >
                       </div>
                       <div class="col-md-9">
-                          <h5 class="fw-bold mb-2">${response.firstname} ${response.lastname}</h5>
-                          <p class="mb-1"><strong>Phone:</strong> ${response.phone}</p>
-                          <p class="mb-1"><strong>Email:</strong> ${response.email}</p>
-                          <p class="mb-1"><strong>Status:</strong> <span class="badge bg-info">${response.status}</span></p>
-                          <p><strong>State:</strong> ${response.userId?.stateOfOrigin}</p>
-                          <p><strong>LGA:</strong> ${response.userId?.lgaOfOrigin}</p>
-                          <p><strong>isProfileCompleted:</strong> ${response.userId?.isProfileCompleted}</p>
+                          <h5 class="fw-bold mb-2">${response.firstname} ${
+          response.lastname
+        }</h5>
+                          <p class="mb-1"><strong>Phone:</strong> ${
+                            response.phone
+                          }</p>
+                          <p class="mb-1"><strong>Email:</strong> ${
+                            response.email
+                          }</p>
+                          <p class="mb-1"><strong>Status:</strong> <span class="badge bg-info">${
+                            response.status
+                          }</span></p>
+                          <p><strong>State:</strong> ${
+                            response.userId?.stateOfOrigin
+                          }</p>
+                          <p><strong>LGA:</strong> ${
+                            response.userId?.lgaOfOrigin
+                          }</p>
+                          <p><strong>isProfileCompleted:</strong> ${
+                            response.userId?.isProfileCompleted
+                          }</p>
                       </div>
                   </div>
 
@@ -4155,15 +4037,15 @@ function handleView(requestId) {
                   <h6 class="text-primary">Uploaded Documents</h6>
           `;
 
-          if (validDocuments.length === 0) {
-              modalContent += `<p class="text-muted">No documents uploaded.</p>`;
-          }
+        if (validDocuments.length === 0) {
+          modalContent += `<p class="text-muted">No documents uploaded.</p>`;
+        }
 
-          // Generate HTML for each existing document
-          validDocuments.forEach((doc, index) => {
-              const fileUrl = `${BACKEND_URL}/idcard/${requestId}/document/${doc.key}`;
-              
-              modalContent += `
+        // Generate HTML for each existing document
+        validDocuments.forEach((doc, index) => {
+          const fileUrl = `${BACKEND_URL}/idcard/${requestId}/document/${doc.key}`;
+
+          modalContent += `
                   <div class="card my-3 shadow-sm">
                       <div class="card-header bg-light fw-semibold">
                           ${doc.title}
@@ -4177,45 +4059,45 @@ function handleView(requestId) {
                       </div>
                   </div>
               `;
-          });
-          
-          modalContent += `</div>`;
-          $("#viewModal .modal-body").html(modalContent);
-          $("#viewModal").modal("show");
+        });
 
-          // Load PDFs with authorization
-          validDocuments.forEach((doc, index) => {
-              const fileUrl = `${BACKEND_URL}/idcard/${requestId}/document/${doc.key}`;
-              
-              // Show loader while fetching
-              $(`#pdf-viewer-container-${index}`).html(`
+        modalContent += `</div>`;
+        $("#viewModal .modal-body").html(modalContent);
+        $("#viewModal").modal("show");
+
+        // Load PDFs with authorization
+        validDocuments.forEach((doc, index) => {
+          const fileUrl = `${BACKEND_URL}/idcard/${requestId}/document/${doc.key}`;
+
+          // Show loader while fetching
+          $(`#pdf-viewer-container-${index}`).html(`
                   <div class="d-flex justify-content-center align-items-center h-100">
                       <div class="spinner-border text-primary" role="status">
                           <span class="visually-hidden">Loading...</span>
                       </div>
                   </div>
               `);
-              
-              // Fetch document with authorization
-              fetch(fileUrl, {
-                  headers: {
-                      Authorization: apiHeaders.Authorization
-                  }
-              })
-              .then(res => {
-                  if (!res.ok) throw new Error("Failed to fetch PDF");
-                  return res.blob();
-              })
-              .then(blob => {
-                  const blobUrl = URL.createObjectURL(blob);
-                  loadPDFJ(
-                      blobUrl,
-                      document.getElementById(`pdf-viewer-container-${index}`)
-                  );
-              })
-              .catch(err => {
-                  console.error(`Error loading PDF [${doc.key}]:`, err);
-                  $(`#pdf-viewer-container-${index}`).html(`
+
+          // Fetch document with authorization
+          fetch(fileUrl, {
+            headers: {
+              Authorization: apiHeaders.Authorization,
+            },
+          })
+            .then((res) => {
+              if (!res.ok) throw new Error("Failed to fetch PDF");
+              return res.blob();
+            })
+            .then((blob) => {
+              const blobUrl = URL.createObjectURL(blob);
+              loadPDFJ(
+                blobUrl,
+                document.getElementById(`pdf-viewer-container-${index}`)
+              );
+            })
+            .catch((err) => {
+              console.error(`Error loading PDF [${doc.key}]:`, err);
+              $(`#pdf-viewer-container-${index}`).html(`
                       <div class="alert alert-danger">
                           Failed to load document: ${err.message}
                           <div class="mt-2">
@@ -4223,20 +4105,15 @@ function handleView(requestId) {
                           </div>
                       </div>
                   `);
-              });
-          });
+            });
+        });
       },
       error: function (error) {
-          console.error("Error fetching request details:", error);
-          alert("Failed to fetch request details.");
+        console.error("Error fetching request details:", error);
+        alert("Failed to fetch request details.");
       },
-  });
-}
-
-
-
-  
-  
+    });
+  }
 
   function showNotification(type, message) {
     const toastHtml = `
@@ -4285,7 +4162,7 @@ function handleView(requestId) {
     $("#rejectionModal").modal("show");
   });
 
-  $("#dataTable").on("click", ".btn-view", function () {
+  $("#idcardsTable").on("click", ".btn-view", function () {
     const requestId = $(this).data("id");
 
     handleView(requestId);
@@ -4313,20 +4190,20 @@ function handleView(requestId) {
 });
 $(document).ready(function () {
   // Toggle sidebar on button click
-  $("#sidebarToggle").click(function (e) {
-    e.stopPropagation(); // prevent the click from bubbling up to document
-    $(".sidebar").toggleClass("show");
-  });
+  // $("#sidebarToggle").click(function (e) {
+  //   e.stopPropagation(); // prevent the click from bubbling up to document
+  //   $(".sidebar").toggleClass("show");
+  // });
 
-  // Prevent clicks inside the sidebar from closing it
-  $(".sidebar").click(function (e) {
-    e.stopPropagation();
-  });
+  // // Prevent clicks inside the sidebar from closing it
+  // $(".sidebar").click(function (e) {
+  //   e.stopPropagation();
+  // });
 
-  // Hide sidebar when clicking anywhere else in the document
-  $(document).click(function () {
-    $(".sidebar").removeClass("show");
-  });
+  // // Hide sidebar when clicking anywhere else in the document
+  // $(document).click(function () {
+  //   $(".sidebar").removeClass("show");
+  // });
 
   // Add hover effects to cards
   $(".stat-card").hover(
@@ -4443,7 +4320,6 @@ function handleDeleteLga(userId) {
           const errorMessage =
             xhr.responseJSON?.message || "Failed to delete LGA.";
           Swal.fire("Error!", errorMessage, "error");
-
         },
       });
     }
@@ -4515,7 +4391,7 @@ function handleUpdateLga(userData) {
     preConfirm: () => {
       return {
         name: $("#updateName").val().trim(),
-        headquaters: $("#updateLgaHeadqtrs").val().trim(), 
+        headquaters: $("#updateLgaHeadqtrs").val().trim(),
       };
     },
   }).then((result) => {
@@ -4544,8 +4420,6 @@ function handleUpdateLga(userData) {
     }
   });
 }
-
-
 
 // Event Delegation for Delete & Update Buttons
 $(document).on("click", ".delete-lga-btn", function () {

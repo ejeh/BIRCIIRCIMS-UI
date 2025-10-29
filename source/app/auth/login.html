@@ -27,6 +27,31 @@
       href="/assets/images/benue-state-logo.png"
       sizes="16x16"
     />
+
+    <style>
+      .green-sidebar {
+        /* The gradient overlay is on top, the image is on the bottom */
+        background-image: linear-gradient(
+            rgba(25, 135, 84, 0.7),
+            rgba(25, 135, 84, 0.7)
+          ),
+          url("/assets//images/istockphoto-922266274-612x612.jpg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+
+      /* Optional: Add a drop shadow to the fingerprint image for better visibility */
+      .svg-position {
+        filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.3));
+        width: 75px;
+        height: auto;
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        opacity: 0.6;
+      }
+    </style>
   </head>
   <body>
     <div class="container-fluid p-0">
@@ -56,9 +81,9 @@
           <!-- Certificate image -->
           <div class="mt-3 mb-4 rounded overflow-hidden">
             <img
-              src="/assets/images/man-holding-a-cert.png"
-              alt="Person holding certificate"
-              class="img-fluid rounded"
+              src="/assets/images/Finger Print.svg"
+              alt="finger print"
+              class="img-fluid rounded svg-position"
             />
           </div>
         </div>
@@ -201,16 +226,17 @@
             success: function (data) {
               const { role } = data.user;
               console.log(role);
-              if (
-                // role === "user" ||
-                role === "super_admin" ||
-                role === "support_admin"
-              ) {
-                window.location.href = "../../app/index.html";
+              if (role === "global_admin") {
+                window.location.href = "../../app/global-admin-dashboard.html";
+              }
+              if (role === "super_admin" || role === "support_admin") {
+                // window.location.href = "../../app/index.html";
+                window.location.href = "../../app/support-admin-dashboard.html";
               }
 
               if (role === "user") {
-                window.location.href = "../../app/user-dasboard.html";
+                // window.location.href = "../../app/user-dasboard.html";
+                window.location.href = "../../app/user-dashboard.html";
               }
 
               if (role === "kindred_head") {
