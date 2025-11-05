@@ -4129,28 +4129,28 @@ $(document).ready(function () {
     new bootstrap.Toast(toastEl, { autohide: false }).show();
   }
 
-  $(document).ready(function () {
-    if (typeof io === "undefined") {
-      console.error("Socket.io library is not loaded.");
-      return;
-    }
+  // $(document).ready(function () {
+  //   if (typeof io === "undefined") {
+  //     console.error("Socket.io library is not loaded.");
+  //     return;
+  //   }
 
-    const eventName = `member-status-update-${user?.id}`;
+  //   const eventName = `member-status-update-${user?.id}`;
 
-    const socket = io(`${BACKEND_URL}`, {
-      transports: ["websocket"],
-    });
+  //   const socket = io(`${BACKEND_URL}`, {
+  //     transports: ["websocket"],
+  //   });
 
-    socket.on(eventName, function (data) {
-      console.log("📥 Received data:", data);
-      showNotification(
-        "info",
-        `Status: Your request for identity card was ${data.status}. Reason: ${
-          data.reason || "N/A"
-        }`
-      );
-    });
-  });
+  //   socket.on(eventName, function (data) {
+  //     console.log("📥 Received data:", data);
+  //     showNotification(
+  //       "info",
+  //       `Status: Your request for identity card was ${data.status}. Reason: ${
+  //         data.reason || "N/A"
+  //       }`
+  //     );
+  //   });
+  // });
 
   $(document).on("click", ".btn-approve", function () {
     const requestId = $(this).data("id");
