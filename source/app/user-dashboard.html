@@ -3454,114 +3454,12 @@
         initializeVerificationSystem();
       });
 
-      /**
-       * Checks if the user can access the profile based on their payment history.
-       * @param {Array} idcardRequests - The user's ID card requests.
-       * @param {Array} certificateRequests - The user's certificate requests.
-       */
-      // function checkProfileAccess(idcardRequests, certificateRequests) {
-      //   // User can edit profile if they have at least one PAID request
-      //   const hasPaidRequest =
-      //     (idcardRequests || []).some((req) => req.paymentStatus === "paid") ||
-      //     (certificateRequests || []).some(
-      //       (req) => req.paymentStatus === "paid"
-      //     );
-
-      //   if (!hasPaidRequest) {
-      //     // Disable profile editing
-      //     $(
-      //       "#saveProfileBtn, #addFamilyBtn, #addNeighborBtn, #addNextOfKinBtn, #addEmploymentBtn, #addBusinessBtn, #addEducationBtn"
-      //     )
-      //       .prop("disabled", true)
-      //       .attr(
-      //         "title",
-      //         "You must make at least one successful payment to edit your profile."
-      //       );
-      //     $(
-      //       ".remove-family, .remove-neighbor, .remove-next-of-kin, .remove-employment, .remove-business, .remove-education"
-      //     ).prop("disabled", true);
-
-      //     // Show a warning message on the profile page
-      //     if ($("#profile-page").is(":visible")) {
-      //       showNotification(
-      //         "Profile editing is locked. Please make a payment for an approved request to unlock this feature.",
-      //         "warning"
-      //       );
-      //     }
-      //   } else {
-      //     // Enable profile editing
-      //     $(
-      //       "#saveProfileBtn, #addFamilyBtn, #addNeighborBtn, #addNextOfKinBtn, #addEmploymentBtn, #addBusinessBtn, #addEducationBtn"
-      //     )
-      //       .prop("disabled", false)
-      //       .removeAttr("title");
-      //     $(
-      //       ".remove-family, .remove-neighbor, .remove-next-of-kin, .remove-employment, .remove-business, .remove-education"
-      //     ).prop("disabled", false);
-      //   }
-      // }
-
-      // Initialize verification system
-
-      // function checkProfileAccess(idcardRequests, certificateRequests) {
-      //   // const hasPaidRequest =
-      //   //   (idcardRequests || []).some((req) => req.paymentStatus === "paid") ||
-      //   //   (certificateRequests || []).some(
-      //   //     (req) => req.paymentStatus === "paid"
-      //   //   );
-
-      //   // console.log("hasPaidRequest:", hasPaidRequest);
-
-      //   console.log("=== checkProfileAccess Called ===");
-      //   console.log("idcardRequests:", idcardRequests);
-      //   console.log("certificateRequests:", certificateRequests);
-      //   // -------------------------
-
-      //   const hasPaidRequest =
-      //     (idcardRequests || []).some((req) => req.paymentStatus === "paid") ||
-      //     (certificateRequests || []).some(
-      //       (req) => req.paymentStatus === "paid"
-      //     );
-
-      //   console.log("hasPaidRequest:", hasPaidRequest);
-      //   console.log("================================");
-
-      //   if (!hasPaidRequest) {
-      //     // Disable ALL profile control buttons
-      //     $(".profile-control-btn")
-      //       .prop("disabled", true)
-      //       .attr("title", "Payment required to use this feature.");
-
-      //     // Disable all form inputs EXCEPT those inside the "Personal Information" card
-      //     // The selector ":input" targets input, textarea, select, and button elements.
-      //     $("#profile-page :input")
-      //       .not("#personal-info-card :input")
-      //       .prop("disabled", true);
-
-      //     // Show the warning message
-      //     if ($("#profile-page").is(":visible")) {
-      //       showNotification(
-      //         "Profile editing is locked. You can edit your personal information, but you must make a payment for an approved request to unlock other features.",
-      //         "warning"
-      //       );
-      //     }
-      //   } else {
-      //     // Enable ALL profile control buttons
-      //     $(".profile-control-btn").prop("disabled", false).removeAttr("title");
-
-      //     // Enable ALL form inputs on the profile page
-      //     $("#profile-page :input").prop("disabled", false);
-      //   }
-      // }
-
       function checkProfileAccess(idcardRequests, certificateRequests) {
         const hasPaidRequest =
           (idcardRequests || []).some((req) => req.paymentStatus === "paid") ||
           (certificateRequests || []).some(
             (req) => req.paymentStatus === "paid"
           );
-
-        console.log("hasPaidRequest:", hasPaidRequest);
 
         if (!hasPaidRequest) {
           // Disable ALL profile control buttons
@@ -4544,7 +4442,6 @@
           // If a matching, unsaved item was found, update its data-id
           if ($matchingItem.length) {
             $matchingItem.attr("data-id", serverItem._id);
-            console.log(`Updated ${itemClass} with new ID: ${serverItem._id}`);
           }
         });
       }
@@ -5073,7 +4970,6 @@
             populateEducationalHistory(formData.educationalHistory);
           }
 
-          console.log("Profile form data loaded from localStorage");
           return true;
         }
         return false;
@@ -6092,7 +5988,6 @@
       }
 
       async function initializeRequestsPage() {
-        console.log("user.id", user.id);
         try {
           const [idcardRes, certificateRes] = await Promise.all([
             $.ajax({
@@ -6893,7 +6788,6 @@
       });
 
       function showRequestDetailsModal(request) {
-        console.log(request);
         $("#viewRequestModal .modal-title").text(`Request #${request._id}`);
         $("#viewRequestModal .modal-body").html(`
   <p><strong>Name:</strong> ${request.firstname || request.fullname || ""} ${
