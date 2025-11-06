@@ -2529,6 +2529,18 @@
                   </div>
                 </div>
                 <div class="row">
+                  <div class="col-md-12 mb-3">
+                    <label for="certEmail" class="form-label">Email</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="certEmail"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div class="row">
                   <div class="col-md-6 mb-3">
                     <label for="certGuardian" class="form-label"
                       >Guardian (if applicable)</label
@@ -6080,6 +6092,7 @@
       }
 
       async function initializeRequestsPage() {
+        console.log("user.id", user.id);
         try {
           const [idcardRes, certificateRes] = await Promise.all([
             $.ajax({
@@ -6402,11 +6415,12 @@
           $("#certGender").val(user.gender);
           $("#certStateOfOrigin").val(user.stateOfOrigin);
           $("#certLGAOfOrigin").val(user.lgaOfOrigin);
-          $("#certAddress").val(`${user.address}`);
+          $("#certAddress").val(`${user?.address}`);
           $("#certPhone").val(user.phone);
           $("#certKindred").val(user.community);
           $("#certFathersStateOfOrigin").val(user.stateOfOrigin);
           $("#certMothersStateOfOrigin").val(user.stateOfOrigin);
+          $("#certEmail").val(user.email);
         }
       });
 
@@ -6501,6 +6515,7 @@
               "certAddress",
               "certPhone",
               "certKindred",
+              "certEmail",
               "certFathersName",
               "certFathersStateOfOrigin",
               "certMothersName",
@@ -6537,6 +6552,9 @@
             formData.append("phone", $("#certPhone").val());
             formData.append("kindred", $("#certKindred").val());
             formData.append("fathersName", $("#certFathersName").val());
+            formData.append("userId", user.id);
+            formData.append("email", $("#certEmail").val());
+
             formData.append(
               "fathersStateOfOrigin",
               $("#certFathersStateOfOrigin").val()
@@ -6596,7 +6614,7 @@
               "Certificate request submitted successfully",
               "success"
             );
-            certificateRequestsTable.ajax.reload();
+            // certificateRequestsTable.ajax.reload();
           }
 
           // =====================
