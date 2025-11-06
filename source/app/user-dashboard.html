@@ -5833,8 +5833,15 @@
         };
 
         return function (data, type, row) {
+          console.log("Rendering actions for row:", row);
           const buttons = [];
+
           const isPaid = row.paymentStatus === "paid";
+
+          // Check for profile completion only if payment is paid
+          if (isPaid && row.userId && row.userId.isProfileCompleted === false) {
+            return '<span class="text-warning">Please complete your profile</span>';
+          }
 
           if (row.status === "Approved") {
             const action = isPaid ? "download" : "pay";
