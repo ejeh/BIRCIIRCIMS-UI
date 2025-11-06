@@ -3471,6 +3471,7 @@
           // Disable all form inputs EXCEPT those inside the "Personal Information" form
           $("#profile-page :input")
             .not("#saveProfileBtn")
+            .not("#profilePhotoInput")
             .not("#personalInfoForm :input")
             .prop("disabled", true);
           // -------------------------
