@@ -2595,7 +2595,7 @@
                     />
                   </div>
                 </div>
-                <div class="row">
+                <!-- <div class="row">
                   <div class="col-md-6 mb-3">
                     <label
                       for="certParentGuardianIndigeneCert"
@@ -2620,7 +2620,7 @@
                       accept=".pdf,.jpg,.jpeg,.png"
                     />
                   </div>
-                </div>
+                </div> -->
               </div>
             </form>
           </div>
@@ -3281,8 +3281,19 @@
         });
 
         // Submit request button
+        // $("#submitRequestBtn").on("click", function () {
+        //   submitNewRequest();
+        // });
         $("#submitRequestBtn").on("click", function () {
-          submitNewRequest();
+          const $btn = $(this);
+
+          // Only show "Submitting..." when clicked
+          $btn.prop("disabled", true).text("Submitting...");
+
+          // Call your function and reset when done
+          submitNewRequest().finally(() => {
+            $btn.prop("disabled", false).text("Submit Request"); // Or your original text
+          });
         });
 
         // Change password button
@@ -4831,10 +4842,10 @@
           $("#profilePhotoImg").attr("src", user.passportPhoto);
 
           // Populate health info
-          $("#blood_group").val(user.healthInfo.bloodGroup);
-          $("#genotype").val(user.healthInfo.genotype);
-          $("#medical_condition").val(user.healthInfo.medical_condition);
-          $("#disability").val(user.healthInfo.disabilityStatus);
+          $("#blood_group").val(user.healthInfo?.bloodGroup);
+          $("#genotype").val(user.healthInfo?.genotype);
+          $("#medical_condition").val(user.healthInfo?.medical_condition);
+          $("#disability").val(user.healthInfo?.disabilityStatus);
 
           // Populate next of kin
           populateNextOfKin(user.nextOfKin);
@@ -6472,8 +6483,6 @@
             // idcardRequestsTable.ajax.reload(); // Refresh table
 
             initializeRequestsPage();
-
-            console.log("ID card response:", response);
           }
 
           // =====================
@@ -6496,7 +6505,7 @@
               "certFathersStateOfOrigin",
               "certMothersName",
               "certMothersStateOfOrigin",
-              "certPurpose",
+              // "certPurpose",
               "certPassportPhoto",
               "certIdCard",
               "certBirthCertificate",
@@ -6542,7 +6551,7 @@
               "relationshipToguardian",
               $("#certRelationshipToGuardian").val() || ""
             );
-            formData.append("purpose", $("#certPurpose").val());
+            // formData.append("purpose", $("#certPurpose").val());
 
             if ($("#certPassportPhoto")[0].files[0]) {
               formData.append(
@@ -6559,18 +6568,18 @@
                 $("#certBirthCertificate")[0].files[0]
               );
             }
-            if ($("#certParentGuardianIndigeneCert")[0].files[0]) {
-              formData.append(
-                "parentGuardianIndigeneCert",
-                $("#certParentGuardianIndigeneCert")[0].files[0]
-              );
-            }
-            if ($("#certAttestationLetter")[0].files[0]) {
-              formData.append(
-                "uploadedAttestationUrl",
-                $("#certAttestationLetter")[0].files[0]
-              );
-            }
+            // if ($("#certParentGuardianIndigeneCert")[0].files[0]) {
+            //   formData.append(
+            //     "parentGuardianIndigeneCert",
+            //     $("#certParentGuardianIndigeneCert")[0].files[0]
+            //   );
+            // }
+            // if ($("#certAttestationLetter")[0].files[0]) {
+            //   formData.append(
+            //     "uploadedAttestationUrl",
+            //     $("#certAttestationLetter")[0].files[0]
+            //   );
+            // }
 
             const response = await $.ajax({
               url: `${BACKEND_URL}/indigene/certificate/create`,
@@ -6588,8 +6597,6 @@
               "success"
             );
             certificateRequestsTable.ajax.reload();
-
-            console.log("Certificate response:", response);
           }
 
           // =====================

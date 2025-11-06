@@ -1435,7 +1435,6 @@ $(document).ready(function () {
           },
           success: function () {
             Swal.fire("Request", "Successfully Deleted!", "success");
-            fetchData();
           },
           error: function (error) {
             console.error("Error deleting request:", error);
@@ -3254,40 +3253,40 @@ $(document).ready(function () {
 });
 
 // Function to update the header title based on the current page
-function updateHeaderTitle() {
-  const path = window.location.pathname;
-  const page = path.split("/").pop().replace(".html", "");
-  const titleMap = {
-    index: "Admin Panel",
-    "user-dasboard": "User Dashboard",
-    approvals: "Approvals",
-    request: "View Certificate Status",
-    idcard: "View Card Status",
-    "all-request": "View Certificate Request",
-    "all-card": "View Card Request",
-    citizens: "Users",
-    certificate: "Request Certificate",
-    profile: "Profile",
-    transaction: "Transactions",
-    login: "Login",
-    card: "Request Card",
-    "support-admin-lga": "Admin LGAs",
-    "user-kindred": "Kindreds",
-    "user-kindred": "Kindreds",
-    "kindred-dasboard": "Kindred Head Dashboard",
-    "kindred-head": "View All Request",
-    kindred: "All Kindred Heads",
-  };
+// function updateHeaderTitle() {
+//   const path = window.location.pathname;
+//   const page = path.split("/").pop().replace(".html", "");
+//   const titleMap = {
+//     index: "Admin Panel",
+//     "user-dasboard": "User Dashboard",
+//     approvals: "Approvals",
+//     request: "View Certificate Status",
+//     idcard: "View Card Status",
+//     "all-request": "View Certificate Request",
+//     "all-card": "View Card Request",
+//     citizens: "Users",
+//     certificate: "Request Certificate",
+//     profile: "Profile",
+//     transaction: "Transactions",
+//     login: "Login",
+//     card: "Request Card",
+//     "support-admin-lga": "Admin LGAs",
+//     "user-kindred": "Kindreds",
+//     "user-kindred": "Kindreds",
+//     "kindred-dasboard": "Kindred Head Dashboard",
+//     "kindred-head": "View All Request",
+//     kindred: "All Kindred Heads",
+//   };
 
-  const pageTitle = titleMap[page] || "Dashboard";
-  document.title =
-    pageTitle +
-    " | Benue State Integrated Citizenship and Resident Identity Registration Management System";
-  document.querySelector(".dashboard_bar").textContent = pageTitle;
-}
+//   const pageTitle = titleMap[page] || "Dashboard";
+//   document.title =
+//     pageTitle +
+//     " | Benue State Integrated Citizenship and Resident Identity Registration Management System";
+//   document.querySelector(".dashboard_bar").textContent = pageTitle;
+// }
 
 // Call the function when the page loads
-document.addEventListener("DOMContentLoaded", updateHeaderTitle);
+// document.addEventListener("DOMContentLoaded", updateHeaderTitle);
 
 let currentPageAll = 1;
 let currentPageUser = 1;
