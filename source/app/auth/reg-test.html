@@ -154,6 +154,7 @@
       .registration-container {
         display: flex;
         flex-direction: column;
+        justify-content: center;
         min-height: 100vh;
         padding: 2rem 3rem;
       }
@@ -497,46 +498,6 @@
           overflow-y: auto;
           height: 100vh;
         }
-
-        /* Fix for form layout on large screens */
-        .form-container .row {
-          flex-wrap: wrap;
-        }
-
-        .form-container .col-md-4,
-        .form-container .col-md-6 {
-          flex: 0 0 auto;
-          width: auto;
-        }
-
-        .form-container .col-md-4 {
-          flex: 0 0 33.333333%;
-          max-width: 33.333333%;
-        }
-
-        .form-container .col-md-6 {
-          flex: 0 0 50%;
-          max-width: 50%;
-        }
-      }
-
-      /* Standard form spacing */
-      .mb-3 {
-        margin-bottom: 1rem !important;
-      }
-
-      .form-container .row.g-3 > * {
-        padding-bottom: 0;
-      }
-
-      .form-container .row.g-3 {
-        --bs-gutter-y: 0.75rem;
-      }
-
-      .step-buttons {
-        margin-top: 1.5rem;
-        display: flex;
-        gap: 0.75rem;
       }
     </style>
   </head>
@@ -623,251 +584,256 @@
           <div class="form-container">
             <form id="signUpForm">
               <div id="step1" class="step-content">
-                <!-- NIN -->
-                <div class="mb-3">
-                  <label for="nin" class="form-label">NIN</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="NIN"
-                    name="NIN"
-                    maxlength="11"
-                    minlength="11"
-                    required
-                    inputmode="numeric"
-                    pattern="\d{11}"
-                    aria-describedby="ninHelp"
-                    autocomplete="on"
-                  />
-                  <small id="ninHelp" class="form-text text-muted">
-                    Enter your 11-digit NIN
-                  </small>
-                  <div id="ninStatus" class="mt-1 text-sm text-info"></div>
-                </div>
+                <div class="row g-3">
+                  <!-- NIN -->
+                  <div class="col-md-4">
+                    <label for="nin" class="form-label">NIN</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="NIN"
+                      name="NIN"
+                      maxlength="11"
+                      minlength="11"
+                      required
+                      inputmode="numeric"
+                      pattern="\d{11}"
+                      aria-describedby="ninHelp"
+                      autocomplete="on"
+                    />
+                    <small id="ninHelp" class="form-text text-muted">
+                      Enter your 11-digit NIN
+                    </small>
+                    <div id="ninStatus" class="mt-1 text-sm text-info"></div>
+                  </div>
+                  <!-- First name -->
+                  <div class="col-md-4">
+                    <label for="firstname" class="form-label">First name</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="firstname"
+                      required
+                      name="firstname"
+                      aria-describedby="firstnameHelp"
+                    />
+                    <small id="firstnameHelp" class="form-text text-muted">
+                      Enter your first name
+                    </small>
+                  </div>
 
-                <!-- First name -->
-                <div class="mb-3">
-                  <label for="firstname" class="form-label">First name</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="firstname"
-                    required
-                    name="firstname"
-                    aria-describedby="firstnameHelp"
-                  />
-                  <small id="firstnameHelp" class="form-text text-muted">
-                    Enter your first name
-                  </small>
-                </div>
+                  <!-- Last name -->
+                  <div class="col-md-4">
+                    <label for="lastname" class="form-label">Last name</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="lastname"
+                      required
+                      aria-describedby="lastnameHelp"
+                    />
+                    <small id="lastnameHelp" class="form-text text-muted">
+                      Enter your last name
+                    </small>
+                  </div>
 
-                <!-- Last name -->
-                <div class="mb-3">
-                  <label for="lastname" class="form-label">Last name</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="lastname"
-                    required
-                    aria-describedby="lastnameHelp"
-                  />
-                  <small id="lastnameHelp" class="form-text text-muted">
-                    Enter your last name
-                  </small>
-                </div>
-
-                <!-- Email -->
-                <div class="mb-3">
-                  <label for="email" class="form-label">Email</label>
-                  <input
-                    type="email"
-                    class="form-control"
-                    id="email"
-                    required
-                    aria-describedby="emailHelp"
-                  />
-                  <small id="emailHelp" class="form-text text-muted">
-                    Enter a valid email address
-                  </small>
-                </div>
-
-                <!-- Phone number -->
-                <div class="mb-3">
-                  <label for="phone" class="form-label">Phone number</label>
-                  <input
-                    type="tel"
-                    class="form-control"
-                    id="phone"
-                    maxlength="11"
-                    pattern="^0[7-9][0-1]\d{8}$"
-                    required
-                    autocomplete="tel-national"
-                    aria-describedby="phoneHelp"
-                  />
-                  <small id="phoneHelp" class="form-text text-muted">
-                    Enter a valid Nigerian phone number
-                  </small>
-                </div>
-
-                <div class="step-buttons">
-                  <button type="button" class="btn btn-success" id="nextButton">
-                    Next
-                  </button>
+                  <!-- Email -->
+                  <div class="col-md-6">
+                    <label for="email" class="form-label">Email</label>
+                    <input
+                      type="email"
+                      class="form-control"
+                      id="email"
+                      required
+                      aria-describedby="emailHelp"
+                    />
+                    <small id="emailHelp" class="form-text text-muted">
+                      Enter a valid email address
+                    </small>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="phone" class="form-label">Phone number</label>
+                    <input
+                      type="tel"
+                      class="form-control"
+                      id="phone"
+                      maxlength="11"
+                      pattern="^0[7-9][0-1]\d{8}$"
+                      required
+                      autocomplete="tel-national"
+                      aria-describedby="phoneHelp"
+                    />
+                    <small id="phoneHelp" class="form-text text-muted">
+                      Enter a valid Nigerian phone number
+                    </small>
+                  </div>
+                  <div class="step-buttons">
+                    <button
+                      type="button"
+                      class="btn btn-success"
+                      id="nextButton"
+                    >
+                      Next
+                    </button>
+                  </div>
                 </div>
               </div>
 
-              <!-- Step 2 -->
+              <!-- Phone number -->
+
               <div id="step2" class="step-content d-none">
-                <!-- State -->
-                <div class="mb-3">
-                  <label for="stateOfOrigin" class="form-label">State</label>
-                  <select
-                    id="stateOfOrigin"
-                    name="stateOfOrigin"
-                    class="form-control"
-                    required
-                    aria-describedby="stateHelp"
-                    onchange="updateLocalGovernmentsOfOrigin()"
-                  >
-                    <option value="">Select State</option>
-                    <option value="abia">Abia</option>
-                    <option value="adamawa">Adamawa</option>
-                    <option value="akwa_ibom">Akwa Ibom</option>
-                    <option value="anambra">Anambra</option>
-                    <option value="bauchi">Bauchi</option>
-                    <option value="bayelsa">Bayelsa</option>
-                    <option value="benue">Benue</option>
-                    <option value="borno">Borno</option>
-                    <option value="cross_river">Cross River</option>
-                    <option value="delta">Delta</option>
-                    <option value="ebonyi">Ebonyi</option>
-                    <option value="edo">Edo</option>
-                    <option value="ekiti">Ekiti</option>
-                    <option value="enugu">Enugu</option>
-                    <option value="gombe">Gombe</option>
-                    <option value="imo">Imo</option>
-                    <option value="jigawa">Jigawa</option>
-                    <option value="kaduna">Kaduna</option>
-                    <option value="kano">Kano</option>
-                    <option value="katsina">Katsina</option>
-                    <option value="kebbi">Kebbi</option>
-                    <option value="kogi">Kogi</option>
-                    <option value="kwara">Kwara</option>
-                    <option value="lagos">Lagos</option>
-                    <option value="nasarawa">Nasarawa</option>
-                    <option value="niger">Niger</option>
-                    <option value="ogun">Ogun</option>
-                    <option value="ondo">Ondo</option>
-                    <option value="osun">Osun</option>
-                    <option value="oyo">Oyo</option>
-                    <option value="plateau">Plateau</option>
-                    <option value="rivers">Rivers</option>
-                    <option value="sokoto">Sokoto</option>
-                    <option value="taraba">Taraba</option>
-                    <option value="yobe">Yobe</option>
-                    <option value="zamfara">Zamfara</option>
-                    <option value="abuja">Abuja (FCT)</option>
-                  </select>
-                </div>
-
-                <!-- LGA -->
-                <div class="mb-3">
-                  <label for="lgaOfOrigin" class="form-label">LGA</label>
-                  <select
-                    id="lgaOfOrigin"
-                    name="lgaOfOrigin"
-                    class="form-control"
-                  >
-                    <option value="">Select Local Government</option>
-                  </select>
-                </div>
-
-                <!-- Password -->
-                <div class="mb-3">
-                  <label for="password" class="form-label">Password</label>
-                  <div class="input-group">
-                    <input
-                      type="password"
+                <div class="row g-3">
+                  <!-- State -->
+                  <div class="col-md-6">
+                    <label for="stateOfOrigin" class="form-label">State</label>
+                    <!-- onchange="updateLocalGovernmentsOfOrigin()" -->
+                    <select
+                      id="stateOfOrigin"
+                      name="stateOfOrigin"
                       class="form-control"
-                      id="password"
                       required
-                      aria-describedby="passwordHelp"
-                    />
-                    <button
-                      class="btn btn-outline-secondary password-toggle"
-                      type="button"
-                      data-target="#password"
+                      aria-describedby="stateHelp"
+                      onchange="updateLocalGovernmentsOfOrigin()"
                     >
-                      <i class="fa fa-eye-slash"></i>
-                    </button>
+                      <option value="">Select State</option>
+                      <option value="abia">Abia</option>
+                      <option value="adamawa">Adamawa</option>
+                      <option value="akwa_ibom">Akwa Ibom</option>
+                      <option value="anambra">Anambra</option>
+                      <option value="bauchi">Bauchi</option>
+                      <option value="bayelsa">Bayelsa</option>
+                      <option value="benue">Benue</option>
+                      <option value="borno">Borno</option>
+                      <option value="cross_river">Cross River</option>
+                      <option value="delta">Delta</option>
+                      <option value="ebonyi">Ebonyi</option>
+                      <option value="edo">Edo</option>
+                      <option value="ekiti">Ekiti</option>
+                      <option value="enugu">Enugu</option>
+                      <option value="gombe">Gombe</option>
+                      <option value="imo">Imo</option>
+                      <option value="jigawa">Jigawa</option>
+                      <option value="kaduna">Kaduna</option>
+                      <option value="kano">Kano</option>
+                      <option value="katsina">Katsina</option>
+                      <option value="kebbi">Kebbi</option>
+                      <option value="kogi">Kogi</option>
+                      <option value="kwara">Kwara</option>
+                      <option value="lagos">Lagos</option>
+                      <option value="nasarawa">Nasarawa</option>
+                      <option value="niger">Niger</option>
+                      <option value="ogun">Ogun</option>
+                      <option value="ondo">Ondo</option>
+                      <option value="osun">Osun</option>
+                      <option value="oyo">Oyo</option>
+                      <option value="plateau">Plateau</option>
+                      <option value="rivers">Rivers</option>
+                      <option value="sokoto">Sokoto</option>
+                      <option value="taraba">Taraba</option>
+                      <option value="yobe">Yobe</option>
+                      <option value="zamfara">Zamfara</option>
+                      <option value="abuja">Abuja (FCT)</option>
+                    </select>
                   </div>
-                  <small id="passwordHelp" class="form-text text-muted">
-                    Enter a strong password
-                  </small>
-                </div>
 
-                <!-- Confirm Password -->
-                <div class="mb-3">
-                  <label for="re_password" class="form-label"
-                    >Confirm password</label
-                  >
-                  <div class="input-group">
-                    <input
-                      type="password"
+                  <!-- LGA -->
+                  <div class="col-md-6">
+                    <label for="lgaOfOrigin" class="form-label">LGA</label>
+                    <select
+                      id="lgaOfOrigin"
+                      name="lgaOfOrigin"
                       class="form-control"
-                      id="re_password"
-                      name="re_password"
-                      required
-                      autocomplete="new-password"
-                      aria-describedby="rePasswordHelp"
-                    />
-                    <button
-                      class="btn btn-outline-secondary password-toggle"
-                      type="button"
-                      data-target="#re_password"
                     >
-                      <i class="fa fa-eye-slash"></i>
-                    </button>
+                      <option value="">Select Local Government</option>
+                    </select>
                   </div>
-                  <small id="rePasswordHelp" class="form-text text-muted">
-                    Re-type your password
-                  </small>
-                </div>
 
-                <!-- Password validation -->
-                <div class="password-validation d-flex flex-wrap gap-2 mt-2">
-                  <div class="d-flex align-items-center small">
-                    <i
-                      class="fas fa-check-circle me-1 invalid"
-                      id="lengthCheck"
-                    ></i>
-                    <span class="invalid" id="lengthText">8 Characters</span>
+                  <!-- Password -->
+                  <div class="col-md-6">
+                    <label for="password" class="form-label">Password</label>
+                    <div class="input-group">
+                      <input
+                        type="password"
+                        class="form-control"
+                        id="password"
+                        required
+                        aria-describedby="passwordHelp"
+                      />
+                      <button
+                        class="btn btn-outline-secondary password-toggle"
+                        type="button"
+                        data-target="#password"
+                      >
+                        <i class="fa fa-eye-slash"></i>
+                      </button>
+                    </div>
+                    <small id="passwordHelp" class="form-text text-muted">
+                      Enter a strong password
+                    </small>
                   </div>
-                  <div class="d-flex align-items-center small">
-                    <i
-                      class="fas fa-check-circle me-1 invalid"
-                      id="symbolCheck"
-                    ></i>
-                    <span class="invalid" id="symbolText">One symbol</span>
-                  </div>
-                  <div class="d-flex align-items-center small">
-                    <i
-                      class="fas fa-check-circle me-1 invalid"
-                      id="capitalCheck"
-                    ></i>
-                    <span class="invalid" id="capitalText"
-                      >One capital letter</span
+
+                  <!-- Confirm Password -->
+                  <div class="col-md-6">
+                    <label for="re_password" class="form-label"
+                      >Confirm password</label
                     >
+                    <div class="input-group">
+                      <input
+                        type="password"
+                        class="form-control"
+                        id="re_password"
+                        name="re_password"
+                        required
+                        autocomplete="new-password"
+                        aria-describedby="rePasswordHelp"
+                      />
+                      <button
+                        class="btn btn-outline-secondary password-toggle"
+                        type="button"
+                        data-target="#re_password"
+                      >
+                        <i class="fa fa-eye-slash"></i>
+                      </button>
+                    </div>
+                    <small id="rePasswordHelp" class="form-text text-muted">
+                      Re-type your password
+                    </small>
                   </div>
-                  <div class="d-flex align-items-center small">
-                    <i
-                      class="fas fa-check-circle me-1 invalid"
-                      id="numberCheck"
-                    ></i>
-                    <span class="invalid" id="numberText">One number</span>
+
+                  <!-- Password validation -->
+                  <div class="password-validation d-flex flex-wrap gap-2 mt-2">
+                    <div class="d-flex align-items-center small">
+                      <i
+                        class="fas fa-check-circle me-1 invalid"
+                        id="lengthCheck"
+                      ></i>
+                      <span class="invalid" id="lengthText">8 Characters</span>
+                    </div>
+                    <div class="d-flex align-items-center small">
+                      <i
+                        class="fas fa-check-circle me-1 invalid"
+                        id="symbolCheck"
+                      ></i>
+                      <span class="invalid" id="symbolText">One symbol</span>
+                    </div>
+                    <div class="d-flex align-items-center small">
+                      <i
+                        class="fas fa-check-circle me-1 invalid"
+                        id="capitalCheck"
+                      ></i>
+                      <span class="invalid" id="capitalText"
+                        >One capital letter</span
+                      >
+                    </div>
+                    <div class="d-flex align-items-center small">
+                      <i
+                        class="fas fa-check-circle me-1 invalid"
+                        id="numberCheck"
+                      ></i>
+                      <span class="invalid" id="numberText">One number</span>
+                    </div>
                   </div>
                 </div>
-
                 <div class="step-buttons">
                   <button
                     type="button"
@@ -961,7 +927,7 @@
 
         // Helper function to display error messages
         const showError = (input, message) => {
-          const formGroup = input.closest(".mb-3");
+          const formGroup = input.closest(".col-md-6");
           const errorElement = formGroup.querySelector(".error-message");
 
           if (!errorElement) {
@@ -978,7 +944,7 @@
 
         // Helper function to display error messages
         const showNINError = (input, message) => {
-          const formGroup = input.closest(".mb-3");
+          const formGroup = input.closest(".col-md-4");
           const errorElement = formGroup.querySelector(".error-message");
 
           if (!errorElement) {
@@ -995,7 +961,7 @@
 
         // Helper function to clear error messages
         const clearError = (input) => {
-          const formGroup = input.closest(".mb-3");
+          const formGroup = input.closest(".col-md-6");
           const errorElement = formGroup.querySelector(".error-message");
 
           if (errorElement) {
@@ -1006,7 +972,7 @@
         };
 
         const clearNINError = (input) => {
-          const formGroup = input.closest(".mb-3");
+          const formGroup = input.closest(".col-md-4");
           const errorElement = formGroup.querySelector(".error-message");
 
           if (errorElement) {

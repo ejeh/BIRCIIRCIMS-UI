@@ -3,481 +3,266 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Reference Verification</title>
-    <!-- Bootstrap 5 CSS -->
+    <title>
+      Login - Benue State Integrated Citizenship and Resident Identity
+      Registration Management System
+    </title>
+    <!-- Bootstrap CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <!-- Bootstrap Icons -->
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css" />
+    <!-- Font Awesome for icons -->
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
+    <script type="text/javascript" src="../../js/index.js"></script>
+
+    <link
+      rel="icon"
+      type="image/png"
+      href="/assets/images/benue-state-logo.png"
+      sizes="16x16"
+    />
+
     <style>
-      .verification-container {
-        max-width: 800px;
-        margin: 2rem auto;
-        padding: 2rem;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      .green-sidebar {
+        /* The gradient overlay is on top, the image is on the bottom */
+        background-image: linear-gradient(
+            rgba(25, 135, 84, 0.7),
+            rgba(25, 135, 84, 0.7)
+          ),
+          url("/assets/images/istockphoto-922266274-612x612.jpg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
       }
-      .applicant-info {
-        background-color: #f8f9fa;
-        padding: 1rem;
-        border-radius: 6px;
-        margin-bottom: 1.5rem;
-      }
-      .expired-notice {
-        background-color: #fff3cd;
-        border: 1px solid #ffeeba;
-        color: #856404;
-        padding: 1rem;
-        border-radius: 6px;
-        margin-bottom: 1.5rem;
-      }
-      .loading-spinner {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 200px;
-      }
-      .confirmation-message {
-        display: none;
-        text-align: center;
-        padding: 2rem;
-      }
-      .mock-mode-toggle {
-        position: fixed;
+
+      /* Optional: Add a drop shadow to the fingerprint image for better visibility */
+      .svg-position {
+        filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.3));
+        width: 75px;
+        height: auto;
+        position: absolute;
         bottom: 20px;
-        right: 20px;
-        z-index: 1000;
+        left: 20px;
+        opacity: 0.6;
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <div class="verification-container">
-        <div class="text-center mb-4">
-          <h2>Reference Verification</h2>
-          <p class="text-muted">Please verify the information below</p>
-        </div>
+    <div class="container-fluid p-0">
+      <div class="row g-0">
+        <!-- Green sidebar -->
+        <div class="col-md-5 green-sidebar p-4 text-white d-flex flex-column">
+          <div class="d-flex align-items-center mb-4">
+            <a href="../../index.html">
+              <div class="benue-logo me-3"></div>
+            </a>
+          </div>
 
-        <!-- Loading State -->
-        <div id="loadingState" class="loading-spinner">
-          <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
+          <h2 class="fs-3 fw-bold mb-2">Benue State Integrated</h2>
+          <h2 class="fs-3 fw-bold mb-1">Citizenship and Resident Identity</h2>
+          <h2 class="fs-3 fw-bold mb-1">Registration Management System</h2>
+
+          <!-- Mobile buttons -->
+          <div class="d-flex d-md-none gap-3 mb-4 w-100">
+            <a href="register.html" class="btn btn-outline-light flex-grow-1"
+              >Register</a
+            >
+            <a href="login.html" class="btn btn-light text-success flex-grow-1"
+              >Log in</a
+            >
+          </div>
+
+          <!-- Certificate image -->
+          <div class="mt-3 mb-4 rounded overflow-hidden">
+            <img
+              src="/assets/images/Finger-print.svg"
+              alt="finger print"
+              class="img-fluid rounded svg-position"
+            />
           </div>
         </div>
 
-        <!-- Expired Token Notice -->
-        <div id="expiredNotice" class="expired-notice d-none">
-          <h5>
-            <i class="bi bi-exclamation-triangle-fill"></i> Verification Link
-            Expired
-          </h5>
-          <p>
-            This verification link has expired. Please contact the applicant for
-            a new verification link.
-          </p>
-        </div>
-
-        <!-- Verification Form -->
-        <div id="verificationForm" class="d-none">
-          <div class="applicant-info">
-            <h5>Applicant Information</h5>
-            <div class="row">
-              <div class="col-md-6">
-                <p><strong>Name:</strong> <span id="applicantName"></span></p>
-                <p>
-                  <strong>Reference Type:</strong>
-                  <span id="referenceType"></span>
-                </p>
-              </div>
-              <div class="col-md-6">
-                <p>
-                  <strong>Your Name:</strong> <span id="referenceName"></span>
-                </p>
-                <p>
-                  <strong>Verification Token:</strong>
-                  <span id="tokenDisplay"></span>
-                </p>
-              </div>
-            </div>
+        <!-- Login form -->
+        <div class="col-md-7 p-4 p-md-5">
+          <div class="d-none d-md-flex justify-content-end mb-4">
+            <a href="login.html" class="btn btn-success">Login</a>
           </div>
 
-          <form id="referenceVerificationForm">
-            <div class="mb-3">
-              <label for="knowsApplicant" class="form-label"
-                >Do you know this person?</label
-              >
-              <select class="form-select" id="knowsApplicant" required>
-                <option value="" selected disabled>Please select...</option>
-                <option value="true">Yes, I know this person</option>
-                <option value="false">No, I don't know this person</option>
-              </select>
-            </div>
+          <h2 class="fs-4 fw-bold mb-4">
+            Welcome Back! Please log in to your account
+          </h2>
 
+          <form id="signInForm">
             <div class="mb-3">
-              <label for="knownDuration" class="form-label"
-                >How long have you known this person?</label
-              >
+              <label for="email" class="form-label">Email</label>
               <input
-                type="text"
+                type="email"
                 class="form-control"
-                id="knownDuration"
-                placeholder="e.g., 2 years, 6 months"
+                id="email"
+                placeholder="Enter your email"
                 required
               />
             </div>
 
             <div class="mb-3">
-              <label for="isResident" class="form-label"
-                >Is this person a resident at the provided address?</label
+              <label for="password" class="form-label">Password</label>
+              <div class="input-group">
+                <input
+                  type="password"
+                  class="form-control"
+                  id="password"
+                  placeholder="Enter your password"
+                  required
+                />
+                <button
+                  class="btn btn-outline-secondary toggle-password"
+                  id="togglePassword"
+                  type="button"
+                >
+                  <i class="fa fa-eye-slash"></i>
+                </button>
+              </div>
+            </div>
+            <div class="mb-3 form-check">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="rememberMe"
+                name="rememberMe"
+              />
+              <label class="form-check-label" for="rememberMe"
+                >Remember Me</label
               >
-              <select class="form-select" id="isResident" required>
-                <option value="" selected disabled>Please select...</option>
-                <option value="true">Yes, they are a resident</option>
-                <option value="false">No, they are not a resident</option>
-              </select>
             </div>
 
-            <div class="mb-3">
-              <label for="comments" class="form-label"
-                >Additional Comments</label
+            <div class="text-end mb-4">
+              <a href="forgot-password.html" class="text-success"
+                >Forgot password?</a
               >
-              <textarea
-                class="form-control"
-                id="comments"
-                rows="4"
-                placeholder="Please provide any additional information that might help verify this person..."
-              ></textarea>
             </div>
 
-            <div class="d-grid gap-2">
-              <button type="submit" class="btn btn-primary">
-                <i class="bi bi-check-circle"></i> Submit Verification
-              </button>
-            </div>
+            <!-- Login button -->
+            <button type="submit" class="btn btn-success w-100 mt-2">
+              Log in
+            </button>
           </form>
-        </div>
 
-        <!-- Confirmation Message -->
-        <div id="confirmationMessage" class="confirmation-message">
-          <i
-            class="bi bi-check-circle-fill text-success"
-            style="font-size: 3rem"
-          ></i>
-          <h3 class="mt-3">Thank You!</h3>
-          <p>
-            Your verification has been submitted successfully for
-            <span id="confirmedApplicantName"></span>.
-          </p>
-          <p>Your response: <span id="verificationResult"></span></p>
-          <p class="text-muted">This page can now be closed.</p>
-        </div>
+          <!-- Register link -->
+          <div class="text-center mt-4">
+            Don't have an account?
+            <a href="register.html" class="text-success fw-medium">Register</a>
+          </div>
 
-        <!-- Mock Mode Toggle -->
-        <div class="form-check form-switch mock-mode-toggle">
-          <input class="form-check-input" type="checkbox" id="mockModeToggle" />
-          <label class="form-check-label" for="mockModeToggle">Mock Mode</label>
+          <div class="copyright">
+            Powered By BDIC <br />© 2025 All Rights Reserved
+          </div>
         </div>
+        <img src="" alt="" />
       </div>
     </div>
-
-    <!-- Bootstrap 5 JS Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.0/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script type="text/javascript" src="../js/index.js"></script>
+    <!-- Custom Script -->
 
     <script>
-      // Configuration
-      const CONFIG = {
-        // Replace with your actual backend URL when deploying
-        // BACKEND_URL: "https:/localhost:5000",
-        // Set to true to use mock data for testing
-        MOCK_MODE: false,
-      };
-
-      // Global variables
-      let mockMode = false;
-      let verificationData = null;
-
-      // Mock data for testing
-      const MOCK_DATA = {
-        referenceData: {
-          applicant: {
-            name: "John Smith",
-            address: "123 Main St, Anytown, USA",
-          },
-          reference: {
-            name: "Jane Doe",
-            type: "neighbor",
-            phone: "+1234567890",
-          },
-          token: "mock-token-12345",
-          expiryDate: "2023-06-30T23:59:59Z",
-        },
-        submitResponse: {
-          success: true,
-          message: "Verification submitted successfully",
-        },
-      };
-
-      // Initialize the page
       $(document).ready(function () {
-        // Get token from URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get("token");
-
-        if (!token) {
-          showError(
-            "Invalid verification link. Please check the URL and try again."
-          );
-          return;
+        // Check if there's a saved email in localStorage
+        const savedEmail = localStorage.getItem("rememberMeEmail");
+        if (savedEmail) {
+          $("#email").val(savedEmail);
+          $("#rememberMe").prop("checked", true);
         }
 
-        // Set up event listeners
-        $("#mockModeToggle").change(toggleMockMode);
-        $("#referenceVerificationForm").submit(submitVerification);
-
-        // Load verification data
-        loadVerificationData(token);
-      });
-
-      // Toggle mock mode
-      function toggleMockMode() {
-        mockMode = $(this).prop("checked");
-        CONFIG.MOCK_MODE = mockMode;
-
-        if (mockMode) {
-          showToast("Mock mode enabled. Using test data.", "success");
-        } else {
-          showToast("Mock mode disabled. Using real API.", "success");
-        }
-
-        // Reload verification data with the new mode
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get("token");
-        loadVerificationData(token);
-      }
-
-      // Load verification data from the backend
-      function loadVerificationData(token) {
-        // Show loading state
-        $("#loadingState").show();
-        $("#verificationForm").hide();
-        $("#expiredNotice").hide();
-        $("#confirmationMessage").hide();
-
-        if (CONFIG.MOCK_MODE) {
-          // Simulate API delay
-          setTimeout(function () {
-            verificationData = MOCK_DATA.referenceData;
-
-            // Check if token is expired
-            const expiryDate = new Date(verificationData.expiryDate);
-            const now = new Date();
-
-            if (expiryDate < now) {
-              $("#expiredNotice").show();
-            } else {
-              populateVerificationForm();
-              $("#verificationForm").show();
-            }
-
-            $("#loadingState").hide();
-          }, 1000);
-          return;
-        }
-
-        // Real API call
-        $.ajax({
-          url: `${BACKEND_URL}/users/verify-reference/${token}`,
-          type: "GET",
-          success: function (response) {
-            verificationData = response;
-
-            console.log("verificationData", verificationData);
-
-            // Check if token is expired
-            const expiryDate = new Date(verificationData.expiryDate);
-            const now = new Date();
-
-            if (expiryDate < now) {
-              $("#expiredNotice").show();
-            } else {
-              populateVerificationForm();
-              $("#verificationForm").show();
-            }
-          },
-          error: function (xhr) {
-            let errorMessage = "Failed to load verification data.";
-            if (xhr.responseJSON && xhr.responseJSON.message) {
-              errorMessage = xhr.responseJSON.message;
-            }
-
-            // Check if it's an expired token error
-            if (xhr.status === 410) {
-              $("#expiredNotice").show();
-            } else {
-              showError(errorMessage);
-            }
-          },
-          complete: function () {
-            $("#loadingState").hide();
-          },
+        // Toggle password visibility
+        $("#togglePassword").click(function () {
+          const passwordInput = $("#password");
+          const type =
+            passwordInput.attr("type") === "password" ? "text" : "password";
+          passwordInput.attr("type", type);
+          $(this).find("i").toggleClass("fa-eye fa-eye-slash");
         });
-      }
 
-      // Populate the verification form with data
-      function populateVerificationForm() {
-        $("#applicantName").text(verificationData.applicant.name);
-        $("#referenceType").text(
-          verificationData.referenceType.charAt(0).toUpperCase() +
-            verificationData.referenceType.slice(1)
-        );
-        $("#referenceName").text(verificationData.applicant.fulname);
-        // $("#tokenDisplay").text(verificationData.token.substring(0, 8) + "...");
-      }
+        // Handle form submission
+        $("#signInForm").on("submit", function (e) {
+          e.preventDefault();
 
-      // Submit verification
-      function submitVerification(e) {
-        e.preventDefault();
+          const email = $("#email").val();
+          const password = $("#password").val();
+          const rememberMe = $("#rememberMe").is(":checked");
 
-        const knowsApplicant = $("#knowsApplicant").val() === "true";
-        const knownDuration = $("#knownDuration").val();
-        const isResident = $("#isResident").val() === "true";
-        const comments = $("#comments").val();
+          if (!email || !password) {
+            Swal.fire("Oops...", "Please fill in all fields", "error");
+            return;
+          }
 
-        const submitBtn = $('#referenceVerificationForm button[type="submit"]');
-        submitBtn
-          .prop("disabled", true)
-          .html(
-            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...'
-          );
+          // Save email to localStorage if "Remember Me" is checked
+          if (rememberMe) {
+            localStorage.setItem("rememberMeEmail", email);
+          } else {
+            localStorage.removeItem("rememberMeEmail");
+          }
 
-        const payload = {
-          knowsApplicant,
-          knownDuration,
-          isResident,
-          comments,
-        };
+          $.ajax({
+            type: "POST",
+            url: `${BACKEND_URL}/auth/login`,
+            contentType: "application/json",
+            data: JSON.stringify({ email, password }),
+            beforeSend: function () {
+              $("button[type='submit']")
+                .html("<i class='fa fa-spinner fa-spin'></i>")
+                .prop("disabled", true);
+            },
+            success: function (data) {
+              const { role } = data.user;
+              console.log(role);
+              if (role === "global_admin") {
+                window.location.href = "../../app/global-admin-dashboard.html";
+              }
+              if (role === "super_admin" || role === "support_admin") {
+                // window.location.href = "../../app/index.html";
+                window.location.href = "../../app/support-admin-dashboard.html";
+              }
 
-        if (CONFIG.MOCK_MODE) {
-          // Simulate API delay
-          setTimeout(function () {
-            const response = MOCK_DATA.submitResponse;
+              if (role === "user") {
+                // window.location.href = "../../app/user-dasboard.html";
+                window.location.href = "../../app/user-dashboard.html";
+              }
 
-            if (response.success) {
-              showConfirmation(
-                verificationData.applicant.name,
-                knowsApplicant ? "Verified" : "Not Verified"
+              if (role === "kindred_head") {
+                window.location.href = "../../app/kindred-dasboard.html";
+              }
+            },
+            error: function (data) {
+              Swal.fire(
+                "Oops...",
+                data.responseJSON.message || "Login failed",
+                "error"
               );
-            } else {
-              showError(response.message || "Failed to submit verification");
-            }
-
-            submitBtn
-              .prop("disabled", false)
-              .html('<i class="bi bi-check-circle"></i> Submit Verification');
-          }, 1500);
-          return;
-        }
-
-        // Real API call
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get("token");
-
-        $.ajax({
-          url: `${CONFIG.BACKEND_URL}/users/verify-reference/${token}`,
-          type: "POST",
-          data: payload,
-          success: function (response) {
-            showConfirmation(
-              verificationData.applicant.name,
-              knowsApplicant ? "Verified" : "Not Verified"
-            );
-          },
-          error: function (xhr) {
-            let errorMessage = "Failed to submit verification.";
-            if (xhr.responseJSON && xhr.responseJSON.message) {
-              errorMessage = xhr.responseJSON.message;
-            }
-            showError(errorMessage);
-          },
-          complete: function () {
-            submitBtn
-              .prop("disabled", false)
-              .html('<i class="bi bi-check-circle"></i> Submit Verification');
-          },
+            },
+            complete: function () {
+              $("button[type='submit']").html("Login").prop("disabled", false);
+            },
+          }).done((res) => {
+            const data = res;
+            localStorage.setItem("token", JSON.stringify(data));
+          });
         });
-      }
-
-      // Show confirmation message
-      function showConfirmation(applicantName, result) {
-        $("#confirmedApplicantName").text(applicantName);
-        $("#verificationResult").text(result);
-
-        $("#verificationForm").hide();
-        $("#confirmationMessage").show();
-      }
-
-      // Show error message
-      function showError(message) {
-        $("#loadingState").hide();
-        $("#verificationForm").hide();
-        $("#expiredNotice").hide();
-
-        const errorHtml = `
-                <div class="alert alert-danger" role="alert">
-                    <h5><i class="bi bi-exclamation-triangle-fill"></i> Error</h5>
-                    <p>${message}</p>
-                </div>
-            `;
-
-        $("#loadingState").after(errorHtml);
-      }
-
-      // Show toast notification
-      function showToast(message, type) {
-        // Create toast element if it doesn't exist
-        if (!$("#notificationToast").length) {
-          $("body").append(`
-                    <div class="toast-container position-fixed bottom-0 end-0 p-3">
-                        <div id="notificationToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                            <div class="toast-header bg-${
-                              type === "success" ? "success" : "danger"
-                            } text-white">
-                                <i class="bi bi-${
-                                  type === "success"
-                                    ? "check-circle"
-                                    : "exclamation-triangle"
-                                }-fill me-2"></i>
-                                <strong class="me-auto">${
-                                  type === "success" ? "Success" : "Error"
-                                }</strong>
-                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
-                            </div>
-                            <div class="toast-body" id="notificationToastBody">
-                                ${message}
-                            </div>
-                        </div>
-                    </div>
-                `);
-        } else {
-          $("#notificationToastBody").text(message);
-          $("#notificationToast .toast-header")
-            .removeClass("bg-success bg-danger")
-            .addClass(type === "success" ? "bg-success" : "bg-danger");
-        }
-
-        const toast = new bootstrap.Toast(
-          document.getElementById("notificationToast")
-        );
-        toast.show();
-      }
+      });
     </script>
+
+    <!-- jQuery and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

@@ -3,2005 +3,1721 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Refactored Multi-Step Form</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <title>
+      Benue State Integrated Citizenship and Resident Identity Registration
+      Management System
+    </title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css" />
+    <!-- Font Awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <link
+      rel="icon"
+      type="image/png"
+      href="/assets/images/benue-state-logo.png"
+      sizes="16x16"
+    />
+    <!-- <script src="../src/ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script> -->
+
+    <script type="text/javascript" src="../../js/index.js"></script>
     <style>
-      .status-indicator {
-        position: fixed;
-        top: 10px;
-        right: 10px;
-        padding: 8px 12px;
-        border-radius: 4px;
-        font-weight: bold;
-        z-index: 1000;
+      .progress-indicator {
+        width: 3px;
+        height: 1px;
       }
-      .status-saving {
-        background: #ffc107;
-        color: #000;
+
+      .progress-indicator.active {
+        background-color: #198754;
       }
-      .status-saved {
-        background: #28a745;
-        color: #fff;
+
+      .progress-indicator.inactive {
+        background-color: #dee2e6;
       }
-      .status-error {
-        background: #dc3545;
-        color: #fff;
+
+      .password-validation .valid {
+        color: #198754;
       }
+
+      .password-validation .invalid {
+        color: #6c757d;
+      }
+
+      .step-buttons {
+        display: flex;
+        gap: 10px;
+      }
+
+      .step-buttons .btn {
+        flex: 1;
+      }
+      .green-sidebar {
+        /* The gradient overlay is on top, the image is on the bottom */
+        background-image: linear-gradient(
+            rgba(25, 135, 84, 0.7),
+            rgba(25, 135, 84, 0.7)
+          ),
+          url("/assets/images/istockphoto-922266274-612x612.jpg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+
+      /* Optional: Add a drop shadow to the fingerprint image for better visibility */
+      .svg-position {
+        filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.3));
+        width: 75px;
+        height: auto;
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        opacity: 0.6;
+      }
+
+      /* .svg-position {
+        width: 75px;
+        height: auto;
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        opacity: 0.6;
+      } */
     </style>
   </head>
+
   <body>
-    <div id="autoSaveStatus" class="status-indicator">Ready</div>
-    <script>
-      $(document).ready(function () {
-        // Form steps data
-        const steps = [
-          { id: "profile", title: "Profile Details", icon: "bi-person" },
-          { id: "address", title: "Residential Address", icon: "bi-geo-alt" },
-          { id: "identity", title: "Identification", icon: "bi-credit-card" },
-          { id: "nok", title: "Next of Kin", icon: "bi-people" },
-          { id: "contacts", title: "Contact Details", icon: "bi-telephone" },
-          { id: "family", title: "Family Details", icon: "bi-people" },
-          { id: "business", title: "Business Details", icon: "bi-briefcase" },
-          {
-            id: "employment",
-            title: "Employment History",
-            icon: "bi-briefcase",
-          },
-          {
-            id: "education",
-            title: "Education Details",
-            icon: "bi-mortarboard",
-          },
-          { id: "health", title: "Health Information", icon: "bi-heart" },
-        ];
-
-        let currentStep = 0;
-
-        // Use unique IDs instead of indices to prevent renumbering issues
-        let nextNeighborId = 1;
-        let nextFamilyId = 1;
-        let nextEmploymentId = 1;
-        let nextInstitutionId = 1;
-
-        // Keep track of active items
-        const activeNeighbors = new Set();
-        const activeFamilyMembers = new Set();
-        const activeEmployments = new Set();
-        const activeInstitutions = new Set();
-
-        // Initialize form
-        updateStepDisplay();
-
-        // Initialize first items
-        activeNeighbors.add(0);
-        activeFamilyMembers.add(0);
-        activeEmployments.add(0);
-        activeInstitutions.add(0);
-
-        // Identification type change handler
-        $("#identification").change(function () {
-          const value = $(this).val();
-          $("#other-identification-container").toggle(value === "others");
-        });
-
-        // Generic function to create item HTML
-        function createNeighborHTML(id, displayNumber) {
-          return `
-      <div class="neighbor-item" data-id="${id}">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <label class="form-label">Neighbor ${displayNumber}</label>
-          <button type="button" class="btn btn-outline-danger btn-sm remove-neighbor" data-id="${id}">
-            <i class="bi bi-dash"></i>
-          </button>
-        </div>
-        <div class="row g-3">
-          <div class="col-md-4">
-            <input type="text" class="form-control" name="neighbor_name_${id}" placeholder="Full Name">
+    <div class="container-fluid p-0">
+      <div class="row g-0">
+        <!-- Green sidebar -->
+        <div class="col-md-5 green-sidebar p-4 text-white d-flex flex-column">
+          <div class="d-flex align-items-center mb-4">
+            <a href="../../index.html">
+              <div class="benue-logo me-3"></div>
+            </a>
           </div>
-          <div class="col-md-4">
-            <input type="text" class="form-control" name="neighbor_address_${id}" placeholder="Residential Address">
+
+          <h2 class="fs-3 fw-bold mb-2">Benue State Integrated</h2>
+          <h2 class="fs-3 fw-bold mb-1">Citizenship and Resident Identity</h2>
+          <h2 class="fs-3 fw-bold mb-1">Registration Management System</h2>
+
+          <!-- Mobile buttons -->
+          <div class="d-flex d-md-none gap-3 mb-4 w-100">
+            <a
+              href="register.html"
+              class="btn btn-light text-success flex-grow-1"
+              >Register</a
+            >
+            <a href="login.html" class="btn btn-outline-light flex-grow-1"
+              >Log in</a
+            >
           </div>
-          <div class="col-md-4">
-            <input type="tel" class="form-control" name="neighbor_phone_${id}" placeholder="Phone Number">
+
+          <!-- Certificate image -->
+          <div class="mt-3 mb-4 rounded overflow-hidden">
+            <img
+              src="/assets/images/finger-print.svg"
+              alt="finger print"
+              class="img-fluid rounded svg-position"
+            />
           </div>
         </div>
-      </div>
-    `;
-        }
 
-        function createFamilyHTML(id, displayNumber) {
-          return `
-      <div class="family-item" data-id="${id}">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <label class="form-label">Family Member ${displayNumber}</label>
-          <button type="button" class="btn btn-outline-danger btn-sm remove-family-member" data-id="${id}">
-            <i class="bi bi-dash"></i>
-          </button>
-        </div>
-        <div class="row g-3">
-          <div class="col-md-3">
-            <input type="text" class="form-control" name="family_name_${id}" placeholder="Full Name">
+        <!-- Registration form -->
+        <div class="col-md-7 p-4 p-md-5">
+          <div class="d-none d-md-flex justify-content-end mb-4">
+            <a href="register.html" class="btn btn-success">Register</a>
           </div>
-          <div class="col-md-3">
-            <input type="text" class="form-control" name="family_relationship_${id}" placeholder="Relationship">
-          </div>
-          <div class="col-md-3">
-            <input type="text" class="form-control" name="family_address_${id}" placeholder="Residential Address">
-          </div>
-          <div class="col-md-3">
-            <input type="tel" class="form-control" name="family_phone_${id}" placeholder="Phone Number">
-          </div>
-        </div>
-      </div>
-    `;
-        }
 
-        function createEmploymentHTML(id, displayNumber) {
-          return `
-      <div class="employment-item" data-id="${id}">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <label class="form-label">Employment ${displayNumber}</label>
-          <button type="button" class="btn btn-outline-danger btn-sm remove-employment" data-id="${id}">
-            <i class="bi bi-dash"></i>
-          </button>
-        </div>
-        
-        <div class="row g-3">
-          <div class="col-md-6">
-            <label class="form-label">Company Name</label>
-            <input type="text" class="form-control" name="companyName_${id}" placeholder="Enter company name">
-          </div>
-          <div class="col-md-6">
-            <label class="form-label">Address</label>
-            <input type="text" class="form-control" name="employment_address_${id}" placeholder="Enter company address">
-          </div>
-          <div class="col-md-6">
-            <label class="form-label">Designation</label>
-            <input type="text" class="form-control" name="designation_${id}" placeholder="Enter your designation">
-          </div>
-          <div class="col-md-6">
-            <label class="form-label">Start Year</label>
-            <input type="number" class="form-control" name="startYear_${id}" placeholder="Enter start year">
-          </div>
-          <div class="col-md-6">
-            <label class="form-label">End Year</label>
-            <input type="number" class="form-control" name="endYear_${id}" placeholder="Enter end year">
-            <p class="text-muted small mt-1">Leave blank if this is your current employment.</p>
-          </div>
-          <div class="col-md-6">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="isCurrentEmployment_${id}" name="isCurrentEmployment_${id}">
-              <label class="form-check-label" for="isCurrentEmployment_${id}">
-                This is my current employment
-              </label>
+          <h2 class="fs-4 fw-bold mb-4">
+            Hello there! Please enter your details to get started
+          </h2>
+          <div class="d-flex justify-content-center gap-3 mt-4">
+            <div class="d-flex align-items-center">
+              <div
+                class="progress-indicator rounded me-2 active"
+                id="step1-indicator"
+              ></div>
+              <span class="small text-success" id="step1-text"
+                >Personal info.</span
+              >
+            </div>
+            <div class="d-flex align-items-center">
+              <div
+                class="progress-indicator rounded me-2 inactive"
+                id="step2-indicator"
+              ></div>
+              <span class="small text-muted" id="step2-text"
+                >Personal info</span
+              >
             </div>
           </div>
-        </div>
 
-        <div class="mt-3">
-          <label class="form-label">Description of Company</label>
-          <textarea class="form-control" name="employment_description_${id}" rows="3" placeholder="Describe the company"></textarea>
+          <form id="signUpForm">
+            <div id="step1" class="step-content">
+              <div class="row g-3">
+                <!-- NIN -->
+                <div class="col-md-4">
+                  <label for="nin" class="form-label">NIN</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="NIN"
+                    name="NIN"
+                    maxlength="11"
+                    minlength="11"
+                    required
+                    inputmode="numeric"
+                    pattern="\d{11}"
+                    aria-describedby="ninHelp"
+                    autocomplete="on"
+                  />
+                  <small id="ninHelp" class="form-text text-muted">
+                    Enter your 11-digit NIN
+                  </small>
+                  <div id="ninStatus" class="mt-1 text-sm text-info"></div>
+                </div>
+                <!-- First name -->
+                <div class="col-md-4">
+                  <label for="firstname" class="form-label">First name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="firstname"
+                    required
+                    name="firstname"
+                    aria-describedby="firstnameHelp"
+                  />
+                  <small id="firstnameHelp" class="form-text text-muted">
+                    Enter your first name
+                  </small>
+                </div>
+
+                <!-- Last name -->
+                <div class="col-md-4">
+                  <label for="lastname" class="form-label">Last name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="lastname"
+                    required
+                    aria-describedby="lastnameHelp"
+                  />
+                  <small id="lastnameHelp" class="form-text text-muted">
+                    Enter your last name
+                  </small>
+                </div>
+
+                <!-- Email -->
+                <div class="col-md-6">
+                  <label for="email" class="form-label">Email</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    required
+                    aria-describedby="emailHelp"
+                  />
+                  <small id="emailHelp" class="form-text text-muted">
+                    Enter a valid email address
+                  </small>
+                </div>
+                <div class="col-md-6">
+                  <label for="phone" class="form-label">Phone number</label>
+                  <input
+                    type="tel"
+                    class="form-control"
+                    id="phone"
+                    maxlength="11"
+                    pattern="^0[7-9][0-1]\d{8}$"
+                    required
+                    autocomplete="tel-national"
+                    aria-describedby="phoneHelp"
+                  />
+                  <small id="phoneHelp" class="form-text text-muted">
+                    Enter a valid Nigerian phone number
+                  </small>
+                </div>
+                <div class="step-buttons">
+                  <button type="button" class="btn btn-success" id="nextButton">
+                    Next
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Phone number -->
+
+            <div id="step2" class="step-content d-none">
+              <div class="row g-3">
+                <!-- State -->
+                <div class="col-md-6">
+                  <label for="stateOfOrigin" class="form-label">State</label>
+                  <!-- onchange="updateLocalGovernmentsOfOrigin()" -->
+                  <select
+                    id="stateOfOrigin"
+                    name="stateOfOrigin"
+                    class="form-control"
+                    required
+                    aria-describedby="stateHelp"
+                    onchange="updateLocalGovernmentsOfOrigin()"
+                  >
+                    <option value="">Select State</option>
+                    <option value="abia">Abia</option>
+                    <option value="adamawa">Adamawa</option>
+                    <option value="akwa_ibom">Akwa Ibom</option>
+                    <option value="anambra">Anambra</option>
+                    <option value="bauchi">Bauchi</option>
+                    <option value="bayelsa">Bayelsa</option>
+                    <option value="benue">Benue</option>
+                    <option value="borno">Borno</option>
+                    <option value="cross_river">Cross River</option>
+                    <option value="delta">Delta</option>
+                    <option value="ebonyi">Ebonyi</option>
+                    <option value="edo">Edo</option>
+                    <option value="ekiti">Ekiti</option>
+                    <option value="enugu">Enugu</option>
+                    <option value="gombe">Gombe</option>
+                    <option value="imo">Imo</option>
+                    <option value="jigawa">Jigawa</option>
+                    <option value="kaduna">Kaduna</option>
+                    <option value="kano">Kano</option>
+                    <option value="katsina">Katsina</option>
+                    <option value="kebbi">Kebbi</option>
+                    <option value="kogi">Kogi</option>
+                    <option value="kwara">Kwara</option>
+                    <option value="lagos">Lagos</option>
+                    <option value="nasarawa">Nasarawa</option>
+                    <option value="niger">Niger</option>
+                    <option value="ogun">Ogun</option>
+                    <option value="ondo">Ondo</option>
+                    <option value="osun">Osun</option>
+                    <option value="oyo">Oyo</option>
+                    <option value="plateau">Plateau</option>
+                    <option value="rivers">Rivers</option>
+                    <option value="sokoto">Sokoto</option>
+                    <option value="taraba">Taraba</option>
+                    <option value="yobe">Yobe</option>
+                    <option value="zamfara">Zamfara</option>
+                    <option value="abuja">Abuja (FCT)</option>
+                  </select>
+                </div>
+
+                <!-- LGA -->
+                <div class="col-md-6">
+                  <label for="lgaOfOrigin" class="form-label">LGA</label>
+                  <select
+                    id="lgaOfOrigin"
+                    name="lgaOfOrigin"
+                    class="form-control"
+                  >
+                    <option value="">Select Local Government</option>
+                  </select>
+                </div>
+
+                <!-- Password -->
+                <div class="col-md-6">
+                  <label for="password" class="form-label">Password</label>
+                  <div class="input-group">
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="password"
+                      required
+                      aria-describedby="passwordHelp"
+                    />
+                    <button
+                      class="btn btn-outline-secondary password-toggle"
+                      type="button"
+                      data-target="#password"
+                    >
+                      <i class="fa fa-eye-slash"></i>
+                    </button>
+                  </div>
+                  <small id="passwordHelp" class="form-text text-muted">
+                    Enter a strong password
+                  </small>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="col-md-6">
+                  <label for="re_password" class="form-label"
+                    >Confirm password</label
+                  >
+                  <div class="input-group">
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="re_password"
+                      name="re_password"
+                      required
+                      autocomplete="new-password"
+                      aria-describedby="rePasswordHelp"
+                    />
+                    <button
+                      class="btn btn-outline-secondary password-toggle"
+                      type="button"
+                      data-target="#re_password"
+                    >
+                      <i class="fa fa-eye-slash"></i>
+                    </button>
+                  </div>
+                  <small id="rePasswordHelp" class="form-text text-muted">
+                    Re-type your password
+                  </small>
+                </div>
+
+                <!-- Password validation -->
+                <div class="password-validation d-flex flex-wrap gap-2 mt-2">
+                  <div class="d-flex align-items-center small">
+                    <i
+                      class="fas fa-check-circle me-1 invalid"
+                      id="lengthCheck"
+                    ></i>
+                    <span class="invalid" id="lengthText">8 Characters</span>
+                  </div>
+                  <div class="d-flex align-items-center small">
+                    <i
+                      class="fas fa-check-circle me-1 invalid"
+                      id="symbolCheck"
+                    ></i>
+                    <span class="invalid" id="symbolText">One symbol</span>
+                  </div>
+                  <div class="d-flex align-items-center small">
+                    <i
+                      class="fas fa-check-circle me-1 invalid"
+                      id="capitalCheck"
+                    ></i>
+                    <span class="invalid" id="capitalText"
+                      >One capital letter</span
+                    >
+                  </div>
+                  <div class="d-flex align-items-center small">
+                    <i
+                      class="fas fa-check-circle me-1 invalid"
+                      id="numberCheck"
+                    ></i>
+                    <span class="invalid" id="numberText">One number</span>
+                  </div>
+                </div>
+              </div>
+              <div class="step-buttons">
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary"
+                  id="previousButton"
+                >
+                  Previous
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-success"
+                  id="proceedButton"
+                >
+                  Proceed
+                </button>
+              </div>
+            </div>
+          </form>
+
+          <!-- Login link -->
+          <div class="text-center mt-4">
+            Already have an account?
+            <a href="login.html" class="text-success fw-medium">Login</a>
+          </div>
+
+          <div class="copyright">
+            Powered By BDIC <br />© 2025 All Rights Reserved
+          </div>
         </div>
       </div>
-    `;
-        }
+    </div>
+    <!-- Bootstrap 5.3.0 JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <!-- jQuery (if still needed) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+      $(document).ready(function () {
+        // Form data object that matches the API structure
+        const formData = {
+          firstname: "",
+          lastname: "",
+          email: "",
+          password: "",
+          phone: "",
+          NIN: "",
+          lgaOfOrigin: "",
+          stateOfOrigin: "",
+          confirmPassword: "",
+        };
+        let currentStep = 1;
 
-        function createInstitutionHTML(id, displayNumber) {
-          return `
-      <div class="institution-item border rounded p-4 mt-3" data-id="${id}">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <label class="form-label">Tertiary Institution ${displayNumber}</label>
-          <button type="button" class="btn btn-outline-danger btn-sm remove-institution" data-id="${id}">
-            <i class="bi bi-dash"></i>
-          </button>
-        </div>
-        
-        <div class="row g-3">
-          <div class="col-md-6">
-            <input type="text" class="form-control" name="tertiaryInstitution_name_${id}" placeholder="Name of Tertiary Institution">
-          </div>
-          <div class="col-md-6">
-            <input type="text" class="form-control" name="tertiaryInstitution_address_${id}" placeholder="Address of Tertiary Institution">
-          </div>
-          <div class="col-md-6">
-            <input type="text" class="form-control" name="tertiaryInstitution_certificate_${id}" placeholder="Certificate Obtained">
-          </div>
-          <div class="col-md-6">
-            <input type="text" class="form-control" name="tertiaryInstitution_matricNo_${id}" placeholder="Matriculation Number">
-          </div>
-          <div class="col-md-12">
-            <input type="text" class="form-control" name="tertiaryInstitution_year_${id}" placeholder="Year of Attendance">
-          </div>
-        </div>
-      </div>
-    `;
-        }
-
-        // Function to update display numbers without changing form names
-        function updateDisplayNumbers(
-          containerSelector,
-          itemSelector,
-          labelPrefix,
-          activeSet
-        ) {
-          const items = $(containerSelector).find(itemSelector);
-          items.each(function (index) {
-            $(this)
-              .find(".form-label")
-              .first()
-              .text(`${labelPrefix} ${index + 1}`);
-          });
-
-          // Update remove button visibility
-          const removeButtons = $(containerSelector).find(
-            ".btn-outline-danger"
-          );
-          removeButtons.toggle(activeSet.size > 1);
-        }
-
-        // Add neighbor handler
-        $("#add-neighbor").click(function () {
-          if (activeNeighbors.size < 5) {
-            const id = nextNeighborId++;
-            activeNeighbors.add(id);
-
-            const neighborHtml = createNeighborHTML(id, activeNeighbors.size);
-            $("#neighbors-container").append(neighborHtml);
-
-            // Update UI state
-            $("#neighbor-max-message").toggle(activeNeighbors.size >= 5);
-            $("#add-neighbor").prop("disabled", activeNeighbors.size >= 5);
-            updateDisplayNumbers(
-              "#neighbors-container",
-              ".neighbor-item",
-              "Neighbor",
-              activeNeighbors
-            );
-          }
+        $(".password-toggle").click(function () {
+          const targetSelector = $(this).data("target");
+          const input = $(targetSelector);
+          const type = input.attr("type") === "password" ? "text" : "password";
+          input.attr("type", type);
+          $(this).find("i").toggleClass("fa-eye fa-eye-slash");
         });
 
-        // Remove neighbor handler (delegated)
-        $("#neighbors-container").on("click", ".remove-neighbor", function () {
-          const id = parseInt($(this).data("id"));
-          if (activeNeighbors.size > 1) {
-            $(this).closest(".neighbor-item").remove();
-            activeNeighbors.delete(id);
+        // Password validation
+        $("#password").on("input", function () {
+          const password = $(this).val();
+          formData.password = password;
 
-            // Update UI state
-            $("#neighbor-max-message").hide();
-            $("#add-neighbor").prop("disabled", false);
-            updateDisplayNumbers(
-              "#neighbors-container",
-              ".neighbor-item",
-              "Neighbor",
-              activeNeighbors
-            );
-          }
+          // Validation checks
+          const lengthValid = password.length >= 8;
+          const symbolValid = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+          const capitalValid = /[A-Z]/.test(password);
+          const numberValid = /\d/.test(password);
+
+          // Update UI
+          updateValidationIcon("#lengthCheck", "#lengthText", lengthValid);
+          updateValidationIcon("#symbolCheck", "#symbolText", symbolValid);
+          updateValidationIcon("#capitalCheck", "#capitalText", capitalValid);
+          updateValidationIcon("#numberCheck", "#numberText", numberValid);
         });
 
-        // Add family member handler
-        $("#add-family-member").click(function () {
-          if (activeFamilyMembers.size < 5) {
-            const id = nextFamilyId++;
-            activeFamilyMembers.add(id);
-
-            const familyHtml = createFamilyHTML(id, activeFamilyMembers.size);
-            $("#family-members-container").append(familyHtml);
-
-            // Update UI state
-            $("#family-max-message").toggle(activeFamilyMembers.size >= 5);
-            $("#add-family-member").prop(
-              "disabled",
-              activeFamilyMembers.size >= 5
-            );
-            updateDisplayNumbers(
-              "#family-members-container",
-              ".family-item",
-              "Family Member",
-              activeFamilyMembers
-            );
-          }
-        });
-
-        // Remove family member handler (delegated)
-        $("#family-members-container").on(
-          "click",
-          ".remove-family-member",
-          function () {
-            const id = parseInt($(this).data("id"));
-            if (activeFamilyMembers.size > 1) {
-              $(this).closest(".family-item").remove();
-              activeFamilyMembers.delete(id);
-
-              // Update UI state
-              $("#family-max-message").hide();
-              $("#add-family-member").prop("disabled", false);
-              updateDisplayNumbers(
-                "#family-members-container",
-                ".family-item",
-                "Family Member",
-                activeFamilyMembers
-              );
-            }
-          }
-        );
-
-        // Add employment handler
-        $("#add-employment").click(function () {
-          const id = nextEmploymentId++;
-          activeEmployments.add(id);
-
-          const employmentHtml = createEmploymentHTML(
-            id,
-            activeEmployments.size
-          );
-          $("#employment-history-container").append(employmentHtml);
-
-          updateDisplayNumbers(
-            "#employment-history-container",
-            ".employment-item",
-            "Employment",
-            activeEmployments
-          );
-        });
-
-        // Remove employment handler (delegated)
-        $("#employment-history-container").on(
-          "click",
-          ".remove-employment",
-          function () {
-            const id = parseInt($(this).data("id"));
-            if (activeEmployments.size > 1) {
-              $(this).closest(".employment-item").remove();
-              activeEmployments.delete(id);
-
-              updateDisplayNumbers(
-                "#employment-history-container",
-                ".employment-item",
-                "Employment",
-                activeEmployments
-              );
-            }
-          }
-        );
-
-        // Add institution handler
-        $("#add-institution").click(function () {
-          const id = nextInstitutionId++;
-          activeInstitutions.add(id);
-
-          const institutionHtml = createInstitutionHTML(
-            id,
-            activeInstitutions.size
-          );
-          $("#tertiary-institutions-container").append(institutionHtml);
-
-          updateDisplayNumbers(
-            "#tertiary-institutions-container",
-            ".institution-item",
-            "Tertiary Institution",
-            activeInstitutions
-          );
-        });
-
-        // Remove institution handler (delegated)
-        $("#tertiary-institutions-container").on(
-          "click",
-          ".remove-institution",
-          function () {
-            const id = parseInt($(this).data("id"));
-            if (activeInstitutions.size > 1) {
-              $(this).closest(".institution-item").remove();
-              activeInstitutions.delete(id);
-
-              updateDisplayNumbers(
-                "#tertiary-institutions-container",
-                ".institution-item",
-                "Tertiary Institution",
-                activeInstitutions
-              );
-            }
-          }
-        );
-
-        // Next step handler
-        $("#next-step").click(function () {
-          if (currentStep < steps.length - 1) {
-            currentStep++;
-            updateStepDisplay();
-          }
-        });
-
-        // Previous step handler
-        $("#prev-step").click(function () {
-          if (currentStep > 0) {
-            currentStep--;
-            updateStepDisplay();
-          }
-        });
-
-        // Form submit handler
-        $("#unifiedForm").submit(function (e) {
-          e.preventDefault();
-          // Add your form submission logic here
-          console.log("Form submitted");
-        });
-
-        // Update step display
-        function updateStepDisplay() {
-          // Hide all sections
-          $(".form-section").removeClass("active");
-
-          // Show current section
-          $(`#${steps[currentStep].id}-section`).addClass("active");
-
-          // Update step info in header
-          $("#current-step-title").text(steps[currentStep].title);
-          $("#current-step-description").text(
-            `Step ${currentStep + 1} of ${steps.length}`
-          );
-          $("#current-step-icon")
-            .removeClass()
-            .addClass(`bi ${steps[currentStep].icon}`);
-
-          // Update progress bar
-          const progressPercent = ((currentStep + 1) / steps.length) * 100;
-          $("#progress-bar").css("width", `${progressPercent}%`);
-
-          // Update navigation buttons
-          $("#prev-step").prop("disabled", currentStep === 0);
-
-          if (currentStep === steps.length - 1) {
-            $("#next-step").hide();
-            $("#submit-btn").show();
+        function updateValidationIcon(iconId, textId, isValid) {
+          if (isValid) {
+            $(iconId).removeClass("invalid").addClass("valid");
+            $(textId).removeClass("invalid").addClass("valid");
           } else {
-            $("#next-step").show();
-            $("#submit-btn").hide();
+            $(iconId).removeClass("valid").addClass("invalid");
+            $(textId).removeClass("valid").addClass("invalid");
+          }
+        }
+
+        // Helper function to display error messages
+        const showError = (input, message) => {
+          const formGroup = input.closest(".col-md-6");
+          const errorElement = formGroup.querySelector(".error-message");
+
+          if (!errorElement) {
+            const errorDiv = document.createElement("div");
+            errorDiv.className = "error-message text-danger mt-1";
+            errorDiv.innerText = message;
+            formGroup.appendChild(errorDiv);
+          } else {
+            errorElement.innerText = message;
+          }
+
+          input.classList.add("is-invalid");
+        };
+
+        // Helper function to display error messages
+        const showNINError = (input, message) => {
+          const formGroup = input.closest(".col-md-4");
+          const errorElement = formGroup.querySelector(".error-message");
+
+          if (!errorElement) {
+            const errorDiv = document.createElement("div");
+            errorDiv.className = "error-message text-danger mt-1";
+            errorDiv.innerText = message;
+            formGroup.appendChild(errorDiv);
+          } else {
+            errorElement.innerText = message;
+          }
+
+          input.classList.add("is-invalid");
+        };
+
+        // Helper function to clear error messages
+        const clearError = (input) => {
+          const formGroup = input.closest(".col-md-6");
+          const errorElement = formGroup.querySelector(".error-message");
+
+          if (errorElement) {
+            errorElement.remove();
+          }
+
+          input.classList.remove("is-invalid");
+        };
+
+        const clearNINError = (input) => {
+          const formGroup = input.closest(".col-md-4");
+          const errorElement = formGroup.querySelector(".error-message");
+
+          if (errorElement) {
+            errorElement.remove();
+          }
+
+          input.classList.remove("is-invalid");
+        };
+
+        // Validation functions for each field
+        const validateFirstName = (input) => {
+          const value = input.value.trim();
+          if (!value) {
+            showNINError(input, "First name is required.");
+            return false;
+          } else if (!/^[a-zA-Z]+$/.test(value)) {
+            showNINError(input, "First name should contain only letters.");
+            return false;
+          } else {
+            clearNINError(input);
+            return true;
+          }
+        };
+
+        const validateLastName = (input) => {
+          const value = input.value.trim();
+          if (!value) {
+            showNINError(input, "Last name is required.");
+            return false;
+          } else if (!/^[a-zA-Z]+$/.test(value)) {
+            showNINError(input, "Last name should contain only letters.");
+            return false;
+          } else {
+            clearNINError(input);
+            return true;
+          }
+        };
+
+        const validateEmail = (input) => {
+          const value = input.value.trim();
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!value) {
+            showError(input, "Email is required.");
+            return false;
+          } else if (!emailRegex.test(value)) {
+            showError(input, "Please enter a valid email address.");
+            return false;
+          } else {
+            clearError(input);
+            return true;
+          }
+        };
+
+        const validatePhone = (input) => {
+          const value = input.value.trim();
+          const phoneRegex = /^0[7-9][0-1]\d{8}$/;
+          if (!value) {
+            showError(input, "Phone number is required.");
+            return false;
+          } else if (!phoneRegex.test(value)) {
+            showError(input, "Please enter a valid Nigerian phone number.");
+            return false;
+          } else {
+            clearError(input);
+            return true;
+          }
+        };
+
+        const validatePassword = (input) => {
+          const value = input.value.trim();
+          const passwordRegex =
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+
+          if (!value) {
+            showError(input, "Password is required.");
+            return false;
+          } else if (!passwordRegex.test(value)) {
+            showError(
+              input,
+              "Password must include uppercase, lowercase, number, and special character."
+            );
+            return false;
+          } else {
+            clearError(input);
+            return true;
+          }
+        };
+
+        const validateConfirmPassword = (input) => {
+          const value = input.value.trim();
+          const password = $("#password").val().trim();
+
+          if (!value) {
+            showError(input, "Please confirm your password.");
+            return false;
+          } else if (value !== password) {
+            showError(input, "Passwords do not match.");
+            return false;
+          } else {
+            clearError(input);
+            return true;
+          }
+        };
+
+        const validateNIN = (input) => {
+          const value = input.value.trim();
+          if (!value) {
+            showNINError(input, "NIN is required.");
+            return false;
+          } else if (!/^\d{11}$/.test(value)) {
+            showNINError(
+              input,
+              "NIN should contain only numbers and be exactly 11 digits long."
+            );
+            return false;
+          } else {
+            clearNINError(input);
+            return true;
+          }
+        };
+
+        // Attach event listeners for real-time validation
+        $("#firstname").on("input blur", function () {
+          validateFirstName(this);
+        });
+
+        $("#lastname").on("input blur", function () {
+          validateLastName(this);
+        });
+
+        $("#email").on("input blur", function () {
+          validateEmail(this);
+        });
+
+        $("#phone").on("input blur", function () {
+          validatePhone(this);
+        });
+
+        $("#password").on("input blur", function () {
+          validatePassword(this);
+        });
+
+        $("#re_password").on("input blur", function () {
+          validateConfirmPassword(this);
+        });
+
+        $("#NIN").on("input blur", function () {
+          validateNIN(this);
+        });
+
+        $("#NIN").on("blur", async function () {
+          const nin = $(this).val().trim();
+          if (/^\d{11}$/.test(nin)) {
+            try {
+              $("#ninStatus").html(
+                '<span class="text-info">Verifying NIN...</span>'
+              );
+
+              const response = await $.ajax({
+                url: `${BACKEND_URL}/auth/verify`, // Replace with your endpoint
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ nin }),
+              });
+
+              if (response.success && response.data) {
+                const { fullName, dob, phone, stateOfOrigin, lga } =
+                  response.data;
+
+                const nameParts = fullName.trim().split(" ");
+                const firstname = nameParts[0];
+                const lastname = nameParts.slice(1).join(" ");
+
+                $("#firstname").val(firstname).prop("readonly", true);
+                $("#lastname").val(lastname).prop("readonly", true);
+                $("#dob").val(dob).prop("readonly", true);
+                $("#phone").val(phone).prop("readonly", true);
+
+                // Populate state of origin
+                if (stateOfOrigin) {
+                  // Convert stateOfOrigin to match your select options
+                  let formattedState = stateOfOrigin
+                    .toLowerCase()
+                    .replace(/\s+/g, "_");
+
+                  // Set the value and trigger change to update LGA dropdown
+                  $("#stateOfOrigin")
+                    .val(formattedState)
+                    .trigger("change")
+                    .prop("disabled", true);
+
+                  // If you're using Bootstrap selectpicker
+                  if ($("#stateOfOrigin").hasClass("selectpicker")) {
+                    $("#stateOfOrigin").selectpicker("refresh");
+                  }
+                  // Populate LGA after a small delay to ensure state change is processed
+                  setTimeout(() => {
+                    if (lga) {
+                      $("#lgaOfOrigin")
+                        .val(lga)
+                        .trigger("change")
+                        .prop("disabled", true);
+
+                      if ($("#lgaOfOrigin").hasClass("selectpicker")) {
+                        $("#lgaOfOrigin").selectpicker("refresh");
+                      }
+                    }
+                  }, 200);
+                }
+
+                $("#ninStatus").html(
+                  '<span class="text-success">NIN Verified ✅</span>'
+                );
+              } else {
+                $("#ninStatus").html(
+                  '<span class="text-danger">NIN not found.</span>'
+                );
+              }
+            } catch (error) {
+              $("#ninStatus").html(
+                `<span class="text-danger">${
+                  error.responseJSON?.message || "Verification failed."
+                }</span>`
+              );
+            }
+          }
+        });
+
+        // Next button click handler
+        $("#nextButton").click(function () {
+          const isFirstNameValid = validateFirstName($("#firstname")[0]);
+          const isLastNameValid = validateLastName($("#lastname")[0]);
+          const isEmailValid = validateEmail($("#email")[0]);
+          const isPhoneValid = validatePhone($("#phone")[0]);
+          const isNINValid = validateNIN($("#NIN")[0]);
+
+          if (
+            isFirstNameValid &&
+            isLastNameValid &&
+            isEmailValid &&
+            isPhoneValid &&
+            isNINValid
+          ) {
+            formData.firstname = $("#firstname").val().trim();
+            formData.lastname = $("#lastname").val().trim();
+            formData.email = $("#email").val().trim();
+            formData.phone = $("#phone").val().trim();
+            formData.NIN = $("#NIN").val().trim();
+
+            currentStep = 2;
+            updateStepUI();
+          }
+        });
+
+        // Previous button click handler
+        $("#previousButton").click(function () {
+          currentStep = 1;
+          updateStepUI();
+        });
+
+        // Proceed button click handler
+        $("#proceedButton").click(function () {
+          const isPasswordValid = validatePassword($("#password")[0]);
+          const isConfirmPasswordValid = validateConfirmPassword(
+            $("#re_password")[0]
+          );
+
+          if (isPasswordValid && isConfirmPasswordValid) {
+            formData.stateOfOrigin = $("#stateOfOrigin").val().trim();
+            formData.lgaOfOrigin = $("#lgaOfOrigin").val().trim();
+            formData.confirmPassword = $("#re_password").val().trim();
+            formData.password = $("#password").val().trim();
+
+            const apiData = {
+              firstname: formData.firstname,
+              lastname: formData.lastname,
+              email: formData.email,
+              password: formData.password,
+              phone: formData.phone,
+              NIN: formData.NIN,
+              lgaOfOrigin: formData.lgaOfOrigin,
+              stateOfOrigin: formData.stateOfOrigin,
+            };
+
+            submitForm(apiData);
+          }
+        });
+
+        // Submit form to backend
+        const submitForm = async (formData) => {
+          try {
+            $("#submitbtn")
+              .html('<i class="fa fa-spinner fa-spin"></i>')
+              .prop("disabled", true);
+
+            const response = await $.ajax({
+              type: "POST",
+              url: `${BACKEND_URL}/auth/signup`,
+              contentType: "application/json",
+              data: JSON.stringify(formData),
+            });
+
+            Swal.fire(
+              "Welcome",
+              "Please check your email inbox or spam to activate your account. Click OK to continue.",
+              "success"
+            ).then(() => {
+              window.location.href = "../auth/login.html";
+            });
+          } catch (error) {
+            Swal.fire(
+              "Oops...",
+              error.responseJSON?.message || "An error occurred.",
+              "error"
+            );
+          } finally {
+            $("#submitbtn").html("Sign Up").attr("disabled", false);
+          }
+        };
+
+        // Update step UI
+        function updateStepUI() {
+          if (currentStep === 1) {
+            $("#step1").removeClass("d-none");
+            $("#step2").addClass("d-none");
+            $("#step1-indicator").addClass("active").removeClass("inactive");
+            $("#step2-indicator").addClass("inactive").removeClass("active");
+            $("#step1-text").addClass("text-success").removeClass("text-muted");
+            $("#step2-text").addClass("text-muted").removeClass("text-success");
+          } else {
+            $("#step1").addClass("d-none");
+            $("#step2").removeClass("d-none");
+            $("#step1-indicator").addClass("active").removeClass("inactive");
+            $("#step2-indicator").addClass("active").removeClass("inactive");
+            $("#step1-text").addClass("text-success").removeClass("text-muted");
+            $("#step2-text").addClass("text-success").removeClass("text-muted");
           }
         }
       });
     </script>
     <script>
-      $(document).ready(function () {
-        // Hold state for counts and the auto-save timer.
-        const state = {
-          autoSaveTimer: null,
-          institutionCount: 0,
-          neighborCount: 0,
-          familyCount: 0,
-          employmentCount: 0,
-          isDataLoaded: false, // Flag to prevent premature auto-saves
-          pendingSave: false, // Flag to prevent concurrent saves
-        };
+      const nigerData = {
+        adamawa: [
+          "Demsa",
+          "Fufure",
+          "Ganye",
+          "Gayuk",
+          "Gombi",
+          "Grie",
+          "Hong",
+          "Jada",
+          "Larmurde",
+          "Madagali",
+          "Maiha",
+          "Mayo Belwa",
+          "Michika",
+          "Mubi North",
+          "Mubi South",
+          "Numan",
+          "Shelleng",
+          "Song",
+          "Toungo",
+          "Yola North",
+          "Yola South",
+        ],
+        akwa_ibom: [
+          "Abak",
+          "Eastern Obolo",
+          "Eket",
+          "Esit Eket",
+          "Essien Udim",
+          "Etim Ekpo",
+          "Etinan",
+          "Ibeno",
+          "Ibesikpo Asutan",
+          "Ibiono-Ibom",
+          "Ikot Abasi",
+          "Ika",
+          "Ikono",
+          "Ikot Ekpene",
+          "Ini",
+          "Mkpat-Enin",
+          "Itu",
+          "Mbo",
+          "Nsit-Atai",
+          "Nsit-Ibom",
+          "Nsit-Ubium",
+          "Obot Akara",
+          "Okobo",
+          "Onna",
+          "Oron",
+          "Udung-Uko",
+          "Ukanafun",
+          "Oruk Anam",
+          "Uruan",
+          "Urue-Offong/Oruko",
+          "Uyo",
+        ],
+        anambra: [
+          "Aguata",
+          "Anambra East",
+          "Anaocha",
+          "Awka North",
+          "Anambra West",
+          "Awka South",
+          "Ayamelum",
+          "Dunukofia",
+          "Ekwusigo",
+          "Idemili North",
+          "Idemili South",
+          "Ihiala",
+          "Njikoka",
+          "Nnewi North",
+          "Nnewi South",
+          "Ogbaru",
+          "Onitsha North",
+          "Onitsha South",
+          "Orumba North",
+          "Orumba South",
+          "Oyi",
+        ],
+        abia: [
+          "Aba North",
+          "Arochukwu",
+          "Aba South",
+          "Bende",
+          "Isiala Ngwa North",
+          "Ikwuano",
+          "Isiala Ngwa South",
+          "Isuikwuato",
+          "Obi Ngwa",
+          "Ohafia",
+          "Osisioma",
+          "Ugwunagbo",
+          "Ukwa East",
+          "Ukwa West",
+          "Umuahia North",
+          "Umuahia South",
+          "Umu Nneochi",
+        ],
+        bauchi: [
+          "Alkaleri",
+          "Bauchi",
+          "Bogoro",
+          "Damban",
+          "Darazo",
+          "Dass",
+          "Gamawa",
+          "Ganjuwa",
+          "Giade",
+          "Itas/Gadau",
+          "Jama'are",
+          "Katagum",
+          "Kirfi",
+          "Misau",
+          "Ningi",
+          "Shira",
+          "Tafawa Balewa",
+          "Toro",
+          "Warji",
+          "Zaki",
+        ],
+        benue: [
+          "Agatu",
+          "Apa",
+          "Ado",
+          "Buruku",
+          "Gboko",
+          "Guma",
+          "Gwer East",
+          "Gwer West",
+          "Katsina-Ala",
+          "Konshisha",
+          "Kwande",
+          "Logo",
+          "Makurdi",
+          "Obi",
+          "Ogbadibo",
+          "Ohimini",
+          "Oju",
+          "Okpokwu",
+          "Oturkpo",
+          "Tarka",
+          "Ukum",
+          "Ushongo",
+          "Vandeikya",
+        ],
+        borno: [
+          "Abadam",
+          "Askira/Uba",
+          "Bama",
+          "Bayo",
+          "Biu",
+          "Chibok",
+          "Damboa",
+          "Dikwa",
+          "Guzamala",
+          "Gubio",
+          "Hawul",
+          "Gwoza",
+          "Jere",
+          "Kaga",
+          "Kala/Balge",
+          "Konduga",
+          "Kukawa",
+          "Kwaya Kusar",
+          "Mafa",
+          "Magumeri",
+          "Maiduguri",
+          "Mobbar",
+          "Marte",
+          "Monguno",
+          "Ngala",
+          "Nganzai",
+          "Shani",
+        ],
+        bayelsa: [
+          "Brass",
+          "Ekeremor",
+          "Kolokuma/Opokuma",
+          "Nembe",
+          "Ogbia",
+          "Sagbama",
+          "Southern Ijaw",
+          "Yenagoa",
+        ],
+        cross_river: [
+          "Abi",
+          "Akamkpa",
+          "Akpabuyo",
+          "Bakassi",
+          "Bekwarra",
+          "Biase",
+          "Boki",
+          "Calabar Municipal",
+          "Calabar South",
+          "Etung",
+          "Ikom",
+          "Obanliku",
+          "Obubra",
+          "Obudu",
+          "Odukpani",
+          "Ogoja",
+          "Yakuur",
+          "Yala",
+        ],
+        delta: [
+          "Aniocha North",
+          "Aniocha South",
+          "Bomadi",
+          "Burutu",
+          "Ethiope West",
+          "Ethiope East",
+          "Ika North East",
+          "Ika South",
+          "Isoko North",
+          "Isoko South",
+          "Ndokwa East",
+          "Ndokwa West",
+          "Okpe",
+          "Oshimili North",
+          "Oshimili South",
+          "Patani",
+          "Sapele",
+          "Udu",
+          "Ughelli North",
+          "Ukwuani",
+          "Ughelli South",
+          "Uvwie",
+          "Warri North",
+          "Warri South",
+          "Warri South West",
+        ],
+        ebonyi: [
+          "Abakaliki",
+          "Afikpo North",
+          "Ebonyi",
+          "Afikpo South",
+          "Ezza North",
+          "Ikwo",
+          "Ezza South",
+          "Ivo",
+          "Ishielu",
+          "Izzi",
+          "Ohaozara",
+          "Ohaukwu",
+          "Onicha",
+        ],
+        edo: [
+          "Akoko-Edo",
+          "Egor",
+          "Esan Central",
+          "Esan North-East",
+          "Esan South-East",
+          "Esan West",
+          "Etsako Central",
+          "Etsako East",
+          "Etsako West",
+          "Igueben",
+          "Ikpoba Okha",
+          "Orhionmwon",
+          "Oredo",
+          "Ovia North-East",
+          "Ovia South-West",
+          "Owan East",
+          "Owan West",
+          "Uhunmwonde",
+        ],
+        ekiti: [
+          "Ado Ekiti",
+          "Efon",
+          "Ekiti East",
+          "Ekiti South-West",
+          "Ekiti West",
+          "Emure",
+          "Gbonyin",
+          "Ido Osi",
+          "Ijero",
+          "Ikere",
+          "Ilejemeje",
+          "Irepodun/Ifelodun",
+          "Ikole",
+          "Ise/Orun",
+          "Moba",
+          "Oye",
+        ],
+        enugu: [
+          "Awgu",
+          "Aninri",
+          "Enugu East",
+          "Enugu North",
+          "Ezeagu",
+          "Enugu South",
+          "Igbo Etiti",
+          "Igbo Eze North",
+          "Igbo Eze South",
+          "Isi Uzo",
+          "Nkanu East",
+          "Nkanu West",
+          "Nsukka",
+          "Udenu",
+          "Oji River",
+          "Uzo Uwani",
+          "Udi",
+        ],
+        abuja: [
+          "Abaji",
+          "Bwari",
+          "Gwagwalada",
+          "Kuje",
+          "Kwali",
+          "Municipal Area Council",
+        ],
+        gombe: [
+          "Akko",
+          "Balanga",
+          "Billiri",
+          "Dukku",
+          "Funakaye",
+          "Gombe",
+          "Kaltungo",
+          "Kwami",
+          "Nafada",
+          "Shongom",
+          "Yamaltu/Deba",
+        ],
+        jigawa: [
+          "Auyo",
+          "Babura",
+          "Buji",
+          "Biriniwa",
+          "Birnin Kudu",
+          "Dutse",
+          "Gagarawa",
+          "Garki",
+          "Gumel",
+          "Guri",
+          "Gwaram",
+          "Gwiwa",
+          "Hadejia",
+          "Jahun",
+          "Kafin Hausa",
+          "Kazaure",
+          "Kiri Kasama",
+          "Kiyawa",
+          "Kaugama",
+          "Maigatari",
+          "Malam Madori",
+          "Miga",
+          "Sule Tankarkar",
+          "Roni",
+          "Ringim",
+          "Yankwashi",
+          "Taura",
+        ],
+        lagos: [
+          "Agege",
+          "Ajeromi-Ifelodun",
+          "Alimosho",
+          "Amuwo-Odofin",
+          "Badagry",
+          "Apapa",
+          "Epe",
+          "Eti Osa",
+          "Ibeju-Lekki",
+          "Ifako-Ijaiye",
+          "Ikeja",
+          "Ikorodu",
+          "Kosofe",
+          "Lagos Island",
+          "Mushin",
+          "Lagos Mainland",
+          "Ojo",
+          "Oshodi-Isolo",
+          "Shomolu",
+          "Surulere Lagos State",
+        ],
+        oyo: [
+          "Afijio",
+          "Akinyele",
+          "Atiba",
+          "Atisbo",
+          "Egbeda",
+          "Ibadan North",
+          "Ibadan North-East",
+          "Ibadan North-West",
+          "Ibadan South-East",
+          "Ibarapa Central",
+          "Ibadan South-West",
+          "Ibarapa East",
+          "Ido",
+          "Ibarapa North",
+          "Irepo",
+          "Iseyin",
+          "Itesiwaju",
+          "Iwajowa",
+          "Kajola",
+          "Lagelu",
+          "Ogbomosho North",
+          "Ogbomosho South",
+          "Ogo Oluwa",
+          "Olorunsogo",
+          "Oluyole",
+          "Ona Ara",
+          "Orelope",
+          "Ori Ire",
+          "Oyo",
+          "Oyo East",
+          "Saki East",
+          "Saki West",
+          "Surulere Oyo State",
+        ],
+        imo: [
+          "Aboh Mbaise",
+          "Ahiazu Mbaise",
+          "Ehime Mbano",
+          "Ezinihitte",
+          "Ideato North",
+          "Ideato South",
+          "Ihitte/Uboma",
+          "Ikeduru",
+          "Isiala Mbano",
+          "Mbaitoli",
+          "Isu",
+          "Ngor Okpala",
+          "Njaba",
+          "Nkwerre",
+          "Nwangele",
+          "Obowo",
+          "Oguta",
+          "Ohaji/Egbema",
+          "Okigwe",
+          "Orlu",
+          "Orsu",
+          "Oru East",
+          "Oru West",
+          "Owerri Municipal",
+          "Owerri North",
+          "Unuimo",
+          "Owerri West",
+        ],
+        kaduna: [
+          "Birnin Gwari",
+          "Chikun",
+          "Giwa",
+          "Ikara",
+          "Igabi",
+          "Jaba",
+          "Jema'a",
+          "Kachia",
+          "Kaduna North",
+          "Kaduna South",
+          "Kagarko",
+          "Kajuru",
+          "Kaura",
+          "Kauru",
+          "Kubau",
+          "Kudan",
+          "Lere",
+          "Makarfi",
+          "Sabon Gari",
+          "Sanga",
+          "Soba",
+          "Zangon Kataf",
+          "Zaria",
+        ],
+        kebbi: [
+          "Aleiro",
+          "Argungu",
+          "Arewa Dandi",
+          "Augie",
+          "Bagudo",
+          "Birnin Kebbi",
+          "Bunza",
+          "Dandi",
+          "Fakai",
+          "Gwandu",
+          "Jega",
+          "Kalgo",
+          "Koko/Besse",
+          "Maiyama",
+          "Ngaski",
+          "Shanga",
+          "Suru",
+          "Sakaba",
+          "Wasagu/Danko",
+          "Yauri",
+          "Zuru",
+        ],
+        kano: [
+          "Ajingi",
+          "Albasu",
+          "Bagwai",
+          "Bebeji",
+          "Bichi",
+          "Bunkure",
+          "Dala",
+          "Dambatta",
+          "Dawakin Kudu",
+          "Dawakin Tofa",
+          "Doguwa",
+          "Fagge",
+          "Gabasawa",
+          "Garko",
+          "Garun Mallam",
+          "Gezawa",
+          "Gaya",
+          "Gwale",
+          "Gwarzo",
+          "Kabo",
+          "Kano Municipal",
+          "Karaye",
+          "Kibiya",
+          "Kiru",
+          "Kumbotso",
+          "Kunchi",
+          "Kura",
+          "Madobi",
+          "Makoda",
+          "Minjibir",
+          "Nasarawa",
+          "Rano",
+          "Rimin Gado",
+          "Rogo",
+          "Shanono",
+          "Takai",
+          "Sumaila",
+          "Tarauni",
+          "Tofa",
+          "Tsanyawa",
+          "Tudun Wada",
+          "Ungogo",
+          "Warawa",
+          "Wudil",
+        ],
+        kogi: [
+          "Ajaokuta",
+          "Adavi",
+          "Ankpa",
+          "Bassa",
+          "Dekina",
+          "Ibaji",
+          "Idah",
+          "Igalamela Odolu",
+          "Ijumu",
+          "Kogi",
+          "Kabba/Bunu",
+          "Lokoja",
+          "Ofu",
+          "Mopa Muro",
+          "Ogori/Magongo",
+          "Okehi",
+          "Okene",
+          "Olamaboro",
+          "Omala",
+          "Yagba East",
+          "Yagba West",
+        ],
+        osun: [
+          "Aiyedire",
+          "Atakunmosa West",
+          "Atakunmosa East",
+          "Aiyedaade",
+          "Boluwaduro",
+          "Boripe",
+          "Ife East",
+          "Ede South",
+          "Ife North",
+          "Ede North",
+          "Ife South",
+          "Ejigbo",
+          "Ife Central",
+          "Ifedayo",
+          "Egbedore",
+          "Ila",
+          "Ifelodun",
+          "Ilesa East",
+          "Ilesa West",
+          "Irepodun",
+          "Irewole",
+          "Isokan",
+          "Iwo",
+          "Obokun",
+          "Odo Otin",
+          "Ola Oluwa",
+          "Olorunda",
+          "Oriade",
+          "Orolu",
+          "Osogbo",
+        ],
+        sokoto: [
+          "Gudu",
+          "Gwadabawa",
+          "Illela",
+          "Isa",
+          "Kebbe",
+          "Kware",
+          "Rabah",
+          "Sabon Birni",
+          "Shagari",
+          "Silame",
+          "Sokoto North",
+          "Sokoto South",
+          "Tambuwal",
+          "Tangaza",
+          "Tureta",
+          "Wamako",
+          "Wurno",
+          "Yabo",
+          "Binji",
+          "Bodinga",
+          "Dange Shuni",
+          "Goronyo",
+          "Gada",
+        ],
+        plateau: [
+          "Bokkos",
+          "Barkin Ladi",
+          "Bassa",
+          "Jos East",
+          "Jos North",
+          "Jos South",
+          "Kanam",
+          "Kanke",
+          "Langtang South",
+          "Langtang North",
+          "Mangu",
+          "Mikang",
+          "Pankshin",
+          "Qua'an Pan",
+          "Riyom",
+          "Shendam",
+          "Wase",
+        ],
+        taraba: [
+          "Ardo Kola",
+          "Bali",
+          "Donga",
+          "Gashaka",
+          "Gassol",
+          "Ibi",
+          "Jalingo",
+          "Karim Lamido",
+          "Kumi",
+          "Lau",
+          "Sardauna",
+          "Takum",
+          "Ussa",
+          "Wukari",
+          "Yorro",
+          "Zing",
+        ],
+        yobe: [
+          "Bade",
+          "Bursari",
+          "Damaturu",
+          "Fika",
+          "Fune",
+          "Geidam",
+          "Gujba",
+          "Gulani",
+          "Jakusko",
+          "Karasuwa",
+          "Machina",
+          "Nangere",
+          "Nguru",
+          "Potiskum",
+          "Tarmuwa",
+          "Yunusari",
+          "Yusufari",
+        ],
+        zamfara: [
+          "Anka",
+          "Birnin Magaji/Kiyaw",
+          "Bakura",
+          "Bukkuyum",
+          "Bungudu",
+          "Gummi",
+          "Gusau",
+          "Kaura Namoda",
+          "Maradun",
+          "Shinkafi",
+          "Maru",
+          "Talata Mafara",
+          "Tsafe",
+          "Zurmi",
+        ],
+        katsina: [
+          "Bakori",
+          "Batagarawa",
+          "Batsari",
+          "Baure",
+          "Bindawa",
+          "Charanchi",
+          "Danja",
+          "Dandume",
+          "Dan Musa",
+          "Daura",
+          "Dutsi",
+          "Dutsin Ma",
+          "Faskari",
+          "Funtua",
+          "Ingawa",
+          "Jibia",
+          "Kafur",
+          "Kaita",
+          "Kankara",
+          "Kankia",
+          "Katsina",
+          "Kurfi",
+          "Kusada",
+          "Mai'Adua",
+          "Malumfashi",
+          "Mani",
+          "Mashi",
+          "Matazu",
+          "Musawa",
+          "Rimi",
+          "Sabuwa",
+          "Safana",
+          "Sandamu",
+          "Zango",
+        ],
+        kwara: [
+          "Asa",
+          "Baruten",
+          "Edu",
+          "Ilorin East",
+          "Ifelodun",
+          "Ilorin South",
+          "Ekiti Kwara State",
+          "Ilorin West",
+          "Irepodun",
+          "Isin",
+          "Kaiama",
+          "Moro",
+          "Offa",
+          "Oke Ero",
+          "Oyun",
+          "Pategi",
+        ],
+        nasarawa: [
+          "Akwanga",
+          "Awe",
+          "Doma",
+          "Karu",
+          "Keana",
+          "Keffi",
+          "Lafia",
+          "Kokona",
+          "Nasarawa Egon",
+          "Nasarawa",
+          "Obi",
+          "Toto",
+          "Wamba",
+        ],
+        niger: [
+          "Agaie",
+          "Agwara",
+          "Bida",
+          "Borgu",
+          "Bosso",
+          "Chanchaga",
+          "Edati",
+          "Gbako",
+          "Gurara",
+          "Katcha",
+          "Kontagora",
+          "Lapai",
+          "Lavun",
+          "Mariga",
+          "Magama",
+          "Mokwa",
+          "Mashegu",
+          "Moya",
+          "Paikoro",
+          "Rafi",
+          "Rijau",
+          "Shiroro",
+          "Suleja",
+          "Tafa",
+          "Wushishi",
+        ],
+        rivers: [
+          "Abua/Odual",
+          "Ahoada East",
+          "Ahoada West",
+          "Andoni",
+          "Akuku-Toru",
+          "Asari-Toru",
+          "Bonny",
+          "Degema",
+          "Emuoha",
+          "Eleme",
+          "Ikwerre",
+          "Etche",
+          "Gokana",
+          "Khana",
+          "Obio/Akpor",
+          "Ogba/Egbema/Ndoni",
+          "Ogu/Bolo",
+          "Okrika",
+          "Omuma",
+          "Opobo/Nkoro",
+          "Oyigbo",
+          "Port Harcourt",
+          "Tai",
+        ],
+      };
 
-        // Utility function to set input values safely
-        const setInputValue = (id, value) => {
-          const element = document.getElementById(id);
-          if (element) {
-            element.value = value || "";
-          }
-        };
+      function updateLocalGovernmentsOfOrigin() {
+        const stateSelect = document.getElementById("stateOfOrigin");
+        const lgaSelect = document.getElementById("lgaOfOrigin");
+        const selectedState = stateSelect.value;
 
-        // Debounced auto-save function
-        const debouncedAutoSave = (() => {
-          let timeoutId;
-          return (delay = 1000) => {
-            clearTimeout(timeoutId);
-            $("#autoSaveStatus").text("Saving...").css("color", "blue");
-            timeoutId = setTimeout(() => {
-              if (state.isDataLoaded) {
-                autoSave();
-              }
-            }, delay);
-          };
-        })();
+        // Clear previous options
+        lgaSelect.innerHTML =
+          '<option value="">Select Local Government</option>';
 
-        /* ===================================================
-         * Field Addition Functions (Improved)
-         * =================================================== */
-
-        // Add a new tertiary institution section with better validation
-        const addInstitution = (institutionData = {}) => {
-          const container = $("#tertiary-institution-container");
-          const index = container.find(".institution-fields").length;
-
-          const newInstitutionFields = `
-      <div class="institution-fields m-b30" data-index="${index}">
-        <label class="form-label">Tertiary Institution ${index + 1}</label>
-        <input
-          type="text"
-          class="form-control institution-input"
-          name="educationalHistory.tertiaryInstitutions[${index}].name"
-          placeholder="Name of Tertiary Institution"
-          value="${escapeHtml(institutionData.name || "")}"
-          data-field="name"
-        />
-        <input
-          type="text"
-          class="form-control institution-input"
-          name="educationalHistory.tertiaryInstitutions[${index}].address"
-          placeholder="Address of Tertiary Institution"
-          value="${escapeHtml(institutionData.address || "")}"
-          data-field="address"
-        />
-        <input
-          type="text"
-          class="form-control institution-input"
-          name="educationalHistory.tertiaryInstitutions[${index}].certificateObtained"
-          placeholder="Certificate Obtained"
-          value="${escapeHtml(institutionData.certificateObtained || "")}"
-          data-field="certificateObtained"
-        />
-        <input
-          type="text"
-          class="form-control institution-input"
-          name="educationalHistory.tertiaryInstitutions[${index}].matricNo"
-          placeholder="Matriculation Number"
-          value="${escapeHtml(institutionData.matricNo || "")}"
-          data-field="matricNo"
-        />
-        <input
-          type="text"
-          class="form-control institution-input"
-          name="educationalHistory.tertiaryInstitutions[${index}].yearOfAttendance"
-          placeholder="Year of Attendance"
-          value="${escapeHtml(institutionData.yearOfAttendance || "")}"
-          data-field="yearOfAttendance"
-        />
-        <button type="button" class="btn btn-danger btn-sm remove-institution mt-2">Remove</button>
-      </div>`;
-
-          container.append(newInstitutionFields);
-          state.institutionCount++;
-
-          // Bind remove button event
-          container
-            .find(".remove-institution")
-            .last()
-            .on("click", function () {
-              $(this).closest(".institution-fields").remove();
-              state.institutionCount--;
-              reindexInstitutions();
-            });
-
-          // Only trigger auto-save if data is already loaded (not during initial population)
-          if (state.isDataLoaded) {
-            debouncedAutoSave();
-          }
-        };
-
-        // Reindex institutions after removal
-        const reindexInstitutions = () => {
-          $("#tertiary-institution-container .institution-fields").each(
-            function (newIndex) {
-              $(this).attr("data-index", newIndex);
-              $(this)
-                .find("label")
-                .text(`Tertiary Institution ${newIndex + 1}`);
-              $(this)
-                .find("input")
-                .each(function () {
-                  const currentName = $(this).attr("name");
-                  if (
-                    currentName &&
-                    currentName.includes("tertiaryInstitutions")
-                  ) {
-                    const newName = currentName.replace(
-                      /\[\d+\]/,
-                      `[${newIndex}]`
-                    );
-                    $(this).attr("name", newName);
-                  }
-                });
-            }
-          );
-        };
-
-        // Add a new family section with improved validation
-        const addFamily = (familyData = {}) => {
-          if (state.familyCount >= 5) {
-            console.warn("Maximum family members reached");
-            return;
-          }
-
-          const container = $("#family-container");
-          const index = container.find(".family-fields").length;
-
-          const newFamilyFields = `
-      <div class="family-fields m-b30" data-index="${index}">
-        <label class="form-label">Family ${index + 1}</label>
-        <input 
-          type="text" 
-          class="form-control m-b10 family-name" 
-          name="family_name[]" 
-          placeholder="Full Name" 
-          value="${escapeHtml(familyData.name || "")}"
-        />
-        <input
-          type="text" 
-          class="form-control m-b10 family-relationship" 
-          name="family_relationship[]" 
-          placeholder="Relationship" 
-          value="${escapeHtml(familyData.relationship || "")}"
-        />
-        <input 
-          type="tel" 
-          class="form-control family-phone" 
-          name="family_phone[]" 
-          placeholder="Phone Number" 
-          value="${escapeHtml(familyData.phone || "")}"
-        />
-        <input 
-          type="text" 
-          class="form-control family-address" 
-          name="family_address[]" 
-          placeholder="Residential Address" 
-          value="${escapeHtml(familyData.address || "")}"
-        />
-        <button type="button" class="btn btn-danger btn-sm remove-family mt-2">Remove</button>
-      </div>`;
-
-          container.append(newFamilyFields);
-          state.familyCount++;
-
-          // Update button state
-          updateFamilyButtonState();
-
-          // Bind remove button event
-          container
-            .find(".remove-family")
-            .last()
-            .on("click", function () {
-              $(this).closest(".family-fields").remove();
-              state.familyCount--;
-              updateFamilyButtonState();
-              reindexFamily();
-            });
-
-          if (state.isDataLoaded) {
-            debouncedAutoSave();
-          }
-        };
-
-        // Update family button state
-        const updateFamilyButtonState = () => {
-          const addButton = $("#add-family");
-          if (state.familyCount >= 5) {
-            addButton
-              .prop("disabled", true)
-              .text("Maximum family reached")
-              .removeClass("btn-primary")
-              .addClass("btn-secondary");
-          } else {
-            addButton
-              .prop("disabled", false)
-              .text("Add Family Member")
-              .removeClass("btn-secondary")
-              .addClass("btn-primary");
-          }
-        };
-
-        // Reindex family after removal
-        const reindexFamily = () => {
-          $("#family-container .family-fields").each(function (newIndex) {
-            $(this).attr("data-index", newIndex);
-            $(this)
-              .find("label")
-              .text(`Family ${newIndex + 1}`);
+        if (nigerData[selectedState]) {
+          nigerData[selectedState].forEach((lga) => {
+            const option = document.createElement("option");
+            option.value = lga;
+            option.textContent = lga;
+            lgaSelect.appendChild(option);
           });
-        };
-
-        // Add a new neighbor section with improved validation
-        const addNeighbor = (neighborData = {}) => {
-          if (state.neighborCount >= 5) {
-            console.warn("Maximum neighbors reached");
-            return;
-          }
-
-          const container = $("#neighbors-container");
-          const index = container.find(".neighbor-fields").length;
-
-          const newNeighborFields = `
-      <div class="neighbor-fields m-b30" data-index="${index}">
-        <label class="form-label">Neighbor ${index + 1}</label>
-        <input 
-          type="text" 
-          class="form-control m-b10 neighbor-name" 
-          name="neighbor_name[]" 
-          placeholder="Full Name" 
-          value="${escapeHtml(neighborData.name || "")}"
-        />
-        <input 
-          type="text" 
-          class="form-control m-b10 neighbor-address" 
-          name="neighbor_address[]" 
-          placeholder="Residential Address" 
-          value="${escapeHtml(neighborData.address || "")}"
-        />
-        <input 
-          type="tel" 
-          class="form-control neighbor-phone" 
-          name="neighbor_phone[]" 
-          placeholder="Phone Number" 
-          value="${escapeHtml(neighborData.phone || "")}"
-        />
-        <button type="button" class="btn btn-danger btn-sm remove-neighbor mt-2">Remove</button>
-      </div>`;
-
-          container.append(newNeighborFields);
-          state.neighborCount++;
-
-          // Update button state
-          updateNeighborButtonState();
-
-          // Bind remove button event
-          container
-            .find(".remove-neighbor")
-            .last()
-            .on("click", function () {
-              $(this).closest(".neighbor-fields").remove();
-              state.neighborCount--;
-              updateNeighborButtonState();
-              reindexNeighbors();
-            });
-
-          if (state.isDataLoaded) {
-            debouncedAutoSave();
-          }
-        };
-
-        // Update neighbor button state
-        const updateNeighborButtonState = () => {
-          const addButton = $("#add-neighbor");
-          if (state.neighborCount >= 5) {
-            addButton
-              .prop("disabled", true)
-              .text("Maximum neighbors reached")
-              .removeClass("btn-primary")
-              .addClass("btn-secondary");
-          } else {
-            addButton
-              .prop("disabled", false)
-              .text("Add Neighbor")
-              .removeClass("btn-secondary")
-              .addClass("btn-primary");
-          }
-        };
-
-        // Reindex neighbors after removal
-        const reindexNeighbors = () => {
-          $("#neighbors-container .neighbor-fields").each(function (newIndex) {
-            $(this).attr("data-index", newIndex);
-            $(this)
-              .find("label")
-              .text(`Neighbor ${newIndex + 1}`);
-          });
-        };
-
-        // Add a new employment section with improved validation
-        const addEmployment = (employmentData = {}) => {
-          const container = $("#employment-history-container");
-          const index = container.find(".employment-fields").length;
-
-          const newEmploymentFields = `
-      <div class="employment-fields m-b30" data-index="${index}">
-        <label class="form-label">Employment ${index + 1}</label> 
-        <input
-          type="text"
-          class="form-control"
-          name="companyName[]"
-          placeholder="Company Name"
-          value="${escapeHtml(employmentData.companyName || "")}"
-        />
-        <input
-          type="text"
-          class="form-control"
-          name="address[]"
-          placeholder="Company Address"
-          value="${escapeHtml(employmentData.address || "")}"
-        />
-        <input
-          type="text"
-          class="form-control"  
-          name="designation[]"
-          placeholder="Designation"
-          value="${escapeHtml(employmentData.designation || "")}"
-        />
-        <input
-          type="number"
-          class="form-control"
-          name="startYear[]"
-          placeholder="Start Year"
-          value="${employmentData.startYear || ""}"
-        />
-        <div>
-          <input
-            type="number"
-            class="form-control"
-            name="endYear[]"
-            placeholder="End Year"
-            value="${employmentData.endYear || ""}"
-          />
-          <small class="form-text text-muted">Leave blank if this is your current employment.</small>
-        </div>
-        <div class="form-check">
-          <input
-            type="checkbox"
-            class="form-check-input"
-            name="isCurrentEmployment[]"
-            ${employmentData.isCurrentEmployment ? "checked" : ""}
-          />
-          <label class="form-check-label" for="isCurrentEmployment">This is my current employment</label>
-        </div>
-        <div>
-          <label for="description">Description of Company</label>
-          <textarea
-            class="form-control"
-            name="description[]"
-            placeholder="Job Description"
-          >${escapeHtml(employmentData.description || "")}</textarea>
-        </div>
-        <button type="button" class="btn btn-danger btn-sm remove-employment mt-2">Remove</button>
-      </div>`;
-
-          container.append(newEmploymentFields);
-          state.employmentCount++;
-
-          // Bind remove button event
-          container
-            .find(".remove-employment")
-            .last()
-            .on("click", function () {
-              $(this).closest(".employment-fields").remove();
-              state.employmentCount--;
-              reindexEmployment();
-            });
-
-          if (state.isDataLoaded) {
-            debouncedAutoSave();
-          }
-        };
-
-        // Reindex employment after removal
-        const reindexEmployment = () => {
-          $("#employment-history-container .employment-fields").each(function (
-            newIndex
-          ) {
-            $(this).attr("data-index", newIndex);
-            $(this)
-              .find("label")
-              .text(`Employment ${newIndex + 1}`);
-          });
-        };
-
-        // Utility function to escape HTML to prevent XSS
-        const escapeHtml = (text) => {
-          if (!text) return "";
-          const map = {
-            "&": "&amp;",
-            "<": "&lt;",
-            ">": "&gt;",
-            '"': "&quot;",
-            "'": "&#039;",
-          };
-          return text.replace(/[&<>"']/g, (m) => map[m]);
-        };
-
-        /* ===================================================
-         * Data Population Logic (Improved with Safety Checks)
-         * =================================================== */
-
-        const populateTertiaryInstitutions = (institutions) => {
-          const container = $("#tertiary-institution-container");
-          container.empty(); // Clear existing fields
-          state.institutionCount = 0; // Reset count
-
-          if (
-            institutions &&
-            Array.isArray(institutions) &&
-            institutions.length > 0
-          ) {
-            institutions.forEach((institution) => {
-              if (institution && typeof institution === "object") {
-                addInstitution(institution);
-              }
-            });
-          } else {
-            // Add at least one empty institution field
-            addInstitution();
-          }
-        };
-
-        const populateFamily = (family) => {
-          const container = $("#family-container");
-          container.empty(); // Clear existing fields
-          state.familyCount = 0; // Reset count
-
-          if (family && Array.isArray(family) && family.length > 0) {
-            family.forEach((fam) => {
-              if (fam && typeof fam === "object") {
-                addFamily(fam);
-              }
-            });
-          } else {
-            // Add at least one empty family field
-            addFamily();
-          }
-        };
-
-        const populateNeighbors = (neighbors) => {
-          const container = $("#neighbors-container");
-          container.empty(); // Clear existing fields
-          state.neighborCount = 0; // Reset count
-
-          if (neighbors && Array.isArray(neighbors) && neighbors.length > 0) {
-            neighbors.forEach((neighbor) => {
-              if (neighbor && typeof neighbor === "object") {
-                addNeighbor(neighbor);
-              }
-            });
-          } else {
-            // Add at least one empty neighbor field
-            addNeighbor();
-          }
-        };
-
-        const populateEmploymentHistory = (employments) => {
-          const container = $("#employment-history-container");
-          container.empty(); // Clear existing fields
-          state.employmentCount = 0; // Reset count
-
-          if (
-            employments &&
-            Array.isArray(employments) &&
-            employments.length > 0
-          ) {
-            employments.forEach((employment) => {
-              if (employment && typeof employment === "object") {
-                addEmployment(employment);
-              }
-            });
-          } else {
-            // Add at least one empty employment field
-            addEmployment();
-          }
-        };
-
-        // Improved AJAX success handler with better error handling
-        const handleProfileDataSuccess = (data) => {
-          try {
-            // Set flag to prevent auto-saves during population
-            state.isDataLoaded = false;
-
-            // Populate other fields safely
-            if (data) {
-              // Handle educational history
-              if (data.educationalHistory) {
-                // Primary and secondary school population
-                if (data.educationalHistory.primarySchool) {
-                  setInputValue(
-                    "primarySchool.name",
-                    data.educationalHistory.primarySchool.name
-                  );
-                  setInputValue(
-                    "primarySchool.address",
-                    data.educationalHistory.primarySchool.address
-                  );
-                  setInputValue(
-                    "primarySchool.yearOfAttendance",
-                    data.educationalHistory.primarySchool.yearOfAttendance
-                  );
-                }
-
-                if (data.educationalHistory.secondarySchool) {
-                  setInputValue(
-                    "secondarySchool.name",
-                    data.educationalHistory.secondarySchool.name
-                  );
-                  setInputValue(
-                    "secondarySchool.address",
-                    data.educationalHistory.secondarySchool.address
-                  );
-                  setInputValue(
-                    "secondarySchool.yearOfAttendance",
-                    data.educationalHistory.secondarySchool.yearOfAttendance
-                  );
-                }
-
-                // Tertiary institutions
-                populateTertiaryInstitutions(
-                  data.educationalHistory.tertiaryInstitutions
-                );
-              }
-
-              // Populate family data
-              if (data.family) {
-                populateFamily(data.family);
-              }
-
-              // Populate neighbor data
-              if (data.neighbor) {
-                populateNeighbors(data.neighbor);
-              }
-
-              // Populate employment history
-              if (data.employmentHistory) {
-                populateEmploymentHistory(data.employmentHistory);
-              }
-
-              // Update counts after population
-              state.institutionCount = $(
-                "#tertiary-institution-container .institution-fields"
-              ).length;
-              state.familyCount = $("#family-container .family-fields").length;
-              state.neighborCount = $(
-                "#neighbors-container .neighbor-fields"
-              ).length;
-              state.employmentCount = $(
-                "#employment-history-container .employment-fields"
-              ).length;
-
-              // Update button states
-              updateFamilyButtonState();
-              updateNeighborButtonState();
-            }
-
-            // Set flag to allow auto-saves after population is complete
-            state.isDataLoaded = true;
-
-            console.log("Profile data populated successfully");
-          } catch (error) {
-            console.error("Error populating profile data:", error);
-            state.isDataLoaded = true; // Still allow saves even if population fails
-          }
-        };
-
-        // Improved AJAX call with better error handling
-        const loadProfileData = () => {
-          if (!user || !user.id || !token) {
-            console.error("Missing user data or token");
-            state.isDataLoaded = true; // Allow saves even without loaded data
-            return;
-          }
-
-          $.ajax({
-            url: `${BACKEND_URL}/users/${user.id}`,
-            method: "GET",
-            headers: { Authorization: `Bearer ${token}` },
-            timeout: 10000, // 10 second timeout
-            success: handleProfileDataSuccess,
-            error: function (xhr, status, error) {
-              console.error("Failed to load profile data:", {
-                status: xhr.status,
-                statusText: xhr.statusText,
-                error: error,
-              });
-
-              // Still allow the form to function even if data loading fails
-              state.isDataLoaded = true;
-
-              // Add default empty fields if no data was loaded
-              if (
-                $("#tertiary-institution-container .institution-fields")
-                  .length === 0
-              ) {
-                addInstitution();
-              }
-              if ($("#family-container .family-fields").length === 0) {
-                addFamily();
-              }
-              if ($("#neighbors-container .neighbor-fields").length === 0) {
-                addNeighbor();
-              }
-              if (
-                $("#employment-history-container .employment-fields").length ===
-                0
-              ) {
-                addEmployment();
-              }
-            },
-          });
-        };
-
-        /* ===================================================
-         * Data Collection (Improved)
-         * =================================================== */
-
-        const collectFormData = () => {
-          try {
-            // Initialize FormData (this will also capture file uploads)
-            const formData = new FormData();
-
-            // List of simple fields by their IDs.
-            const fields = [
-              "middlename",
-              "lastname",
-              "nationality",
-              "community",
-              "religion",
-              "gender",
-              "stateOfOrigin",
-              "DOB",
-              "countryOfResidence",
-              "lgaOfOrigin",
-              "maritalStatus",
-              "house_number",
-              "street_name",
-              "nearest_bus_stop_landmark",
-              "city_town",
-              "stateOfResidence",
-              "lgaOfResidence",
-              "id_number",
-              "issue_date",
-              "expiry_date",
-            ];
-
-            fields.forEach((field) => {
-              const element = $(`#${field}`);
-              const value = element.length ? element.val() || "" : "";
-              formData.append(field, value);
-            });
-
-            // Build the next-of-kin object with safe value extraction
-            const nextOfKin = {
-              nok_surname: $("#nok_surname").val()?.trim() || "",
-              nok_firstname: $("#nok_firstname").val()?.trim() || "",
-              nok_middlename: $("#nok_middlename").val()?.trim() || "",
-              nok_relationship: $("#nok_relationship").val()?.trim() || "",
-              nok_countryOfResidence:
-                $("#nok_countryOfResidence").val()?.trim() || "",
-              nok_stateOfResidence:
-                $("#nok_stateOfResidence").val()?.trim() || "",
-              nok_lgaOfResidence: $("#nok_lgaOfResidence").val()?.trim() || "",
-              nok_cityOfResidence:
-                $("#nok_cityOfResidence").val()?.trim() || "",
-              nok_address: $("#nok_address").val()?.trim() || "",
-            };
-
-            // Build the health info object
-            const healthInfo = {
-              bloodGroup: $("#bloodGroup").val() || "",
-              genotype: $("#genotype").val() || "",
-              disabilityStatus: $("#disabilityStatus").val() || "",
-            };
-
-            // Build the business object
-            const business = {
-              biz_name: $("#biz_name").val()?.trim() || "",
-              biz_type: $("#biz_type").val() || "",
-              registration_number:
-                $("#registration_number").val()?.trim() || "",
-              biz_address: $("#biz_address").val()?.trim() || "",
-              nature_of_business:
-                $("#nature_of_business").val()?.trim() ||
-                $("#nature_of_bussiness").val()?.trim() ||
-                "",
-              numberOfYears: $("#numberOfYears").val()?.trim() || "",
-              numberOfEmployees: $("#numberOfEmployees").val()?.trim() || "",
-              annualRevenue: $("#annualRevenue").val()?.trim() || "",
-              TIN: $("#TIN").val()?.trim() || "",
-              biz_phone: $("#biz_phone").val()?.trim() || "",
-              biz_email: $("#biz_email").val()?.trim() || "",
-            };
-
-            // Collect neighbor entries safely
-            const neighbor = [];
-            $(".neighbor-fields").each(function () {
-              const neighborData = {
-                name:
-                  $(this).find('input[name="neighbor_name[]"]').val()?.trim() ||
-                  "",
-                address:
-                  $(this)
-                    .find('input[name="neighbor_address[]"]')
-                    .val()
-                    ?.trim() || "",
-                phone:
-                  $(this)
-                    .find('input[name="neighbor_phone[]"]')
-                    .val()
-                    ?.trim() || "",
-              };
-
-              // Only add if at least one field has data
-              if (
-                neighborData.name ||
-                neighborData.address ||
-                neighborData.phone
-              ) {
-                neighbor.push(neighborData);
-              }
-            });
-
-            // Collect family entries safely
-            const family = [];
-            $(".family-fields").each(function () {
-              const familyData = {
-                name:
-                  $(this).find('input[name="family_name[]"]').val()?.trim() ||
-                  "",
-                relationship:
-                  $(this)
-                    .find('input[name="family_relationship[]"]')
-                    .val()
-                    ?.trim() || "",
-                phone:
-                  $(this).find('input[name="family_phone[]"]').val()?.trim() ||
-                  "",
-                address:
-                  $(this)
-                    .find('input[name="family_address[]"]')
-                    .val()
-                    ?.trim() || "",
-              };
-
-              // Only add if at least one field has data
-              if (
-                familyData.name ||
-                familyData.relationship ||
-                familyData.phone ||
-                familyData.address
-              ) {
-                family.push(familyData);
-              }
-            });
-
-            // Build educational history safely
-            const educationalHistory = {
-              primarySchool: {
-                name: $('input[name="primarySchool.name"]').val()?.trim() || "",
-                address:
-                  $('input[name="primarySchool.address"]').val()?.trim() || "",
-                yearOfAttendance:
-                  $('input[name="primarySchool.yearOfAttendance"]')
-                    .val()
-                    ?.trim() || "",
-              },
-              secondarySchool: {
-                name:
-                  $('input[name="secondarySchool.name"]').val()?.trim() || "",
-                address:
-                  $('input[name="secondarySchool.address"]').val()?.trim() ||
-                  "",
-                yearOfAttendance:
-                  $('input[name="secondarySchool.yearOfAttendance"]')
-                    .val()
-                    ?.trim() || "",
-              },
-              tertiaryInstitutions: [],
-            };
-
-            $(".institution-fields").each(function (index) {
-              const institution = {
-                name:
-                  $(this)
-                    .find(`input[name*="[${index}].name"]`)
-                    .val()
-                    ?.trim() || "",
-                address:
-                  $(this)
-                    .find(`input[name*="[${index}].address"]`)
-                    .val()
-                    ?.trim() || "",
-                certificateObtained:
-                  $(this)
-                    .find(`input[name*="[${index}].certificateObtained"]`)
-                    .val()
-                    ?.trim() || "",
-                matricNo:
-                  $(this)
-                    .find(`input[name*="[${index}].matricNo"]`)
-                    .val()
-                    ?.trim() || "",
-                yearOfAttendance:
-                  $(this)
-                    .find(`input[name*="[${index}].yearOfAttendance"]`)
-                    .val()
-                    ?.trim() || "",
-              };
-
-              // Only add if at least one field has data
-              if (
-                institution.name ||
-                institution.address ||
-                institution.certificateObtained ||
-                institution.matricNo ||
-                institution.yearOfAttendance
-              ) {
-                educationalHistory.tertiaryInstitutions.push(institution);
-              }
-            });
-
-            // Employment History
-            const employmentHistory = [];
-            $(".employment-fields").each(function () {
-              const employment = {
-                companyName:
-                  $(this).find('input[name="companyName[]"]').val()?.trim() ||
-                  "",
-                address:
-                  $(this).find('input[name="address[]"]').val()?.trim() || "",
-                designation:
-                  $(this).find('input[name="designation[]"]').val()?.trim() ||
-                  "",
-                startYear:
-                  $(this).find('input[name="startYear[]"]').val()?.trim() || "",
-                endYear:
-                  $(this).find('input[name="endYear[]"]').val()?.trim() || "",
-                isCurrentEmployment: $(this)
-                  .find('input[name="isCurrentEmployment[]"]')
-                  .is(":checked"),
-                description:
-                  $(this)
-                    .find('textarea[name="description[]"]')
-                    .val()
-                    ?.trim() || "",
-              };
-
-              // Only add if at least one field has data
-              if (
-                employment.companyName ||
-                employment.address ||
-                employment.designation ||
-                employment.startYear ||
-                employment.endYear ||
-                employment.description
-              ) {
-                employmentHistory.push(employment);
-              }
-            });
-
-            return {
-              formData,
-              nextOfKin,
-              healthInfo,
-              business,
-              educationalHistory,
-              employmentHistory,
-              neighbor,
-              family,
-            };
-          } catch (error) {
-            console.error("Error collecting form data:", error);
-            throw error;
-          }
-        };
-
-        /* ===================================================
-         * Auto-Save / Update Handling (Improved)
-         * =================================================== */
-        let cameraStream = null;
-        let photoCaptured = false;
-
-        // Utility: Convert dataURL to File
-        function dataURLtoFile(dataurl, filename) {
-          try {
-            const arr = dataurl.split(",");
-            const mime = arr[0].match(/:(.*?);/)[1];
-            const bstr = atob(arr[1]);
-            let n = bstr.length;
-            const u8arr = new Uint8Array(n);
-            while (n--) {
-              u8arr[n] = bstr.charCodeAt(n);
-            }
-            return new File([u8arr], filename, { type: mime });
-          } catch (error) {
-            console.error("Error converting dataURL to file:", error);
-            return null;
-          }
         }
-
-        // Enhanced Auto-Save System with Data Loss Prevention
-        class FormDataManager {
-          constructor() {
-            this.state = {
-              autoSaveTimer: null,
-              retryTimer: null,
-              maxRetries: 3,
-              retryDelay: 2000,
-              currentRetryCount: 0,
-              lastSaveAttempt: null,
-              pendingChanges: false,
-              isOnline: navigator.onLine,
-              formData: new Map(),
-              lastKnownGoodState: null,
-            };
-
-            this.initializeNetworkMonitoring();
-            this.initializePageUnloadProtection();
-            this.loadPersistedData();
-          }
-
-          // Network monitoring to detect connectivity issues
-          initializeNetworkMonitoring() {
-            window.addEventListener("online", () => {
-              console.log("Connection restored");
-              this.state.isOnline = true;
-              this.updateStatus("Connection restored. Syncing data...", "blue");
-              if (this.state.pendingChanges) {
-                this.performAutoSave();
-              }
-            });
-
-            window.addEventListener("offline", () => {
-              console.log("Connection lost");
-              this.state.isOnline = false;
-              this.updateStatus("Offline - changes saved locally", "orange");
-            });
-          }
-
-          // Prevent data loss on page unload
-          initializePageUnloadProtection() {
-            window.addEventListener("beforeunload", (e) => {
-              if (this.state.pendingChanges) {
-                // Save to local storage as backup
-                this.saveToLocalStorage();
-
-                // Show confirmation dialog
-                const message =
-                  "You have unsaved changes. Are you sure you want to leave?";
-                e.returnValue = message;
-                return message;
-              }
-            });
-
-            // Handle page visibility changes (mobile browsers)
-            document.addEventListener("visibilitychange", () => {
-              if (
-                document.visibilityState === "hidden" &&
-                this.state.pendingChanges
-              ) {
-                this.saveToLocalStorage();
-                if (this.state.isOnline) {
-                  this.performAutoSave(true); // Force immediate save
-                }
-              }
-            });
-          }
-
-          // Load persisted data from local storage
-          loadPersistedData() {
-            try {
-              const savedData = localStorage.getItem("formData_backup");
-              if (savedData) {
-                const parsedData = JSON.parse(savedData);
-                const timestamp = new Date(parsedData.timestamp);
-                const now = new Date();
-
-                // Only restore if data is less than 24 hours old
-                if (now - timestamp < 24 * 60 * 60 * 1000) {
-                  this.showDataRecoveryDialog(parsedData.data);
-                } else {
-                  localStorage.removeItem("formData_backup");
-                }
-              }
-            } catch (error) {
-              console.warn("Failed to load persisted data:", error);
-              localStorage.removeItem("formData_backup");
-            }
-          }
-
-          // Show dialog to recover unsaved data
-          showDataRecoveryDialog(savedData) {
-            Swal.fire({
-              title: "Recover Unsaved Changes?",
-              text: "We found unsaved changes from your previous session. Would you like to restore them?",
-              icon: "question",
-              showCancelButton: true,
-              confirmButtonText: "Restore",
-              cancelButtonText: "Discard",
-            }).then((result) => {
-              if (result.isConfirmed) {
-                this.restoreFormData(savedData);
-                this.updateStatus("Previous session data restored", "green");
-              } else {
-                localStorage.removeItem("formData_backup");
-              }
-            });
-          }
-
-          // Restore form data to the page
-          restoreFormData(data) {
-            Object.entries(data).forEach(([key, value]) => {
-              const element = $(`[name="${key}"], #${key}`);
-              if (element.length) {
-                if (
-                  element.is('input[type="checkbox"]') ||
-                  element.is('input[type="radio"]')
-                ) {
-                  element.prop("checked", value);
-                } else {
-                  element.val(value);
-                }
-              }
-            });
-            this.state.pendingChanges = true;
-          }
-
-          // Save form data to local storage as backup
-          saveToLocalStorage() {
-            try {
-              const formData = this.collectFormData();
-              const backupData = {
-                data: formData,
-                timestamp: new Date().toISOString(),
-              };
-              localStorage.setItem(
-                "formData_backup",
-                JSON.stringify(backupData)
-              );
-              console.log("Form data backed up to local storage");
-            } catch (error) {
-              console.warn("Failed to save to local storage:", error);
-            }
-          }
-
-          // Collect all form data
-          collectFormData() {
-            const formData = {};
-
-            // Collect regular form inputs
-            $(
-              "#unifiedForm input, #unifiedForm select, #unifiedForm textarea"
-            ).each(function () {
-              const $el = $(this);
-              const name = $el.attr("name") || $el.attr("id");
-
-              if (name) {
-                if (
-                  $el.is('input[type="checkbox"]') ||
-                  $el.is('input[type="radio"]')
-                ) {
-                  formData[name] = $el.is(":checked");
-                } else {
-                  formData[name] = $el.val();
-                }
-              }
-            });
-
-            return formData;
-          }
-
-          // Enhanced auto-save with retry mechanism
-          async performAutoSave(forceImmediate = false) {
-            if (!this.state.isOnline && !forceImmediate) {
-              this.saveToLocalStorage();
-              this.updateStatus("Offline - saved locally", "orange");
-              return;
-            }
-
-            this.state.lastSaveAttempt = new Date();
-
-            try {
-              // Collect form data
-              const formData = new FormData();
-              const collectedData = this.collectFormData();
-
-              // Add regular form fields
-              Object.entries(collectedData).forEach(([key, value]) => {
-                if (value !== null && value !== undefined) {
-                  formData.append(key, value);
-                }
-              });
-
-              // Add photo data if present
-              // const photoData = $("#passportPhotoData").val();
-              // if (photoData) {
-              //   // Convert base64 to blob for more efficient transmission
-              //   const blob = this.base64ToBlob(photoData);
-              //   formData.append("passportPhoto", blob, "passport_photo.jpg");
-              // }
-
-              const canvas = $("#snapshot").get(0);
-              const dataURL = canvas.toDataURL("image/jpeg", 0.9);
-              const passportPhotoFile = $("#passportPhoto")[0]?.files[0];
-
-              // console.log("photoCaptured:", photoCaptured);
-              // console.log("passportPhotoFile:", passportPhotoFile);
-              // console.log("dataURL from canvas:", dataURL);
-
-              if (photoCaptured && dataURL) {
-                formData.append(
-                  "passportPhoto",
-                  dataURLtoFile(dataURL, "captured-passport.jpg")
-                );
-              } else if (passportPhotoFile) {
-                formData.append("passportPhoto", passportPhotoFile);
-              }
-
-              // Perform the save operation
-              const response = await this.saveWithRetry(formData);
-
-              if (response.ok) {
-                this.onSaveSuccess();
-              } else {
-                throw new Error(
-                  `Server error: ${response.status} ${response.statusText}`
-                );
-              }
-            } catch (error) {
-              this.onSaveError(error);
-            }
-          }
-
-          // Save with retry mechanism
-          async saveWithRetry(formData, retryCount = 0) {
-            try {
-              const token =
-                localStorage.getItem("authToken") ||
-                sessionStorage.getItem("authToken");
-              if (!token) {
-                throw new Error("Authentication token not found");
-              }
-
-              const user = JSON.parse(
-                localStorage.getItem("user") ||
-                  sessionStorage.getItem("user") ||
-                  "{}"
-              );
-              if (!user.id) {
-                throw new Error("User ID not found");
-              }
-
-              const controller = new AbortController();
-              const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
-
-              const response = await fetch(`${BACKEND_URL}/users/${user.id}`, {
-                method: "PUT",
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-                body: formData,
-                signal: controller.signal,
-              });
-
-              clearTimeout(timeoutId);
-              return response;
-            } catch (error) {
-              if (retryCount < this.state.maxRetries) {
-                console.log(
-                  `Save attempt ${retryCount + 1} failed, retrying in ${
-                    this.state.retryDelay
-                  }ms...`
-                );
-                this.updateStatus(
-                  `Save failed, retrying... (${retryCount + 1}/${
-                    this.state.maxRetries
-                  })`,
-                  "orange"
-                );
-
-                await new Promise((resolve) =>
-                  setTimeout(resolve, this.state.retryDelay)
-                );
-                return this.saveWithRetry(formData, retryCount + 1);
-              }
-              throw error;
-            }
-          }
-
-          // Handle successful save
-          onSaveSuccess() {
-            console.log("Auto-save successful");
-            this.updateStatus("Saved", "green");
-            this.state.pendingChanges = false;
-            this.state.currentRetryCount = 0;
-            this.state.lastKnownGoodState = this.collectFormData();
-
-            // Remove local storage backup after successful save
-            localStorage.removeItem("formData_backup");
-
-            // Clear any retry timers
-            if (this.state.retryTimer) {
-              clearTimeout(this.state.retryTimer);
-              this.state.retryTimer = null;
-            }
-          }
-
-          // Handle save errors
-          onSaveError(error) {
-            console.error("Auto-save error:", error);
-
-            // Save to local storage as fallback
-            this.saveToLocalStorage();
-
-            if (error.name === "AbortError") {
-              this.updateStatus("Save timed out - saved locally", "red");
-            } else if (!this.state.isOnline) {
-              this.updateStatus("Offline - saved locally", "orange");
-            } else {
-              this.updateStatus("Failed to save - saved locally", "red");
-            }
-
-            // Schedule retry if online
-            if (
-              this.state.isOnline &&
-              this.state.currentRetryCount < this.state.maxRetries
-            ) {
-              this.state.retryTimer = setTimeout(() => {
-                this.performAutoSave();
-              }, this.state.retryDelay * (this.state.currentRetryCount + 1));
-            }
-          }
-
-          // Update status indicator
-          updateStatus(message, color) {
-            $("#autoSaveStatus").text(message).css("color", color);
-          }
-
-          // Convert base64 to blob for efficient transmission
-          base64ToBlob(base64String) {
-            const parts = base64String.split(",");
-            const contentType = parts[0].match(/:(.*?);/)[1];
-            const raw = window.atob(parts[1]);
-            const rawLength = raw.length;
-            const uint8Array = new Uint8Array(rawLength);
-
-            for (let i = 0; i < rawLength; ++i) {
-              uint8Array[i] = raw.charCodeAt(i);
-            }
-
-            return new Blob([uint8Array], { type: contentType });
-          }
-
-          // Debounced auto-save trigger
-          triggerAutoSave() {
-            this.state.pendingChanges = true;
-            clearTimeout(this.state.autoSaveTimer);
-            this.updateStatus("Saving...", "blue");
-
-            this.state.autoSaveTimer = setTimeout(() => {
-              this.performAutoSave();
-            }, 1000); // 1-second debounce
-          }
-
-          // Force immediate save (for critical operations)
-          async forceSave() {
-            clearTimeout(this.state.autoSaveTimer);
-            this.updateStatus("Saving...", "blue");
-            await this.performAutoSave(true);
-          }
-        }
-
-        // Initialize the form data manager
-        const formManager = new FormDataManager();
-
-        // Camera and photo handling with enhanced error handling
-        // let cameraStream = null;
-        // let photoCaptured = false;
-
-        // ✅ Enhanced Camera Start
-        $("#start-camera").click(async function () {
-          try {
-            const constraints = {
-              video: {
-                width: { ideal: 1280 },
-                height: { ideal: 720 },
-                facingMode: "user",
-              },
-            };
-
-            cameraStream = await navigator.mediaDevices.getUserMedia(
-              constraints
-            );
-            $("#camera-stream").get(0).srcObject = cameraStream;
-            $("#camera-stream").show();
-            $("#capture-photo, #close-camera").show();
-            $("#start-camera").hide();
-            $("#photo-preview").hide();
-          } catch (err) {
-            console.error("Camera access error:", err);
-            let errorMessage = "Unable to access camera: ";
-
-            if (err.name === "NotAllowedError") {
-              errorMessage += "Permission denied. Please allow camera access.";
-            } else if (err.name === "NotFoundError") {
-              errorMessage += "No camera found on this device.";
-            } else {
-              errorMessage += err.message;
-            }
-
-            Swal.fire({
-              title: "Camera Error",
-              text: errorMessage,
-              icon: "error",
-            });
-          }
-        });
-
-        // ✅ Enhanced Capture Photo with validation
-        $("#capture-photo").click(function () {
-          try {
-            const video = $("#camera-stream").get(0);
-            const canvas = $("#snapshot").get(0);
-            const context = canvas.getContext("2d");
-
-            if (!video.videoWidth || !video.videoHeight) {
-              throw new Error("Video stream not ready");
-            }
-
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-            const dataUrl = canvas.toDataURL("image/jpeg", 0.9);
-
-            // Validate the captured image
-            if (dataUrl === "data:,") {
-              throw new Error("Failed to capture image");
-            }
-
-            $("#photo-preview").attr("src", dataUrl).show();
-            $("#passportPhotoData").val(dataUrl);
-
-            // Clean up camera stream
-            if (cameraStream) {
-              cameraStream.getTracks().forEach((track) => track.stop());
-              cameraStream = null;
-            }
-
-            $("#camera-stream, #capture-photo, #close-camera").hide();
-            $("#start-camera").show();
-            photoCaptured = true;
-
-            formManager.updateStatus("Photo captured! Saving...", "orange");
-            console.log("Calling autoSave() after camera capture...");
-            formManager.triggerAutoSave();
-          } catch (error) {
-            console.error("Photo capture error:", error);
-            Swal.fire({
-              title: "Capture Error",
-              text: "Failed to capture photo: " + error.message,
-              icon: "error",
-            });
-          }
-        });
-
-        // ✅ Enhanced Close Camera
-        $("#close-camera").click(function () {
-          if (cameraStream) {
-            cameraStream.getTracks().forEach((track) => track.stop());
-            cameraStream = null;
-          }
-          $("#camera-stream, #capture-photo, #close-camera").hide();
-          $("#start-camera").show();
-        });
-
-        // ✅ Enhanced Upload Photo from File
-        $("#upload-photo-btn").click(function () {
-          $("#passportPhoto").click();
-        });
-
-        $("#passportPhoto").change(function (e) {
-          const file = e.target.files[0];
-          if (file) {
-            // Validate file type and size
-            const validTypes = ["image/jpeg", "image/jpg", "image/png"];
-            const maxSize = 5 * 1024 * 1024; // 5MB
-
-            if (!validTypes.includes(file.type)) {
-              Swal.fire({
-                title: "Invalid File Type",
-                text: "Please select a JPEG or PNG image.",
-                icon: "error",
-              });
-              return;
-            }
-
-            if (file.size > maxSize) {
-              Swal.fire({
-                title: "File Too Large",
-                text: "Please select an image smaller than 5MB.",
-                icon: "error",
-              });
-              return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function (event) {
-              $("#photo-preview").attr("src", event.target.result).show();
-              $("#passportPhotoData").val(event.target.result);
-
-              // Clean up camera if active
-              if (cameraStream) {
-                cameraStream.getTracks().forEach((track) => track.stop());
-                cameraStream = null;
-                $("#camera-stream, #capture-photo, #close-camera").hide();
-                $("#start-camera").show();
-              }
-
-              photoCaptured = false;
-              formManager.updateStatus("Photo uploaded! Saving...", "orange");
-              console.log("Calling autoSave() after photo upload...");
-              formManager.triggerAutoSave();
-            };
-
-            reader.onerror = function () {
-              Swal.fire({
-                title: "File Read Error",
-                text: "Failed to read the selected file.",
-                icon: "error",
-              });
-            };
-
-            reader.readAsDataURL(file);
-          }
-        });
-
-        /* ===================================================
-         * Enhanced Event Bindings
-         * =================================================== */
-
-        const bindEvents = () => {
-          // Bind the click events to add new sections
-          $("#add-institution").on("click", addInstitution);
-          $("#add-neighbor").on("click", addNeighbor);
-          $("#add-family").on("click", addFamily);
-          $("#add-employment").on("click", addEmployment);
-
-          // Enhanced input change detection
-          $(document).on(
-            "input change",
-            "input, select, textarea",
-            function () {
-              formManager.triggerAutoSave();
-            }
-          );
-
-          // Enhanced form submission with validation
-          $("#unifiedForm").on("submit", async function (e) {
-            e.preventDefault();
-
-            try {
-              // Show loading state
-              Swal.fire({
-                title: "Submitting...",
-                text: "Please wait while we save your information.",
-                allowOutsideClick: false,
-                didOpen: () => {
-                  Swal.showLoading();
-                },
-              });
-
-              // Force save before submission
-              await formManager.forceSave();
-
-              // Close loading and show success
-              Swal.fire({
-                title: "Success!",
-                text: "Your form has been submitted successfully.",
-                icon: "success",
-                confirmButtonText: "OK",
-              });
-            } catch (error) {
-              Swal.fire({
-                title: "Submission Error",
-                text: "Failed to submit form. Your data has been saved locally and will be retried automatically.",
-                icon: "error",
-                confirmButtonText: "OK",
-              });
-            }
-          });
-        };
-
-        // Initialize all event bindings
-        bindEvents();
-
-        // Add periodic sync for offline changes
-        setInterval(() => {
-          if (formManager.state.isOnline && formManager.state.pendingChanges) {
-            const lastAttempt = formManager.state.lastSaveAttempt;
-            const now = new Date();
-
-            // If no recent save attempt, try to sync
-            if (!lastAttempt || now - lastAttempt > 60000) {
-              // 1 minute
-              console.log("Periodic sync attempt...");
-              formManager.performAutoSave();
-            }
-          }
-        }, 30000); // Check every 30 seconds
-      });
+      }
     </script>
+
+    <!-- jQuery and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
