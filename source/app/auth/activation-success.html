@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -23,5 +23,368 @@
         <a href="login.html" class="alert-link">log in</a>.
       </div>
     </div>
+  </body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Activation Successful</title>
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+    <!-- Font Awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="/assets/images/benue-state-logo.png"
+      sizes="16x16"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+      :root {
+        --primary-color: #25a18e;
+        --primary-dark: #1e7f70;
+        --primary-light: #3db8a5;
+        --secondary-color: #2e8b57;
+        --success-color: #28a745;
+        --success-light: #52c41a;
+        --light-bg: #f8f9fa;
+        --white: #ffffff;
+        --text-dark: #212529;
+        --text-muted: #6c757d;
+        --border-radius: 12px;
+        --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        --transition: all 0.3s ease;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(
+          135deg,
+          var(--primary-color) 0%,
+          var(--secondary-color) 100%
+        );
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Background pattern */
+      body::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: radial-gradient(
+            circle at 10% 20%,
+            rgba(255, 255, 255, 0.05) 0%,
+            transparent 20%
+          ),
+          radial-gradient(
+            circle at 80% 80%,
+            rgba(255, 255, 255, 0.05) 0%,
+            transparent 20%
+          ),
+          radial-gradient(
+            circle at 40% 40%,
+            rgba(255, 255, 255, 0.03) 0%,
+            transparent 20%
+          );
+        z-index: 0;
+      }
+
+      .container {
+        max-width: 600px;
+        width: 90%;
+        position: relative;
+        z-index: 1;
+        animation: fadeInUp 0.6s ease forwards;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .success-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        padding: 50px 40px;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Success icon animation */
+      .success-icon {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto 30px;
+        position: relative;
+      }
+
+      .success-icon i {
+        font-size: 60px;
+        color: var(--success-color);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        animation: scaleIn 0.5s ease forwards;
+      }
+
+      .success-icon::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: rgba(40, 167, 69, 0.1);
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes scaleIn {
+        from {
+          transform: translate(-50%, -50%) scale(0);
+        }
+        to {
+          transform: translate(-50%, -50%) scale(1);
+        }
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(1.1);
+          opacity: 0.7;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      .success-title {
+        color: var(--text-dark);
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+      }
+
+      .success-message {
+        color: var(--text-muted);
+        font-size: 1.1rem;
+        margin-bottom: 30px;
+        line-height: 1.6;
+      }
+
+      .btn-login {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color) 0%,
+          var(--primary-dark) 100%
+        );
+        color: var(--white);
+        border: none;
+        border-radius: 8px;
+        padding: 12px 40px;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: var(--transition);
+        box-shadow: 0 4px 8px rgba(37, 161, 142, 0.3);
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .btn-login:hover {
+        background: linear-gradient(
+          135deg,
+          var(--primary-dark) 0%,
+          var(--primary-color) 100%
+        );
+        color: var(--white);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(37, 161, 142, 0.4);
+        text-decoration: none;
+      }
+
+      .btn-login:active {
+        transform: translateY(0);
+      }
+
+      /* Decorative elements */
+      .decoration {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        pointer-events: none;
+      }
+
+      .decoration-1 {
+        width: 80px;
+        height: 80px;
+        top: -20px;
+        right: -20px;
+      }
+
+      .decoration-2 {
+        width: 60px;
+        height: 60px;
+        bottom: -15px;
+        left: -15px;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 576px) {
+        .success-card {
+          padding: 40px 30px;
+        }
+
+        .success-title {
+          font-size: 1.5rem;
+        }
+
+        .success-message {
+          font-size: 1rem;
+        }
+
+        .btn-login {
+          padding: 10px 30px;
+          font-size: 0.9rem;
+        }
+      }
+
+      /* Confetti animation */
+      .confetti {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background: var(--success-color);
+        animation: confetti-fall 3s linear infinite;
+      }
+
+      @keyframes confetti-fall {
+        0% {
+          transform: translateY(-100vh) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(100vh) rotate(720deg);
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="success-card">
+        <!-- Decorative elements -->
+        <div class="decoration decoration-1"></div>
+        <div class="decoration decoration-2"></div>
+
+        <!-- Success icon -->
+        <div class="success-icon">
+          <i class="fas fa-check-circle"></i>
+        </div>
+
+        <!-- Success message -->
+        <h1 class="success-title">Activation Successful!</h1>
+        <p class="success-message">
+          Your account has been successfully activated! You can now log in and
+          access all the features of the Benue State Integrated Citizenship and
+          Resident Identity Registration Management System.
+        </p>
+
+        <!-- Login button -->
+        <a href="login.html" class="btn-login">
+          <i class="fas fa-sign-in-alt me-2"></i>
+          Log In Now
+        </a>
+      </div>
+    </div>
+
+    <!-- Confetti elements -->
+    <div
+      class="confetti"
+      style="left: 10%; animation-delay: 0s; background: #28a745"
+    ></div>
+    <div
+      class="confetti"
+      style="left: 20%; animation-delay: 0.5s; background: #52c41a"
+    ></div>
+    <div
+      class="confetti"
+      style="left: 30%; animation-delay: 1s; background: #25a18e"
+    ></div>
+    <div
+      class="confetti"
+      style="left: 40%; animation-delay: 1.5s; background: #2e8b57"
+    ></div>
+    <div
+      class="confetti"
+      style="left: 50%; animation-delay: 2s; background: #28a745"
+    ></div>
+    <div
+      class="confetti"
+      style="left: 60%; animation-delay: 2.5s; background: #52c41a"
+    ></div>
+    <div
+      class="confetti"
+      style="left: 70%; animation-delay: 0.3s; background: #25a18e"
+    ></div>
+    <div
+      class="confetti"
+      style="left: 80%; animation-delay: 0.8s; background: #2e8b57"
+    ></div>
+    <div
+      class="confetti"
+      style="left: 90%; animation-delay: 1.3s; background: #28a745"
+    ></div>
+
+    <script>
+      $(document).ready(function () {
+        // Optional: Add any interactive features
+        // For example, auto-redirect after 5 seconds
+        setTimeout(function () {
+          // Uncomment the line below if you want auto-redirect
+          // window.location.href = "login.html";
+        }, 5000);
+      });
+    </script>
   </body>
 </html>
