@@ -587,7 +587,7 @@
       </nav>
     </aside>
 
-    <!-- Header -->
+    Header
     <header class="header">
       <button class="btn btn-light d-md-none me-3" id="sidebarToggle">
         <i class="bi bi-list"></i>
@@ -3698,7 +3698,7 @@
                         }" required>
                     </div>
                       <div class="col-md-4 mb-3">
-                        <label class="form-label">Phone</label>
+                        <label class="form-label">Email</label>
                         <input type="email" class="form-control neighbor-email" value="${
                           neighbor.email || ""
                         }" required>
@@ -3801,7 +3801,7 @@
                       </div>
                       <div class="row">
                          <div class="col-md-6 mb-3">
-                              <label class="form-label">Phone</label>
+                              <label class="form-label">Email</label>
                               <input type="email" class="form-control family-email" value="${
                                 family.email || ""
                               }" required>
@@ -4676,7 +4676,8 @@
         } catch (error) {
           console.error("Error updating profile:", error.message);
           showNotification(
-            "Failed to update profile. Please try again.",
+            error.responseJSON?.message ||
+              "Failed to update profile. Please try again.",
             "danger"
           );
         } finally {
@@ -5017,19 +5018,6 @@
         });
         return data;
       }
-
-      // function getEmploymentHistoryData() {
-      //   const data = [];
-      //   $(".employment-item").each(function () {
-      //     data.push({
-      //       company: $(this).find(".employment-company").val(),
-      //       position: $(this).find(".employment-position").val(),
-      //       start: $(this).find(".employment-start").val(),
-      //       end: $(this).find(".employment-end").val(),
-      //     });
-      //   });
-      //   return data;
-      // }
 
       // Refactored getEmploymentHistoryData helper function
       function getEmploymentHistoryData() {
@@ -5699,7 +5687,7 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Start Year</label>
-                            <input type="month" class="form-control education-startYear" value="${
+                            <input type="month" class="form-control education-start" value="${
                               edu.startDate
                                 ? new Date(edu.startDate)
                                     .toISOString()
@@ -5709,7 +5697,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">End Year</label>
-                            <input type="month" class="form-control education-endYear" value="${
+                            <input type="month" class="form-control education-end" value="${
                               edu.endDate
                                 ? new Date(edu.endDate)
                                     .toISOString()
@@ -5833,7 +5821,6 @@
         };
 
         return function (data, type, row) {
-          console.log("Rendering actions for row:", row);
           const buttons = [];
 
           const isPaid = row.paymentStatus === "paid";
@@ -6742,24 +6729,6 @@
         }, 5000);
       }
 
-      // Event delegation for dynamically created elements
-      // $(document).on("click", ".download-btn", function () {
-      //   const requestId = $(this).data("id");
-      //   showNotification(`Downloading document ${requestId}...`, "info");
-
-      //   // Simulate download delay
-      //   setTimeout(() => {
-      //     showNotification(
-      //       `Document ${requestId} downloaded successfully`,
-      //       "success"
-      //     );
-      //   }, 1500);
-
-      //   // In a real implementation, this would make an API call
-      //   // GET /api/documents/:id/download
-      //   console.log("API Call: GET /api/documents/" + requestId + "/download");
-      // });
-
       $(document).on("click", ".view-btn", async function () {
         const requestId = $(this).data("id");
         const requestType = $(this).data("type"); // "certificate" or "idcard"
@@ -7650,44 +7619,6 @@
         }
       }
 
-      // function addEmployment() {
-      //   const empItem = $(`
-      //     <div class="employment-item mb-3">
-      //         <div class="card">
-      //             <div class="card-body">
-      //                 <div class="row">
-      //                     <div class="col-md-6 mb-3">
-      //                         <label class="form-label">Company Name</label>
-      //                         <input type="text" class="form-control employment-company" required>
-      //                     </div>
-      //                     <div class="col-md-6 mb-3">
-      //                         <label class="form-label">Position</label>
-      //                         <input type="text" class="form-control employment-position" required>
-      //                     </div>
-      //                 </div>
-      //                 <div class="row">
-      //                     <div class="col-md-6 mb-3">
-      //                         <label class="form-label">Start Date</label>
-      //                         <input type="date" class="form-control employment-start" required>
-      //                     </div>
-      //                     <div class="col-md-6 mb-3">
-      //                         <label class="form-label">End Date</label>
-      //                         <input type="date" class="form-control employment-end">
-      //                     </div>
-      //                 </div>
-      //                 <div class="text-end">
-      //                     <button type="button" class="btn btn-sm btn-outline-danger remove-employment">
-      //                         <i class="bi bi-trash"></i> Remove
-      //                     </button>
-      //                 </div>
-      //             </div>
-      //         </div>
-      //     </div>
-      // `);
-      //   $("#employmentHistoryContainer").append(empItem);
-      // }
-
-      // Refactored addEmployment function
       function addEmployment() {
         const uniqueId = Date.now(); // For unique checkbox ID
         const empItem = $(`
