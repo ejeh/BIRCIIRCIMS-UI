@@ -144,18 +144,27 @@
         background-color: var(--header-bg);
         z-index: 999;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+
         display: flex;
         align-items: center;
+
+        /* Keep layout clean and spaced */
         padding: 0 20px;
+        gap: 20px;
+
         transition: all 0.3s ease;
       }
 
+      /* Search bar stays in the middle-left and expands */
       .header .search-bar {
-        flex: 1;
-        max-width: 400px;
+        flex: 1; /* Fills the available space */
+        max-width: 400px; /* Prevents it from stretching too wide */
       }
 
+      /* Push header actions to the far right */
       .header .header-actions {
+        margin-left: auto; /* The key fix: pushes this entire block to right */
+
         display: flex;
         align-items: center;
         gap: 15px;
@@ -955,11 +964,10 @@
                 <tr>
                   <th>S/N</th>
                   <th>ID</th>
-
                   <th>Name</th>
                   <th>Email</th>
                   <th>Role</th>
-                  <th>IsActive</th>
+                  <th>Status</th>
                   <th>State</th>
                   <th>LGA</th>
                   <th>Registered</th>
@@ -4184,7 +4192,7 @@
                   ? new Date(req.created_at).toLocaleDateString()
                   : "N/A",
                 approvedBy: req.approvedBy
-                  ? `${req.approvedBy.firstname} ${req.approvedBy.lastname}`
+                  ? `${req.approvedBy?.firstname} ${req.approvedBy?.lastname}`
                   : req.status === "Rejected"
                   ? "Rejected by Admin"
                   : "Not yet approved",
@@ -5277,7 +5285,13 @@
                   `${u.firstname || ""} ${u.lastname || ""}`.trim() || "N/A",
                 email: u.email || "N/A",
                 role: u.role || "user",
-                assignedBy: u.assignedBy || "N/A",
+                // assignedBy:
+                //   `${u.assignedBy.firstname || ""} ${
+                //     u.assignedBy.lastname || ""
+                //   }`.trim() || "N/A",
+                assignedBy: u.assignedBy
+                  ? `${u.assignedBy?.firstname} ${u.assignedBy?.lastname}`
+                  : "N/A",
                 registeredAt: new Date(u.created_at).toLocaleString(),
               })),
               columns: [

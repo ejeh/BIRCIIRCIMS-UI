@@ -134,18 +134,27 @@
         background-color: var(--header-bg);
         z-index: 999;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+
         display: flex;
         align-items: center;
+
+        /* Keep layout clean and spaced */
         padding: 0 20px;
+        gap: 20px;
+
         transition: all 0.3s ease;
       }
 
+      /* Search bar stays in the middle-left and expands */
       .header .search-bar {
-        flex: 1;
-        max-width: 400px;
+        flex: 1; /* Fills the available space */
+        max-width: 400px; /* Prevents it from stretching too wide */
       }
 
+      /* Push header actions to the far right */
       .header .header-actions {
+        margin-left: auto; /* The key fix: pushes this entire block to right */
+
         display: flex;
         align-items: center;
         gap: 15px;
@@ -3365,11 +3374,11 @@
       <div class="loader"></div>
       <div class="loading-message">Loading...</div>
     </div>
-    <!-- Mock Mode Toggle -->
+    <!-- Mock Mode Toggle
     <div class="form-check form-switch mock-mode-toggle">
       <input class="form-check-input" type="checkbox" id="mockModeToggle" />
       <label class="form-check-label" for="mockModeToggle">Mock Mode</label>
-    </div>
+    </div> -->
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -3386,366 +3395,366 @@
     <script type="text/javascript" src="../js/index.js"></script>
 
     <script>
-      // Add these near the top of your script
-      let allCertificateRequests = [];
-      let allIdCardRequests = [];
-      const mockAPI = {
-        // Current user data
-        currentUser: {
-          id: "64a1b2c3d4e5f6789012345", // MongoDB ObjectId format
-          email: "john.doe@example.com",
-          firstname: "John",
-          lastname: "Doe",
-          middlename: "Michael",
-          isActive: true,
-          DOB: "1990-05-15",
-          maritalStatus: "Single",
-          gender: "Male",
-          nationality: "Nigerian",
-          stateOfOrigin: "Lagos",
-          lgaOfOrigin: "Ikeja",
-          stateOfResidence: "Lagos",
-          lgaOfResidence: "Ikeja",
-          house_number: "123",
-          street_name: "Main Street",
-          nearest_bus_stop_landmark: "City Mall",
-          city_town: "Ikeja",
-          countryOfResidence: "Nigeria",
-          identification: "National ID",
-          id_number: "12345678901",
-          issue_date: "2020-01-15",
-          expiry_date: "2025-01-15",
-          passportPhoto: "https://picsum.photos/seed/user/150/150.jpg",
-          nextOfKin: [
-            {
-              name: "Jane Doe",
-              relationship: "Spouse",
-              phone: "+2348023456789",
-              address: "123 Main Street, Ikeja, Lagos",
-            },
-          ],
-          employmentHistory: [
-            {
-              company: "Tech Solutions Ltd",
-              position: "Software Developer",
-              start: "2018-01-15",
-              end: "",
-            },
-          ],
-          business: [
-            {
-              name: "Doe Enterprises",
-              type: "Technology",
-              registrationNumber: "RC123456",
-            },
-          ],
-          educationalHistory: [
-            {
-              institution: "University of Lagos",
-              qualification: "B.Sc Computer Science",
-              start: "2012-09-15",
-              end: "2016-06-30",
-            },
-          ],
-          healthInfo: {
-            blood_group: "O+",
-            genotype: "AA",
-            medical_condition: "None",
-            disability: "None",
-          },
-          neighbor: "James Smith",
-          family: "Doe Family",
-          phone: "+2348012345678",
-          NIN: "12345678901",
-          role: "user",
-          religion: "Christianity",
-          community: "Yoruba",
-          isVerified: true,
-          isProfileCompleted: true,
-          profileCompletionPercentage: 85,
-          twoFactorEnabled: false,
-          created_at: "2023-01-15T10:30:00Z",
-        },
+      // // Add these near the top of your script
+      // let allCertificateRequests = [];
+      // let allIdCardRequests = [];
+      // const mockAPI = {
+      //   // Current user data
+      //   currentUser: {
+      //     id: "64a1b2c3d4e5f6789012345", // MongoDB ObjectId format
+      //     email: "john.doe@example.com",
+      //     firstname: "John",
+      //     lastname: "Doe",
+      //     middlename: "Michael",
+      //     isActive: true,
+      //     DOB: "1990-05-15",
+      //     maritalStatus: "Single",
+      //     gender: "Male",
+      //     nationality: "Nigerian",
+      //     stateOfOrigin: "Lagos",
+      //     lgaOfOrigin: "Ikeja",
+      //     stateOfResidence: "Lagos",
+      //     lgaOfResidence: "Ikeja",
+      //     house_number: "123",
+      //     street_name: "Main Street",
+      //     nearest_bus_stop_landmark: "City Mall",
+      //     city_town: "Ikeja",
+      //     countryOfResidence: "Nigeria",
+      //     identification: "National ID",
+      //     id_number: "12345678901",
+      //     issue_date: "2020-01-15",
+      //     expiry_date: "2025-01-15",
+      //     passportPhoto: "https://picsum.photos/seed/user/150/150.jpg",
+      //     nextOfKin: [
+      //       {
+      //         name: "Jane Doe",
+      //         relationship: "Spouse",
+      //         phone: "+2348023456789",
+      //         address: "123 Main Street, Ikeja, Lagos",
+      //       },
+      //     ],
+      //     employmentHistory: [
+      //       {
+      //         company: "Tech Solutions Ltd",
+      //         position: "Software Developer",
+      //         start: "2018-01-15",
+      //         end: "",
+      //       },
+      //     ],
+      //     business: [
+      //       {
+      //         name: "Doe Enterprises",
+      //         type: "Technology",
+      //         registrationNumber: "RC123456",
+      //       },
+      //     ],
+      //     educationalHistory: [
+      //       {
+      //         institution: "University of Lagos",
+      //         qualification: "B.Sc Computer Science",
+      //         start: "2012-09-15",
+      //         end: "2016-06-30",
+      //       },
+      //     ],
+      //     healthInfo: {
+      //       blood_group: "O+",
+      //       genotype: "AA",
+      //       medical_condition: "None",
+      //       disability: "None",
+      //     },
+      //     neighbor: "James Smith",
+      //     family: "Doe Family",
+      //     phone: "+2348012345678",
+      //     NIN: "12345678901",
+      //     role: "user",
+      //     religion: "Christianity",
+      //     community: "Yoruba",
+      //     isVerified: true,
+      //     isProfileCompleted: true,
+      //     profileCompletionPercentage: 85,
+      //     twoFactorEnabled: false,
+      //     created_at: "2023-01-15T10:30:00Z",
+      //   },
 
-        // ID Card requests (updated to match IdCard schema)
-        idcardRequests: [
-          {
-            id: "ID2023001",
-            refNumber: "ID2023001",
-            userId: "64a1b2c3d4e5f6789012345",
-            firstname: "John",
-            lastname: "Doe",
-            email: "john.doe@example.com",
-            status: "Approved",
-            card_type: "National ID",
-            dateOfIssue: "2023-01-15",
-            dateOfExpiration: "2028-01-15",
-            phone: "+2348012345678",
-            lga: "Ikeja",
-            approvalDate: "2023-02-01",
-            approvedBy: "64a1b2c3d4e5f6789012346",
-          },
-          {
-            id: "ID2023002",
-            refNumber: "ID2023002",
-            userId: "64a1b2c3d4e5f6789012345",
-            firstname: "John",
-            lastname: "Doe",
-            email: "john.doe@example.com",
-            status: "Pending",
-            card_type: "Driver's License",
-            dateOfIssue: "2023-03-10",
-            dateOfExpiration: "2028-03-10",
-            phone: "+2348012345678",
-            lga: "Ikeja",
-          },
-          {
-            id: "ID2023003",
-            refNumber: "ID2023003",
-            userId: "64a1b2c3d4e5f6789012345",
-            firstname: "John",
-            lastname: "Doe",
-            email: "john.doe@example.com",
-            status: "Rejected",
-            card_type: "Voter's Card",
-            dateOfIssue: "2023-02-05",
-            dateOfExpiration: "2028-02-05",
-            phone: "+2348012345678",
-            lga: "Ikeja",
-            rejectionReason: "Invalid documents provided",
-          },
-        ],
+      //   // ID Card requests (updated to match IdCard schema)
+      //   idcardRequests: [
+      //     {
+      //       id: "ID2023001",
+      //       refNumber: "ID2023001",
+      //       userId: "64a1b2c3d4e5f6789012345",
+      //       firstname: "John",
+      //       lastname: "Doe",
+      //       email: "john.doe@example.com",
+      //       status: "Approved",
+      //       card_type: "National ID",
+      //       dateOfIssue: "2023-01-15",
+      //       dateOfExpiration: "2028-01-15",
+      //       phone: "+2348012345678",
+      //       lga: "Ikeja",
+      //       approvalDate: "2023-02-01",
+      //       approvedBy: "64a1b2c3d4e5f6789012346",
+      //     },
+      //     {
+      //       id: "ID2023002",
+      //       refNumber: "ID2023002",
+      //       userId: "64a1b2c3d4e5f6789012345",
+      //       firstname: "John",
+      //       lastname: "Doe",
+      //       email: "john.doe@example.com",
+      //       status: "Pending",
+      //       card_type: "Driver's License",
+      //       dateOfIssue: "2023-03-10",
+      //       dateOfExpiration: "2028-03-10",
+      //       phone: "+2348012345678",
+      //       lga: "Ikeja",
+      //     },
+      //     {
+      //       id: "ID2023003",
+      //       refNumber: "ID2023003",
+      //       userId: "64a1b2c3d4e5f6789012345",
+      //       firstname: "John",
+      //       lastname: "Doe",
+      //       email: "john.doe@example.com",
+      //       status: "Rejected",
+      //       card_type: "Voter's Card",
+      //       dateOfIssue: "2023-02-05",
+      //       dateOfExpiration: "2028-02-05",
+      //       phone: "+2348012345678",
+      //       lga: "Ikeja",
+      //       rejectionReason: "Invalid documents provided",
+      //     },
+      //   ],
 
-        // Certificate requests (updated to match Certificate schema)
-        certificateRequests: [
-          {
-            id: "CERT2023001",
-            refNumber: "CERT2023001",
-            userId: "64a1b2c3d4e5f6789012345",
-            status: "Approved",
-            email: "john.doe@example.com",
-            firstname: "John",
-            lastname: "Doe",
-            middlename: "Michael",
-            DOB: new Date("1990-05-15"),
-            maritalStatus: "Single",
-            gender: "Male",
-            stateOfOrigin: "Lagos",
-            lgaOfOrigin: "Ikeja",
-            ward: "Central Ward",
-            address: "123 Main Street, Ikeja, Lagos",
-            phone: "+2348012345678",
-            kindred: "Yoruba",
-            fathersName: "Richard Doe",
-            fathersStateOfOrigin: "Lagos",
-            mothersName: "Mary Doe",
-            mothersStateOfOrigin: "Lagos",
-            purpose: "Employment verification",
-            passportPhoto: "https://picsum.photos/seed/user/150/150.jpg",
-            idCard: "National ID",
-            birthCertificate: "Birth Certificate",
-            approvalDate: "2023-03-15",
-            approvedBy: "64a1b2c3d4e5f6789012346",
-          },
-          {
-            id: "CERT2023002",
-            refNumber: "CERT2023002",
-            userId: "64a1b2c3d4e5f6789012345",
-            status: "Pending",
-            email: "john.doe@example.com",
-            firstname: "John",
-            lastname: "Doe",
-            middlename: "Michael",
-            DOB: new Date("1990-05-15"),
-            maritalStatus: "Single",
-            gender: "Male",
-            stateOfOrigin: "Lagos",
-            lgaOfOrigin: "Ikeja",
-            ward: "Central Ward",
-            address: "123 Main Street, Ikeja, Lagos",
-            phone: "+2348012345678",
-            kindred: "Yoruba",
-            fathersName: "Richard Doe",
-            fathersStateOfOrigin: "Lagos",
-            mothersName: "Mary Doe",
-            mothersStateOfOrigin: "Lagos",
-            purpose: "Bank account opening",
-            passportPhoto: "https://picsum.photos/seed/user/150/150.jpg",
-            idCard: "National ID",
-            birthCertificate: "Birth Certificate",
-          },
-        ],
+      //   // Certificate requests (updated to match Certificate schema)
+      //   certificateRequests: [
+      //     {
+      //       id: "CERT2023001",
+      //       refNumber: "CERT2023001",
+      //       userId: "64a1b2c3d4e5f6789012345",
+      //       status: "Approved",
+      //       email: "john.doe@example.com",
+      //       firstname: "John",
+      //       lastname: "Doe",
+      //       middlename: "Michael",
+      //       DOB: new Date("1990-05-15"),
+      //       maritalStatus: "Single",
+      //       gender: "Male",
+      //       stateOfOrigin: "Lagos",
+      //       lgaOfOrigin: "Ikeja",
+      //       ward: "Central Ward",
+      //       address: "123 Main Street, Ikeja, Lagos",
+      //       phone: "+2348012345678",
+      //       kindred: "Yoruba",
+      //       fathersName: "Richard Doe",
+      //       fathersStateOfOrigin: "Lagos",
+      //       mothersName: "Mary Doe",
+      //       mothersStateOfOrigin: "Lagos",
+      //       purpose: "Employment verification",
+      //       passportPhoto: "https://picsum.photos/seed/user/150/150.jpg",
+      //       idCard: "National ID",
+      //       birthCertificate: "Birth Certificate",
+      //       approvalDate: "2023-03-15",
+      //       approvedBy: "64a1b2c3d4e5f6789012346",
+      //     },
+      //     {
+      //       id: "CERT2023002",
+      //       refNumber: "CERT2023002",
+      //       userId: "64a1b2c3d4e5f6789012345",
+      //       status: "Pending",
+      //       email: "john.doe@example.com",
+      //       firstname: "John",
+      //       lastname: "Doe",
+      //       middlename: "Michael",
+      //       DOB: new Date("1990-05-15"),
+      //       maritalStatus: "Single",
+      //       gender: "Male",
+      //       stateOfOrigin: "Lagos",
+      //       lgaOfOrigin: "Ikeja",
+      //       ward: "Central Ward",
+      //       address: "123 Main Street, Ikeja, Lagos",
+      //       phone: "+2348012345678",
+      //       kindred: "Yoruba",
+      //       fathersName: "Richard Doe",
+      //       fathersStateOfOrigin: "Lagos",
+      //       mothersName: "Mary Doe",
+      //       mothersStateOfOrigin: "Lagos",
+      //       purpose: "Bank account opening",
+      //       passportPhoto: "https://picsum.photos/seed/user/150/150.jpg",
+      //       idCard: "National ID",
+      //       birthCertificate: "Birth Certificate",
+      //     },
+      //   ],
 
-        // Analytics data
-        analytics: {
-          idcardRequests: {
-            Jan: 2,
-            Feb: 1,
-            Mar: 3,
-            Apr: 2,
-          },
-          certificateRequests: {
-            Jan: 1,
-            Feb: 2,
-            Mar: 1,
-            Apr: 2,
-          },
-          requestStatus: {
-            Approved: 3,
-            Pending: 2,
-            Rejected: 1,
-          },
-          requestFrequency: {
-            Monday: 1,
-            Tuesday: 2,
-            Wednesday: 1,
-            Thursday: 2,
-            Friday: 1,
-            Saturday: 0,
-            Sunday: 0,
-          },
-        },
+      //   // Analytics data
+      //   analytics: {
+      //     idcardRequests: {
+      //       Jan: 2,
+      //       Feb: 1,
+      //       Mar: 3,
+      //       Apr: 2,
+      //     },
+      //     certificateRequests: {
+      //       Jan: 1,
+      //       Feb: 2,
+      //       Mar: 1,
+      //       Apr: 2,
+      //     },
+      //     requestStatus: {
+      //       Approved: 3,
+      //       Pending: 2,
+      //       Rejected: 1,
+      //     },
+      //     requestFrequency: {
+      //       Monday: 1,
+      //       Tuesday: 2,
+      //       Wednesday: 1,
+      //       Thursday: 2,
+      //       Friday: 1,
+      //       Saturday: 0,
+      //       Sunday: 0,
+      //     },
+      //   },
 
-        // Activity data
-        activities: [
-          { time: "2023-04-15 10:30", content: "Submitted ID card request" },
-          {
-            time: "2023-04-10 14:15",
-            content: "Certificate of Origin approved",
-          },
-          { time: "2023-03-15 09:45", content: "Updated profile information" },
-          {
-            time: "2023-03-10 16:20",
-            content: "Submitted Driver's License request",
-          },
-          {
-            time: "2023-02-05 11:30",
-            content: "Voter's Card request rejected",
-          },
-        ],
+      //   // Activity data
+      //   activities: [
+      //     { time: "2023-04-15 10:30", content: "Submitted ID card request" },
+      //     {
+      //       time: "2023-04-10 14:15",
+      //       content: "Certificate of Origin approved",
+      //     },
+      //     { time: "2023-03-15 09:45", content: "Updated profile information" },
+      //     {
+      //       time: "2023-03-10 16:20",
+      //       content: "Submitted Driver's License request",
+      //     },
+      //     {
+      //       time: "2023-02-05 11:30",
+      //       content: "Voter's Card request rejected",
+      //     },
+      //   ],
 
-        // Notifications
-        notifications: [
-          {
-            id: 1,
-            message: "Your ID card request has been approved",
-            read: false,
-          },
-          {
-            id: 2,
-            message: "Certificate of origin is ready for download",
-            read: false,
-          },
-          {
-            id: 3,
-            message: "Please complete your profile verification",
-            read: true,
-          },
-        ],
+      //   // Notifications
+      //   notifications: [
+      //     {
+      //       id: 1,
+      //       message: "Your ID card request has been approved",
+      //       read: false,
+      //     },
+      //     {
+      //       id: 2,
+      //       message: "Certificate of origin is ready for download",
+      //       read: false,
+      //     },
+      //     {
+      //       id: 3,
+      //       message: "Please complete your profile verification",
+      //       read: true,
+      //     },
+      //   ],
 
-        // Verification tokens data
-        verificationTokens: {
-          neighbor: [
-            {
-              id: "n1",
-              name: "James Smith",
-              phone: "+2348012345678",
-              address: "124 Main Street, Ikeja, Lagos",
-              verificationToken: "token123",
-              verificationLink: "https://example.com/verify/token123",
-              status: "verified",
-              verifiedAt: "2023-05-15T10:30:00Z",
-              comments: "Confirmed residence for 3 years",
-              verificationExpiresAt: "2023-06-15T23:59:59Z",
-            },
-            {
-              id: "n2",
-              name: "Sarah Johnson",
-              phone: "+2348023456789",
-              address: "126 Main Street, Ikeja, Lagos",
-              verificationToken: "token456",
-              verificationLink: "https://example.com/verify/token456",
-              status: "pending",
-              verificationExpiresAt: "2023-06-20T23:59:59Z",
-            },
-          ],
-          family: [
-            {
-              id: "f1",
-              name: "Richard Doe",
-              relationship: "Father",
-              phone: "+2348034567890",
-              address: "456 Oak Avenue, Ikeja, Lagos",
-              verificationToken: "token789",
-              verificationLink: "https://example.com/verify/token789",
-              status: "expired",
-              verificationExpiresAt: "2023-05-01T23:59:59Z",
-            },
-            {
-              id: "f2",
-              name: "Mary Doe",
-              relationship: "Mother",
-              phone: "+2348045678901",
-              address: "456 Oak Avenue, Ikeja, Lagos",
-              verificationToken: "token101",
-              verificationLink: "https://example.com/verify/token101",
-              status: "pending",
-              verificationExpiresAt: "2023-06-25T23:59:59Z",
-            },
-          ],
+      //   // Verification tokens data
+      //   verificationTokens: {
+      //     neighbor: [
+      //       {
+      //         id: "n1",
+      //         name: "James Smith",
+      //         phone: "+2348012345678",
+      //         address: "124 Main Street, Ikeja, Lagos",
+      //         verificationToken: "token123",
+      //         verificationLink: "https://example.com/verify/token123",
+      //         status: "verified",
+      //         verifiedAt: "2023-05-15T10:30:00Z",
+      //         comments: "Confirmed residence for 3 years",
+      //         verificationExpiresAt: "2023-06-15T23:59:59Z",
+      //       },
+      //       {
+      //         id: "n2",
+      //         name: "Sarah Johnson",
+      //         phone: "+2348023456789",
+      //         address: "126 Main Street, Ikeja, Lagos",
+      //         verificationToken: "token456",
+      //         verificationLink: "https://example.com/verify/token456",
+      //         status: "pending",
+      //         verificationExpiresAt: "2023-06-20T23:59:59Z",
+      //       },
+      //     ],
+      //     family: [
+      //       {
+      //         id: "f1",
+      //         name: "Richard Doe",
+      //         relationship: "Father",
+      //         phone: "+2348034567890",
+      //         address: "456 Oak Avenue, Ikeja, Lagos",
+      //         verificationToken: "token789",
+      //         verificationLink: "https://example.com/verify/token789",
+      //         status: "expired",
+      //         verificationExpiresAt: "2023-05-01T23:59:59Z",
+      //       },
+      //       {
+      //         id: "f2",
+      //         name: "Mary Doe",
+      //         relationship: "Mother",
+      //         phone: "+2348045678901",
+      //         address: "456 Oak Avenue, Ikeja, Lagos",
+      //         verificationToken: "token101",
+      //         verificationLink: "https://example.com/verify/token101",
+      //         status: "pending",
+      //         verificationExpiresAt: "2023-06-25T23:59:59Z",
+      //       },
+      //     ],
 
-          // Mock data for requests now includes paymentStatus
-          idcardRequests: [
-            {
-              _id: "id_req_1",
-              status: "Approved",
-              dateOfIssue: new Date().toISOString(),
-              dateOfExpiration: new Date(
-                Date.now() + 365 * 24 * 60 * 60 * 1000
-              ).toISOString(),
-              paymentStatus: "paid", // Can be 'pending', 'paid', 'failed'
-              // ... other fields
-            },
-            {
-              _id: "id_req_2",
-              status: "Approved",
-              dateOfIssue: new Date().toISOString(),
-              dateOfExpiration: new Date(
-                Date.now() + 365 * 24 * 60 * 60 * 1000
-              ).toISOString(),
-              paymentStatus: "pending", // This one needs payment
-            },
-          ],
-          certificateRequests: [
-            {
-              _id: "cert_req_1",
-              status: "Approved",
-              stateOfOrigin: "Benue",
-              lgaOfOrigin: "Makurdi",
-              kindred: "Ikyurav",
-              paymentStatus: "pending", // This one needs payment
-            },
-          ],
-        },
+      //     // Mock data for requests now includes paymentStatus
+      //     idcardRequests: [
+      //       {
+      //         _id: "id_req_1",
+      //         status: "Approved",
+      //         dateOfIssue: new Date().toISOString(),
+      //         dateOfExpiration: new Date(
+      //           Date.now() + 365 * 24 * 60 * 60 * 1000
+      //         ).toISOString(),
+      //         paymentStatus: "paid", // Can be 'pending', 'paid', 'failed'
+      //         // ... other fields
+      //       },
+      //       {
+      //         _id: "id_req_2",
+      //         status: "Approved",
+      //         dateOfIssue: new Date().toISOString(),
+      //         dateOfExpiration: new Date(
+      //           Date.now() + 365 * 24 * 60 * 60 * 1000
+      //         ).toISOString(),
+      //         paymentStatus: "pending", // This one needs payment
+      //       },
+      //     ],
+      //     certificateRequests: [
+      //       {
+      //         _id: "cert_req_1",
+      //         status: "Approved",
+      //         stateOfOrigin: "Benue",
+      //         lgaOfOrigin: "Makurdi",
+      //         kindred: "Ikyurav",
+      //         paymentStatus: "pending", // This one needs payment
+      //       },
+      //     ],
+      //   },
 
-        // Verification history data
-        verificationHistory: [
-          {
-            date: "2023-05-15T10:30:00Z",
-            status: "verified",
-            comments: "Confirmed residence for 3 years",
-            deviceInfo:
-              "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-          },
-          {
-            date: "2023-05-10T14:22:00Z",
-            status: "pending",
-            comments: "Verification link sent",
-            deviceInfo:
-              "Mozilla/5.0 (iPhone; CPU iPhone OS 14_7_1 like Mac OS X)",
-          },
-        ],
-      };
+      //   // Verification history data
+      //   verificationHistory: [
+      //     {
+      //       date: "2023-05-15T10:30:00Z",
+      //       status: "verified",
+      //       comments: "Confirmed residence for 3 years",
+      //       deviceInfo:
+      //         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+      //     },
+      //     {
+      //       date: "2023-05-10T14:22:00Z",
+      //       status: "pending",
+      //       comments: "Verification link sent",
+      //       deviceInfo:
+      //         "Mozilla/5.0 (iPhone; CPU iPhone OS 14_7_1 like Mac OS X)",
+      //     },
+      //   ],
+      // };
 
       // // Global configuration and state (prevent ReferenceErrors when code references these before async load)
       // const BACKEND_URL = window.BACKEND_URL || ""; // set your backend base URL here or via global variable
@@ -5245,12 +5254,9 @@
       async function saveProfile() {
         // Collect form data
         const formData = {
-          // firstname: $("#firstname").val(),
-          // lastname: $("#lastname").val(),
           middlename: $("#middlename").val(),
           email: $("#email").val().trim(),
           phone: $("#phone").val(),
-          // NIN: $("#NIN").val(),
           DOB: $("#DOB").val(),
           gender: $("#gender").val(),
           maritalStatus: $("#maritalStatus").val(),
@@ -7190,9 +7196,10 @@
           // ✅ Update photo preview on success
           if (response?.photoUrl) {
             $("#profilePhotoImg").attr("src", response.photoUrl);
+            loadUserData();
           }
-
           showNotification("Profile photo uploaded successfully", "success");
+          loadUserData();
         } catch (error) {
           console.error("Upload failed:", error);
           showNotification("Failed to upload profile photo", "danger");
