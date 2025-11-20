@@ -7201,8 +7201,9 @@
           showNotification("Profile photo uploaded successfully", "success");
           loadUserData();
         } catch (error) {
-          console.error("Upload failed:", error);
-          showNotification("Failed to upload profile photo", "danger");
+          error.responseJSON && error.responseJSON.message
+            ? showNotification(error.responseJSON.message, "danger")
+            : showNotification("Failed to upload profile photo", "danger");
         } finally {
           // Hide loader after completion
           setTimeout(() => {
