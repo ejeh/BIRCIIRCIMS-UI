@@ -12,80 +12,186 @@ const FRONTEND_URL = isDevelopment
 const userData = JSON.parse(localStorage.getItem("token") || "{}");
 const { token, user } = userData;
 
-function loadPDFJ(blobUrl, container) {
-  const loader = document.getElementById("pdf-loader");
-  if (typeof pdfjsLib === "undefined") {
-    container.innerHTML = `<iframe src="${blobUrl}" width="100%" height="100%"></iframe>`;
-    return;
-  }
-
-  // Use the same version as loaded in HTML
-  pdfjsLib.GlobalWorkerOptions.workerSrc =
-    "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js";
-
+/**
+ * Renders a PDF page responsively into a specified container.
+ * It adjusts the scale to fit the container width and re-renders on window resize.
+ * @param {string} url - The URL to the PDF file (can be a blob URL).
+ * @param {HTMLElement} container - The DOM element where the PDF will be rendered.
+ */
+async function loadPDFJ(url, container) {
   let pdfDoc = null;
-  let pageNum = 1;
-  let scale = 1.2;
+  let canvas = null;
+  let ctx = null;
 
-  const renderPage = (num) => {
-    loader.style.display = "block";
+  /**
+   * Renders the PDF page with the current container width.
+   */
+  const renderPage = async () => {
+    if (!pdfDoc || !canvas) return;
 
-    pdfDoc.getPage(num).then((page) => {
-      const viewport = page.getViewport({ scale });
-      const canvas = document.createElement("canvas");
-      const context = canvas.getContext("2d");
+    try {
+      const page = await pdfDoc.getPage(1);
 
-      // Make canvas responsive
-      canvas.style.width = "100%";
-      canvas.style.height = "auto";
+      // Get the container's current width
+      const containerWidth = container.clientWidth;
 
-      // Set canvas dimensions for rendering
-      const presentationSize = {
-        width: container.clientWidth,
-        height: container.clientWidth * (viewport.height / viewport.width),
-      };
+      // Calculate the scale to fit the container width
+      // We start with a scale of 1 to get the page's original dimensions
+      const viewport = page.getViewport({ scale: 1 });
+      const scale = containerWidth / viewport.width;
 
-      canvas.width = presentationSize.width;
-      canvas.height = presentationSize.height;
+      // Re-calculate viewport with the new, responsive scale
+      const responsiveViewport = page.getViewport({ scale: scale });
 
-      // Adjust viewport to container size
-      const scaledViewport = page.getViewport({
-        scale: presentationSize.width / viewport.width,
-      });
+      // Set canvas dimensions to match the scaled viewport
+      const outputScale = window.devicePixelRatio || 1;
+      canvas.width = Math.floor(viewport.width * scale * outputScale);
+      canvas.height = Math.floor(viewport.height * scale * outputScale);
+      canvas.style.width = Math.floor(viewport.width * scale) + "px";
+      canvas.style.height = Math.floor(viewport.height * scale) + "px";
 
+      // Scale the drawing context to match the device pixel ratio for sharpness
+      ctx.scale(outputScale, outputScale);
+
+      // Render PDF page into canvas context
       const renderContext = {
-        canvasContext: context,
-        viewport: scaledViewport,
+        canvasContext: ctx,
+        viewport: responsiveViewport,
       };
-
-      container.innerHTML = "";
-      container.appendChild(canvas);
-
-      page.render(renderContext).promise.finally(() => {
-        loader.style.display = "none";
-      });
-    });
+      await page.render(renderContext).promise;
+    } catch (error) {
+      console.error("Error rendering PDF page:", error);
+    }
   };
 
-  loader.style.display = "block";
+  /**
+   * Event handler for window resizing.
+   */
+  const handleResize = () => {
+    renderPage();
+  };
 
-  pdfjsLib
-    .getDocument(blobUrl)
-    .promise.then((pdf) => {
-      pdfDoc = pdf;
-      renderPage(pageNum);
+  try {
+    container.innerHTML = `<p class="text-center">Loading PDF...</p>`;
+
+    const loadingTask = pdfjsLib.getDocument(url);
+    pdfDoc = await loadingTask.promise;
+
+    // Set up canvas
+    canvas = document.createElement("canvas");
+    ctx = canvas.getContext("2d");
+    container.innerHTML = ""; // Clear loading message
+    container.appendChild(canvas);
+
+    // Initial render
+    renderPage();
+
+    // Add resize listener to make it responsive
+    window.addEventListener("resize", handleResize);
+
+    // --- IMPORTANT: CLEANUP ---
+    // When the modal is hidden, remove the resize listener to prevent memory leaks.
+    // This assumes your modal has the ID 'viewModal'.
+    const viewModal = document.getElementById("viewModal");
+    const cleanup = () => {
+      window.removeEventListener("resize", handleResize);
+      viewModal.removeEventListener("hide.bs.modal", cleanup);
+    };
+    viewModal.addEventListener("hide.bs.modal", cleanup);
+  } catch (error) {
+    console.error("Error loading PDF:", error);
+    container.innerHTML = `<div class="alert alert-danger">Failed to load PDF. <a href="${url}" target="_blank" class="btn btn-sm btn-primary mt-2">Open in New Tab</a></div>`;
+  }
+}
+
+/**
+ * Renders an image into a specified container.
+ * @param {string} url - The URL to the image file (can be a blob URL).
+ * @param {HTMLElement} container - The DOM element where the image will be rendered.
+ */
+function loadImage(url, container) {
+  const img = document.createElement("img");
+  img.src = url;
+  // Use Bootstrap's responsive image class for a responsive view
+  img.className = "img-fluid d-block mx-auto";
+  img.style.maxHeight = "400px"; // Consistent max height with PDF viewer
+  container.innerHTML = ""; // Clear the loading spinner
+  container.appendChild(img);
+}
+
+/**
+ * Triggers the download of a file (PDF or image) from a URL.
+ */
+function downloadFile(buttonElement) {
+  const url = buttonElement.dataset.url;
+  const docIndex = buttonElement.dataset.docIndex;
+  const filename = `document-${docIndex}`; // The browser will handle the correct file type/extension
+
+  fetch(url, {
+    headers: { Authorization: apiHeaders.Authorization },
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error(`Failed to download: ${res.statusText}`);
+      return res.blob();
+    })
+    .then((blob) => {
+      const blobUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(blobUrl); // Clean up
     })
     .catch((error) => {
-      loader.style.display = "none";
-      console.error("Error rendering PDF:", error);
-      container.innerHTML = `
-              <div class="alert alert-danger">
-                  Failed to render PDF: ${error.message}
-                  <div class="mt-2">
-                      <a href="${blobUrl}" target="_blank" class="btn btn-sm btn-primary">Open in New Tab</a>
-                  </div>
-              </div>
-          `;
+      console.error("Error downloading file:", error);
+      alert("Failed to download the document.");
+    });
+}
+
+/**
+ * Renders an image into a specified container.
+ */
+function loadImage(url, container) {
+  const img = document.createElement("img");
+  img.src = url;
+  img.className = "img-fluid"; // Makes the image responsive
+  img.style.maxHeight = "400px"; // Consistent max height with PDF viewer
+  img.style.display = "block"; // Removes bottom space under image
+  img.style.margin = "auto"; // Centers the image
+  container.innerHTML = ""; // Clear the loading spinner
+  container.appendChild(img);
+}
+
+/**
+ * Triggers the download of a file (PDF or image) from a URL.
+ */
+function downloadFile(buttonElement) {
+  const url = buttonElement.dataset.url;
+  const docIndex = buttonElement.dataset.docIndex;
+  const filename = `document-${docIndex}`; // The browser will handle the correct file type/extension
+
+  fetch(url, {
+    headers: { Authorization: apiHeaders.Authorization },
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error(`Failed to download: ${res.statusText}`);
+      return res.blob();
+    })
+    .then((blob) => {
+      const blobUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(blobUrl); // Clean up
+    })
+    .catch((error) => {
+      console.error("Error downloading file:", error);
+      alert("Failed to download the document.");
     });
 }
 
@@ -297,7 +403,7 @@ $(document).ready(function () {
         // Add other business fields if needed
       }
 
-      $(".selectpicker").selectpicker("refresh");
+      // $(".selectpicker").selectpicker("refresh");
 
       // Destructure the main fields
       const {
@@ -949,50 +1055,41 @@ $(document).ready(function () {
         // Filter documents that actually exist in response
         const validDocuments = docTypes
           .map((key, index) => ({ key, title: documentTitles[index] }))
-          .filter((doc) => response[doc.key]); // Check if document exists
+          .filter((doc) => response[doc.key]);
 
         let modalContent = `
-                <div class="container-fluid">
-                    <div class="row mb-3">
-                        <div class="col-md-3 text-center">
-                            <img 
-                                src="${
-                                  response.passportPhoto ||
-                                  "/assets/images/avatar.jpeg"
-                                }" 
-                                alt="Passport Photo" 
-                                class="img-fluid rounded shadow-sm profile-photo"
-                                style="max-height: 150px;"
-                                crossOrigin="anonymous"
-                            >
-                        </div>
-                        <div class="col-md-9">
-                            <h5 class="fw-bold mb-2">${response.firstname} ${
+        <div class="container-fluid">
+          <div class="row mb-3">
+            <div class="col-md-3 text-center">
+              <img 
+                src="${response.passportPhoto || "/assets/images/avatar.jpeg"}" 
+                alt="Passport Photo" 
+                class="img-fluid rounded shadow-sm profile-photo"
+                style="max-height: 150px;"
+                crossOrigin="anonymous"
+              >
+            </div>
+            <div class="col-md-9">
+              <h5 class="fw-bold mb-2">${response.firstname} ${
           response.lastname
         }</h5>
-                            <p class="mb-1"><strong>Phone:</strong> ${
-                              response.phone
-                            }</p>
-                            <p class="mb-1"><strong>Email:</strong> ${
-                              response.email
-                            }</p>
-                            <p class="mb-1"><strong>Status:</strong> <span class="badge bg-info">${
-                              response.status
-                            }</span></p>
-                            <p><strong>State:</strong> ${
-                              response.stateOfOrigin
-                            }</p>
-                            <p><strong>LGA:</strong> ${response.lgaOfOrigin}</p>
-                            <p><strong>Kindred:</strong> ${response.kindred}</p>
-                            <p><strong>isProfileCompleted:</strong> ${
-                              response.userId?.isProfileCompleted
-                            }</p>
-                        </div>
-                    </div>
+              <p class="mb-1"><strong>Phone:</strong> ${response.phone}</p>
+              <p class="mb-1"><strong>Email:</strong> ${response.email}</p>
+              <p class="mb-1"><strong>Status:</strong> <span class="badge bg-info">${
+                response.status
+              }</span></p>
+              <p><strong>State:</strong> ${response.stateOfOrigin}</p>
+              <p><strong>LGA:</strong> ${response.lgaOfOrigin}</p>
+              <p><strong>Kindred:</strong> ${response.kindred}</p>
+              <p><strong>isProfileCompleted:</strong> ${
+                response.userId?.isProfileCompleted
+              }</p>
+            </div>
+          </div>
   
-                    <hr class="my-3">
-                    <h6 class="text-primary">Uploaded Documents</h6>
-            `;
+          <hr class="my-3">
+          <h6 class="text-primary">Uploaded Documents</h6>
+      `;
 
         if (validDocuments.length === 0) {
           modalContent += `<p class="text-muted">No documents uploaded.</p>`;
@@ -1003,36 +1100,40 @@ $(document).ready(function () {
           const fileUrl = `${BACKEND_URL}/indigene/certificate/${requestId}/document/${doc.key}`;
 
           modalContent += `
-                    <div class="card my-3 shadow-sm">
-                        <div class="card-header bg-light fw-semibold">
-                            ${doc.title}
-                        </div>
-                        <div class="card-body">
-                            <div id="pdf-viewer-container-${index}" style="width:100%; height:400px;" class="pdf-container"></div>
-                            <div class="text-end mt-2">
-                               <button class="btn btn-sm btn-outline-primary me-2" onclick="window.open('${fileUrl}', '_blank')">Open in New Tab</button>
-                               <button class="btn btn-sm btn-outline-secondary" data-doc-index="${index}" data-url="${fileUrl}" onclick="downloadPDF(this)">Download</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
+          <div class="card my-3 shadow-sm">
+            <div class="card-header bg-light fw-semibold">
+              ${doc.title}
+            </div>
+            <div class="card-body p-0"> <!-- Use p-0 for full-width viewer -->
+              <!-- Renamed ID for clarity, added responsive container -->
+              <div id="viewer-container-${index}" style="width:100%; max-height:75vh; overflow:auto;" class="border bg-light p-2"></div>
+              <div class="p-2 text-end">
+                 <button class="btn btn-sm btn-outline-primary me-2" onclick="window.open('${fileUrl}', '_blank')">Open in New Tab</button>
+                 <!-- Updated onclick to call the generic downloadFile function -->
+                 <button class="btn btn-sm btn-outline-secondary" data-doc-index="${index}" data-url="${fileUrl}" onclick="downloadFile(this)">Download</button>
+              </div>
+            </div>
+          </div>
+        `;
         });
 
         modalContent += `</div>`;
         $("#viewModal .modal-body").html(modalContent);
         $("#viewModal").modal("show");
 
-        // Load PDFs with authorization
+        // Load documents with authorization and type-checking
         validDocuments.forEach((doc, index) => {
           const fileUrl = `${BACKEND_URL}/indigene/certificate/${requestId}/document/${doc.key}`;
+          const container = document.getElementById(
+            `viewer-container-${index}`
+          );
+
           // Show loader while fetching
-          $(`#pdf-viewer-container-${index}`).html(`
-                    <div class="d-flex justify-content-center align-items-center h-100">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                    </div>
-                `);
+          container.innerHTML = `
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        `;
 
           // Fetch document with authorization
           fetch(fileUrl, {
@@ -1041,26 +1142,39 @@ $(document).ready(function () {
             },
           })
             .then((res) => {
-              if (!res.ok) throw new Error("Failed to fetch PDF");
-              return res.blob();
+              if (!res.ok) throw new Error("Failed to fetch document");
+
+              // --- KEY LOGIC: Get the content type from the response header ---
+              const contentType = res.headers.get("Content-Type");
+
+              // Return both the blob and the content type for the next .then()
+              return res.blob().then((blob) => ({ blob, contentType }));
             })
-            .then((blob) => {
+            .then(({ blob, contentType }) => {
               const blobUrl = URL.createObjectURL(blob);
-              loadPDFJ(
-                blobUrl,
-                document.getElementById(`pdf-viewer-container-${index}`)
-              );
+
+              // --- Check the content type and call the correct renderer ---
+              if (contentType === "application/pdf") {
+                loadPDFJ(blobUrl, container);
+              } else if (contentType && contentType.startsWith("image/")) {
+                loadImage(blobUrl, container);
+              } else {
+                // Handle unknown or missing content type
+                throw new Error(
+                  `Unsupported file type: ${contentType || "Unknown"}`
+                );
+              }
             })
             .catch((err) => {
-              console.error(`Error loading PDF [${doc.key}]:`, err);
-              $(`#pdf-viewer-container-${index}`).html(`
-                        <div class="alert alert-danger">
-                            Failed to load document: ${err.message}
-                            <div class="mt-2">
-                                <a href="${fileUrl}" target="_blank" class="btn btn-sm btn-primary">Open in New Tab</a>
-                            </div>
-                        </div>
-                    `);
+              console.error(`Error loading document [${doc.key}]:`, err);
+              container.innerHTML = `
+              <div class="alert alert-danger m-2">
+                Failed to load document: ${err.message}
+                <div class="mt-2">
+                  <a href="${fileUrl}" target="_blank" class="btn btn-sm btn-primary">Try Opening in New Tab</a>
+                </div>
+              </div>
+            `;
             });
         });
       },
@@ -1293,8 +1407,11 @@ $(document).ready(function () {
         // Handle Certificate Download
         async function handleDownload(certificateId) {
           if (
+            // !confirm(
+            //   "Warning! Sure you want to download? Click ok to continue or else click cancel. You can only download once."
+            // )
             !confirm(
-              "Warning! Sure you want to download? Click ok to continue or else click cancel. You can only download once."
+              "Warning! Sure you want to download? Click ok to continue or else click cancel."
             )
           ) {
             return;
@@ -1310,10 +1427,9 @@ $(document).ready(function () {
 
             showSuccessMessage("Certificate downloaded successfully!");
           } catch (error) {
-            console.error(error.responseJSON?.message);
             const errorMessage =
               error.responseJSON?.message ||
-              "Certificate has already been downloaded.";
+              "Download window has expired. Please request a new certificate.";
             showErrorMessage(errorMessage);
           } finally {
             hideLoadingIndicator();
@@ -1381,7 +1497,6 @@ $(document).ready(function () {
         // Add click event listeners for download buttons
         $(document).on("click", ".btn-cert-download", function () {
           const certificateId = $(this).data("id");
-          console.log("certificateId", certificateId);
           const button = $(this);
 
           if (certificateId) {
@@ -1612,8 +1727,11 @@ $(document).ready(function () {
               document.body.removeChild(a);
               window.URL.revokeObjectURL(url);
             },
-            error: function (error) {
-              alert(" Certificate has already been downloaded.");
+            error: function (xhr) {
+              const errorMessage = xhr.responseJSON
+                ? xhr.responseJSON.message
+                : "Failed to change password";
+              alert(errorMessage);
             },
           });
         });
@@ -2878,7 +2996,6 @@ $(document).ready(function () {
             showSuccessMessage("Card downloaded successfully!");
           } catch (error) {
             // Handle errors
-            console.error(error.responseJSON?.message);
             const errorMessage =
               // error.responseJSON?.message || "Failed to download the card.";
               error.responseJSON?.message || "Card Already Downloaded";
@@ -2943,7 +3060,6 @@ $(document).ready(function () {
 
         // Show a success message
         function showSuccessMessage(message) {
-          console.log("Success:", message);
           alert(message); // Replace with a toast notification if needed
         }
 
@@ -4067,7 +4183,9 @@ $(document).ready(function () {
         // Load PDFs with authorization
         validDocuments.forEach((doc, index) => {
           const fileUrl = `${BACKEND_URL}/idcard/${requestId}/document/${doc.key}`;
-
+          const container = document.getElementById(
+            `pdf-viewer-container-${index}`
+          );
           // Show loader while fetching
           $(`#pdf-viewer-container-${index}`).html(`
                   <div class="d-flex justify-content-center align-items-center h-100">
@@ -4083,16 +4201,40 @@ $(document).ready(function () {
               Authorization: apiHeaders.Authorization,
             },
           })
+            // .then((res) => {
+            //   if (!res.ok) throw new Error("Failed to fetch PDF");
+            //   return res.blob();
+            // })
+            // .then((blob) => {
+            //   const blobUrl = URL.createObjectURL(blob);
+            //   loadPDFJ(
+            //     blobUrl,
+            //     document.getElementById(`pdf-viewer-container-${index}`)
+            //   );
+            // })
             .then((res) => {
-              if (!res.ok) throw new Error("Failed to fetch PDF");
-              return res.blob();
+              if (!res.ok) throw new Error("Failed to fetch document");
+
+              // --- KEY LOGIC: Get the content type from the response header ---
+              const contentType = res.headers.get("Content-Type");
+
+              // Return both the blob and the content type for the next .then()
+              return res.blob().then((blob) => ({ blob, contentType }));
             })
-            .then((blob) => {
+            .then(({ blob, contentType }) => {
               const blobUrl = URL.createObjectURL(blob);
-              loadPDFJ(
-                blobUrl,
-                document.getElementById(`pdf-viewer-container-${index}`)
-              );
+
+              // --- Check the content type and call the correct renderer ---
+              if (contentType === "application/pdf") {
+                loadPDFJ(blobUrl, container);
+              } else if (contentType && contentType.startsWith("image/")) {
+                loadImage(blobUrl, container);
+              } else {
+                // Handle unknown or missing content type
+                throw new Error(
+                  `Unsupported file type: ${contentType || "Unknown"}`
+                );
+              }
             })
             .catch((err) => {
               console.error(`Error loading PDF [${doc.key}]:`, err);

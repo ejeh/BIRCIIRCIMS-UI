@@ -27,6 +27,12 @@
       rel="stylesheet"
       href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css"
     />
+
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css"
+    />
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- jsPDF for PDF export -->
@@ -535,6 +541,40 @@
           animation: spin 1s linear infinite; /* Spin animation */
         }
       }
+      .profile-photo-container {
+        position: relative;
+        display: inline-block;
+      }
+
+      .profile-photo-container img {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+      }
+
+      .profile-photo-upload {
+        position: absolute;
+        bottom: 10px; /* distance from bottom of image */
+        right: 10px; /* distance from right edge */
+        background: #0d6efd;
+        color: #fff;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        font-size: 18px;
+        border: 3px solid #fff; /* clean border around the circle */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        transition: all 0.2s ease-in-out;
+      }
+
+      .profile-photo-upload:hover {
+        background: #0b5ed7;
+        transform: scale(1.05);
+      }
     </style>
   </head>
   <body>
@@ -678,11 +718,6 @@
             <li>
               <a class="dropdown-item" href="#" data-page="profile"
                 ><i class="bi bi-person me-2"></i>Profile</a
-              >
-            </li>
-            <li>
-              <a class="dropdown-item" href="#"
-                ><i class="bi bi-gear me-2"></i>Settings</a
               >
             </li>
             <li><hr class="dropdown-divider" /></li>
@@ -900,7 +935,10 @@
             </div>
           </div>
           <div class="card-body">
-            <table id="usersTable" class="table table-striped table-hover">
+            <table
+              id="usersTable"
+              class="table table-striped table-hover dt-responsive w-100"
+            >
               <thead>
                 <tr>
                   <th>Name</th>
@@ -911,7 +949,6 @@
                   <th>Is Active</th>
                   <th>Is Verified</th>
                   <th>Kindred</th>
-                  <!-- <th>Registered</th> -->
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -985,44 +1022,24 @@
                   </button>
                 </div>
               </div>
-              <div class="card-body">
+
+              <div class="card-body table-responsive">
                 <table
                   id="idcardsTable"
-                  class="table table-striped table-hover"
+                  class="table table-striped table-hover dt-responsive w-100"
                 >
                   <thead>
                     <tr>
-                      <th>Request ID</th>
+                      <th>S/N</th>
+                      <th>ID</th>
                       <th>User</th>
                       <th>Kindred</th>
                       <th>Status</th>
                       <th>Request Date</th>
-                      <!-- <th>Actions</th> -->
                     </tr>
                   </thead>
-                  <tbody>
-                    <!-- Table data will be populated by JavaScript -->
-                  </tbody>
+                  <tbody></tbody>
                 </table>
-                <div
-                  id="pdf-loader"
-                  style="
-                    display: none;
-                    position: fixed;
-                    top: 50%;
-                    left: 50%;
-                    z-index: 9999;
-                    transform: translate(-50%, -50%);
-                  "
-                >
-                  <div
-                    class="spinner-border text-primary"
-                    role="status"
-                    style="width: 3rem; height: 3rem"
-                  >
-                    <span class="visually-hidden">Loading...</span>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -1046,13 +1063,16 @@
                   </button>
                 </div>
               </div>
-              <div class="card-body">
+
+              <div class="card-body table-responsive">
                 <table
                   id="certificatesTable"
-                  class="table table-striped table-hover"
+                  class="table table-striped table-hover dt-responsive w-100"
                 >
                   <thead>
                     <tr>
+                      <th>S/N</th>
+                      <th>ID</th>
                       <th>User</th>
                       <th>Kindred</th>
                       <th>Status</th>
@@ -1064,9 +1084,7 @@
                       <th>Actions</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <!-- Table data will be populated by JavaScript -->
-                  </tbody>
+                  <tbody></tbody>
                 </table>
               </div>
             </div>
@@ -1281,11 +1299,34 @@
           <div class="col-md-4 mb-4">
             <div class="card">
               <div class="card-body text-center">
-                <img
-                  src="https://picsum.photos/seed/admin/150/150.jpg"
-                  class="rounded-circle mb-3"
-                  alt="Profile"
-                />
+                <div class="profile-photo-container">
+                  <img
+                    src="https://picsum.photos/seed/admin/150/150.jpg"
+                    class="rounded-circle mb-3"
+                    id="profilePhotoImg"
+                    alt="Profile"
+                  />
+                  <div class="profile-photo-upload" id="profilePhotoUpload">
+                    <i class="bi bi-camera"></i>
+                  </div>
+                  <input
+                    type="file"
+                    id="profilePhotoInput"
+                    accept="image/*"
+                    style="display: none"
+                  />
+                </div>
+                <div
+                  class="progress mt-3"
+                  id="uploadProgress"
+                  style="display: none"
+                >
+                  <div
+                    class="progress-bar"
+                    role="progressbar"
+                    style="width: 0%"
+                  ></div>
+                </div>
                 <h4 id="profileName">Support Admin</h4>
                 <p class="text-muted" id="profileRole">
                   Support Admin - Otukpo LGA
@@ -2312,6 +2353,10 @@
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
+
     <!-- Add these in the <head> section -->
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
@@ -2887,6 +2932,15 @@
           saveProfileFormData();
         });
 
+        // Profile photo upload
+        $("#profilePhotoUpload").on("click", function () {
+          $("#profilePhotoInput").click();
+        });
+
+        $("#profilePhotoInput").on("change", function () {
+          uploadProfilePhoto(this.files[0]);
+        });
+
         // Handle page unload only for profile page
         $(window).on("beforeunload", function (e) {
           // Check if we're on the profile page
@@ -3018,6 +3072,7 @@
           $("#userProfilePic")
             .attr("src", profilePicUrl)
             .addClass("img-fluid rounded-circle profile-avatar");
+          $("#profilePhotoImg").attr("src", user.passportPhoto);
 
           $("#currentUser").text(`${user.firstname} ${user.lastname}` || "N/A");
           $("#currentLGA").text(user.lgaOfOrigin || "N/A");
@@ -3068,6 +3123,62 @@
               "warning"
             );
           }
+        }
+      }
+
+      async function uploadProfilePhoto(file) {
+        if (!file) return;
+
+        // Show progress bar
+        $("#uploadProgress").show();
+        $("#uploadProgress .progress-bar").css("width", "0%");
+
+        // Prepare FormData for file upload
+        const formData = new FormData();
+        formData.append("passportPhoto", file); // field name must match your NestJS DTO
+
+        try {
+          // Perform AJAX upload
+          const response = await $.ajax({
+            url: `${BACKEND_URL}/users/${user.id}`,
+            method: "PUT",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            data: formData,
+            processData: false,
+            contentType: false,
+            xhr: function () {
+              const xhr = new window.XMLHttpRequest();
+              xhr.upload.addEventListener("progress", function (e) {
+                if (e.lengthComputable) {
+                  const percentComplete = (e.loaded / e.total) * 100;
+                  $("#uploadProgress .progress-bar").css(
+                    "width",
+                    percentComplete + "%"
+                  );
+                }
+              });
+              return xhr;
+            },
+          });
+
+          // ✅ Update photo preview on success
+          if (response?.photoUrl) {
+            $("#profilePhotoImg").attr("src", response.photoUrl);
+          }
+          updateCurrentUserDisplay();
+
+          showNotification("Profile photo uploaded successfully", "success");
+        } catch (error) {
+          console.error("Upload failed:", error);
+          showNotification("Failed to upload profile photo", "danger");
+        } finally {
+          // Hide loader after completion
+          setTimeout(() => {
+            $("#uploadProgress").hide();
+            $("#uploadProgress .progress-bar").css("width", "0%");
+          }, 800);
         }
       }
 
@@ -3439,15 +3550,19 @@
                   },
                 },
                 {
-                  data: "isVerified",
-                  render: function (data) {
-                    const badgeClass = data
+                  data: null,
+                  render: function (data, type, row) {
+                    // Check if isVerified exists in the row data
+                    const isVerified =
+                      row.isVerified !== undefined ? row.isVerified : false;
+                    const badgeClass = isVerified
                       ? "status-badge approved"
                       : "status-badge pending";
-                    const text = data ? "Verified" : "Not Verified";
+                    const text = isVerified ? "Verified" : "Not Verified";
                     return `<span class="${badgeClass}">${text}</span>`;
                   },
                 },
+
                 {
                   data: null,
                   render: function (row) {
@@ -3455,10 +3570,7 @@
                             `;
                   },
                 },
-                // {
-                //   data: "created_at",
-                //   render: (data) => new Date(data).toLocaleDateString(),
-                // },
+
                 {
                   data: null,
                   render: function (data, type, row) {
@@ -3511,6 +3623,13 @@
       }
 
       async function initializeRequestsPage() {
+        if ($.fn.DataTable.isDataTable("#idcardsTable")) {
+          $("#idcardsTable").DataTable().destroy();
+        }
+
+        if ($.fn.DataTable.isDataTable("#certificatesTable")) {
+          $("#certificatesTable").DataTable().destroy();
+        }
         const currentUserResponse = await $.ajax({
           url: `${BACKEND_URL}/users/me`,
           method: "GET",
@@ -3548,186 +3667,158 @@
           });
 
           // Initialize ID Card Requests Table
-          if (!idcardsTable) {
-            idcardsTable = $("#idcardsTable").DataTable({
-              data: idcardResponse,
-              columns: [
-                { data: "_id" },
-                {
-                  data: null,
-                  render: function (row) {
-                    return `${row.firstname || ""} ${row.lastname || ""}
-                            `;
+          $("#idcardsTable").DataTable({
+            data: idcardResponse,
+            columns: [
+              {
+                title: "S/N",
+                data: null,
+                orderable: false,
+                searchable: false,
+                render: (data, type, row, meta) =>
+                  meta.row + meta.settings._iDisplayStart + 1,
+              },
+              { data: "_id", visible: false },
+              {
+                data: null,
+                render: (row) => `${row.firstname || ""} ${row.lastname || ""}`,
+              },
+              { data: "kindred", defaultContent: "N/A" },
+              {
+                data: "status",
+                render: (data) => {
+                  let badgeClass = "status-badge pending";
+                  if (data === "Approved") badgeClass = "status-badge approved";
+                  else if (data === "Rejected")
+                    badgeClass = "status-badge rejected";
+                  return `<span class="${badgeClass}">${data.toUpperCase()}</span>`;
+                },
+              },
+              {
+                data: "created_at",
+                render: (data) => new Date(data).toLocaleDateString(),
+              },
+            ],
+            responsive: {
+              details: {
+                display: $.fn.dataTable.Responsive.display.modal({
+                  header: (row) => {
+                    const data = row.data();
+                    return `Identity Card Request – ${data.firstname || ""} ${
+                      data.lastname || ""
+                    }`;
                   },
-                },
-                {
-                  data: null,
-                  render: function (row) {
-                    return `${row.kindred || "N/A"}
-                            `;
-                  },
-                },
-                {
-                  data: "status",
-                  render: function (data) {
-                    let badgeClass = "status-badge pending";
-                    if (data === "Approved")
-                      badgeClass = "status-badge approved";
-                    else if (data === "Rejected")
-                      badgeClass = "status-badge rejected";
-                    return `<span class="${badgeClass}">${data.toUpperCase()}</span>`;
-                  },
-                },
-                {
-                  data: "created_at",
-                  render: (data) => new Date(data).toLocaleDateString(),
-                },
-                // {
-                //   data: null,
-                //   render: function (data, type, row) {
-                //     return `
-                //         <div class="btn-group">
-                //           <button class="btn btn-sm btn-outline-primary view-request-btn" data-id="${row._id}" data-type="idcard">
-                //             <i class="bi bi-eye"></i>
-                //           </button>
-                //           <button class="btn btn-sm btn-outline-success approve-request-btn" data-id="${row._id}" data-type="idcard" data-bs-toggle="modal" data-bs-target="#requestActionModal">
-                //             <i class="bi bi-check-circle"></i>
-                //           </button>
-                //           <button class="btn btn-sm btn-outline-danger reject-request-btn" data-id="${row._id}" data-type="idcard" data-bs-toggle="modal" data-bs-target="#requestActionModal">
-                //             <i class="bi bi-x-circle"></i>
-                //           </button>
-                //            <button class="btn btn-sm btn-outline-danger btn-card-download" data-id="${row._id}">
-                //               <i class="bi bi-download"></i>
-                //           </button>
-                //         </div>
-                //       `;
-                //   },
-                // },
-              ],
-              responsive: true,
-              pageLength: 10,
-            });
-          } else {
-            idcardsTable.clear();
-            idcardsTable.rows.add(idcardResponse);
-            idcardsTable.draw();
-          }
+                }),
+                renderer: $.fn.dataTable.Responsive.renderer.tableAll({
+                  tableClass: "table",
+                }),
+              },
+            },
+            columnDefs: [
+              { responsivePriority: 1, targets: 2 }, // User
+              { responsivePriority: 2, targets: 4 }, // Status
+            ],
+            pageLength: 10,
+          });
 
           // Initialize Certificate Requests Table
-          if (!certificatesTable) {
-            certificatesTable = $("#certificatesTable").DataTable({
-              data: certificateResponse,
-              columns: [
-                {
-                  data: null,
-                  render: function (row) {
-                    return `${row.firstname || ""} ${row.lastname || ""}
-                            `;
-                  },
+          $("#certificatesTable").DataTable({
+            data: certificateResponse,
+            columns: [
+              {
+                title: "S/N",
+                data: null,
+                orderable: false,
+                searchable: false,
+                render: (data, type, row, meta) =>
+                  meta.row + meta.settings._iDisplayStart + 1,
+              },
+              { data: "_id", visible: false },
+              {
+                data: null,
+                render: (row) => `${row.firstname || ""} ${row.lastname || ""}`,
+              },
+              { data: "kindred", defaultContent: "N/A" },
+              {
+                data: "status",
+                render: (data) => {
+                  let badgeClass = "status-badge pending";
+                  if (data === "Approved") badgeClass = "status-badge approved";
+                  else if (data === "Rejected")
+                    badgeClass = "status-badge rejected";
+                  return `<span class="${badgeClass}">${data.toUpperCase()}</span>`;
                 },
+              },
+              {
+                data: "created_at",
+                render: (data) => new Date(data).toLocaleDateString(),
+              },
+              { data: "stateOfOrigin", defaultContent: "N/A" },
+              { data: "lgaOfOrigin", defaultContent: "N/A" },
+              { data: "IsProfileCompleted", defaultContent: "N/A" },
+              {
+                data: null,
+                render: (row) =>
+                  `${row.approvedBy?.firstname || ""} ${
+                    row.approvedBy?.lastname || ""
+                  }`.trim() || "N/A",
+              },
+              {
+                data: null,
+                orderable: false,
+                render: (data, type, row) => {
+                  let actionButtons = "";
+                  let downloadButton = "";
 
-                {
-                  data: null,
-                  render: function (row) {
-                    return `${row.kindred || "N/A"}
-                            `;
-                  },
-                },
-                {
-                  data: "status",
-                  render: function (data) {
-                    let badgeClass = "status-badge pending";
-                    if (data === "Approved")
-                      badgeClass = "status-badge approved";
-                    else if (data === "Rejected")
-                      badgeClass = "status-badge rejected";
-                    return `<span class="${badgeClass}">${data.toUpperCase()}</span>`;
-                  },
-                },
-                {
-                  data: "created_at",
-                  render: (data) => new Date(data).toLocaleDateString(),
-                },
-                {
-                  data: null,
-                  render: function (row) {
-                    return `${row.stateOfOrigin || "N/A"}
-                            `;
-                  },
-                },
+                  if (row.status === "Pending") {
+                    actionButtons = `
+            <button class="btn btn-sm btn-outline-success approve-request-btn" data-id="${row._id}" data-type="certificate" data-bs-toggle="modal" data-bs-target="#requestActionModal">
+              <i class="bi bi-check-circle"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-danger reject-request-btn" data-id="${row._id}" data-type="certificate" data-bs-toggle="modal" data-bs-target="#requestActionModal">
+              <i class="bi bi-x-circle"></i>
+            </button>`;
+                  }
 
-                {
-                  data: null,
-                  render: function (row) {
-                    return `${row.lgaOfOrigin || "N/A"}
-                            `;
-                  },
+                  if (row.status === "Approved") {
+                    downloadButton = `
+            <button class="btn btn-sm btn-outline-danger btn-cert-download" data-id="${row._id}">
+              <i class="bi bi-download"></i>
+            </button>`;
+                  }
+
+                  return `
+          <div class="btn-group">
+            <button class="btn btn-sm btn-outline-primary btn-cert-view" data-id="${row._id}">
+              <i class="bi bi-eye"></i>
+            </button>
+            ${actionButtons}
+            ${downloadButton}
+          </div>`;
                 },
-
-                {
-                  data: null,
-                  render: function (row) {
-                    return `${row.IsProfileCompleted || "N/A"}
-                            `;
+              },
+            ],
+            responsive: {
+              details: {
+                display: $.fn.dataTable.Responsive.display.modal({
+                  header: (row) => {
+                    const data = row.data();
+                    return `Certificate Request – ${data.firstname || ""} ${
+                      data.lastname || ""
+                    }`;
                   },
-                },
-
-                {
-                  data: null,
-                  render: (row) => {
-                    const fullName = `${row.approvedBy?.firstname || ""} ${
-                      row.approvedBy?.lastname || ""
-                    }`.trim();
-                    return fullName || "N/A";
-                  },
-                },
-                {
-                  data: null,
-                  render: function (data, type, row) {
-                    let actionButtons = "";
-                    let downloadButton = "";
-
-                    // Show action buttons only for pending requests
-                    if (row.status === "Pending") {
-                      actionButtons = `
-        <button class="btn btn-sm btn-outline-success approve-request-btn" data-id="${row._id}" data-type="certificate" data-bs-toggle="modal" data-bs-target="#requestActionModal">
-          <i class="bi bi-check-circle"></i>
-        </button>
-        <button class="btn btn-sm btn-outline-danger reject-request-btn" data-id="${row._id}" data-type="certificate" data-bs-toggle="modal" data-bs-target="#requestActionModal">
-          <i class="bi bi-x-circle"></i>
-        </button>
-      `;
-                    }
-
-                    // Show download button only for approved requests
-                    if (row.status === "Approved") {
-                      downloadButton = `
-        <button class="btn btn-sm btn-outline-danger btn-cert-download" data-id="${row._id}">
-          <i class="bi bi-download"></i>
-        </button>
-      `;
-                    }
-
-                    return `
-        <div class="btn-group">
-          <button class="btn btn-sm btn-outline-primary btn-cert-view" data-id="${row._id}">
-            <i class="bi bi-eye"></i>
-          </button>
-          ${actionButtons}
-          ${downloadButton}
-        </div>
-      `;
-                  },
-                },
-              ],
-              responsive: true,
-              pageLength: 10,
-            });
-          } else {
-            certificatesTable.clear();
-            certificatesTable.rows.add(certificateResponse);
-            certificatesTable.draw();
-          }
+                }),
+                renderer: $.fn.dataTable.Responsive.renderer.tableAll({
+                  tableClass: "table",
+                }),
+              },
+            },
+            columnDefs: [
+              { responsivePriority: 1, targets: 2 }, // User
+              { responsivePriority: 2, targets: -1 }, // Actions
+            ],
+            pageLength: 10,
+          });
         } catch (error) {
           console.error("Error loading requests:", error);
           showNotification(
@@ -4292,38 +4383,6 @@
           );
         }
       }
-
-      // function initializeReportsPage() {
-      //   if (!reportsTable) {
-      //     reportsTable = $("#reportsTable").DataTable({
-      //       data: mockAPI.reports,
-      //       columns: [
-      //         { data: "name" },
-      //         { data: "type" },
-      //         { data: "generatedDate" },
-      //         { data: "generatedBy" },
-      //         {
-      //           data: null,
-      //           render: function (data, type, row) {
-      //             return `
-      //                               <div class="btn-group">
-      //                                   <button class="btn btn-sm btn-outline-primary download-report-btn" data-id="${row.id}">
-      //                                       <i class="bi bi-download"></i>
-      //                                   </button>
-      //                                   <button class="btn btn-sm btn-outline-danger delete-report-btn" data-id="${row.id}">
-      //                                       <i class="bi bi-trash"></i>
-      //                                   </button>
-      //                               </div>
-      //                           `;
-      //           },
-      //         },
-      //       ],
-      //       responsive: true,
-      //       pageLength: 10,
-      //     });
-      //   }
-      // }
-
       // Function to initialize the reports page table
       async function initializeReportsPage() {
         try {
@@ -5645,8 +5704,6 @@
               "Content-Type": "application/json",
             },
             success: function (response) {
-              console.log("2FA Status:", response);
-
               // Update the button based on 2FA status
               if (response.isEnabled) {
                 $("#enable2FABtn").html(
@@ -5689,6 +5746,20 @@
         ) {
           check2FAStatus();
         }
+      });
+
+      $(document).on("click", '[data-page="profile"]', function (e) {
+        e.preventDefault();
+
+        // Hide all pages
+        $(".page-content").addClass("d-none");
+
+        // Show profile page
+        $("#profile-page").removeClass("d-none");
+
+        // Close dropdown after clicking
+        $(this).closest(".dropdown-menu").removeClass("show");
+        $(this).closest(".dropdown").removeClass("show");
       });
     </script>
 

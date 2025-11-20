@@ -2594,7 +2594,7 @@
     </div>
 
     <!-- Change Role Modal -->
-    <div
+    <!-- <div
       class="modal fade"
       id="changeRoleModal"
       tabindex="-1"
@@ -2629,10 +2629,7 @@
               <div class="mb-3">
                 <label for="changeRoleNew" class="form-label">New Role</label>
                 <select class="form-select" id="changeRoleNew" required>
-                  <!-- <option value="super_admin">Super Admin</option> -->
-                  <!-- <option value="support_admin">Support Admin</option>
-                  <option value="kindred_head">Kindred Head</option>                  
-                  <option value="user">User</option> -->
+                 
                 </select>
               </div>
               <div class="mb-3">
@@ -2659,6 +2656,208 @@
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+    <!-- Permissions Management -->
+    <!-- <div class="card mt-4">
+      <div
+        class="card-header d-flex justify-content-between align-items-center"
+      >
+        <h5 class="mb-0">Permissions Management</h5>
+        <button class="btn btn-sm btn-outline-primary" id="refreshPermissions">
+          <i class="bi bi-arrow-clockwise"></i> Refresh
+        </button>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Role</th>
+                <th>Permissions</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="permissionsTableBody">
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div> -->
+
+    <!-- Roles Page Container -->
+    <div id="rolesPage" class="d-none">
+      <!-- Permissions Management -->
+      <div class="card mt-4">
+        <div
+          class="card-header d-flex justify-content-between align-items-center"
+        >
+          <h5 class="mb-0">Permissions Management</h5>
+          <button
+            class="btn btn-sm btn-outline-primary"
+            id="refreshPermissions"
+          >
+            <i class="bi bi-arrow-clockwise"></i> Refresh
+          </button>
+        </div>
+
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Role</th>
+                  <th>Permissions</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="permissionsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enhanced Change Role Modal -->
+    <div
+      class="modal fade"
+      id="changeRoleModal"
+      tabindex="-1"
+      aria-labelledby="changeRoleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="changeRoleModalLabel">
+              Change User Role
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="changeRoleForm">
+              <input type="hidden" id="changeRoleUserId" />
+              <div class="mb-3">
+                <label for="changeRoleUser" class="form-label">User</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="changeRoleUser"
+                  readonly
+                />
+              </div>
+              <div class="mb-3">
+                <label for="currentRole" class="form-label">Current Role</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="currentRole"
+                  readonly
+                />
+              </div>
+              <div class="mb-3">
+                <label for="changeRoleNew" class="form-label">New Role</label>
+                <select class="form-select" id="changeRoleNew" required>
+                  <!-- Options will be populated dynamically -->
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="rolePermissions" class="form-label"
+                  >New Role Permissions</label
+                >
+                <div
+                  id="rolePermissions"
+                  class="border rounded p-2 bg-light"
+                  style="max-height: 200px; overflow-y: auto"
+                >
+                  <!-- Permissions will be displayed here -->
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="changeReason" class="form-label"
+                  >Reason for Change</label
+                >
+                <textarea
+                  class="form-control"
+                  id="changeReason"
+                  rows="3"
+                  required
+                ></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button type="button" class="btn btn-primary" id="saveRoleChange">
+              Save Changes
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Role History Modal -->
+    <div
+      class="modal fade"
+      id="roleHistoryModal"
+      tabindex="-1"
+      aria-labelledby="roleHistoryModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="roleHistoryModalLabel">
+              Role Change History
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Previous Role</th>
+                    <th>New Role</th>
+                    <th>Assigned By</th>
+                    <th>Reason</th>
+                  </tr>
+                </thead>
+                <tbody id="roleHistoryTableBody">
+                  <!-- History will be populated here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
           </div>
         </div>
       </div>
@@ -2988,6 +3187,11 @@
         startDate: null,
         endDate: null,
       };
+
+      // Global variables
+      let allRoles = [];
+      let rolePermissions = {};
+      let isRolesPageInitialized = false;
 
       // Page Navigation
       $(document).ready(function () {
@@ -4020,69 +4224,73 @@
         });
       }
 
-      // Function to populate the role dropdown
-      function populateRoleDropdown(roles) {
+      $(document).on("click", ".change-role-btn", function () {
+        const userId = $(this).data("id");
+        const userName = $(this).data("user");
+        const currentRole = $(this).data("role");
+
+        $("#changeRoleUserId").val(userId);
+        $("#changeRoleUser").val(userName);
+        $("#currentRole").val(currentRole.replace("_", " ").toUpperCase());
+
+        // Populate role dropdown
+        populateRoleDropdown(currentRole);
+      });
+
+      // 🔹 Populate Role Dropdown
+      function populateRoleDropdown(currentRole) {
         const $roleSelect = $("#changeRoleNew");
-        $roleSelect.empty(); // Clear existing options
+        $roleSelect.empty();
 
-        // Add a default option if needed
-        $roleSelect.append(
-          '<option value="" disabled selected>Select a role</option>'
-        );
-
-        // Add each role as an option
-        roles.forEach((role) => {
-          // Skip super_admin if needed (uncomment the condition if you want to exclude it)
-          // if (role.value === 'super_admin') return;
+        allRoles.forEach((role) => {
+          // Skip current role
+          if (role.value === currentRole) return;
 
           $roleSelect.append(
             `<option value="${role.value}">${role.label}</option>`
           );
         });
+
+        // Trigger change event to show permissions for the first role
+        if ($roleSelect.find("option").length > 0) {
+          $roleSelect.prop("selectedIndex", 0).trigger("change");
+        }
       }
 
-      // 🔹 Open Change Role Modal
-      // $(document).on("click", ".change-role-btn", function () {
-      //   const userId = $(this).data("id");
-      //   const userName = $(this).data("user");
-      //   $("#changeRoleUserId").val(userId);
-      //   $("#changeRoleUser").val(userName);
-      // });
-      $(document).on("click", ".change-role-btn", function () {
-        const userId = $(this).data("id");
-        const userName = $(this).data("user");
-        $("#changeRoleUserId").val(userId);
-        $("#changeRoleUser").val(userName);
+      // 🔹 Show Role Permissions
+      $("#changeRoleNew").on("change", function () {
+        const selectedRole = $(this).val();
+        const permissions = rolePermissions[selectedRole] || [];
 
-        // Fetch available roles and populate the dropdown
-        fetchAvailableRoles()
-          .done(function (response) {
-            // The response structure will be { status: 'success', data: [...] }
-            const roles = response.data;
-            populateRoleDropdown(roles);
-          })
-          .fail(function (xhr) {
-            showNotification(
-              "Error",
-              xhr.responseText || "Failed to fetch available roles",
-              "danger"
-            );
+        const $permissionsDiv = $("#rolePermissions");
+        $permissionsDiv.empty();
 
-            // Fallback to hardcoded roles if API fails
-            const fallbackRoles = [
-              { value: "support_admin", label: "Support Admin" },
-              { value: "kindred_head", label: "Kindred Head" },
-              { value: "user", label: "User" },
-            ];
-            populateRoleDropdown(fallbackRoles);
-          });
+        if (permissions.length === 0) {
+          $permissionsDiv.html(
+            "<p class='text-muted'>No permissions defined for this role.</p>"
+          );
+          return;
+        }
+
+        permissions.forEach((permission) => {
+          const permissionName = permission.replace(":", " - ");
+          $permissionsDiv.append(
+            `<span class="badge bg-secondary me-1 mb-1">${permissionName}</span>`
+          );
+        });
       });
 
-      // 🔹 Handle Role Change Submission
-      $("#changeRoleForm").on("submit", function (e) {
-        e.preventDefault();
+      // 🔹 Handle Change Role Form Submission
+      $("#saveRoleChange").on("click", function () {
         const userId = $("#changeRoleUserId").val();
         const newRole = $("#changeRoleNew").val();
+        const reason = $("#changeReason").val();
+
+        if (!userId || !newRole || !reason) {
+          showNotification("Please fill all required fields", "warning");
+          return;
+        }
+
         $.ajax({
           url: `${BACKEND_URL}/users/${userId}/role`,
           method: "PATCH",
@@ -4090,25 +4298,155 @@
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-          data: JSON.stringify({ role: newRole }),
-          success: function () {
+          data: JSON.stringify({
+            role: newRole,
+            reason: reason,
+          }),
+          success: function (response) {
+            console.log("Role changed successfully:", response);
             $("#changeRoleModal").modal("hide");
-            initializeUsersPage();
-            showNotification(
-              "Success",
-              "User role updated successfully",
-              "success"
-            );
+            showNotification("✅ User role updated successfully!", "success");
+            // Refresh roles page to reflect changes
+            initializeRolesPage();
           },
           error: function (xhr) {
-            showNotification(
-              "Error",
-              xhr.responseText || "Failed to change role",
-              "danger"
-            );
+            console.error("Failed to change role:", xhr.responseText);
+            showNotification("❌ Failed to update user role.", "danger");
           },
         });
       });
+
+      // 🔹 Open Role History Modal
+      $(document).on("click", ".role-history-btn", function () {
+        const userId = $(this).data("id");
+        const userName = $(this).data("user");
+
+        $("#roleHistoryModalLabel").text(`Role Change History - ${userName}`);
+
+        $.ajax({
+          url: `${BACKEND_URL}/users/${userId}/role-history`,
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          success: function (response) {
+            console.log("Role history fetched:", response);
+            const history = response.data || [];
+            const $tbody = $("#roleHistoryTableBody");
+            $tbody.empty();
+
+            if (history.length === 0) {
+              $tbody.html(
+                "<tr><td colspan='5' class='text-center text-muted'>No role change history found</td></tr>"
+              );
+              return;
+            }
+
+            history.forEach((item) => {
+              const date = new Date(item.createdAt).toLocaleString();
+              const assignedBy = item.assignedBy
+                ? `${item.assignedBy.firstname} ${item.assignedBy.lastname}`
+                : "N/A";
+
+              $tbody.append(`
+          <tr>
+            <td>${date}</td>
+            <td>${item.previousRole.replace("_", " ").toUpperCase()}</td>
+            <td>${item.newRole.replace("_", " ").toUpperCase()}</td>
+            <td>${assignedBy}</td>
+            <td>${item.reason}</td>
+          </tr>
+        `);
+            });
+
+            $("#roleHistoryModal").modal("show");
+          },
+          error: function (xhr) {
+            console.error("Failed to fetch role history:", xhr.responseText);
+            showNotification("❌ Failed to fetch role history.", "danger");
+          },
+        });
+      });
+
+      function updatePermissionsTable() {
+        // Run only if the Roles Page is active
+        // Run only if the Roles Page is active
+        // if ($("#rolesPage").hasClass("d-none")) {
+        //   console.warn(
+        //     "⛔ Permissions Table update skipped: Roles page not active"
+        //   );
+        //   return;
+        // }
+
+        // --- GUARD: Only run if roles data is available ---
+        if (!allRoles || allRoles.length === 0) {
+          console.warn(
+            "⚠️ updatePermissionsTable called but allRoles is empty. Skipping."
+          );
+          return; // Exit the function immediately
+        }
+
+        const $tbody = $("#permissionsTableBody");
+        $tbody.empty();
+
+        allRoles.forEach((role) => {
+          const permissionBadges = role.permissions
+            .map((permission) => {
+              const permissionName = permission.replace(":", " - ");
+              return `<span class="badge bg-secondary me-1 mb-1">${permissionName}</span>`;
+            })
+            .join("");
+
+          $tbody.append(`
+      <tr>
+        <td><span class="badge bg-primary">${role.label}</span></td>
+        <td>${
+          permissionBadges || "<span class='text-muted'>No permissions</span>"
+        }</td>
+        <td>
+          <button class="btn btn-sm btn-outline-primary edit-permissions-btn" 
+                  data-role="${role.value}" data-bs-toggle="modal" 
+                  data-bs-target="#editPermissionsModal">
+            <i class="bi bi-pencil"></i> Edit
+          </button>
+        </td>
+      </tr>
+    `);
+        });
+      }
+
+      // 🔹 Handle Role Change Submission
+      // $("#changeRoleForm").on("submit", function (e) {
+      //   e.preventDefault();
+      //   const userId = $("#changeRoleUserId").val();
+      //   const newRole = $("#changeRoleNew").val();
+      //   $.ajax({
+      //     url: `${BACKEND_URL}/users/${userId}/role`,
+      //     method: "PATCH",
+      //     headers: {
+      //       Authorization: `Bearer ${token}`,
+      //       "Content-Type": "application/json",
+      //     },
+      //     data: JSON.stringify({ role: newRole }),
+      //     success: function () {
+      //       $("#changeRoleModal").modal("hide");
+      //       initializeUsersPage();
+      //       showNotification(
+      //         "Success",
+      //         "User role updated successfully",
+      //         "success"
+      //       );
+      //     },
+      //     error: function (xhr) {
+      //       showNotification(
+      //         "Error",
+      //         xhr.responseText || "Failed to change role",
+      //         "danger"
+      //       );
+      //     },
+      //   });
+      // });
 
       $(document).on("click", ".deactivate-user-btn", function () {
         const userId = $(this).data("id");
@@ -5241,10 +5579,29 @@
       }
 
       async function initializeRolesPage() {
+        // --- GUARD: Exit if already initialized ---
+        if (isRolesPageInitialized) {
+          console.warn(
+            "⚠️ Roles page already initialized. Skipping redundant call."
+          );
+          return;
+        }
+
+        if (!token || !BACKEND_URL) {
+          console.error("CRITICAL: Token or BACKEND_URL is missing.");
+          showNotification(
+            "❌ Authentication or configuration error.",
+            "danger"
+          );
+          return;
+        }
+
         try {
-          // 🔹 Fetch all users from backend
-          const response = await $.ajax({
-            url: `${BACKEND_URL}/users`,
+          showNotification("Loading roles and permissions...", "info");
+
+          // 1. 🔹 FETCH ROLES & PERMISSIONS FIRST and WAIT
+          console.log(`📡 Fetching roles from: ${BACKEND_URL}/roles`);
+          const rolesResponse = await fetch(`${BACKEND_URL}/roles`, {
             method: "GET",
             headers: {
               Authorization: `Bearer ${token}`,
@@ -5252,23 +5609,54 @@
             },
           });
 
-          const users = Array.isArray(response.data) ? response.data : [];
+          if (!rolesResponse.ok) {
+            throw new Error(`HTTP error! Status: ${rolesResponse.status}`);
+          }
+          allRoles = await rolesResponse.json();
+          if (allRoles.length === 0) {
+            throw new Error("Server returned an empty roles array.");
+          }
+          console.log("✅ Roles data received:", allRoles);
 
-          // 🔹 Prepare role counts for chart
+          // Create rolePermissions mapping object
+          allRoles.forEach((role) => {
+            rolePermissions[role.value] = role.permissions;
+          });
+
+          // 2. 🔹 UPDATE THE PERMISSIONS TABLE
+          updatePermissionsTable();
+
+          // 3. 🔹 FETCH USERS and WAIT
+          console.log(`📡 Fetching users from: ${BACKEND_URL}/users`);
+          const usersResponse = await fetch(`${BACKEND_URL}/users`, {
+            method: "GET",
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          if (!usersResponse.ok) {
+            throw new Error(
+              `HTTP error fetching users! Status: ${usersResponse.status}`
+            );
+          }
+
+          const usersData = await usersResponse.json();
+          const users = Array.isArray(usersData.data) ? usersData.data : [];
+          console.log("✅ Users data received:", users);
+
+          // 4. 🔹 PREPARE ROLE COUNTS
           const roleCounts = {
             global_admin: 0,
             support_admin: 0,
             kindred_head: 0,
             user: 0,
           };
-
           users.forEach((u) => {
             const role = (u.role || "user").toLowerCase();
             if (roleCounts[role] !== undefined) roleCounts[role]++;
-            else roleCounts.user++; // fallback
+            else roleCounts.user++;
           });
 
-          // 🔹 Initialize DataTable
+          // 5. 🔹 INITIALIZE OR UPDATE DATATABLE
           if (!rolesTable) {
             rolesTable = $("#rolesTable").DataTable({
               data: users.map((u) => ({
@@ -5304,14 +5692,24 @@
                   data: null,
                   render: function (data, type, row) {
                     return `
-                                    <button class="btn btn-sm btn-outline-primary change-role-btn"
-                                        data-id="${row.id}"
-                                        data-user="${row.name}"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#changeRoleModal">
-                                        <i class="bi bi-person-badge"></i> Change Role
-                                    </button>
-                                `;
+                <div class="btn-group" role="group">
+                  <button class="btn btn-sm btn-outline-primary change-role-btn"
+                      data-id="${row.id}"
+                      data-user="${row.name}"
+                      data-role="${row.role}"
+                      data-bs-toggle="modal"
+                      data-bs-target="#changeRoleModal">
+                    <i class="bi bi-person-badge"></i> Change Role
+                  </button>
+                  <button class="btn btn-sm btn-outline-info role-history-btn"
+                      data-id="${row.id}"
+                      data-user="${row.name}"
+                      data-bs-toggle="modal"
+                      data-bs-target="#roleHistoryModal">
+                    <i class="bi bi-clock-history"></i> History
+                  </button>
+                </div>
+              `;
                   },
                 },
               ],
@@ -5319,7 +5717,6 @@
               pageLength: 10,
             });
           } else {
-            // rolesTable.clear().rows.add(users).draw();
             rolesTable
               .clear()
               .rows.add(
@@ -5336,7 +5733,7 @@
               .draw();
           }
 
-          // 🔹 Initialize role distribution chart
+          // 6. 🔹 INITIALIZE OR UPDATE CHART
           if (!roleDistributionChart) {
             const ctx = document
               .getElementById("roleDistributionChart")
@@ -5359,7 +5756,6 @@
                       roleCounts.global_admin,
                     ],
                     backgroundColor: [
-                      // "#ef4444",
                       "#f59e0b",
                       "#3b82f6",
                       "#10b981",
@@ -5385,47 +5781,29 @@
             ];
             roleDistributionChart.update();
           }
+
+          // 7. --- SET FLAG TO TRUE ---
+          isRolesPageInitialized = true;
+          console.log("✅ Roles page initialization complete.");
+          showNotification("Roles and users loaded successfully.", "success");
         } catch (error) {
-          console.error("Error loading roles:", error);
-          alert("Failed to load roles. Please check your network or API.");
+          console.error("🚨 Error during page initialization:", error);
+          showNotification(
+            `❌ Failed to load page. ${error.message}`,
+            "danger"
+          );
         }
       }
-      // 🔹 Open Change Role Modal
-      $(document).on("click", ".change-role-btn", function () {
-        const userId = $(this).data("id");
-        const userName = $(this).data("user");
-        $("#changeRoleUserId").val(userId);
-        $("#changeRoleUser").val(userName);
-      });
-      // 🔹 Handle Change Role Form Submission
-      $("#changeRoleForm").on("submit", function (e) {
-        e.preventDefault();
-        const userId = $("#changeRoleUserId").val();
-        const newRole = $("#changeRoleNew").val();
-        if (!userId || !newRole) {
-          alert("Please select a valid role.");
-          return;
-        }
 
-        $.ajax({
-          url: `${BACKEND_URL}/users/${userId}/role`,
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          data: JSON.stringify({ role: newRole }),
-          success: function (response) {
-            $("#changeRoleModal").modal("hide");
-            showNotification("✅ User role updated successfully!", "success");
-            // Refresh roles page to reflect changes
-            initializeRolesPage();
-          },
-          error: function (xhr) {
-            console.error("Failed to change role:", xhr.responseText);
-            showNotification("❌ Failed to update user role.", "danger");
-          },
-        });
+      $("#refreshPermissions").on("click", function () {
+        loadRolesAndPermissions();
+        showNotification("Permissions refreshed", "info");
+      });
+
+      // 🔹 Document Ready
+      $(document).ready(function () {
+        initializeRolesPage();
+        $("#refreshRoleStats").click(loadRoleStats);
       });
 
       function loadRoleStats() {

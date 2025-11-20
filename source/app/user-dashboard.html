@@ -27,6 +27,11 @@
       rel="stylesheet"
       href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css"
     />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css"
+    />
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -506,7 +511,8 @@
           display: flex;
           justify-content: center;
           align-items: center;
-          z-index: 1000; /* Ensure it's on top of other elements */
+          /* z-index: 1000; Ensure it's on top of other elements */
+          z-index: 9999;
         }
         .loader {
           border: 8px solid #f3f3f3; /* Light grey */
@@ -524,6 +530,55 @@
           100% {
             transform: rotate(360deg);
           }
+        }
+      }
+      /* Download Loading Overlay */
+      .download-loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none; /* Prevent interaction when hidden */
+      }
+
+      .download-loading-overlay.show {
+        opacity: 1;
+        pointer-events: auto; /* Enable interaction when shown */
+      }
+
+      .download-loading-content {
+        background-color: white;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        text-align: center;
+        max-width: 300px;
+      }
+
+      .download-spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #4c5fd5;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 15px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
         }
       }
     </style>
@@ -587,7 +642,7 @@
       </nav>
     </aside>
 
-    Header
+    <!-- Header -->
     <header class="header">
       <button class="btn btn-light d-md-none me-3" id="sidebarToggle">
         <i class="bi bi-list"></i>
@@ -1875,11 +1930,12 @@
               <div class="card-body">
                 <table
                   id="idcardRequestsTable"
-                  class="table table-striped table-hover w-100"
+                  class="table table-striped table-hover dt-responsive w-100"
                 >
                   <thead>
                     <tr>
-                      <th>Request ID</th>
+                      <th>S/N</th>
+                      <th>ID</th>
                       <th>Full Name</th>
                       <th>Date of Issue</th>
                       <th>Date of Expiration</th>
@@ -1922,11 +1978,12 @@
               <div class="card-body">
                 <table
                   id="certificateRequestsTable"
-                  class="table table-striped table-hover w-100"
+                  class="table table-striped table-hover dt-responsive w-100"
                 >
                   <thead>
                     <tr>
-                      <th>Request ID</th>
+                      <th>S/N</th>
+                      <th>ID</th>
                       <th>Full Name</th>
                       <th>State of Origin</th>
                       <th>LGA of Origin</th>
@@ -2233,15 +2290,27 @@
                     />
                   </div>
                 </div>
+                <div class="mb-3">
+                  <label for="passportPhoto" class="form-label"
+                    >passportPhoto</label
+                  >
+                  <input
+                    type="file"
+                    class="form-control"
+                    id="passportPhoto"
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    required
+                  />
+                </div>
 
                 <div class="mb-3">
-                  <label for="ref_Letter" class="form-label"
+                  <label for="ref_letter" class="form-label"
                     >Reference Letter</label
                   >
                   <input
                     type="file"
                     class="form-control"
-                    id="ref_Letter"
+                    id="ref_letter"
                     accept=".pdf,.jpg,.jpeg,.png"
                     required
                   />
@@ -2558,17 +2627,6 @@
                     />
                   </div>
                 </div>
-                <!-- <div class="mb-3">
-                  <label for="certPurpose" class="form-label"
-                    >Purpose of Request</label
-                  >
-                  <textarea
-                    class="form-control"
-                    id="certPurpose"
-                    rows="2"
-                    required
-                  ></textarea>
-                </div> -->
 
                 <h6 class="mt-4 mb-3">Required Documents</h6>
                 <div class="row">
@@ -2607,32 +2665,6 @@
                     />
                   </div>
                 </div>
-                <!-- <div class="row">
-                  <div class="col-md-6 mb-3">
-                    <label
-                      for="certParentGuardianIndigeneCert"
-                      class="form-label"
-                      >Parent/Guardian Indigene Certificate</label
-                    >
-                    <input
-                      type="file"
-                      class="form-control"
-                      id="certParentGuardianIndigeneCert"
-                      accept=".pdf,.jpg,.jpeg,.png"
-                    />
-                  </div>
-                  <div class="col-md-6 mb-3">
-                    <label for="certAttestationLetter" class="form-label"
-                      >Attestation Letter</label
-                    >
-                    <input
-                      type="file"
-                      class="form-control"
-                      id="certAttestationLetter"
-                      accept=".pdf,.jpg,.jpeg,.png"
-                    />
-                  </div>
-                </div> -->
               </div>
             </form>
           </div>
@@ -2646,6 +2678,518 @@
             </button>
             <button type="button" class="btn btn-primary" id="submitRequestBtn">
               Submit Request
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resubmission Modal -->
+    <div
+      class="modal fade"
+      id="resubmitModal"
+      tabindex="-1"
+      aria-labelledby="resubmitModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="resubmitModalLabel">
+              Resubmit Request
+              <br />
+              <small class="text-muted">Only Three Attempts Allowed</small>
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <input type="hidden" id="resubmitRequestId" />
+            <input type="hidden" id="resubmitRequestType" />
+
+            <!-- Alert for resubmission attempts -->
+            <div
+              class="alert alert-warning d-none"
+              id="resubmissionAttemptsAlert"
+            >
+              <i class="bi bi-exclamation-triangle-fill me-2"></i>
+              You have used <span id="attemptCount">0</span> of 3 resubmission
+              attempts.
+              <span id="attemptWarning"></span>
+            </div>
+
+            <!-- ID Card Resubmission Fields -->
+            <div id="idcardResubmitFields" class="resubmit-fields d-none">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="resubmitIdcardFirstname" class="form-label"
+                    >First Name</label
+                  >
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="resubmitIdcardFirstname"
+                    required
+                  />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="resubmitIdcardLastname" class="form-label"
+                    >Last Name</label
+                  >
+                  <input
+                    type="tel"
+                    class="form-control"
+                    id="resubmitIdcardLastname"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="resubmitIdcardEmail" class="form-label"
+                    >Email</label
+                  >
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="resubmitIdcardEmail"
+                    required
+                  />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="resubmitIdcardPhone" class="form-label"
+                    >Phone Number</label
+                  >
+                  <input
+                    type="tel"
+                    class="form-control"
+                    id="resubmitIdcardPhone"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="resubmitpassportPhoto" class="form-label"
+                  >Passport Photo</label
+                >
+                <input
+                  type="file"
+                  class="form-control"
+                  id="resubmitpassportPhoto"
+                  accept=".pdf,.jpg,.jpeg,.png"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label for="resubmitRefLetter" class="form-label"
+                  >Reference Letter</label
+                >
+                <input
+                  type="file"
+                  class="form-control"
+                  id="resubmitRefLetter"
+                  accept=".pdf,.jpg,.jpeg,.png"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="resubmitUtilityBill" class="form-label"
+                  >Utility Bill</label
+                >
+                <input
+                  type="file"
+                  class="form-control"
+                  id="resubmitUtilityBill"
+                  accept=".pdf,.jpg,.jpeg,.png"
+                  required
+                />
+              </div>
+            </div>
+
+            <!-- Certificate Resubmission Fields -->
+            <div id="certificateResubmitFields" class="resubmit-fields d-none">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="resubmitCertFirstname" class="form-label"
+                    >First Name</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="resubmitCertFirstname"
+                    required
+                    readonly
+                  />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="resubmitCertLastname" class="form-label"
+                    >Last Name</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="resubmitCertLastname"
+                    required
+                    readonly
+                  />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="resubmitCertMiddlename" class="form-label"
+                    >Middle Name</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="resubmitCertMiddlename"
+                  />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="resubmitCertDOB" class="form-label"
+                    >Date of Birth</label
+                  >
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="resubmitCertDOB"
+                    min="1900-01-01"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="resubmitCertMaritalStatus" class="form-label"
+                    >Marital Status</label
+                  >
+                  <select
+                    class="form-select"
+                    id="resubmitCertMaritalStatus"
+                    required
+                  >
+                    <option value="">Select Status</option>
+                    <option value="Single">Single</option>
+                    <option value="Married">Married</option>
+                    <option value="Divorced">Divorced</option>
+                    <option value="Widowed">Widowed</option>
+                  </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="resubmitCertGender" class="form-label"
+                    >Gender</label
+                  >
+                  <select class="form-select" id="resubmitCertGender" required>
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Other certificate fields would go here, similar to the original form -->
+              <!-- For brevity, I'm only including key fields -->
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="stateOfOrigin" class="form-label"
+                    >State Of Origin</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control bg-light"
+                    id="resubmitCertStateOfOrigin"
+                    required
+                    readonly
+                  />
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label for="resubmitCertLGAOfOrigin" class="form-label"
+                    >LGA of Origin</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="resubmitCertLGAOfOrigin"
+                    required
+                    readonly
+                  />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="resubmitCertPhone" class="form-label"
+                    >Phone Number</label
+                  >
+                  <input
+                    type="tel"
+                    class="form-control"
+                    id="resubmitCertPhone"
+                    required
+                  />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="resubmitCertAddress" class="form-label"
+                    >Address</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="resubmitCertAddress"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="resubmitCertWard" class="form-label">Ward</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="resubmitCertWard"
+                    required
+                  />
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label for="resubmitCertKindred" class="form-label"
+                    >Kindred</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="resubmitCertKindred"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="resubmitCertFathersName" class="form-label"
+                    >Father's Name</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="resubmitCertFathersName"
+                    required
+                  />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label
+                    for="resubmitCertFathersStateOfOrigin"
+                    class="form-label"
+                    >Father's State of Origin</label
+                  >
+                  <select
+                    class="form-select"
+                    id="resubmitCertFathersStateOfOrigin"
+                    required
+                  >
+                    <option value="">Select State</option>
+                    <option value="Abia">Abia</option>
+                    <option value="Adamawa">Adamawa</option>
+                    <option value="Akwa Ibom">Akwa Ibom</option>
+                    <option value="Anambra">Anambra</option>
+                    <option value="Bauchi">Bauchi</option>
+                    <option value="Bayelsa">Bayelsa</option>
+                    <option value="Benue">Benue</option>
+                    <option value="Borno">Borno</option>
+                    <option value="Cross River">Cross River</option>
+                    <option value="Delta">Delta</option>
+                    <option value="Ebonyi">Ebonyi</option>
+                    <option value="Edo">Edo</option>
+                    <option value="Ekiti">Ekiti</option>
+                    <option value="Enugu">Enugu</option>
+                    <option value="FCT">FCT</option>
+                    <option value="Gombe">Gombe</option>
+                    <option value="Imo">Imo</option>
+                    <option value="Jigawa">Jigawa</option>
+                    <option value="Kaduna">Kaduna</option>
+                    <option value="Kano">Kano</option>
+                    <option value="Katsina">Katsina</option>
+                    <option value="Kebbi">Kebbi</option>
+                    <option value="Kogi">Kogi</option>
+                    <option value="Kwara">Kwara</option>
+                    <option value="Lagos">Lagos</option>
+                    <option value="Nasarawa">Nasarawa</option>
+                    <option value="Niger">Niger</option>
+                    <option value="Ogun">Ogun</option>
+                    <option value="Ondo">Ondo</option>
+                    <option value="Osun">Osun</option>
+                    <option value="Oyo">Oyo</option>
+                    <option value="Plateau">Plateau</option>
+                    <option value="Rivers">Rivers</option>
+                    <option value="Sokoto">Sokoto</option>
+                    <option value="Taraba">Taraba</option>
+                    <option value="Yobe">Yobe</option>
+                    <option value="Zamfara">Zamfara</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="resubmitCertMothersName" class="form-label"
+                    >Mother's Name</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="resubmitCertMothersName"
+                    required
+                  />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label
+                    for="resubmitCertMothersStateOfOrigin"
+                    class="form-label"
+                    >Mother's State of Origin</label
+                  >
+                  <select
+                    class="form-select"
+                    id="resubmitCertMothersStateOfOrigin"
+                    required
+                  >
+                    <option value="">Select State</option>
+                    <option value="Abia">Abia</option>
+                    <option value="Adamawa">Adamawa</option>
+                    <option value="Akwa Ibom">Akwa Ibom</option>
+                    <option value="Anambra">Anambra</option>
+                    <option value="Bauchi">Bauchi</option>
+                    <option value="Bayelsa">Bayelsa</option>
+                    <option value="Benue">Benue</option>
+                    <option value="Borno">Borno</option>
+                    <option value="Cross River">Cross River</option>
+                    <option value="Delta">Delta</option>
+                    <option value="Ebonyi">Ebonyi</option>
+                    <option value="Edo">Edo</option>
+                    <option value="Ekiti">Ekiti</option>
+                    <option value="Enugu">Enugu</option>
+                    <option value="FCT">FCT</option>
+                    <option value="Gombe">Gombe</option>
+                    <option value="Imo">Imo</option>
+                    <option value="Jigawa">Jigawa</option>
+                    <option value="Kaduna">Kaduna</option>
+                    <option value="Kano">Kano</option>
+                    <option value="Katsina">Katsina</option>
+                    <option value="Kebbi">Kebbi</option>
+                    <option value="Kogi">Kogi</option>
+                    <option value="Kwara">Kwara</option>
+                    <option value="Lagos">Lagos</option>
+                    <option value="Nasarawa">Nasarawa</option>
+                    <option value="Niger">Niger</option>
+                    <option value="Ogun">Ogun</option>
+                    <option value="Ondo">Ondo</option>
+                    <option value="Osun">Osun</option>
+                    <option value="Oyo">Oyo</option>
+                    <option value="Plateau">Plateau</option>
+                    <option value="Rivers">Rivers</option>
+                    <option value="Sokoto">Sokoto</option>
+                    <option value="Taraba">Taraba</option>
+                    <option value="Yobe">Yobe</option>
+                    <option value="Zamfara">Zamfara</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12 mb-3">
+                  <label for="resubmitCertEmail" class="form-label"
+                    >Email</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="resubmitCertEmail"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="resubmitCertGuardian" class="form-label"
+                    >Guardian (if applicable)</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="resubmitCertGuardian"
+                  />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label
+                    for="resubmitCertRelationshipToGuardian"
+                    class="form-label"
+                    >Relationship to Guardian</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="resubmitCertRelationshipToGuardian"
+                  />
+                </div>
+              </div>
+              <h6 class="mt-4 mb-3">Required Documents</h6>
+              <div class="row">
+                <div class="col-md-4 mb-3">
+                  <label for="resubmitCertPassportPhoto" class="form-label"
+                    >Passport Photo *</label
+                  >
+                  <input
+                    type="file"
+                    class="form-control"
+                    id="resubmitCertPassportPhoto"
+                    accept=".jpg,.jpeg,.png"
+                    required
+                  />
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label for="resubmitCertIdCard" class="form-label"
+                    >ID Card *</label
+                  >
+                  <input
+                    type="file"
+                    class="form-control"
+                    id="resubmitCertIdCard"
+                    accept=".jpg,.jpeg,.png"
+                    required
+                  />
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label for="resubmitCertBirthCertificate" class="form-label"
+                    >Birth Certificate *</label
+                  >
+                  <input
+                    type="file"
+                    class="form-control"
+                    id="resubmitCertBirthCertificate"
+                    accept=".jpg,.jpeg,.png"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              id="submitResubmission"
+              class="btn btn-primary"
+            >
+              <i class="bi bi-arrow-clockwise me-2"></i>Resubmit
             </button>
           </div>
         </div>
@@ -2817,21 +3361,34 @@
       </div>
     </div>
 
+    <div id="loadingIndicator" style="display: none">
+      <div class="loader"></div>
+      <div class="loading-message">Loading...</div>
+    </div>
     <!-- Mock Mode Toggle -->
     <div class="form-check form-switch mock-mode-toggle">
       <input class="form-check-input" type="checkbox" id="mockModeToggle" />
       <label class="form-check-label" for="mockModeToggle">Mock Mode</label>
     </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
+
+    <!-- Your Custom Script -->
+    <script type="text/javascript" src="../js/index.js"></script>
+
     <script>
+      // Add these near the top of your script
+      let allCertificateRequests = [];
+      let allIdCardRequests = [];
       const mockAPI = {
         // Current user data
         currentUser: {
@@ -3293,9 +3850,6 @@
         });
 
         // Submit request button
-        // $("#submitRequestBtn").on("click", function () {
-        //   submitNewRequest();
-        // });
         $("#submitRequestBtn").on("click", function () {
           const $btn = $(this);
 
@@ -3395,18 +3949,6 @@
           saveProfileFormData();
         });
 
-        // $(document).on("click", ".remove-neighbor", function () {
-        //   $(this).closest(".neighbor-item").remove();
-        //   // Save profile form data to localStorage
-        //   saveProfileFormData();
-        // });
-
-        // $(document).on("click", ".remove-family", function () {
-        //   $(this).closest(".family-item").remove();
-        //   // Save profile form data to localStorage
-        //   saveProfileFormData();
-        // });
-
         $(document).on("click", ".remove-family", function () {
           $(this).closest(".family-item").remove();
           saveProfileFormData();
@@ -3446,6 +3988,269 @@
             saveProfileFormData();
           }
         );
+
+        $(document).on("click", ".resubmit-btn", function () {
+          const requestId = $(this).data("id");
+          const requestType = $(this).data("type"); // "certificate" or "idcard"
+
+          // Find the request data from our stored arrays
+          let requestData = null;
+          if (requestType === "certificate") {
+            requestData = allCertificateRequests.find(
+              (req) => req._id === requestId
+            );
+          } else if (requestType === "idcard") {
+            requestData = allIdCardRequests.find(
+              (req) => req._id === requestId
+            );
+          }
+
+          if (!requestData) {
+            showNotification(
+              "Could not find request details. Please refresh the page.",
+              "error"
+            );
+            return;
+          }
+
+          // Set the hidden fields
+          $("#resubmitRequestId").val(requestId);
+          $("#resubmitRequestType").val(requestType);
+
+          // Show resubmission attempts alert if applicable
+          if (
+            requestData.resubmissionAttempts &&
+            requestData.resubmissionAttempts > 0
+          ) {
+            const remainingAttempts = 3 - requestData.resubmissionAttempts;
+            $("#attemptCount").text(requestData.resubmissionAttempts);
+
+            if (remainingAttempts === 1) {
+              $("#attemptWarning").text("This is your final attempt.");
+            } else {
+              $("#attemptWarning").text(
+                `You have ${remainingAttempts} attempts remaining.`
+              );
+            }
+
+            $("#resubmissionAttemptsAlert").removeClass("d-none");
+          } else {
+            $("#resubmissionAttemptsAlert").addClass("d-none");
+          }
+
+          // Hide both field sets initially
+          $("#idcardResubmitFields, #certificateResubmitFields").addClass(
+            "d-none"
+          );
+
+          // Show the appropriate form fields based on request type
+          if (requestType === "idcard") {
+            $("#resubmitModalLabel").html(
+              "Resubmit ID Card Request<br><small class='text-muted'>Only Three Attempts Allowed</small>"
+            );
+            $("#idcardResubmitFields").removeClass("d-none");
+
+            // Pre-fill with existing data
+            $("#resubmitIdcardEmail").val(requestData.email || "");
+            $("#resubmitIdcardPhone").val(requestData.phone || "");
+            $("#resubmitIdcardFirstname").val(requestData.firstname || "");
+            $("#resubmitIdcardLastname").val(requestData.lastname || "");
+          } else if (requestType === "certificate") {
+            $("#resubmitModalLabel").html(
+              "Resubmit Certificate Request<br><small class='text-muted'>Only Three Attempts Allowed</small>"
+            );
+            $("#certificateResubmitFields").removeClass("d-none");
+
+            // Pre-fill with existing data
+            $("#resubmitCertFirstname").val(requestData.firstname || "");
+            $("#resubmitCertLastname").val(requestData.lastname || "");
+            $("#resubmitCertMiddlename").val(requestData.middlename || "");
+            $("#resubmitCertDOB").val(
+              requestData.DOB
+                ? new Date(requestData.DOB).toISOString().split("T")[0]
+                : ""
+            );
+            $("#resubmitCertMaritalStatus").val(
+              requestData.maritalStatus || ""
+            );
+            $("#resubmitCertGender").val(requestData.gender || "");
+
+            $("#resubmitCertStateOfOrigin").val(
+              requestData.stateOfOrigin || ""
+            );
+            $("#resubmitCertLGAOfOrigin").val(requestData.lgaOfOrigin || "");
+
+            $("#resubmitCertPhone").val(requestData.phone || "");
+            $("#resubmitCertAddress").val(requestData.address || "");
+            $("#resubmitCertWard").val(requestData.ward || "");
+            $("#resubmitCertKindred").val(requestData.kindred || "");
+            $("#resubmitCertFathersName").val(requestData.fathersName || "");
+            $("#resubmitCertFathersStateOfOrigin").val(
+              requestData.fathersStateOfOrigin || ""
+            );
+            $("#resubmitCertMothersName").val(requestData.mothersName || "");
+            $("#resubmitCertMothersStateOfOrigin").val(
+              requestData.mothersStateOfOrigin || ""
+            );
+            $("#resubmitCertEmail").val(requestData.email || "");
+            $("#resubmitCertGuardian").val(requestData.guardian || "");
+            $("#resubmitCertRelationshipToGuardian").val(
+              requestData.relationshionToguardian || ""
+            );
+          }
+
+          // Show the modal
+          $("#resubmitModal").modal("show");
+        });
+
+        function resetButton($btn) {
+          $btn.prop("disabled", false).html("Submit");
+        }
+
+        // ---------------------------
+        // Helper: Build FormData
+        // ---------------------------
+        function buildFormData(requestType) {
+          const formData = new FormData();
+          let mappedType = null;
+
+          if (requestType === "certificate") {
+            const fileMap = {
+              passportPhoto: "#resubmitCertPassportPhoto",
+              idCard: "#resubmitCertIdCard",
+              birthCertificate: "#resubmitCertBirthCertificate",
+            };
+
+            for (const [type, selector] of Object.entries(fileMap)) {
+              const input = $(selector)[0];
+              if (input?.files?.[0]) {
+                mappedType = type;
+                formData.append(type, input.files[0]);
+                break;
+              }
+            }
+
+            const certFields = [
+              "firstname",
+              "lastname",
+              "middlename",
+              "DOB",
+              "maritalStatus",
+              "gender",
+              "stateOfOrigin",
+              "lgaOfOrigin",
+              "ward",
+              "address",
+              "phone",
+              "kindred",
+              "fathersName",
+              "fathersStateOfOrigin",
+              "mothersName",
+              "mothersStateOfOrigin",
+              "email",
+              "guardian",
+              "relationshipToguardian",
+            ];
+
+            certFields.forEach((f) => {
+              const value = $(
+                `#resubmitCert${f.charAt(0).toUpperCase() + f.slice(1)}`
+              ).val();
+              if (value) formData.append(f, value);
+            });
+
+            formData.append("userId", user.id);
+          }
+
+          if (requestType === "idcard") {
+            const idcardFields = ["email", "phone", "firstname", "lastname"];
+
+            idcardFields.forEach((f) => {
+              const value = $(
+                `#resubmitIdcard${f.charAt(0).toUpperCase() + f.slice(1)}`
+              ).val();
+              if (value) formData.append(f, value);
+            });
+
+            const fileMap = {
+              passportPhoto: "#resubmitPassportPhoto",
+              ref_letter: "#resubmitRefLetter",
+              utilityBill: "#resubmitUtilityBill",
+            };
+
+            for (const [type, selector] of Object.entries(fileMap)) {
+              const input = $(selector)[0];
+              if (input?.files?.[0]) formData.append(type, input.files[0]);
+            }
+          }
+
+          if (mappedType) formData.append("documentTypeToUpdate", mappedType);
+          return formData;
+        }
+
+        // ---------------------------
+        // Submit Resubmission Handler
+        // ---------------------------
+        $("#submitResubmission")
+          .off("click")
+          .on("click", async function () {
+            const $btn = $(this);
+            const requestId = $("#resubmitRequestId").val();
+            const requestType = $("#resubmitRequestType").val();
+
+            if (!requestId || !requestType) {
+              showNotification(
+                "Invalid request information. Please try again.",
+                "error"
+              );
+              return;
+            }
+
+            // Disable button
+            $btn.prop("disabled", true).html(`
+      <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+      Processing...
+    `);
+
+            try {
+              const formData = buildFormData(requestType);
+              const url =
+                requestType === "idcard"
+                  ? `${BACKEND_URL}/idcard/${requestId}/resubmit`
+                  : `${BACKEND_URL}/indigene/certificate/${requestId}/resubmit`;
+
+              await $.ajax({
+                url,
+                method: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                headers: { Authorization: `Bearer ${token}` },
+              });
+
+              showNotification("Request resubmitted successfully", "success");
+              $("#resubmitModal").modal("hide");
+              await initializeRequestsPage();
+            } catch (error) {
+              console.error("Error resubmitting request:", error);
+              showNotification(
+                error.responseJSON?.message ||
+                  "Failed to resubmit request. Please try again.",
+                "error"
+              );
+            } finally {
+              resetButton($btn);
+            }
+          });
+
+        // ---------------------------
+        // Reset modal fields on hide
+        // ---------------------------
+        $("#resubmitModal").on("hidden.bs.modal", function () {
+          $("#resubmitRequestId, #resubmitRequestType").val("");
+          $("input[type='file']").val("");
+          resetButton($("#submitResubmission"));
+        });
 
         // Initialize user data
         loadUserData();
@@ -4397,17 +5202,6 @@
         updateAddButtonState("#familyContainer", "#addFamilyBtn", 5);
       }
 
-      /**
-       * Updates existing form items with data from the server response.
-       * It finds items in the form that don't have a database ID yet and matches them
-       * to items from the server based on their field values, then assigns the ID.
-       *
-       * @param {Array} serverData - The array of items from the server response (e.g., response.family).
-       * @param {string} containerSelector - The jQuery selector for the container (e.g., "#familyContainer").
-       * @param {string} itemClass - The class of the individual items (e.g., ".family-item").
-       * @param {Object} fieldMap - An object mapping server data fields to form input classes.
-       *                            e.g., { name: '.family-name', phone: '.family-phone' }
-       */
       function updateExistingItemsWithServerData(
         serverData,
         containerSelector,
@@ -5724,32 +6518,6 @@
       }
 
       /**
-       * Renders a status badge with appropriate styling.
-       * This version is robust against undefined, null, or non-string data.
-       * @param {string} data - The status string from the API.
-       * @returns {string} HTML for the status badge.
-       */
-      function renderStatus(data) {
-        // If data is missing, null, or not a string, display a default "N/A" status.
-        if (!data || typeof data !== "string") {
-          return `<span class="status-badge pending">N/A</span>`;
-        }
-
-        // Use toLowerCase() for a case-insensitive comparison, making it more robust.
-        const status = data.toLowerCase();
-        let badgeClass = "status-badge pending"; // Default class
-
-        if (status === "Approved") {
-          badgeClass = "status-badge approved";
-        } else if (status === "Rejected") {
-          badgeClass = "status-badge unverified";
-        }
-
-        // Now we are certain 'data' is a string, so toUpperCase() is safe to call.
-        return `<span class="${badgeClass}">${data.toUpperCase()}</span>`;
-      }
-
-      /**
        * Renders a date in a user-friendly format.
        * @param {string} data - The date string from the API.
        * @returns {string} The formatted date or 'N/A'.
@@ -5776,12 +6544,19 @@
        * @param {string} config.text - The button's display text.
        * @param {string} config.dataId - The value for the 'data-id' attribute.
        * @param {string} [config.dataType] - The value for the 'data-type' attribute (optional).
-       * @returns {string} The complete HTML string for the button.
-       */
+       * @returns {string} The complete HTML string for the button.       */
+
       function createActionButton({ cssClass, icon, text, dataId, dataType }) {
         const typeAttr = dataType ? `data-type="${dataType}"` : "";
-        return `<button class="btn btn-sm ${cssClass}" data-id="${dataId}" ${typeAttr}>
-            <i class="bi bi-${icon}"></i> ${text}
+        // return `<button class="btn btn-sm ${cssClass}" data-id="${dataId}" ${typeAttr}>
+        //     <i class="bi bi-${icon}"></i> ${text}
+        //   </button>`;
+        return `<button class="btn btn-sm ${cssClass}" 
+                 data-id="${dataId}" 
+                 ${typeAttr}
+                 data-bs-toggle="tooltip" 
+                 title="${text}">
+            <i class="bi bi-${icon}"></i>
           </button>`;
       }
 
@@ -5792,6 +6567,7 @@
        * @param {string} documentType - The type of document ('idcard' or 'certificate').
        * @returns {function} A DataTables render function.
        */
+
       function createActionsRenderer(documentType) {
         const buttonConfig = {
           idcard: {
@@ -5805,6 +6581,16 @@
               icon: "credit-card",
               text: "Pay to Download",
             },
+            resubmit: {
+              cssClass: "btn-outline-primary resubmit-btn",
+              icon: "arrow-clockwise",
+              text: "Resubmit Request",
+            },
+            delete: {
+              cssClass: "btn-outline-danger delete-card-btn",
+              icon: "trash",
+              text: "Delete Request",
+            },
           },
           certificate: {
             download: {
@@ -5817,6 +6603,16 @@
               icon: "credit-card",
               text: "Pay to Download",
             },
+            resubmit: {
+              cssClass: "btn-outline-primary resubmit-btn",
+              icon: "arrow-clockwise",
+              text: "Resubmit Request",
+            },
+            delete: {
+              cssClass: "btn-outline-danger delete-btn",
+              icon: "trash",
+              text: "Delete Request",
+            },
           },
         };
 
@@ -5827,7 +6623,7 @@
 
           // Check for profile completion only if payment is paid
           if (isPaid && row.userId && row.userId.isProfileCompleted === false) {
-            return '<span class="text-warning">Please complete your profile</span>';
+            return '<span class="text-warning fw-bold">Please complete your profile</span>';
           }
 
           if (row.status === "Approved") {
@@ -5838,6 +6634,35 @@
                 ...config,
                 dataId: row._id,
                 dataType: isPaid ? undefined : documentType, // Only add type for the pay button
+              })
+            );
+          }
+
+          // Handle both resubmit and delete buttons for rejected status
+          if (row.status === "Rejected") {
+            // Add resubmit button if allowed
+            if (row.resubmissionAllowed) {
+              // Check if user has exceeded resubmission attempts
+              const hasAttemptsRemaining =
+                !row.resubmissionAttempts || row.resubmissionAttempts < 3;
+
+              if (hasAttemptsRemaining) {
+                buttons.push(
+                  createActionButton({
+                    ...buttonConfig[documentType].resubmit,
+                    dataId: row._id,
+                    dataType: documentType,
+                  })
+                );
+              }
+            }
+
+            // Always add delete button for rejected status
+            buttons.push(
+              createActionButton({
+                ...buttonConfig[documentType].delete,
+                dataId: row._id,
+                dataType: documentType,
               })
             );
           }
@@ -5857,6 +6682,137 @@
         };
       }
 
+      // Create the download overlay element
+      const downloadOverlay = document.createElement("div");
+      downloadOverlay.className = "download-loading-overlay";
+      downloadOverlay.innerHTML = `
+    <div class="download-loading-content">
+        <div class="download-spinner"></div>
+        <h5>Preparing Your Document</h5>
+        <p class="text-muted">Please wait while we prepare your document for download.</p>
+        <div class="progress mt-3" style="height: 6px;">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                 role="progressbar" style="width: 100%"></div>
+        </div>
+    </div>
+`;
+      document.body.appendChild(downloadOverlay);
+
+      $(document).on(
+        "click",
+        ".btn-cert-download, .btn-card-download",
+        function () {
+          const $button = $(this);
+          const requestId = $button.data("id");
+          const isCertificate = $button.hasClass("btn-cert-download");
+
+          // Store original button content
+          const originalContent = $button.html();
+
+          // Show spinner on button
+          $button.prop("disabled", true).html(`
+        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+        Downloading...
+    `);
+
+          // Show the overlay
+          $(downloadOverlay).addClass("show");
+
+          // Update overlay message based on document type
+          const documentType = isCertificate
+            ? "Certificate of Origin"
+            : "Identity Card";
+          $(downloadOverlay).find("h5").text(`Preparing Your ${documentType}`);
+
+          // Determine download URL
+          const downloadUrl = isCertificate
+            ? `${BACKEND_URL}/indigene/certificate/download/${requestId}`
+            : `${BACKEND_URL}/idcard/download/${requestId}`;
+
+          // Create a temporary link element
+          const link = document.createElement("a");
+          link.style.display = "none";
+          document.body.appendChild(link);
+
+          // Use fetch to handle the download
+          fetch(downloadUrl, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Network response was not ok");
+              }
+
+              // Update overlay message
+              $(downloadOverlay).find("h5").text("Processing Your Document");
+              $(downloadOverlay)
+                .find("p")
+                .text(
+                  "Your document is being processed. This may take a moment."
+                );
+
+              return response.blob();
+            })
+            .then((blob) => {
+              // Create URL for the blob
+              const url = window.URL.createObjectURL(blob);
+
+              // Set link properties
+              link.href = url;
+              link.download = isCertificate
+                ? `Certificate_${requestId}.pdf`
+                : `ID_Card_${requestId}.pdf`;
+
+              // Trigger the download
+              link.click();
+
+              // Clean up
+              window.URL.revokeObjectURL(url);
+              document.body.removeChild(link);
+
+              // Hide the overlay
+              $(downloadOverlay).removeClass("show");
+
+              // Show success state on button
+              $button.prop("disabled", false).html(`
+            <i class="bi bi-check-circle me-2"></i>
+            Downloaded
+        `);
+
+              // Reset button after a delay
+              setTimeout(() => {
+                $button.html(originalContent);
+              }, 3000);
+            })
+            .catch((error) => {
+              const errorMessage = error.responseJSON
+                ? error.responseJSON.message
+                : "Download window has expired. Please make a new request.";
+              showNotification(errorMessage, "danger");
+              console.error("Download error:", error);
+
+              // Hide the overlay
+              $(downloadOverlay).removeClass("show");
+
+              // Show error state on button
+              $button.prop("disabled", false).html(`
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            Error
+        `);
+
+              // Reset button after a delay
+              setTimeout(() => {
+                $button.html(originalContent);
+              }, 3000);
+
+              // Show notification
+              showNotification("Download failed. Please try again.", "error");
+            });
+        }
+      );
       /**
        * Initializes a new DataTable or updates an existing one with new data.
        * @param {string} selector - The jQuery selector for the table.
@@ -5864,6 +6820,11 @@
        * @param {Array} columns - The DataTables column configuration array.
        */
       function initializeOrUpdateDataTable(selector, data, columns) {
+        // Check if DataTables is loaded
+        if (typeof $.fn.DataTable === "undefined") {
+          console.error("DataTables library is not loaded!");
+          return;
+        }
         const commonOptions = {
           responsive: true,
           pageLength: 10,
@@ -5897,7 +6858,7 @@
         const status = data.toLowerCase();
         let badgeClass = "status-badge pending";
         if (status === "approved") badgeClass = "status-badge approved";
-        else if (status === "rejected") badgeClass = "status-badge unverified";
+        else if (status === "rejected") badgeClass = "status-badge rejected";
         return `<span class="${badgeClass}">${data.toUpperCase()}</span>`;
       }
 
@@ -5913,47 +6874,6 @@
        */
       function renderName(row) {
         return `${row.firstname || ""} ${row.lastname || ""}`.trim();
-      }
-
-      /**
-       * Factory function to create a renderer for the action buttons.
-       */
-      // function createActionsRenderer(documentType) {
-      //   return function (data, type, row) {
-      //     let actions = "";
-      //     if (row.status === "Approved") {
-      //       actions += `<button class="btn btn-sm btn-outline-primary download-btn" data-id="${row._id}">
-      //         <i class="bi bi-download"></i> Download
-      //       </button>`;
-      //     }
-      //     actions += ` <button class="btn btn-sm btn-outline-info view-btn" data-id="${row._id}" data-type="${documentType}">
-      //       <i class="bi bi-eye"></i> View
-      //     </button>`;
-      //     return actions;
-      //   };
-      // }
-
-      /**
-       * Initializes or updates a DataTable.
-       */
-      function initializeOrUpdateDataTable(selector, data, columns) {
-        const commonOptions = {
-          responsive: true,
-          pageLength: 10,
-          language: {
-            emptyTable: "No records found",
-            zeroRecords: "No matching records found",
-          },
-        };
-        if ($.fn.DataTable.isDataTable(selector)) {
-          $(selector).DataTable().clear().rows.add(data).draw();
-        } else {
-          $(selector).DataTable({
-            data: data,
-            columns: columns,
-            ...commonOptions,
-          });
-        }
       }
 
       /**
@@ -5983,10 +6903,15 @@
       }
 
       async function initializeRequestsPage() {
+        // Wait for DataTables to be loaded
+        if (typeof $.fn.DataTable === "undefined") {
+          console.error("DataTables library is not loaded!");
+          return;
+        }
         try {
           const [idcardRes, certificateRes] = await Promise.all([
             $.ajax({
-              url: `${BACKEND_URL}/idcard/${user.id}`,
+              url: `${BACKEND_URL}/idcard/${user.id}/requests`,
               method: "GET",
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -5994,7 +6919,8 @@
               },
             }),
             $.ajax({
-              url: `${BACKEND_URL}/indigene/certificate/${user.id}`,
+              // url: `${BACKEND_URL}/indigene/certificate/${user.id}`,
+              url: `${BACKEND_URL}/indigene/certificate/${user.id}/requests`,
               method: "GET",
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -6004,15 +6930,27 @@
           ]);
 
           // Use the new helper function to prepare the data
-          const idcardData = normalizeDataForDataTable(idcardRes);
-          const certificateData = normalizeDataForDataTable(certificateRes);
-
+          allIdCardRequests = normalizeDataForDataTable(idcardRes); // Normalize and STORE the data in the global variables
+          allCertificateRequests = normalizeDataForDataTable(certificateRes);
           const tableConfigs = [
             {
               selector: "#idcardRequestsTable",
-              data: idcardData,
+              data: allIdCardRequests,
               columns: [
-                { data: "_id" },
+                {
+                  title: "S/N",
+                  data: null,
+                  orderable: false,
+                  searchable: false,
+                  render: function (data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                  },
+                },
+                {
+                  data: "_id",
+                  visible: false,
+                  searchable: false,
+                },
                 { data: null, render: (data, type, row) => renderName(row) },
                 { data: "dateOfIssue", render: renderDate },
                 { data: "dateOfExpiration", render: renderDate },
@@ -6024,12 +6962,26 @@
                   render: createActionsRenderer("idcard"),
                 },
               ],
+              responsive: true,
             },
             {
               selector: "#certificateRequestsTable",
-              data: certificateData,
+              data: allCertificateRequests,
               columns: [
-                { data: "_id" },
+                {
+                  title: "S/N",
+                  data: null,
+                  orderable: false,
+                  searchable: false,
+                  render: function (data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                  },
+                },
+                {
+                  data: "_id",
+                  visible: false,
+                  searchable: false,
+                },
                 { data: null, render: (data, type, row) => renderName(row) },
                 { data: "stateOfOrigin" },
                 { data: "lgaOfOrigin" },
@@ -6042,6 +6994,8 @@
                   render: createActionsRenderer("certificate"),
                 },
               ],
+              responsive: true,
+              retrieve: true,
             },
           ];
 
@@ -6054,11 +7008,10 @@
           });
 
           // --- Check Profile Access ---
-          // Now that we have the data, check the user's access level
-          checkProfileAccess(idcardData, certificateData);
+          checkProfileAccess(allIdCardRequests, allCertificateRequests);
           return {
-            idcardRequests: idcardData,
-            certificateRequests: certificateData,
+            idcardRequests: allIdCardRequests,
+            certificateRequests: allCertificateRequests,
           };
         } catch (error) {
           console.error("Error loading requests:", error);
@@ -6283,8 +7236,8 @@
         });
         const requestType = $(this).val();
 
-        // Hide all request fields
-        $(".request-fields").addClass("d-none");
+        // // Hide all request fields
+        // $(".request-fields").addClass("d-none");
 
         // Show relevant fields based on request type
         if (requestType === "idcard") {
@@ -6305,7 +7258,7 @@
           $("#certGender").val(user.gender);
           $("#certStateOfOrigin").val(user.stateOfOrigin);
           $("#certLGAOfOrigin").val(user.lgaOfOrigin);
-          $("#certAddress").val(`${user?.address}`);
+          // $("#certAddress").val(`${user?.address}`);
           $("#certPhone").val(user.phone);
           $("#certKindred").val(user.community);
           $("#certFathersStateOfOrigin").val(user.stateOfOrigin);
@@ -6343,14 +7296,21 @@
           // ID CARD REQUEST
           // =====================
           if (requestType === "idcard") {
-            if (
-              // !$("#cardType").val() ||
-              !$("#idcardFirstname").val() ||
-              !$("#idcardLastname").val() ||
-              !$("#idcardEmail").val() ||
-              !$("#idcardPhone").val()
-            ) {
-              showNotification("Please fill all required fields", "error");
+            // Check each field individually to show specific error messages
+            if (!$("#idcardFirstname").val()) {
+              showNotification("Please fill in the First Name field", "error");
+              return;
+            }
+            if (!$("#idcardLastname").val()) {
+              showNotification("Please fill in the Last Name field", "error");
+              return;
+            }
+            if (!$("#idcardEmail").val()) {
+              showNotification("Please fill in the Email field", "error");
+              return;
+            }
+            if (!$("#idcardPhone").val()) {
+              showNotification("Please fill in the Phone field", "error");
               return;
             }
 
@@ -6360,11 +7320,14 @@
             formData.append("lastname", $("#idcardLastname").val());
             formData.append("email", $("#idcardEmail").val());
 
-            if ($("#ref_Letter")[0].files[0]) {
-              formData.append("files", $("#ref_Letter")[0].files[0]);
+            if ($("#ref_letter")[0].files[0]) {
+              formData.append("ref_letter", $("#ref_letter")[0].files[0]);
             }
             if ($("#utilityBill")[0].files[0]) {
-              formData.append("files", $("#utilityBill")[0].files[0]);
+              formData.append("utilityBill", $("#utilityBill")[0].files[0]);
+            }
+            if ($("#passportPhoto")[0].files[0]) {
+              formData.append("passportPhoto", $("#passportPhoto")[0].files[0]);
             }
 
             formData.append("userId", user.id);
@@ -6384,7 +7347,6 @@
               "ID Card request submitted successfully",
               "success"
             );
-            // idcardRequestsTable.ajax.reload(); // Refresh table
 
             initializeRequestsPage();
           }
@@ -6394,38 +7356,60 @@
           // =====================
           else if (requestType === "certificate") {
             const requiredCertFields = [
-              "certFirstname",
-              "certLastname",
-              "certDOB",
-              "certMaritalStatus",
-              "certGender",
-              "certStateOfOrigin",
-              "certLGAOfOrigin",
-              "certWard",
-              "certAddress",
-              "certPhone",
-              "certKindred",
-              "certEmail",
-              "certFathersName",
-              "certFathersStateOfOrigin",
-              "certMothersName",
-              "certMothersStateOfOrigin",
+              { id: "certFirstname", name: "First Name" },
+              { id: "certLastname", name: "Last Name" },
+              { id: "certDOB", name: "Date of Birth" },
+              { id: "certMaritalStatus", name: "Marital Status" },
+              { id: "certGender", name: "Gender" },
+              { id: "certStateOfOrigin", name: "State of Origin" },
+              { id: "certLGAOfOrigin", name: "LGA of Origin" },
+              { id: "certWard", name: "Ward" },
+              { id: "certAddress", name: "Address" },
+              { id: "certPhone", name: "Phone" },
+              { id: "certKindred", name: "Kindred" },
+              { id: "certEmail", name: "Email" },
+              { id: "certFathersName", name: "Father's Name" },
+              {
+                id: "certFathersStateOfOrigin",
+                name: "Father's State of Origin",
+              },
+              { id: "certMothersName", name: "Mother's Name" },
+              {
+                id: "certMothersStateOfOrigin",
+                name: "Mother's State of Origin",
+              },
               // "certPurpose",
-              "certPassportPhoto",
-              "certIdCard",
-              "certBirthCertificate",
+              { id: "certPassportPhoto", name: "Passport Photo", isFile: true },
+              { id: "certIdCard", name: "ID Card", isFile: true },
+              {
+                id: "certBirthCertificate",
+                name: "Birth Certificate",
+                isFile: true,
+              },
             ];
 
-            let isValid = true;
+            let missingField = null;
             for (const field of requiredCertFields) {
-              if (!$("#" + field).val()) {
-                isValid = false;
+              const element = $("#" + field.id);
+              let value = null;
+
+              if (field.isFile) {
+                value = element[0].files[0];
+              } else {
+                value = element.val();
+              }
+
+              if (!value) {
+                missingField = field.name;
                 break;
               }
             }
 
-            if (!isValid) {
-              showNotification("Please fill all required fields", "error");
+            if (missingField) {
+              showNotification(
+                `Please fill in the ${missingField} field`,
+                "error"
+              );
               return;
             }
 
@@ -6476,18 +7460,6 @@
                 $("#certBirthCertificate")[0].files[0]
               );
             }
-            // if ($("#certParentGuardianIndigeneCert")[0].files[0]) {
-            //   formData.append(
-            //     "parentGuardianIndigeneCert",
-            //     $("#certParentGuardianIndigeneCert")[0].files[0]
-            //   );
-            // }
-            // if ($("#certAttestationLetter")[0].files[0]) {
-            //   formData.append(
-            //     "uploadedAttestationUrl",
-            //     $("#certAttestationLetter")[0].files[0]
-            //   );
-            // }
 
             const response = await $.ajax({
               url: `${BACKEND_URL}/indigene/certificate/create`,
@@ -6504,7 +7476,7 @@
               "Certificate request submitted successfully",
               "success"
             );
-            // certificateRequestsTable.ajax.reload();
+            initializeRequestsPage();
           }
 
           // =====================
@@ -6666,12 +7638,6 @@
         }, 1000);
       }
 
-      /**
-       * Updates the state of an "Add" button based on the number of items in a container.
-       * @param {string} containerSelector - The jQuery selector for the container (e.g., "#familyContainer").
-       * @param {string} buttonSelector - The jQuery selector for the "Add" button (e.g., "#addFamilyBtn").
-       * @param {number} limit - The maximum number of items allowed.
-       */
       function updateAddButtonState(
         containerSelector,
         buttonSelector,
@@ -6729,63 +7695,148 @@
         }, 5000);
       }
 
-      $(document).on("click", ".view-btn", async function () {
+      $(document).on("click", ".view-btn", function () {
         const requestId = $(this).data("id");
         const requestType = $(this).data("type"); // "certificate" or "idcard"
 
-        try {
-          let endpoint = "";
+        let request = null;
 
-          if (requestType === "certificate") {
-            endpoint = `${BACKEND_URL}/indigene/certificate/${user.id}`;
-          } else if (requestType === "idcard") {
-            endpoint = `${BACKEND_URL}/idcard/${user.id}`;
-          } else {
-            throw new Error("Unknown request type");
-          }
+        // Find the request in the already fetched and stored data
+        if (requestType === "certificate") {
+          request = allCertificateRequests.find((req) => req._id === requestId);
+        } else if (requestType === "idcard") {
+          request = allIdCardRequests.find((req) => req._id === requestId);
+        }
 
-          const request = await $.ajax({
-            url: endpoint,
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          });
-
-          if (request) {
-            showRequestDetailsModal(request); // show in modal or another page
-          } else {
-            alert("No request found for this ID.");
-          }
-        } catch (error) {
-          console.error("Error fetching request details:", error);
-          alert("Failed to fetch request details. Please try again.");
+        if (request) {
+          showRequestDetailsModal(request, requestType);
+        } else {
+          showNotification(
+            "Could not find request details. Please refresh the page.",
+            "error"
+          );
         }
       });
 
-      function showRequestDetailsModal(request) {
+      function showRequestDetailsModal(request, requestType) {
         $("#viewRequestModal .modal-title").text(`Request #${request._id}`);
-        $("#viewRequestModal .modal-body").html(`
-  <p><strong>Name:</strong> ${request.firstname || request.fullname || ""} ${
-          request.lastname || ""
+
+        let modalContent = "";
+
+        if (requestType === "certificate") {
+          modalContent = `
+      <div class="certificate-details">
+        <h5>Personal Information</h5>
+        <p><strong>Name:</strong> ${request.firstname || ""} ${
+            request.middlename || ""
+          } ${request.lastname || ""}</p>
+        <p><strong>Date of Birth:</strong> ${
+          request.DOB ? new Date(request.DOB).toLocaleDateString() : "N/A"
         }</p>
-  <p><strong>Status:</strong> ${request.status}</p>
-  <p><strong>Issued:</strong> ${
-    request.dateOfIssue
-      ? new Date(request.dateOfIssue).toLocaleDateString()
-      : "N/A"
-  }</p>
-  <p><strong>Expires:</strong> ${
-    request.dateOfExpiration
-      ? new Date(request.dateOfExpiration).toLocaleDateString()
-      : "N/A"
-  }</p>
-`);
+        <p><strong>Gender:</strong> ${request.gender || "N/A"}</p>
+        <p><strong>Marital Status:</strong> ${
+          request.maritalStatus || "N/A"
+        }</p>
+        
+        <h5>Origin Information</h5>
+        <p><strong>State of Origin:</strong> ${
+          request.stateOfOrigin || "N/A"
+        }</p>
+        <p><strong>LGA of Origin:</strong> ${request.lgaOfOrigin || "N/A"}</p>
+        <p><strong>Ward:</strong> ${request.ward || "N/A"}</p>
+        <p><strong>Kindred:</strong> ${request.kindred || "N/A"}</p>
+        
+        <h5>Contact Information</h5>
+        <p><strong>Address:</strong> ${request.address || "N/A"}</p>
+        <p><strong>Phone:</strong> ${request.phone || "N/A"}</p>
+        <p><strong>Email:</strong> ${request.email || "N/A"}</p>
+        
+        <h5>Parent Information</h5>
+        <p><strong>Father's Name:</strong> ${request.fathersName || "N/A"}</p>
+        <p><strong>Father's State of Origin:</strong> ${
+          request.fathersStateOfOrigin || "N/A"
+        }</p>
+        <p><strong>Mother's Name:</strong> ${request.mothersName || "N/A"}</p>
+        <p><strong>Mother's State of Origin:</strong> ${
+          request.mothersStateOfOrigin || "N/A"
+        }</p>
+        
+        <h5>Request Status</h5>
+        <p><strong>Status:</strong> ${request.status || "N/A"}</p>
+       
+        <p><strong>Payment Status:</strong> ${
+          request.paymentStatus || "N/A"
+        }</p>
+        <p><strong>Date Submitted:</strong> ${
+          request.created_at
+            ? new Date(request.created_at).toLocaleDateString()
+            : "N/A"
+        }</p>
+        <p><strong>Date of Issue:</strong> ${
+          request.approvalDate
+            ? new Date(request.approvalDate).toLocaleDateString()
+            : "N/A"
+        }</p>
+        <p><strong>Reference Number:</strong> ${request.refNumber || "N/A"}</p>
+        
+        <h5>Documents</h5>
+        <p><strong>Passport Photo:</strong> ${
+          request.passportPhoto
+            ? `<a href="${request.passportPhoto}" target="_blank">View Document</a>`
+            : "N/A"
+        }</p>
+        <p><strong>ID Card:</strong> ${
+          request.idCard
+            ? `<a href="${request.idCard}" target="_blank">View Document</a>`
+            : "N/A"
+        }</p>
+        <p><strong>Birth Certificate:</strong> ${
+          request.birthCertificate
+            ? `<a href="${request.birthCertificate}" target="_blank">View Document</a>`
+            : "N/A"
+        }</p>
+      </div>
+    `;
+        } else if (requestType === "idcard") {
+          modalContent = `
+      <div class="idcard-details">
+        <h5>Personal Information</h5>
+        <p><strong>Name:</strong> ${request.firstname || ""} ${
+            request.lastname || ""
+          }</p>
+        <p><strong>Email:</strong> ${request.email || "N/A"}</p>
+        <p><strong>Phone:</strong> ${request.phone || "N/A"}</p>
+        
+        <h5>Request Status</h5>
+        <p><strong>Status:</strong> ${request.status || "N/A"}</p>
+       
+        <p><strong>Payment Status:</strong> ${
+          request.paymentStatus || "N/A"
+        }</p>
+     
+        <p><strong>Date Submitted:</strong> ${
+          request.createdAt
+            ? new Date(request.createdAt).toLocaleDateString()
+            : "N/A"
+        }</p>
+        <p><strong>Date of Issue:</strong> ${
+          request.dateOfIssue
+            ? new Date(request.dateOfIssue).toLocaleDateString()
+            : "N/A"
+        }</p>
+        <p><strong>Date of Expiration:</strong> ${
+          request.dateOfExpiration
+            ? new Date(request.dateOfExpiration).toLocaleDateString()
+            : "N/A"
+        }</p>
+      </div>
+    `;
+        }
+
+        $("#viewRequestModal .modal-body").html(modalContent);
         $("#viewRequestModal").modal("show");
       }
 
-      // LGA Data for Nigeria
       const nigeriaData = {
         adamawa: [
           "Demsa",
@@ -7818,7 +8869,5 @@
         });
       })();
     </script>
-
-    <script type="text/javascript" src="../js/index.js"></script>
   </body>
 </html>
