@@ -695,6 +695,16 @@
                   </small>
                 </div>
 
+                <!-- middlename name -->
+                <div class="mb-3">
+                  <input id="middlename" type="text" hidden />
+                </div>
+
+                <!-- Date of birth -->
+                <div class="mb-3">
+                  <input id="DOB" type="text" hidden />
+                </div>
+
                 <!-- Email -->
                 <div class="mb-3">
                   <label for="email" class="form-label">Email</label>
@@ -943,6 +953,8 @@
         const formData = {
           firstname: "",
           lastname: "",
+          middlename: "",
+          DOB: "",
           email: "",
           password: "",
           phone: "",
@@ -1203,16 +1215,20 @@
               });
 
               if (response.success && response.data) {
-                const { fullName, dob, phone, stateOfOrigin, lga } =
-                  response.data;
-
-                const nameParts = fullName.trim().split(" ");
-                const firstname = nameParts[0];
-                const lastname = nameParts.slice(1).join(" ");
+                const {
+                  firstname,
+                  lastname,
+                  middlename,
+                  dob,
+                  phone,
+                  stateOfOrigin,
+                  lga,
+                } = response.data;
 
                 $("#firstname").val(firstname).prop("readonly", true);
                 $("#lastname").val(lastname).prop("readonly", true);
-                $("#dob").val(dob).prop("readonly", true);
+                $("#middlename").val(middlename).prop("readonly", true);
+                $("#DOB").val(dob).prop("readonly", true);
                 $("#phone").val(phone).prop("readonly", true);
 
                 // Populate state of origin
@@ -1235,6 +1251,7 @@
                   // Populate LGA after a small delay to ensure state change is processed
                   setTimeout(() => {
                     if (lga) {
+                      console.log("Setting LGA:", lga);
                       $("#lgaOfOrigin")
                         .val(lga)
                         .trigger("change")
@@ -1281,7 +1298,9 @@
             isNINValid
           ) {
             formData.firstname = $("#firstname").val().trim();
+            formData.middlename = $("#middlename").val().trim();
             formData.lastname = $("#lastname").val().trim();
+            formData.DOB = $("#DOB").val().trim();
             formData.email = $("#email").val().trim();
             formData.phone = $("#phone").val().trim();
             formData.NIN = $("#NIN").val().trim();
@@ -1313,6 +1332,8 @@
             const apiData = {
               firstname: formData.firstname,
               lastname: formData.lastname,
+              middlename: formData.middlename,
+              DOB: formData.DOB,
               email: formData.email,
               password: formData.password,
               phone: formData.phone,
@@ -2189,14 +2210,41 @@
         ],
       };
 
+      // function updateLocalGovernmentsOfOrigin() {
+      //   const stateSelect = document.getElementById("stateOfOrigin");
+      //   const lgaSelect = document.getElementById("lgaOfOrigin");
+      //   const selectedState = stateSelect.value;
+
+      //   // Clear previous options
+      //   lgaSelect.innerHTML =
+      //     '<option value="">Select Local Government</option>';
+
+      //   if (nigerData[selectedState]) {
+      //     nigerData[selectedState].forEach((lga) => {
+      //       const option = document.createElement("option");
+      //       option.value = lga;
+      //       option.textContent = lga;
+      //       lgaSelect.appendChild(option);
+      //     });
+      //   }
+      // }
+
       function updateLocalGovernmentsOfOrigin() {
         const stateSelect = document.getElementById("stateOfOrigin");
         const lgaSelect = document.getElementById("lgaOfOrigin");
-        const selectedState = stateSelect.value;
+
+        // Normalize state key
+        const selectedState = stateSelect.value
+          .toLowerCase()
+          .replace(/ /g, "_")
+          .replace(/-/g, "_");
 
         // Clear previous options
         lgaSelect.innerHTML =
           '<option value="">Select Local Government</option>';
+
+        console.log("Selected key:", selectedState);
+        console.log("LGAs:", nigerData[selectedState]);
 
         if (nigerData[selectedState]) {
           nigerData[selectedState].forEach((lga) => {

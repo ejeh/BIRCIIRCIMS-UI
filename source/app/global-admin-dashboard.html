@@ -852,132 +852,152 @@
       <div id="users-page" class="page-content d-none">
         <div class="d-flex justify-content-between align-items-center mb-4">
           <h2 class="mb-0">User Management</h2>
-          <button
-            class="btn btn-primary"
-            data-bs-toggle="modal"
-            data-bs-target="#addUserModal"
-          >
-            <i class="bi bi-plus-circle me-2"></i>Add New User
-          </button>
-        </div>
-
-        <!-- User Stats Cards -->
-        <div class="row mb-4">
-          <div class="col-md-3 mb-3">
-            <div class="card">
-              <div class="card-body text-center">
-                <h3 class="text-primary usercount">2,451</h3>
-                <p class="mb-0">Total Users</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 mb-3">
-            <div class="card">
-              <div class="card-body text-center">
-                <h3 class="text-success isActive">1,892</h3>
-                <p class="mb-0">Active Users</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 mb-3">
-            <div class="card">
-              <div class="card-body text-center">
-                <h3 class="text-warning" id="inActive">559</h3>
-                <p class="mb-0">Inactive Users</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 mb-3">
-            <div class="card">
-              <div class="card-body text-center">
-                <h3 class="text-info" id="new-this-month">142</h3>
-                <p class="mb-0">New This Month</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- User Demographics Charts -->
-        <div class="row mb-4">
-          <div class="col-lg-4 mb-3">
-            <div class="card">
-              <div class="card-header">
-                <h5 class="mb-0">Age Distribution</h5>
-              </div>
-              <div class="card-body">
-                <div class="chart-container">
-                  <canvas id="ageDistributionChart"></canvas>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-4 mb-3">
-            <div class="card">
-              <div class="card-header">
-                <h5 class="mb-0">Gender Distribution</h5>
-              </div>
-              <div class="card-body">
-                <div class="chart-container">
-                  <canvas id="genderDistributionChart"></canvas>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-4 mb-3">
-            <div class="card">
-              <div class="card-header">
-                <h5 class="mb-0">State Distribution</h5>
-              </div>
-              <div class="card-body">
-                <div class="chart-container">
-                  <canvas id="stateDistributionChart"></canvas>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Users Table -->
-        <div class="card">
-          <div
-            class="card-header d-flex justify-content-between align-items-center"
-          >
-            <h5 class="mb-0">All Users</h5>
-            <div class="export-buttons btn-group">
-              <button onclick="exportTable('csv')">
-                <i class="bi bi-file-earmark-csv me-1"></i>CSV
-              </button>
-              <button onclick="exportTable('pdf')">
-                <i class="bi bi-file-earmark-pdf me-1"></i>PDF
-              </button>
-              <button onclick="window.print()">
-                <i class="bi bi-printer me-1"></i>Print
-              </button>
-            </div>
-          </div>
-          <div class="card-body">
-            <table
-              id="usersTable"
-              class="table table-striped table-hover dt-responsive w-100"
+          <div class="d-flex gap-2">
+            <button
+              class="btn btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#addUserModal"
             >
-              <thead>
-                <tr>
-                  <th>S/N</th>
-                  <th>ID</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Role</th>
-                  <th>Status</th>
-                  <th>State</th>
-                  <th>LGA</th>
-                  <th>Registered</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <!-- Table data will be populated by JavaScript -->
-              </tbody>
-            </table>
+              <i class="bi bi-plus-circle me-2"></i>Add New User
+            </button>
+            <!-- Toggle buttons -->
+            <div class="btn-group" role="group">
+              <button
+                type="button"
+                class="btn btn-outline-primary active"
+                id="chartsViewBtn"
+              >
+                <i class="bi bi-bar-chart me-1"></i>Charts & Summary
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-primary"
+                id="tableViewBtn"
+              >
+                <i class="bi bi-table me-1"></i>Table View
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts and Summary View -->
+        <div id="charts-summary-view">
+          <div class="row mb-4">
+            <div class="col-md-3 mb-3">
+              <div class="card">
+                <div class="card-body text-center">
+                  <h3 class="text-primary usercount">2,451</h3>
+                  <p class="mb-0">Total Users</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 mb-3">
+              <div class="card">
+                <div class="card-body text-center">
+                  <h3 class="text-success isActive">1,892</h3>
+                  <p class="mb-0">Active Users</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 mb-3">
+              <div class="card">
+                <div class="card-body text-center">
+                  <h3 class="text-warning" id="inActive">559</h3>
+                  <p class="mb-0">Inactive Users</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 mb-3">
+              <div class="card">
+                <div class="card-body text-center">
+                  <h3 class="text-info" id="new-this-month">142</h3>
+                  <p class="mb-0">New This Month</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-4">
+            <div class="col-lg-4 mb-3">
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="mb-0">Age Distribution</h5>
+                </div>
+                <div class="card-body">
+                  <div class="chart-container">
+                    <canvas id="ageDistributionChart"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 mb-3">
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="mb-0">Gender Distribution</h5>
+                </div>
+                <div class="card-body">
+                  <div class="chart-container">
+                    <canvas id="genderDistributionChart"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 mb-3">
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="mb-0">State Distribution</h5>
+                </div>
+                <div class="card-body">
+                  <div class="chart-container">
+                    <canvas id="stateDistributionChart"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Table View -->
+        <div id="table-view" class="d-none">
+          <div class="card">
+            <div
+              class="card-header d-flex justify-content-between align-items-center"
+            >
+              <h5 class="mb-0">All Users</h5>
+              <div class="export-buttons btn-group">
+                <button onclick="exportTable('csv')">
+                  <i class="bi bi-file-earmark-csv me-1"></i>CSV
+                </button>
+                <button onclick="exportTable('pdf')">
+                  <i class="bi bi-file-earmark-pdf me-1"></i>PDF
+                </button>
+                <button onclick="window.print()">
+                  <i class="bi bi-printer me-1"></i>Print
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <table
+                id="usersTable"
+                class="table table-striped table-hover dt-responsive w-100"
+              >
+                <thead>
+                  <tr>
+                    <th>S/N</th>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>IsActive</th>
+                    <th>State</th>
+                    <th>LGA</th>
+                    <th>Registered</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -986,103 +1006,128 @@
       <div id="idcards-page" class="page-content d-none">
         <div class="d-flex justify-content-between align-items-center mb-4">
           <h2 class="mb-0">Identity Card Requests</h2>
-          <button class="btn btn-primary">
-            <i class="bi bi-download me-2"></i>Export Report
-          </button>
-        </div>
-
-        <!-- ID Card Stats -->
-        <div class="row mb-4">
-          <div class="col-md-3 mb-3">
-            <div class="card">
-              <div class="card-body text-center">
-                <h3 class="text-primary totalRequests">892</h3>
-                <p class="mb-0">Total Requests</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 mb-3">
-            <div class="card">
-              <div class="card-body text-center">
-                <h3 class="text-success" id="approvedRequests">654</h3>
-                <p class="mb-0">Approved</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 mb-3">
-            <div class="card">
-              <div class="card-body text-center">
-                <h3 class="text-warning" id="pendingRequests">142</h3>
-                <p class="mb-0">Pending</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 mb-3">
-            <div class="card">
-              <div class="card-body text-center">
-                <h3 class="text-danger" id="rejectedRequests">96</h3>
-                <p class="mb-0">Rejected</p>
-              </div>
+          <div class="d-flex gap-2">
+            <button class="btn btn-primary">
+              <i class="bi bi-download me-2"></i>Export Report
+            </button>
+            <!-- Toggle buttons -->
+            <div class="btn-group" role="group">
+              <button
+                type="button"
+                class="btn btn-outline-primary active"
+                id="idcardsChartsBtn"
+              >
+                <i class="bi bi-bar-chart me-1"></i>Charts & Summary
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-primary"
+                id="idcardsTableBtn"
+              >
+                <i class="bi bi-table me-1"></i>Table View
+              </button>
             </div>
           </div>
         </div>
 
-        <!-- ID Card Charts -->
-        <div class="row mb-4">
-          <div class="col-lg-8 mb-3">
-            <div class="card">
-              <div class="card-header">
-                <h5 class="mb-0">Request Trends</h5>
+        <!-- Charts and Summary View -->
+        <div id="idcards-charts-view">
+          <!-- ID Card Stats -->
+          <div class="row mb-4">
+            <div class="col-md-3 mb-3">
+              <div class="card">
+                <div class="card-body text-center">
+                  <h3 class="text-primary totalRequests">892</h3>
+                  <p class="mb-0">Total Requests</p>
+                </div>
               </div>
-              <div class="card-body">
-                <div class="chart-container">
-                  <canvas id="idcardTrendChart"></canvas>
+            </div>
+            <div class="col-md-3 mb-3">
+              <div class="card">
+                <div class="card-body text-center">
+                  <h3 class="text-success" id="approvedRequests">654</h3>
+                  <p class="mb-0">Approved</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 mb-3">
+              <div class="card">
+                <div class="card-body text-center">
+                  <h3 class="text-warning" id="pendingRequests">142</h3>
+                  <p class="mb-0">Pending</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 mb-3">
+              <div class="card">
+                <div class="card-body text-center">
+                  <h3 class="text-danger" id="rejectedRequests">96</h3>
+                  <p class="mb-0">Rejected</p>
                 </div>
               </div>
             </div>
           </div>
-          <div class="col-lg-4 mb-3">
-            <div class="card">
-              <div class="card-header">
-                <h5 class="mb-0">Requests by State</h5>
+
+          <!-- ID Card Charts -->
+          <div class="row mb-4">
+            <div class="col-lg-8 mb-3">
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="mb-0">Request Trends</h5>
+                </div>
+                <div class="card-body">
+                  <div class="chart-container">
+                    <canvas id="idcardTrendChart"></canvas>
+                  </div>
+                </div>
               </div>
-              <div class="card-body">
-                <div class="chart-container">
-                  <canvas id="idcardStateChart"></canvas>
+            </div>
+            <div class="col-lg-4 mb-3">
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="mb-0">Requests by State</h5>
+                </div>
+                <div class="card-body">
+                  <div class="chart-container">
+                    <canvas id="idcardStateChart"></canvas>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- ID Card Requests Table -->
-        <div class="card">
-          <div class="card-header">
-            <h5 class="mb-0">All Requests</h5>
-          </div>
-          <div class="card-body">
-            <table
-              id="idcardsTable"
-              class="table table-striped table-hover dt-responsive w-100"
-            >
-              <thead>
-                <tr>
-                  <th>S/N</th>
-                  <th>ID</th>
-                  <th>User</th>
-                  <th>State</th>
-                  <th>LGA</th>
-                  <th>Status</th>
-                  <th>Request Date</th>
-                  <th>IsProfileCompleted</th>
-                  <th>ApprovedBy</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <!-- Table data will be populated by JavaScript -->
-              </tbody>
-            </table>
+        <!-- Table View -->
+        <div id="idcards-table-view" class="d-none">
+          <!-- ID Card Requests Table -->
+          <div class="card">
+            <div class="card-header">
+              <h5 class="mb-0">All Requests</h5>
+            </div>
+            <div class="card-body">
+              <table
+                id="idcardsTable"
+                class="table table-striped table-hover dt-responsive w-100"
+              >
+                <thead>
+                  <tr>
+                    <th>S/N</th>
+                    <th>ID</th>
+                    <th>User</th>
+                    <th>State</th>
+                    <th>LGA</th>
+                    <th>Status</th>
+                    <th>Request Date</th>
+                    <th>IsProfileCompleted</th>
+                    <th>ApprovedBy</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Table data will be populated by JavaScript -->
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -1091,120 +1136,142 @@
       <div id="certificates-page" class="page-content d-none">
         <div class="d-flex justify-content-between align-items-center mb-4">
           <h2 class="mb-0">Certificate of Origin Requests</h2>
-          <button class="btn btn-primary">
-            <i class="bi bi-download me-2"></i>Export Report
-          </button>
-        </div>
-
-        <!-- Certificate Stats -->
-        <div class="row mb-4">
-          <div class="col-md-3 mb-3">
-            <div class="card">
-              <div class="card-body text-center">
-                <h3 class="text-primary totalCertRequests">523</h3>
-                <p class="mb-0">Total Requests</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 mb-3">
-            <div class="card">
-              <div class="card-body text-center">
-                <h3 class="text-success" id="approvedCertRequests">412</h3>
-                <p class="mb-0">Approved</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 mb-3">
-            <div class="card">
-              <div class="card-body text-center">
-                <h3 class="text-warning" id="pendingCertRequests">89</h3>
-                <p class="mb-0">Pending</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 mb-3">
-            <div class="card">
-              <div class="card-body text-center">
-                <h3 class="text-danger" id="rejectedCertRequests">22</h3>
-                <p class="mb-0">Rejected</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Certificate Charts -->
-        <div class="row mb-4">
-          <div class="col-lg-6 mb-3">
-            <div class="card">
-              <div class="card-header">
-                <h5 class="mb-0">Daily Breakdown</h5>
-              </div>
-              <div class="card-body">
-                <div class="chart-container">
-                  <canvas id="certificateDailyChart"></canvas>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-6 mb-3">
-            <div class="card">
-              <div class="card-header">
-                <h5 class="mb-0">Top LGAs</h5>
-              </div>
-              <div class="card-body">
-                <div class="chart-container">
-                  <canvas id="certificateLGAChart"></canvas>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Certificate Requests Table -->
-        <div class="card">
-          <div class="card-header">
-            <h5 class="mb-0">All Requests</h5>
-          </div>
-          <div class="card-body">
-            <table
-              id="certificatesTable"
-              class="table table-striped table-hover dt-responsive w-100"
-            >
-              <thead>
-                <tr>
-                  <th>S/N</th>
-                  <th>ID</th>
-                  <th>User</th>
-                  <th>State</th>
-                  <th>LGA</th>
-                  <th>Status</th>
-                  <th>Request Time</th>
-                  <th>IsProfileCompleted</th>
-                  <th>ApprovedBy</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <!-- Table data will be populated by JavaScript -->
-              </tbody>
-            </table>
-            <div
-              id="pdf-loader"
-              style="
-                display: none;
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                z-index: 9999;
-                transform: translate(-50%, -50%);
-              "
-            >
-              <div
-                class="spinner-border text-primary"
-                role="status"
-                style="width: 3rem; height: 3rem"
+          <div class="d-flex gap-2">
+            <button class="btn btn-primary">
+              <i class="bi bi-download me-2"></i>Export Report
+            </button>
+            <!-- Toggle buttons -->
+            <div class="btn-group" role="group">
+              <button
+                type="button"
+                class="btn btn-outline-primary active"
+                id="certificatesChartsBtn"
               >
-                <span class="visually-hidden">Loading...</span>
+                <i class="bi bi-bar-chart me-1"></i>Charts & Summary
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-primary"
+                id="certificatesTableBtn"
+              >
+                <i class="bi bi-table me-1"></i>Table View
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts and Summary View -->
+        <div id="certificates-charts-view">
+          <div class="row mb-4">
+            <div class="col-md-3 mb-3">
+              <div class="card">
+                <div class="card-body text-center">
+                  <h3 class="text-primary totalCertRequests">523</h3>
+                  <p class="mb-0">Total Requests</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 mb-3">
+              <div class="card">
+                <div class="card-body text-center">
+                  <h3 class="text-success" id="approvedCertRequests">412</h3>
+                  <p class="mb-0">Approved</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 mb-3">
+              <div class="card">
+                <div class="card-body text-center">
+                  <h3 class="text-warning" id="pendingCertRequests">89</h3>
+                  <p class="mb-0">Pending</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 mb-3">
+              <div class="card">
+                <div class="card-body text-center">
+                  <h3 class="text-danger" id="rejectedCertRequests">22</h3>
+                  <p class="mb-0">Rejected</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-4">
+            <div class="col-lg-6 mb-3">
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="mb-0">Daily Breakdown</h5>
+                </div>
+                <div class="card-body">
+                  <div class="chart-container">
+                    <canvas id="certificateDailyChart"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 mb-3">
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="mb-0">Top LGAs</h5>
+                </div>
+                <div class="card-body">
+                  <div class="chart-container">
+                    <canvas id="certificateLGAChart"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Table View -->
+        <div id="certificates-table-view" class="d-none">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="mb-0">All Requests</h5>
+            </div>
+            <div class="card-body">
+              <table
+                id="certificatesTable"
+                class="table table-striped table-hover dt-responsive w-100"
+              >
+                <thead>
+                  <tr>
+                    <th>S/N</th>
+                    <th>ID</th>
+                    <th>User</th>
+                    <th>State</th>
+                    <th>LGA</th>
+                    <th>Status</th>
+                    <th>Request Time</th>
+                    <th>IsProfileCompleted</th>
+                    <th>ApprovedBy</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Table data will be populated by JavaScript -->
+                </tbody>
+              </table>
+              <div
+                id="pdf-loader"
+                style="
+                  display: none;
+                  position: fixed;
+                  top: 50%;
+                  left: 50%;
+                  z-index: 9999;
+                  transform: translate(-50%, -50%);
+                "
+              >
+                <div
+                  class="spinner-border text-primary"
+                  role="status"
+                  style="width: 3rem; height: 3rem"
+                >
+                  <span class="visually-hidden">Loading...</span>
+                </div>
               </div>
             </div>
           </div>
@@ -1215,101 +1282,126 @@
       <div id="transactions-page" class="page-content d-none">
         <div class="d-flex justify-content-between align-items-center mb-4">
           <h2 class="mb-0">Transactions & Logs</h2>
-          <button id="exportTransactionsBtn" class="btn btn-primary">
-            <i class="bi bi-download me-2"></i>Export Report
-          </button>
-        </div>
-
-        <!-- Transaction Stats -->
-        <div class="row mb-4">
-          <div class="col-md-3 mb-3">
-            <div class="card">
-              <div class="card-body text-center">
-                <h3 class="text-primary total-transactions">1,842</h3>
-                <p class="mb-0">Total Transactions</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 mb-3">
-            <div class="card">
-              <div class="card-body text-center">
-                <h3 class="text-success total-revenue">₦2.4M</h3>
-                <p class="mb-0">Total Revenue</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 mb-3">
-            <div class="card">
-              <div class="card-body text-center">
-                <h3 class="text-info average-amount">₦1,302</h3>
-                <p class="mb-0">Average Transaction</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 mb-3">
-            <div class="card">
-              <div class="card-body text-center">
-                <h3 class="text-warning success-rate">98.2%</h3>
-                <p class="mb-0">Success Rate</p>
-              </div>
+          <div class="d-flex gap-2">
+            <button id="exportTransactionsBtn" class="btn btn-primary">
+              <i class="bi bi-download me-2"></i>Export Report
+            </button>
+            <!-- Toggle buttons -->
+            <div class="btn-group" role="group">
+              <button
+                type="button"
+                class="btn btn-outline-primary active"
+                id="transactionsChartsBtn"
+              >
+                <i class="bi bi-bar-chart me-1"></i>Charts & Summary
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-primary"
+                id="transactionsTableBtn"
+              >
+                <i class="bi bi-table me-1"></i>Table View
+              </button>
             </div>
           </div>
         </div>
 
-        <!-- Transaction Charts -->
-        <div class="row mb-4">
-          <div class="col-lg-8 mb-3">
-            <div class="card">
-              <div class="card-header">
-                <h5 class="mb-0">Transactions Over Time</h5>
+        <!-- Charts and Summary View -->
+        <div id="transactions-charts-view">
+          <!-- Transaction Stats -->
+          <div class="row mb-4">
+            <div class="col-md-3 mb-3">
+              <div class="card">
+                <div class="card-body text-center">
+                  <h3 class="text-primary total-transactions">1,842</h3>
+                  <p class="mb-0">Total Transactions</p>
+                </div>
               </div>
-              <div class="card-body">
-                <div class="chart-container">
-                  <canvas id="transactionTrendChart"></canvas>
+            </div>
+            <div class="col-md-3 mb-3">
+              <div class="card">
+                <div class="card-body text-center">
+                  <h3 class="text-success total-revenue">₦2.4M</h3>
+                  <p class="mb-0">Total Revenue</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 mb-3">
+              <div class="card">
+                <div class="card-body text-center">
+                  <h3 class="text-info average-amount">₦1,302</h3>
+                  <p class="mb-0">Average Transaction</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 mb-3">
+              <div class="card">
+                <div class="card-body text-center">
+                  <h3 class="text-warning success-rate">98.2%</h3>
+                  <p class="mb-0">Success Rate</p>
                 </div>
               </div>
             </div>
           </div>
-          <div class="col-lg-4 mb-3">
-            <div class="card">
-              <div class="card-header">
-                <h5 class="mb-0">Revenue by LGA</h5>
+
+          <!-- Transaction Charts -->
+          <div class="row mb-4">
+            <div class="col-lg-8 mb-3">
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="mb-0">Transactions Over Time</h5>
+                </div>
+                <div class="card-body">
+                  <div class="chart-container">
+                    <canvas id="transactionTrendChart"></canvas>
+                  </div>
+                </div>
               </div>
-              <div class="card-body">
-                <div class="chart-container">
-                  <canvas id="revenueStateChart"></canvas>
+            </div>
+            <div class="col-lg-4 mb-3">
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="mb-0">Revenue by LGA</h5>
+                </div>
+                <div class="card-body">
+                  <div class="chart-container">
+                    <canvas id="revenueStateChart"></canvas>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Transactions Table -->
-        <div class="card">
-          <div class="card-header">
-            <h5 class="mb-0">All Transactions</h5>
-          </div>
-          <div class="card-body">
-            <table
-              id="transactionsTable"
-              class="table table-striped table-hove dt-responsive w-100"
-            >
-              <thead>
-                <tr>
-                  <th>S/N</th>
-                  <th>ID</th>
-                  <th>User</th>
-                  <th>Type</th>
-                  <th>Amount</th>
-                  <th>Status</th>
-                  <th>Date & Time</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <!-- Table data will be populated by JavaScript -->
-              </tbody>
-            </table>
+        <!-- Table View -->
+        <div id="transactions-table-view" class="d-none">
+          <!-- Transactions Table -->
+          <div class="card">
+            <div class="card-header">
+              <h5 class="mb-0">All Transactions</h5>
+            </div>
+            <div class="card-body">
+              <table
+                id="transactionsTable"
+                class="table table-striped table-hover dt-responsive w-100"
+              >
+                <thead>
+                  <tr>
+                    <th>S/N</th>
+                    <th>ID</th>
+                    <th>User</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Date & Time</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Table data will be populated by JavaScript -->
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -1451,87 +1543,114 @@
       <div id="roles-page" class="page-content d-none">
         <div class="d-flex justify-content-between align-items-center mb-4">
           <h2 class="mb-0">Role Management</h2>
-          <button
-            class="btn btn-primary"
-            data-bs-toggle="modal"
-            data-bs-target="#addRoleModal"
-          >
-            <i class="bi bi-plus-circle me-2"></i>Add New Role
-          </button>
+          <div class="d-flex gap-2">
+            <button
+              class="btn btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#addRoleModal"
+            >
+              <i class="bi bi-plus-circle me-2"></i>Add New Role
+            </button>
+            <!-- Toggle buttons -->
+            <div class="btn-group" role="group">
+              <button
+                type="button"
+                class="btn btn-outline-primary active"
+                id="rolesChartsBtn"
+              >
+                <i class="bi bi-bar-chart me-1"></i>Charts & Summary
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-primary"
+                id="rolesTableBtn"
+              >
+                <i class="bi bi-table me-1"></i>Table View
+              </button>
+            </div>
+          </div>
         </div>
 
-        <!-- Role Distribution -->
-        <div class="row mb-4">
-          <div class="col-lg-6 mb-3">
-            <div class="card">
-              <div class="card-header">
-                <h5 class="mb-0">Role Distribution</h5>
+        <!-- Charts and Summary View -->
+        <div id="roles-charts-view">
+          <!-- Role Distribution -->
+          <div class="row mb-4">
+            <div class="col-lg-6 mb-3">
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="mb-0">Role Distribution</h5>
+                </div>
+                <div class="card-body">
+                  <div class="chart-container">
+                    <canvas id="roleDistributionChart"></canvas>
+                  </div>
+                </div>
               </div>
-              <div class="card-body">
-                <div class="chart-container">
-                  <canvas id="roleDistributionChart"></canvas>
+            </div>
+
+            <div class="col-lg-6 mb-3">
+              <div class="card shadow-sm">
+                <div
+                  class="card-header d-flex justify-content-between align-items-center"
+                >
+                  <h5 class="mb-0">Role Permissions</h5>
+                  <button
+                    id="refreshRoleStats"
+                    class="btn btn-sm btn-outline-primary"
+                  >
+                    <i class="fas fa-sync-alt"></i> Refresh
+                  </button>
+                </div>
+                <div class="card-body">
+                  <table class="table table-hover align-middle text-center">
+                    <thead class="table-light">
+                      <tr>
+                        <th>Role</th>
+                        <th>Users</th>
+                        <th>Permissions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="roleStatsTableBody">
+                      <tr>
+                        <td colspan="3" class="text-muted">Loading...</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
           </div>
-
-          <div class="col-lg-6 mb-3">
-            <div class="card shadow-sm">
-              <div
-                class="card-header d-flex justify-content-between align-items-center"
-              >
-                <h5 class="mb-0">Role Permissions</h5>
-                <button
-                  id="refreshRoleStats"
-                  class="btn btn-sm btn-outline-primary"
-                >
-                  <i class="fas fa-sync-alt"></i> Refresh
-                </button>
-              </div>
-              <div class="card-body">
-                <table class="table table-hover align-middle text-center">
-                  <thead class="table-light">
-                    <tr>
-                      <th>Role</th>
-                      <th>Users</th>
-                      <th>Permissions</th>
-                    </tr>
-                  </thead>
-                  <tbody id="roleStatsTableBody">
-                    <tr>
-                      <td colspan="3" class="text-muted">Loading...</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
         </div>
 
-        <!-- Role Assignment -->
-        <div class="card">
-          <div class="card-header">
-            <h5 class="mb-0">Role Assignment</h5>
-          </div>
-          <div class="card-body">
-            <table
-              id="rolesTable"
-              class="table table-striped table-hover dt-responsive w-100"
-            >
-              <thead>
-                <tr>
-                  <th>User</th>
-                  <th>Email</th>
-                  <th>Current Role</th>
-                  <th>Assigned By</th>
-                  <th>Assigned Date</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <!-- Table data will be populated by JavaScript -->
-              </tbody>
-            </table>
+        <!-- Table View -->
+        <div id="roles-table-view" class="d-none">
+          <!-- Role Assignment -->
+          <div class="card">
+            <div class="card-header">
+              <h5 class="mb-0">Role Assignment</h5>
+            </div>
+            <div class="card-body">
+              <table
+                id="rolesTable"
+                class="table table-striped table-hover dt-responsive w-100"
+              >
+                <thead>
+                  <tr>
+                    <th>S/N</th>
+                    <th>ID</th>
+                    <th>User</th>
+                    <th>Email</th>
+                    <th>Current Role</th>
+                    <th>Assigned By</th>
+                    <th>Assigned Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Table data will be populated by JavaScript -->
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -2269,9 +2388,28 @@
               data-bs-dismiss="modal"
             ></button>
           </div>
+
           <div class="modal-body">
             <form id="addUserForm">
               <div class="row g-3">
+                <!-- Date of birth -->
+                <div class="mb-3">
+                  <input id="DOB" type="text" hidden />
+                </div>
+                <!-- NIN -->
+                <div class="col-md-6">
+                  <label class="form-label">NIN</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="userNIN"
+                    maxlength="11"
+                    minlength="11"
+                    required
+                  />
+                  <div id="ninStatus" class="mt-1 text-sm text-info"></div>
+                </div>
+                <!-- FIRSTNAME -->
                 <div class="col-md-6">
                   <label class="form-label">First Name</label>
                   <input
@@ -2281,6 +2419,19 @@
                     required
                   />
                 </div>
+
+                <!-- MIDDLENAME -->
+                <div class="col-md-6">
+                  <label class="form-label">Middle Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="middleName"
+                    required
+                  />
+                </div>
+
+                <!-- LASTNAME -->
                 <div class="col-md-6">
                   <label class="form-label">Last Name</label>
                   <input
@@ -2290,6 +2441,8 @@
                     required
                   />
                 </div>
+
+                <!-- EMAIL -->
                 <div class="col-md-6">
                   <label class="form-label">Email</label>
                   <input
@@ -2299,128 +2452,32 @@
                     required
                   />
                 </div>
+
+                <!-- PHONE -->
                 <div class="col-md-6">
                   <label class="form-label">Phone</label>
                   <input
                     type="tel"
                     class="form-control"
                     id="userPhone"
-                    inputmode="tel"
                     maxlength="11"
                     minlength="11"
-                    placeholder="e.g., 08012345678"
-                    autocomplete="on"
                     required
                   />
                 </div>
+
+                <!-- ROLE (DYNAMIC) -->
                 <div class="col-md-6">
-                  <label class="form-label">NIN</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="userNIN"
-                    maxlength="11"
-                    minlength="11"
-                    autocomplete="on"
-                    inputmode="numeric"
-                    pattern="\d{11}"
-                    required
-                  />
-                  <div id="ninStatus" class="mt-1 text-sm text-info"></div>
+                  <label class="form-label">Role</label>
+                  <select id="userRole" class="form-select" required>
+                    <option value="">Select Role</option>
+                  </select>
                 </div>
-                <div class="col-md-6">
-                  <label class="form-label">Kindred</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="userKindred"
-                    required
-                  />
-                </div>
-                <div class="col-md-6">
-                  <label class="form-label">Password</label>
-                  <div class="input-group">
-                    <input
-                      type="password"
-                      class="form-control"
-                      id="userPassword"
-                      required
-                    />
-                    <button
-                      class="btn btn-outline-secondary password-toggle"
-                      type="button"
-                      data-target="#userPassword"
-                    >
-                      <i class="fa fa-eye-slash"></i>
-                    </button>
-                  </div>
-                  <small id="passwordHelp" class="form-text text-muted">
-                    Enter a strong password
-                  </small>
-                </div>
-                <div class="col-md-6">
-                  <label class="form-label">confirm Password</label>
-                  <div class="input-group">
-                    <input
-                      type="password"
-                      class="form-control"
-                      id="confirmPassword"
-                      required
-                    />
-                    <button
-                      class="btn btn-outline-secondary password-toggle"
-                      type="button"
-                      data-target="#confirmPassword"
-                    >
-                      <i class="fa fa-eye-slash"></i>
-                    </button>
-                  </div>
-                </div>
-                <small id="rePasswordHelp" class="form-text text-muted">
-                  Re-type your password
-                </small>
-                <!-- Password validation -->
-                <div class="password-validation d-flex flex-wrap gap-2 mt-2">
-                  <div class="d-flex align-items-center small">
-                    <i
-                      class="fas fa-check-circle me-1 invalid"
-                      id="lengthCheck"
-                    ></i>
-                    <span class="invalid" id="lengthText">8 Characters</span>
-                  </div>
-                  <div class="d-flex align-items-center small">
-                    <i
-                      class="fas fa-check-circle me-1 invalid"
-                      id="symbolCheck"
-                    ></i>
-                    <span class="invalid" id="symbolText">One symbol</span>
-                  </div>
-                  <div class="d-flex align-items-center small">
-                    <i
-                      class="fas fa-check-circle me-1 invalid"
-                      id="capitalCheck"
-                    ></i>
-                    <span class="invalid" id="capitalText"
-                      >One capital letter</span
-                    >
-                  </div>
-                  <div class="d-flex align-items-center small">
-                    <i
-                      class="fas fa-check-circle me-1 invalid"
-                      id="numberCheck"
-                    ></i>
-                    <span class="invalid" id="numberText">One number</span>
-                  </div>
-                </div>
+
+                <!-- STATE -->
                 <div class="col-md-6">
                   <label class="form-label">State of Origin</label>
-                  <select
-                    id="userState"
-                    name="stateOfOrigin"
-                    class="form-select"
-                    required
-                    aria-describedby="stateHelp"
-                  >
+                  <select id="userState" class="form-select" required>
                     <option value="">Select State</option>
                     <option value="abia">Abia</option>
                     <option value="adamawa">Adamawa</option>
@@ -2461,21 +2518,18 @@
                     <option value="abuja">Abuja (FCT)</option>
                   </select>
                 </div>
+
+                <!-- LGA -->
                 <div class="col-md-6">
                   <label class="form-label">LGA of Origin</label>
-                  <!-- <input type="text" class="form-control" id="userLGA" required> -->
-                  <select
-                    id="userLGA"
-                    name="lgaOfOrigin"
-                    class="form-select"
-                    required
-                  >
+                  <select id="userLGA" class="form-select" required>
                     <option value="">Select Local Government</option>
                   </select>
                 </div>
               </div>
             </form>
           </div>
+
           <div class="modal-footer">
             <button
               type="button"
@@ -3714,137 +3768,180 @@
         }
       }
 
-      async function initializeUsersPage() {
-        if ($.fn.DataTable.isDataTable("#usersTable")) {
-          $("#usersTable").DataTable().destroy();
-        }
-        function calculateAge(dob) {
-          if (!dob) return "";
-          const birthDate = new Date(dob);
-          const today = new Date();
-          let age = today.getFullYear() - birthDate.getFullYear();
-          const monthDiff = today.getMonth() - birthDate.getMonth();
+      document.addEventListener("DOMContentLoaded", function () {
+        // Toggle between views
+        const chartsViewBtn = document.getElementById("chartsViewBtn");
+        const tableViewBtn = document.getElementById("tableViewBtn");
+        const chartsView = document.getElementById("charts-summary-view");
+        const tableView = document.getElementById("table-view");
 
-          if (
-            monthDiff < 0 ||
-            (monthDiff === 0 && today.getDate() < birthDate.getDate())
-          ) {
-            age--;
+        chartsViewBtn.addEventListener("click", function () {
+          chartsView.classList.remove("d-none");
+          tableView.classList.add("d-none");
+          chartsViewBtn.classList.add("active");
+          tableViewBtn.classList.remove("active");
+
+          // Refresh charts when switching to charts view
+          if (typeof initializeUsersPage === "function") {
+            initializeUsersPage();
           }
-          return age;
+        });
+
+        tableViewBtn.addEventListener("click", function () {
+          chartsView.classList.add("d-none");
+          tableView.classList.remove("d-none");
+          chartsViewBtn.classList.remove("active");
+          tableViewBtn.classList.add("active");
+
+          // Refresh table when switching to table view
+          if (typeof initializeUsersPage === "function") {
+            initializeUsersPage();
+          }
+        });
+      });
+
+      async function initializeUsersPage() {
+        // Only initialize DataTable if we're on the table view
+        if (!$("#table-view").hasClass("d-none")) {
+          if ($.fn.DataTable.isDataTable("#usersTable")) {
+            $("#usersTable").DataTable().destroy();
+          }
+
+          // Rest of your existing DataTable initialization code
+          function calculateAge(dob) {
+            if (!dob) return "";
+            const birthDate = new Date(dob);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+
+            if (
+              monthDiff < 0 ||
+              (monthDiff === 0 && today.getDate() < birthDate.getDate())
+            ) {
+              age--;
+            }
+            return age;
+          }
+
+          try {
+            $.ajax({
+              url: `${BACKEND_URL}/users`,
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+              success: function (response) {
+                // The actual array is in response.data
+                const usersArray = response.data || [];
+
+                // Initialize or re-draw DataTable
+                usersTable = $("#usersTable").DataTable({
+                  data: usersArray,
+                  columns: [
+                    {
+                      title: "S/N",
+                      data: null,
+                      orderable: false,
+                      searchable: false,
+                      render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                      },
+                    },
+                    {
+                      data: "_id",
+                      visible: false,
+                      searchable: false,
+                    },
+                    {
+                      data: null,
+                      render: function (row) {
+                        return `${row.firstname || ""} ${row.lastname || ""}`;
+                      },
+                    },
+                    { data: "email" },
+                    {
+                      data: "role",
+                      render: function (data) {
+                        let badgeClass = "bg-primary";
+                        if (data === "super_admin") badgeClass = "bg-danger";
+                        else if (data === "support_admin")
+                          badgeClass = "bg-warning";
+                        else if (data === "kindred_head")
+                          badgeClass = "bg-info";
+
+                        return `<span class="badge ${badgeClass}">${data
+                          .replace("_", " ")
+                          .toUpperCase()}</span>`;
+                      },
+                    },
+
+                    {
+                      data: "isActive",
+                      render: function (data) {
+                        return data
+                          ? `<span class="badge bg-success">Active</span>`
+                          : `<span class="badge bg-secondary">Inactive</span>`;
+                      },
+                    },
+
+                    {
+                      data: null,
+                      render: function (row) {
+                        return row.stateOfOrigin || "N/A";
+                      },
+                    },
+
+                    {
+                      data: null,
+                      render: function (row) {
+                        return row.lgaOfOrigin || "N/A";
+                      },
+                    },
+
+                    {
+                      data: "created_at",
+                      render: function (data) {
+                        return new Date(data).toLocaleDateString();
+                      },
+                    },
+                    {
+                      data: null,
+                      render: function (row) {
+                        return `
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-outline-primary edit-user-btn" data-id="${row._id}">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-warning change-role-btn"
+                                        data-id="${row._id}" data-user="${row.firstname}"
+                                        data-bs-toggle="modal" data-bs-target="#changeRoleModal">
+                                    <i class="bi bi-person-badge"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger deactivate-user-btn" data-id="${row._id}">
+                                    <i class="bi bi-person-x"></i>
+                                </button>
+                            </div>
+                        `;
+                      },
+                    },
+                  ],
+                  responsive: true,
+                  pageLength: 10,
+                });
+              },
+              error: function (xhr) {
+                console.error("Failed to fetch users:", xhr.responseText);
+              },
+            });
+          } catch (err) {
+            console.error("Unexpected error:", err);
+          }
         }
 
-        try {
-          $.ajax({
-            url: `${BACKEND_URL}/users`,
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-            success: function (response) {
-              // The actual array is in response.data
-              const usersArray = response.data || [];
-
-              // Initialize or re-draw DataTable
-              $("#usersTable").DataTable({
-                data: usersArray,
-                columns: [
-                  {
-                    title: "S/N",
-                    data: null,
-                    orderable: false,
-                    searchable: false,
-                    render: function (data, type, row, meta) {
-                      return meta.row + meta.settings._iDisplayStart + 1;
-                    },
-                  },
-                  {
-                    data: "_id",
-                    visible: false,
-                    searchable: false,
-                  },
-                  {
-                    data: null,
-                    render: function (row) {
-                      return `${row.firstname || ""} ${row.lastname || ""}`;
-                    },
-                  },
-                  { data: "email" },
-                  {
-                    data: "role",
-                    render: function (data) {
-                      let badgeClass = "bg-primary";
-                      if (data === "super_admin") badgeClass = "bg-danger";
-                      else if (data === "support_admin")
-                        badgeClass = "bg-warning";
-                      else if (data === "kindred_head") badgeClass = "bg-info";
-
-                      return `<span class="badge ${badgeClass}">${data
-                        .replace("_", " ")
-                        .toUpperCase()}</span>`;
-                    },
-                  },
-
-                  {
-                    data: "isActive",
-                    render: function (data) {
-                      return data
-                        ? `<span class="badge bg-success">Active</span>`
-                        : `<span class="badge bg-secondary">Inactive</span>`;
-                    },
-                  },
-
-                  {
-                    data: null,
-                    render: function (row) {
-                      return row.stateOfOrigin || "N/A";
-                    },
-                  },
-
-                  {
-                    data: null,
-                    render: function (row) {
-                      return row.lgaOfOrigin || "N/A";
-                    },
-                  },
-
-                  {
-                    data: "created_at",
-                    render: function (data) {
-                      return new Date(data).toLocaleDateString();
-                    },
-                  },
-                  {
-                    data: null,
-                    render: function (row) {
-                      return `
-                                <div class="btn-group">
-                                    <button class="btn btn-sm btn-outline-primary edit-user-btn" data-id="${row._id}">
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-warning change-role-btn"
-                                            data-id="${row._id}" data-user="${row.firstname}"
-                                            data-bs-toggle="modal" data-bs-target="#changeRoleModal">
-                                        <i class="bi bi-person-badge"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-danger deactivate-user-btn" data-id="${row._id}">
-                                        <i class="bi bi-person-x"></i>
-                                    </button>
-                                </div>
-                            `;
-                    },
-                  },
-                ],
-                responsive: true,
-                pageLength: 10,
-              });
-            },
-            error: function (xhr) {
-              console.error("Failed to fetch users:", xhr.responseText);
-            },
-          });
-
+        // Only initialize charts if we're on the charts view
+        if (!$("#charts-summary-view").hasClass("d-none")) {
           // 2. Fetch User Stats (for charts)
           $.ajax({
             url: `${BACKEND_URL}/users/stats`,
@@ -3863,7 +3960,7 @@
               const ctx1 = document
                 .getElementById("ageDistributionChart")
                 .getContext("2d");
-              new Chart(ctx1, {
+              ageDistributionChart = new Chart(ctx1, {
                 type: "bar",
                 data: {
                   labels: Object.keys(statsData.ageDistribution),
@@ -3882,7 +3979,7 @@
               const ctx2 = document
                 .getElementById("genderDistributionChart")
                 .getContext("2d");
-              new Chart(ctx2, {
+              genderDistributionChart = new Chart(ctx2, {
                 type: "pie",
                 data: {
                   labels: Object.keys(statsData.genderDistribution),
@@ -3900,7 +3997,7 @@
               const ctx3 = document
                 .getElementById("stateDistributionChart")
                 .getContext("2d");
-              new Chart(ctx3, {
+              stateDistributionChart = new Chart(ctx3, {
                 type: "doughnut",
                 data: {
                   labels: Object.keys(statsData.stateDistribution),
@@ -3925,12 +4022,30 @@
               console.error("Failed to fetch stats:", xhr.responseText);
             },
           });
-        } catch (err) {
-          console.error("Unexpected error:", err);
         }
       }
 
+      // Make chart variables global so they can be accessed by destroyChart
+
       // ✅ SAFETY WRAPPER — Ensures Chart.js fully releases canvas
+      function destroyChart(chartInstance, canvasId) {
+        if (chartInstance) {
+          chartInstance.destroy();
+        }
+        // Chart.js maintains internal registry. Manually unregister if needed:
+        const chartStatus = Chart.getChart(canvasId);
+        if (chartStatus) {
+          chartStatus.destroy();
+        }
+
+        // Clear canvas to ensure it's truly free
+        const canvas = document.getElementById(canvasId);
+        if (canvas) {
+          const ctx = canvas.getContext("2d");
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+      }
+
       function destroyChart(chartInstance, canvasId) {
         if (chartInstance) {
           chartInstance.destroy();
@@ -4158,100 +4273,138 @@
         initializeIdCardsPage();
       });
 
+      document.addEventListener("DOMContentLoaded", function () {
+        // Toggle functionality for Identity Cards page
+        const idcardsChartsBtn = document.getElementById("idcardsChartsBtn");
+        const idcardsTableBtn = document.getElementById("idcardsTableBtn");
+        const idcardsChartsView = document.getElementById(
+          "idcards-charts-view"
+        );
+        const idcardsTableView = document.getElementById("idcards-table-view");
+
+        idcardsChartsBtn.addEventListener("click", function () {
+          idcardsChartsView.classList.remove("d-none");
+          idcardsTableView.classList.add("d-none");
+          idcardsChartsBtn.classList.add("active");
+          idcardsTableBtn.classList.remove("active");
+
+          // Refresh charts when switching to charts view
+          if (typeof initializeIdCardsPage === "function") {
+            initializeIdCardsPage();
+          }
+        });
+
+        idcardsTableBtn.addEventListener("click", function () {
+          idcardsChartsView.classList.add("d-none");
+          idcardsTableView.classList.remove("d-none");
+          idcardsChartsBtn.classList.remove("active");
+          idcardsTableBtn.classList.add("active");
+
+          // Refresh table when switching to table view
+          if (typeof initializeIdCardsPage === "function") {
+            initializeIdCardsPage();
+          }
+        });
+      });
+
       async function initializeIdCardsPage() {
-        if ($.fn.DataTable.isDataTable("#idcardsTable")) {
-          $("#idcardsTable").DataTable().destroy();
-        }
-        try {
-          $.ajax({
-            url: `${BACKEND_URL}/idcard/get-all-request`,
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-            success: function (response) {
-              if (!Array.isArray(response)) {
-                console.error("Invalid response format:", response);
-                return;
-              }
+        // Only initialize DataTable if we're on the table view
+        if (!$("#idcards-table-view").hasClass("d-none")) {
+          if ($.fn.DataTable.isDataTable("#idcardsTable")) {
+            $("#idcardsTable").DataTable().destroy();
+          }
 
-              // 🔹 Prepare data for the DataTable
-              const idcardsData = response.map((req, index) => ({
-                _id: req._id, // Keep original ID for actions
-                id: index + 1,
-                user: req.userId?.firstname
-                  ? `${req.userId.firstname} ${req.userId.lastname}`
-                  : "Unknown",
-                state: req.userId?.stateOfOrigin || "N/A",
-                lga: req.userId?.lgaOfOrigin || "N/A",
-                status: req.status
-                  ? req.status.charAt(0).toUpperCase() + req.status.slice(1)
-                  : "Pending",
-                requestDate: req.created_at
-                  ? new Date(req.created_at).toLocaleDateString()
-                  : "N/A",
-                approvedBy: req.approvedBy
-                  ? `${req.approvedBy?.firstname} ${req.approvedBy?.lastname}`
-                  : req.status === "Rejected"
-                  ? "Rejected by Admin"
-                  : "Not yet approved",
+          // Your existing DataTable initialization code
+          try {
+            $.ajax({
+              url: `${BACKEND_URL}/idcard/get-all-request`,
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+              success: function (response) {
+                if (!Array.isArray(response)) {
+                  console.error("Invalid response format:", response);
+                  return;
+                }
 
-                isProfileCompleted: req.userId?.isProfileCompleted
-                  ? `<span class="badge bg-success">Yes</span>`
-                  : `<span class="badge bg-danger">No</span>`,
+                // 🔹 Prepare data for the DataTable
+                const idcardsData = response.map((req, index) => ({
+                  _id: req._id, // Keep original ID for actions
+                  id: index + 1,
+                  user: req.userId?.firstname
+                    ? `${req.userId.firstname} ${req.userId.lastname}`
+                    : "Unknown",
+                  state: req.userId?.stateOfOrigin || "N/A",
+                  lga: req.userId?.lgaOfOrigin || "N/A",
+                  status: req.status
+                    ? req.status.charAt(0).toUpperCase() + req.status.slice(1)
+                    : "Pending",
+                  requestDate: req.created_at
+                    ? new Date(req.created_at).toLocaleDateString()
+                    : "N/A",
+                  approvedBy: req.approvedBy
+                    ? `${req.approvedBy?.firstname} ${req.approvedBy?.lastname}`
+                    : req.status === "Rejected"
+                    ? "Rejected by Admin"
+                    : "Not yet approved",
 
-                paymentStatus: req?.paymentStatus || "Pending",
-              }));
+                  isProfileCompleted: req.userId?.isProfileCompleted
+                    ? `<span class="badge bg-success">Yes</span>`
+                    : `<span class="badge bg-danger">No</span>`,
 
-              // 🔹 Initialize  DataTable
-              $("#idcardsTable").DataTable({
-                data: idcardsData,
-                columns: [
-                  {
-                    title: "S/N",
-                    data: null,
-                    orderable: false,
-                    searchable: false,
-                    render: function (data, type, row, meta) {
-                      return meta.row + meta.settings._iDisplayStart + 1;
+                  paymentStatus: req?.paymentStatus || "Pending",
+                }));
+
+                // 🔹 Initialize  DataTable
+                $("#idcardsTable").DataTable({
+                  data: idcardsData,
+                  columns: [
+                    {
+                      title: "S/N",
+                      data: null,
+                      orderable: false,
+                      searchable: false,
+                      render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                      },
                     },
-                  },
-                  {
-                    data: "id",
-                    visible: false,
-                    searchable: false,
-                  },
-                  { data: "user" },
-                  { data: "state" },
-                  { data: "lga" },
-                  {
-                    data: "status",
-                    render: function (data) {
-                      let badgeClass = "bg-primary";
-                      if (data === "Approved") badgeClass = "bg-success";
-                      else if (data === "Pending") badgeClass = "bg-warning";
-                      else if (data === "Rejected") badgeClass = "bg-danger";
-                      return `<span class="badge ${badgeClass}">${data}</span>`;
+                    {
+                      data: "id",
+                      visible: false,
+                      searchable: false,
                     },
-                  },
-                  { data: "requestDate" },
-                  { data: "isProfileCompleted" },
-                  { data: "approvedBy" },
-                  {
-                    // Actions column
-                    orderable: false,
-                    searchable: false,
-                    width: "120px",
+                    { data: "user" },
+                    { data: "state" },
+                    { data: "lga" },
+                    {
+                      data: "status",
+                      render: function (data) {
+                        let badgeClass = "bg-primary";
+                        if (data === "Approved") badgeClass = "bg-success";
+                        else if (data === "Pending") badgeClass = "bg-warning";
+                        else if (data === "Rejected") badgeClass = "bg-danger";
+                        return `<span class="badge ${badgeClass}">${data}</span>`;
+                      },
+                    },
+                    { data: "requestDate" },
+                    { data: "isProfileCompleted" },
+                    { data: "approvedBy" },
+                    {
+                      // Actions column
+                      orderable: false,
+                      searchable: false,
+                      width: "120px",
 
-                    data: null,
-                    render: function (data, type, row) {
-                      let actionButtons = "";
-                      let downloadButton = "";
+                      data: null,
+                      render: function (data, type, row) {
+                        let actionButtons = "";
+                        let downloadButton = "";
 
-                      // Show action buttons only for pending requests
-                      if (row.status === "Pending") {
-                        actionButtons = `
+                        // Show action buttons only for pending requests
+                        if (row.status === "Pending") {
+                          actionButtons = `
         <button class="btn btn-sm btn-outline-success approve-request-btn" data-id="${row._id}" data-type="idcard" data-bs-toggle="modal" data-bs-target="#requestActionModal">
           <i class="bi bi-check-circle"></i>
         </button>
@@ -4259,38 +4412,38 @@
           <i class="bi bi-x-circle"></i>
         </button>
       `;
-                      }
+                        }
 
-                      // ✅ Show download button only if:
-                      // - status = "Approved"
-                      // - AND paymentStatus = "Paid" (not pending)
-                      if (
-                        row.status === "Approved" &&
-                        row.paymentStatus.toLowerCase() === "paid" &&
-                        row.isProfileCompleted === true
-                      ) {
-                        downloadButton = `
+                        // ✅ Show download button only if:
+                        // - status = "Approved"
+                        // - AND paymentStatus = "Paid" (not pending)
+                        if (
+                          row.status === "Approved" &&
+                          row.paymentStatus.toLowerCase() === "paid" &&
+                          row.isProfileCompleted === true
+                        ) {
+                          downloadButton = `
         <button class="btn btn-sm btn-outline-danger btn-cert-download" 
                 data-id="${row._id}">
           <i class="bi bi-download"></i>
         </button>
       `;
-                      }
+                        }
 
-                      // Optional: Show a disabled version if payment is pending
-                      else if (
-                        row.status === "Approved" &&
-                        row.paymentStatus.toLowerCase() === "pending" &&
-                        row.isProfileCompleted === true
-                      ) {
-                        downloadButton = `
+                        // Optional: Show a disabled version if payment is pending
+                        else if (
+                          row.status === "Approved" &&
+                          row.paymentStatus.toLowerCase() === "pending" &&
+                          row.isProfileCompleted === true
+                        ) {
+                          downloadButton = `
         <button class="btn btn-sm btn-outline-secondary" disabled title="Payment pending">
           <i class="bi bi-download"></i>
         </button>
       `;
-                      }
+                        }
 
-                      return `
+                        return `
         <div class="btn-group">
           <button class="btn btn-sm btn-outline-primary btn-view" data-id="${row._id}">
             <i class="bi bi-eye"></i>
@@ -4299,52 +4452,150 @@
           ${downloadButton}
         </div>
       `;
+                      },
                     },
-                  },
-                ],
-                responsive: true,
-                pageLength: 10,
-                retrieve: true,
-              });
+                  ],
+                  responsive: true,
+                  pageLength: 10,
+                  retrieve: true,
+                });
+              },
+              error: function (xhr) {
+                console.error(
+                  "Failed to fetch ID card requests:",
+                  xhr.responseText
+                );
+              },
+            });
+          } catch (err) {
+            console.error("Unexpected error:", err);
+          }
+        }
 
-              // 🔹 Compute statistics for charts
-              const monthlyTrend = {};
-              const stateDistribution = {};
-
-              response.forEach((req) => {
-                // Monthly trend (by createdAt)
-                if (req.created_at) {
-                  const month = new Date(req.created_at).toLocaleString(
-                    "default",
-                    {
-                      month: "short",
-                      year: "numeric",
-                    }
-                  );
-                  monthlyTrend[month] = (monthlyTrend[month] || 0) + 1;
+        // Only initialize charts if we're on the charts view
+        if (!$("#idcards-charts-view").hasClass("d-none")) {
+          try {
+            $.ajax({
+              url: `${BACKEND_URL}/idcard/get-all-request`,
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+              success: function (response) {
+                if (!Array.isArray(response)) {
+                  console.error("Invalid response format:", response);
+                  return;
                 }
 
-                // State distribution
-                const state =
-                  req.userId?.stateOfOrigin.toUpperCase() || "Unknown";
-                stateDistribution[state] = (stateDistribution[state] || 0) + 1;
-              });
+                // 🔹 Compute statistics for charts
+                const monthlyTrend = {};
+                const stateDistribution = {};
 
-              // 🔹 Render Charts
-              renderIdCardCharts(monthlyTrend, stateDistribution);
-            },
-            error: function (xhr) {
-              console.error(
-                "Failed to fetch ID card requests:",
-                xhr.responseText
-              );
-            },
-          });
-        } catch (err) {
-          console.error("Unexpected error:", err);
+                response.forEach((req) => {
+                  // Monthly trend (by createdAt)
+                  if (req.created_at) {
+                    const month = new Date(req.created_at).toLocaleString(
+                      "default",
+                      {
+                        month: "short",
+                        year: "numeric",
+                      }
+                    );
+                    monthlyTrend[month] = (monthlyTrend[month] || 0) + 1;
+                  }
+
+                  // State distribution
+                  const state =
+                    req.userId?.stateOfOrigin.toUpperCase() || "Unknown";
+                  stateDistribution[state] =
+                    (stateDistribution[state] || 0) + 1;
+                });
+
+                // 🔹 Render Charts
+                renderIdCardCharts(monthlyTrend, stateDistribution);
+              },
+              error: function (xhr) {
+                console.error(
+                  "Failed to fetch ID card requests:",
+                  xhr.responseText
+                );
+              },
+            });
+          } catch (err) {
+            console.error("Unexpected error:", err);
+          }
         }
       }
 
+      // Add this function to render ID card charts
+      function renderIdCardCharts(monthlyTrend, stateDistribution) {
+        // Destroy existing charts if they exist
+        destroyChart(idcardTrendChart, "idcardTrendChart");
+        destroyChart(idcardStateChart, "idcardStateChart");
+
+        // Request Trends Chart
+        const ctx1 = document
+          .getElementById("idcardTrendChart")
+          .getContext("2d");
+        idcardTrendChart = new Chart(ctx1, {
+          type: "line",
+          data: {
+            labels: Object.keys(monthlyTrend),
+            datasets: [
+              {
+                label: "Monthly Requests",
+                data: Object.values(monthlyTrend),
+                backgroundColor: "rgba(99, 102, 241, 0.2)",
+                borderColor: "#6366f1",
+                borderWidth: 2,
+                tension: 0.4,
+                fill: true,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
+            },
+          },
+        });
+
+        // State Distribution Chart
+        const ctx2 = document
+          .getElementById("idcardStateChart")
+          .getContext("2d");
+        idcardStateChart = new Chart(ctx2, {
+          type: "doughnut",
+          data: {
+            labels: Object.keys(stateDistribution),
+            datasets: [
+              {
+                data: Object.values(stateDistribution),
+                backgroundColor: [
+                  "#6366f1",
+                  "#8b5cf6",
+                  "#ec4899",
+                  "#f59e0b",
+                  "#10b981",
+                  "#64748b",
+                  "#ef4444",
+                  "#3b82f6",
+                ],
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+          },
+        });
+      }
+      // 🔹 Approve / Reject ID Card Request
       $(document).on(
         "click",
         ".approve-request-btn, .reject-request-btn",
@@ -4505,226 +4756,307 @@
         initializeIdCardsPage();
       });
 
+      document.addEventListener("DOMContentLoaded", function () {
+        // Toggle functionality for Certificates page
+        const certificatesChartsBtn = document.getElementById(
+          "certificatesChartsBtn"
+        );
+        const certificatesTableBtn = document.getElementById(
+          "certificatesTableBtn"
+        );
+        const certificatesChartsView = document.getElementById(
+          "certificates-charts-view"
+        );
+        const certificatesTableView = document.getElementById(
+          "certificates-table-view"
+        );
+
+        certificatesChartsBtn.addEventListener("click", function () {
+          certificatesChartsView.classList.remove("d-none");
+          certificatesTableView.classList.add("d-none");
+          certificatesChartsBtn.classList.add("active");
+          certificatesTableBtn.classList.remove("active");
+
+          // Refresh charts when switching to charts view
+          if (typeof initializeCertificatesPage === "function") {
+            initializeCertificatesPage();
+          }
+        });
+
+        certificatesTableBtn.addEventListener("click", function () {
+          certificatesChartsView.classList.add("d-none");
+          certificatesTableView.classList.remove("d-none");
+          certificatesChartsBtn.classList.remove("active");
+          certificatesTableBtn.classList.add("active");
+
+          // Refresh table when switching to table view
+          if (typeof initializeCertificatesPage === "function") {
+            initializeCertificatesPage();
+          }
+        });
+      });
+
+      // Modify your initializeCertificatesPage function to work with the toggle
       async function initializeCertificatesPage() {
-        if ($.fn.DataTable.isDataTable("#certificatesTable")) {
-          $("#certificatesTable").DataTable().destroy();
+        // Only initialize DataTable if we're on the table view
+        if (!$("#certificates-table-view").hasClass("d-none")) {
+          if ($.fn.DataTable.isDataTable("#certificatesTable")) {
+            $("#certificatesTable").DataTable().destroy();
+          }
+
+          const headers = {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          };
+
+          try {
+            const response = await $.ajax({
+              url: `${BACKEND_URL}/indigene/certificate/get-all-request`,
+              method: "GET",
+              headers: headers,
+            });
+            // ✅ Prepare table data
+            const tableData = response.map((item, index) => ({
+              _id: item._id, // Keep original ID for actions
+              id: index + 1,
+              user: item.userId?.firstname
+                ? `${item.userId.firstname} ${item.userId.lastname}`
+                : "Unknown",
+              state: item.userId?.stateOfOrigin || "N/A",
+              lga: item.userId?.lgaOfOrigin || "N/A",
+              status: item?.status || "Pending",
+              requestTime: item.created_at
+                ? new Date(item.created_at).toLocaleString()
+                : "N/A",
+              isProfileCompleted: item.userId?.isProfileCompleted
+                ? `<span class="badge bg-success">Yes</span>`
+                : `<span class="badge bg-danger">No</span>`,
+              approvedBy: item.approvedBy
+                ? `${item.approvedBy.firstname} ${item.approvedBy.lastname}`
+                : item.status === "Rejected"
+                ? "Rejected by Admin"
+                : "Not yet approved",
+
+              paymentStatus: item?.paymentStatus || "Pending",
+            }));
+
+            // ✅ Initialize DataTable
+            $("#certificatesTable").DataTable({
+              data: tableData,
+              columns: [
+                // { data: "id" },
+                {
+                  title: "S/N",
+                  data: null,
+                  orderable: false,
+                  searchable: false,
+                  render: function (data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                  },
+                },
+                {
+                  data: "id",
+                  visible: false,
+                  searchable: false,
+                },
+                { data: "user" },
+                { data: "state" },
+                { data: "lga" },
+                {
+                  data: "status",
+                  render: function (data) {
+                    let badgeClass = "bg-primary";
+                    if (data.toLowerCase() === "approved")
+                      badgeClass = "bg-success";
+                    else if (data.toLowerCase() === "pending")
+                      badgeClass = "bg-warning";
+                    else if (data.toLowerCase() === "rejected")
+                      badgeClass = "bg-danger";
+                    return `<span class="badge ${badgeClass}">${data}</span>`;
+                  },
+                },
+                { data: "requestTime" },
+                { data: "isProfileCompleted" },
+                { data: "approvedBy" },
+
+                {
+                  // Actions column
+                  orderable: false,
+                  searchable: false,
+                  width: "120px",
+                  data: null,
+                  render: function (data, type, row) {
+                    let actionButtons = "";
+                    let downloadButton = "";
+
+                    // Approve/Reject buttons (for pending status)
+                    if (row.status === "Pending") {
+                      actionButtons = `
+      <button class="btn btn-sm btn-outline-success approve-request-btn" 
+              data-id="${row._id}" 
+              data-type="certificate" 
+              data-bs-toggle="modal" 
+              data-bs-target="#requestActionModal">
+        <i class="bi bi-check-circle"></i>
+      </button>
+      <button class="btn btn-sm btn-outline-danger reject-request-btn" 
+              data-id="${row._id}" 
+              data-type="certificate" 
+              data-bs-toggle="modal" 
+              data-bs-target="#requestActionModal">
+        <i class="bi bi-x-circle"></i>
+      </button>
+    `;
+                    }
+
+                    // ✅ Show download button only if:
+                    // - status = "Approved"
+                    // - AND paymentStatus = "Paid" (not pending)
+                    if (
+                      row.status === "Approved" &&
+                      row.paymentStatus.toLowerCase() === "paid" &&
+                      row.isProfileCompleted === true
+                    ) {
+                      downloadButton = `
+      <button class="btn btn-sm btn-outline-danger btn-cert-download" 
+              data-id="${row._id}">
+        <i class="bi bi-download"></i>
+      </button>
+    `;
+                    }
+
+                    // Optional: Show a disabled version if payment is pending
+                    else if (
+                      row.status === "Approved" &&
+                      row.paymentStatus.toLowerCase() === "pending" &&
+                      row.isProfileCompleted === true
+                    ) {
+                      downloadButton = `
+      <button class="btn btn-sm btn-outline-secondary" disabled title="Payment pending">
+        <i class="bi bi-download"></i>
+      </button>
+    `;
+                    }
+
+                    return `
+    <div class="btn-group">
+      <button class="btn btn-sm btn-outline-primary btn-cert-view" 
+              data-id="${row._id}">
+        <i class="bi bi-eye"></i>
+      </button>
+      ${actionButtons}
+      ${downloadButton}
+    </div>
+  `;
+                  },
+                },
+              ],
+              responsive: true,
+              pageLength: 10,
+            });
+          } catch (error) {
+            console.error("Error loading certificate data:", error);
+          }
         }
 
-        const headers = {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        };
+        // Only initialize charts if we're on the charts view
+        if (!$("#certificates-charts-view").hasClass("d-none")) {
+          const headers = {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          };
 
-        try {
-          const response = await $.ajax({
-            url: `${BACKEND_URL}/indigene/certificate/get-all-request`,
-            method: "GET",
-            headers: headers,
-          });
-          // ✅ Prepare table data
-          const tableData = response.map((item, index) => ({
-            _id: item._id, // Keep original ID for actions
-            id: index + 1,
-            user: item.userId?.firstname
-              ? `${item.userId.firstname} ${item.userId.lastname}`
-              : "Unknown",
-            state: item.userId?.stateOfOrigin || "N/A",
-            lga: item.userId?.lgaOfOrigin || "N/A",
-            status: item?.status || "Pending",
-            requestTime: item.created_at
-              ? new Date(item.created_at).toLocaleString()
-              : "N/A",
-            isProfileCompleted: item.userId?.isProfileCompleted
-              ? `<span class="badge bg-success">Yes</span>`
-              : `<span class="badge bg-danger">No</span>`,
-            approvedBy: item.approvedBy
-              ? `${item.approvedBy.firstname} ${item.approvedBy.lastname}`
-              : item.status === "Rejected"
-              ? "Rejected by Admin"
-              : "Not yet approved",
+          try {
+            const response = await $.ajax({
+              url: `${BACKEND_URL}/indigene/certificate/get-all-request`,
+              method: "GET",
+              headers: headers,
+            });
 
-            paymentStatus: item?.paymentStatus || "Pending",
-          }));
+            // ✅ Chart data grouping by date
+            const dailyBreakdown = {};
+            const lgaCounts = {};
 
-          // ✅ Initialize DataTable
-          $("#certificatesTable").DataTable({
-            data: tableData,
-            columns: [
-              // { data: "id" },
-              {
-                title: "S/N",
-                data: null,
-                orderable: false,
-                searchable: false,
-                render: function (data, type, row, meta) {
-                  return meta.row + meta.settings._iDisplayStart + 1;
-                },
+            response.forEach((item) => {
+              const day = new Date(item.created_at).toLocaleDateString();
+              dailyBreakdown[day] = (dailyBreakdown[day] || 0) + 1;
+              const lga = item.userId?.lgaOfOrigin || "Unknown";
+              lgaCounts[lga] = (lgaCounts[lga] || 0) + 1;
+            });
+
+            destroyChart(certificateDailyChart, "certificateDailyChart");
+            destroyChart(certificateLGAChart, "certificateLGAChart");
+
+            // ✅ Daily Requests Chart
+            const ctx1 = document
+              .getElementById("certificateDailyChart")
+              .getContext("2d");
+            certificateDailyChart = new Chart(ctx1, {
+              type: "bar",
+              data: {
+                labels: Object.keys(dailyBreakdown),
+                datasets: [
+                  {
+                    label: "Requests",
+                    data: Object.values(dailyBreakdown),
+                    backgroundColor: "#6366f1",
+                  },
+                ],
               },
-              {
-                data: "id",
-                visible: false,
-                searchable: false,
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true } },
               },
-              { data: "user" },
-              { data: "state" },
-              { data: "lga" },
-              {
-                data: "status",
-                render: function (data) {
-                  let badgeClass = "bg-primary";
-                  if (data.toLowerCase() === "approved")
-                    badgeClass = "bg-success";
-                  else if (data.toLowerCase() === "pending")
-                    badgeClass = "bg-warning";
-                  else if (data.toLowerCase() === "rejected")
-                    badgeClass = "bg-danger";
-                  return `<span class="badge ${badgeClass}">${data}</span>`;
-                },
+            });
+
+            // ✅ Top LGA Chart
+            const ctx2 = document
+              .getElementById("certificateLGAChart")
+              .getContext("2d");
+            certificateLGAChart = new Chart(ctx2, {
+              type: "bar",
+              data: {
+                labels: Object.keys(lgaCounts),
+                datasets: [
+                  {
+                    label: "Requests",
+                    data: Object.values(lgaCounts),
+                    backgroundColor: "#6366f1",
+                  },
+                ],
               },
-              { data: "requestTime" },
-              { data: "isProfileCompleted" },
-              { data: "approvedBy" },
-
-              {
-                // Actions column
-                orderable: false,
-                searchable: false,
-                width: "120px",
-                data: null,
-                render: function (data, type, row) {
-                  let actionButtons = "";
-                  let downloadButton = "";
-
-                  // Approve/Reject buttons (for pending status)
-                  if (row.status === "Pending") {
-                    actionButtons = `
-        <button class="btn btn-sm btn-outline-success approve-request-btn" 
-                data-id="${row._id}" 
-                data-type="certificate" 
-                data-bs-toggle="modal" 
-                data-bs-target="#requestActionModal">
-          <i class="bi bi-check-circle"></i>
-        </button>
-        <button class="btn btn-sm btn-outline-danger reject-request-btn" 
-                data-id="${row._id}" 
-                data-type="certificate" 
-                data-bs-toggle="modal" 
-                data-bs-target="#requestActionModal">
-          <i class="bi bi-x-circle"></i>
-        </button>
-      `;
-                  }
-
-                  // ✅ Show download button only if:
-                  // - status = "Approved"
-                  // - AND paymentStatus = "Paid" (not pending)
-                  if (
-                    row.status === "Approved" &&
-                    row.paymentStatus.toLowerCase() === "paid" &&
-                    row.isProfileCompleted === true
-                  ) {
-                    downloadButton = `
-        <button class="btn btn-sm btn-outline-danger btn-cert-download" 
-                data-id="${row._id}">
-          <i class="bi bi-download"></i>
-        </button>
-      `;
-                  }
-
-                  // Optional: Show a disabled version if payment is pending
-                  else if (
-                    row.status === "Approved" &&
-                    row.paymentStatus.toLowerCase() === "pending" &&
-                    row.isProfileCompleted === true
-                  ) {
-                    downloadButton = `
-        <button class="btn btn-sm btn-outline-secondary" disabled title="Payment pending">
-          <i class="bi bi-download"></i>
-        </button>
-      `;
-                  }
-
-                  return `
-      <div class="btn-group">
-        <button class="btn btn-sm btn-outline-primary btn-cert-view" 
-                data-id="${row._id}">
-          <i class="bi bi-eye"></i>
-        </button>
-        ${actionButtons}
-        ${downloadButton}
-      </div>
-    `;
-                },
+              options: {
+                indexAxis: "y",
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { x: { beginAtZero: true } },
               },
-            ],
-            responsive: true,
-            pageLength: 10,
-          });
+            });
+          } catch (error) {
+            console.error("Error loading certificate data:", error);
+          }
+        }
+      }
 
-          // ✅ Chart data grouping by date
-          const dailyBreakdown = {};
-          const lgaCounts = {};
+      // ✅ SAFETY WRAPPER — Ensures Chart.js fully releases canvas
+      function destroyChart(chartInstance, canvasId) {
+        if (chartInstance) {
+          chartInstance.destroy();
+        }
+        // Chart.js maintains internal registry. Manually unregister if needed:
+        const chartStatus = Chart.getChart(canvasId);
+        if (chartStatus) {
+          chartStatus.destroy();
+        }
 
-          response.forEach((item) => {
-            const day = new Date(item.created_at).toLocaleDateString();
-            dailyBreakdown[day] = (dailyBreakdown[day] || 0) + 1;
-            const lga = item.userId?.lgaOfOrigin || "Unknown";
-            lgaCounts[lga] = (lgaCounts[lga] || 0) + 1;
-          });
-
-          destroyChart(certificateDailyChart, "certificateDailyChart");
-          destroyChart(certificateLGAChart, "certificateLGAChart");
-
-          // ✅ Daily Requests Chart
-          const ctx1 = document
-            .getElementById("certificateDailyChart")
-            .getContext("2d");
-          new Chart(ctx1, {
-            type: "bar",
-            data: {
-              labels: Object.keys(dailyBreakdown),
-              datasets: [
-                {
-                  label: "Requests",
-                  data: Object.values(dailyBreakdown),
-                  backgroundColor: "#6366f1",
-                },
-              ],
-            },
-            options: {
-              responsive: true,
-              maintainAspectRatio: false,
-              plugins: { legend: { display: false } },
-              scales: { y: { beginAtZero: true } },
-            },
-          });
-
-          // ✅ Top LGA Chart
-          const ctx2 = document
-            .getElementById("certificateLGAChart")
-            .getContext("2d");
-          new Chart(ctx2, {
-            type: "bar",
-            data: {
-              labels: Object.keys(lgaCounts),
-              datasets: [
-                {
-                  label: "Requests",
-                  data: Object.values(lgaCounts),
-                  backgroundColor: "#6366f1",
-                },
-              ],
-            },
-            options: {
-              indexAxis: "y",
-              responsive: true,
-              maintainAspectRatio: false,
-              plugins: { legend: { display: false } },
-              scales: { x: { beginAtZero: true } },
-            },
-          });
-        } catch (error) {
-          console.error("Error loading certificate data:", error);
+        // Clear canvas to ensure it's truly free
+        const canvas = document.getElementById(canvasId);
+        if (canvas) {
+          const ctx = canvas.getContext("2d");
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
       }
 
@@ -4891,24 +5223,69 @@
         });
       });
 
+      document.addEventListener("DOMContentLoaded", function () {
+        // Toggle functionality for Transactions page
+        const transactionsChartsBtn = document.getElementById(
+          "transactionsChartsBtn"
+        );
+        const transactionsTableBtn = document.getElementById(
+          "transactionsTableBtn"
+        );
+        const transactionsChartsView = document.getElementById(
+          "transactions-charts-view"
+        );
+        const transactionsTableView = document.getElementById(
+          "transactions-table-view"
+        );
+
+        transactionsChartsBtn.addEventListener("click", function () {
+          transactionsChartsView.classList.remove("d-none");
+          transactionsTableView.classList.add("d-none");
+          transactionsChartsBtn.classList.add("active");
+          transactionsTableBtn.classList.remove("active");
+
+          // Refresh charts when switching to charts view
+          if (typeof initializeTransactionsPage === "function") {
+            initializeTransactionsPage();
+          }
+        });
+
+        transactionsTableBtn.addEventListener("click", function () {
+          transactionsChartsView.classList.add("d-none");
+          transactionsTableView.classList.remove("d-none");
+          transactionsChartsBtn.classList.remove("active");
+          transactionsTableBtn.classList.add("active");
+
+          // Refresh table when switching to table view
+          if (typeof initializeTransactionsPage === "function") {
+            initializeTransactionsPage();
+          }
+        });
+      });
+
+      // Modify your initializeTransactionsPage function to work with the toggle
       function initializeTransactionsPage() {
         const headers = {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         };
 
-        // 1️⃣ Fetch Transactions for Table
-        $.ajax({
-          url: `${BACKEND_URL}/transaction/all`,
-          method: "GET",
-          headers,
-          success: function (transactions) {
-            if (!Array.isArray(transactions)) {
-              console.error("Invalid transactions data:", transactions);
-              return;
-            }
+        // 1️⃣ Fetch Transactions for Table (only if table view is visible)
+        if (!$("#transactions-table-view").hasClass("d-none")) {
+          $.ajax({
+            url: `${BACKEND_URL}/transaction/all`,
+            method: "GET",
+            headers,
+            success: function (transactions) {
+              if (!Array.isArray(transactions)) {
+                console.error("Invalid transactions data:", transactions);
+                return;
+              }
 
-            if (!transactionsTable) {
+              if ($.fn.DataTable.isDataTable("#transactionsTable")) {
+                $("#transactionsTable").DataTable().destroy();
+              }
+
               transactionsTable = $("#transactionsTable").DataTable({
                 data: transactions.map((t) => ({
                   id: t._id,
@@ -4961,52 +5338,40 @@
                     data: null,
                     render: function (data, type, row) {
                       return `
-                                    <div class="btn-group">
-                                        <button class="btn btn-sm btn-outline-primary view-transaction-btn" data-id="${row.id}">
-                                            <i class="bi bi-eye"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-success refund-transaction-btn" data-id="${row.id}">
-                                            <i class="bi bi-arrow-counterclockwise"></i>
-                                        </button>
-                                    </div>
-                                `;
+                              <div class="btn-group">
+                                  <button class="btn btn-sm btn-outline-primary view-transaction-btn" data-id="${row.id}">
+                                      <i class="bi bi-eye"></i>
+                                  </button>
+                                  <button class="btn btn-sm btn-outline-success refund-transaction-btn" data-id="${row.id}">
+                                      <i class="bi bi-arrow-counterclockwise"></i>
+                                  </button>
+                              </div>
+                          `;
                     },
                   },
                 ],
                 responsive: true,
                 pageLength: 10,
               });
-            } else {
-              transactionsTable
-                .clear()
-                .rows.add(
-                  transactions.map((t) => ({
-                    id: t._id,
-                    user: t.userId?.firstname
-                      ? `${t.userId.firstname} ${t.userId.lastname}`
-                      : "N/A",
-                    type: t.paymentType || "N/A",
-                    amount: (t.amount || 0) / 100,
-                    status: t.status || "Pending",
-                    datetime: new Date(t.createdAt).toLocaleString(),
-                  }))
-                )
-                .draw();
-            }
-          },
-          error: function (err) {
-            console.error("Error loading transactions:", err);
-          },
-        });
+            },
+            error: function (err) {
+              console.error("Error loading transactions:", err);
+            },
+          });
+        }
 
-        // 2️⃣ Fetch Transaction Stats (for charts)
-        $.ajax({
-          url: `${BACKEND_URL}/transaction/stats`,
-          method: "GET",
-          headers,
-          success: function (stats) {
-            // Transaction Trend Chart
-            if (!transactionTrendChart) {
+        // 2️⃣ Fetch Transaction Stats (for charts, only if charts view is visible)
+        if (!$("#transactions-charts-view").hasClass("d-none")) {
+          $.ajax({
+            url: `${BACKEND_URL}/transaction/stats`,
+            method: "GET",
+            headers,
+            success: function (stats) {
+              // Destroy existing charts before creating new ones
+              destroyChart(transactionTrendChart, "transactionTrendChart");
+              destroyChart(revenueStateChart, "revenueStateChart");
+
+              // Transaction Trend Chart
               const ctx1 = document
                 .getElementById("transactionTrendChart")
                 .getContext("2d");
@@ -5039,10 +5404,8 @@
                   },
                 },
               });
-            }
 
-            // Revenue by State Chart
-            if (!revenueStateChart) {
+              // Revenue by State Chart
               const ctx2 = document
                 .getElementById("revenueStateChart")
                 .getContext("2d");
@@ -5070,12 +5433,31 @@
                   plugins: { legend: { position: "bottom" } },
                 },
               });
-            }
-          },
-          error: function (err) {
-            console.error("Error loading stats:", err);
-          },
-        });
+            },
+            error: function (err) {
+              console.error("Error loading stats:", err);
+            },
+          });
+        }
+      }
+
+      // ✅ SAFETY WRAPPER — Ensures Chart.js fully releases canvas
+      function destroyChart(chartInstance, canvasId) {
+        if (chartInstance) {
+          chartInstance.destroy();
+        }
+        // Chart.js maintains internal registry. Manually unregister if needed:
+        const chartStatus = Chart.getChart(canvasId);
+        if (chartStatus) {
+          chartStatus.destroy();
+        }
+
+        // Clear canvas to ensure it's truly free
+        const canvas = document.getElementById(canvasId);
+        if (canvas) {
+          const ctx = canvas.getContext("2d");
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
       }
 
       function initializeAnalyticsPage() {
@@ -5248,9 +5630,42 @@
         });
       }
 
+      document.addEventListener("DOMContentLoaded", function () {
+        // Toggle functionality for Roles page
+        const rolesChartsBtn = document.getElementById("rolesChartsBtn");
+        const rolesTableBtn = document.getElementById("rolesTableBtn");
+        const rolesChartsView = document.getElementById("roles-charts-view");
+        const rolesTableView = document.getElementById("roles-table-view");
+
+        rolesChartsBtn.addEventListener("click", function () {
+          rolesChartsView.classList.remove("d-none");
+          rolesTableView.classList.add("d-none");
+          rolesChartsBtn.classList.add("active");
+          rolesTableBtn.classList.remove("active");
+
+          // Refresh charts when switching to charts view
+          if (typeof initializeRolesPage === "function") {
+            initializeRolesPage();
+          }
+        });
+
+        rolesTableBtn.addEventListener("click", function () {
+          rolesChartsView.classList.add("d-none");
+          rolesTableView.classList.remove("d-none");
+          rolesChartsBtn.classList.remove("active");
+          rolesTableBtn.classList.add("active");
+
+          // Refresh table when switching to table view
+          if (typeof initializeRolesPage === "function") {
+            initializeRolesPage();
+          }
+        });
+      });
+
+      // Modify your initializeRolesPage function to work with the toggle
       async function initializeRolesPage() {
         try {
-          // 🔹 Fetch all users from backend
+          // 🔹 Fetch all users from backend (needed for both views)
           const response = await $.ajax({
             url: `${BACKEND_URL}/users`,
             method: "GET",
@@ -5262,22 +5677,12 @@
 
           const users = Array.isArray(response.data) ? response.data : [];
 
-          // 🔹 Prepare role counts for chart
-          const roleCounts = {
-            global_admin: 0,
-            support_admin: 0,
-            kindred_head: 0,
-            user: 0,
-          };
+          // 1️⃣ LOGIC FOR TABLE VIEW
+          if (!$("#roles-table-view").hasClass("d-none")) {
+            if ($.fn.DataTable.isDataTable("#rolesTable")) {
+              $("#rolesTable").DataTable().destroy();
+            }
 
-          users.forEach((u) => {
-            const role = (u.role || "user").toLowerCase();
-            if (roleCounts[role] !== undefined) roleCounts[role]++;
-            else roleCounts.user++; // fallback
-          });
-
-          // 🔹 Initialize DataTable
-          if (!rolesTable) {
             rolesTable = $("#rolesTable").DataTable({
               data: users.map((u) => ({
                 id: u._id,
@@ -5285,16 +5690,26 @@
                   `${u.firstname || ""} ${u.lastname || ""}`.trim() || "N/A",
                 email: u.email || "N/A",
                 role: u.role || "user",
-                // assignedBy:
-                //   `${u.assignedBy.firstname || ""} ${
-                //     u.assignedBy.lastname || ""
-                //   }`.trim() || "N/A",
                 assignedBy: u.assignedBy
                   ? `${u.assignedBy?.firstname} ${u.assignedBy?.lastname}`
                   : "N/A",
                 registeredAt: new Date(u.created_at).toLocaleString(),
               })),
               columns: [
+                {
+                  title: "S/N",
+                  data: null,
+                  orderable: false,
+                  searchable: false,
+                  render: function (data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                  },
+                },
+                {
+                  data: "id",
+                  visible: false,
+                  searchable: false,
+                },
                 { data: "name" },
                 { data: "email" },
                 {
@@ -5318,40 +5733,71 @@
                   data: null,
                   render: function (data, type, row) {
                     return `
-                                    <button class="btn btn-sm btn-outline-primary change-role-btn"
-                                        data-id="${row.id}"
-                                        data-user="${row.name}"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#changeRoleModal">
-                                        <i class="bi bi-person-badge"></i> Change Role
-                                    </button>
-                                `;
+                              <button class="btn btn-sm btn-outline-primary change-role-btn"
+                                  data-id="${row.id}"
+                                  data-user="${row.name}"
+                                  data-bs-toggle="modal"
+                                  data-bs-target="#changeRoleModal">
+                                  <i class="bi bi-person-badge"></i> Change Role
+                              </button>
+                          `;
                   },
                 },
               ],
               responsive: true,
               pageLength: 10,
             });
-          } else {
-            // rolesTable.clear().rows.add(users).draw();
-            rolesTable
-              .clear()
-              .rows.add(
-                users.map((u) => ({
-                  id: u._id,
-                  name:
-                    `${u.firstname || ""} ${u.lastname || ""}`.trim() || "N/A",
-                  email: u.email || "N/A",
-                  role: u.role || "user",
-                  assignedBy: u.assignedBy || "N/A",
-                  registeredAt: new Date(u.created_at).toLocaleString(),
-                }))
-              )
-              .draw();
           }
 
-          // 🔹 Initialize role distribution chart
-          if (!roleDistributionChart) {
+          // 2️⃣ LOGIC FOR CHARTS & SUMMARY VIEW
+          if (!$("#roles-charts-view").hasClass("d-none")) {
+            // 🔹 Prepare role counts for chart and summary table
+            const roleCounts = {
+              global_admin: 0,
+              support_admin: 0,
+              kindred_head: 0,
+              user: 0,
+            };
+
+            users.forEach((u) => {
+              const role = (u.role || "user").toLowerCase();
+              if (roleCounts[role] !== undefined) roleCounts[role]++;
+              else roleCounts.user++; // fallback
+            });
+
+            // 🔹 Populate Role Permissions Summary Table
+            const roleStatsBody = document.getElementById("roleStatsTableBody");
+            const rolePermissions = {
+              "Global Admin": "Full system access",
+              "Support Admin": "Manage requests & users",
+              "Kindred Head": "Manage kindred members",
+              User: "View and request services",
+            };
+
+            let tableHTML = "";
+            const roleLabels = {
+              global_admin: "Global Admin",
+              support_admin: "Support Admin",
+              kindred_head: "Kindred Head",
+              user: "User",
+            };
+
+            for (const roleKey in roleCounts) {
+              const count = roleCounts[roleKey];
+              const roleName = roleLabels[roleKey];
+              const permissions = rolePermissions[roleName] || "N/A";
+              tableHTML += `
+          <tr>
+            <td><strong>${roleName}</strong></td>
+            <td><span class="badge bg-primary">${count}</span></td>
+            <td>${permissions}</td>
+          </tr>
+        `;
+            }
+            roleStatsBody.innerHTML = tableHTML;
+
+            // 🔹 Initialize role distribution chart
+            destroyChart(roleDistributionChart, "roleDistributionChart");
             const ctx = document
               .getElementById("roleDistributionChart")
               .getContext("2d");
@@ -5390,21 +5836,32 @@
                 },
               },
             });
-          } else {
-            roleDistributionChart.data.datasets[0].data = [
-              roleCounts.global_admin,
-              roleCounts.support_admin,
-              roleCounts.kindred_head,
-              roleCounts.user,
-            ];
-            roleDistributionChart.update();
           }
         } catch (error) {
           console.error("Error loading roles:", error);
           alert("Failed to load roles. Please check your network or API.");
         }
       }
-      // 🔹 Open Change Role Modal
+
+      // ✅ SAFETY WRAPPER — Ensures Chart.js fully releases canvas
+      function destroyChart(chartInstance, canvasId) {
+        if (chartInstance) {
+          chartInstance.destroy();
+        }
+        // Chart.js maintains internal registry. Manually unregister if needed:
+        const chartStatus = Chart.getChart(canvasId);
+        if (chartStatus) {
+          chartStatus.destroy();
+        }
+
+        // Clear canvas to ensure it's truly free
+        const canvas = document.getElementById(canvasId);
+        if (canvas) {
+          const ctx = canvas.getContext("2d");
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+      }
+
       $(document).on("click", ".change-role-btn", function () {
         const userId = $(this).data("id");
         const userName = $(this).data("user");
@@ -5650,15 +6107,21 @@
             });
 
             if (response.success && response.data) {
-              const { fullName, phone, stateOfOrigin, lga } = response.data;
-
-              const nameParts = fullName.trim().split(" ");
-              const firstname = nameParts[0];
-              const lastname = nameParts.slice(1).join(" ");
+              const {
+                firstname,
+                lastname,
+                middlename,
+                dob,
+                phone,
+                stateOfOrigin,
+                lga,
+              } = response.data;
 
               $("#firstName").val(firstname).prop("readonly", true);
               $("#lastName").val(lastname).prop("readonly", true);
-              $("#phone").val(phone).prop("readonly", true);
+              $("#userPhone").val(phone).prop("readonly", true);
+              $("#middleName").val(middlename).prop("readonly", true);
+              $("#DOB").val(dob).prop("readonly", true);
 
               // Populate state of origin
               if (stateOfOrigin) {
@@ -5710,87 +6173,97 @@
         }
       });
 
-      $("#addUserBtn").on("click", function () {
-        const signUpData = {
+      async function loadRoles() {
+        try {
+          const res = await fetch(`${BACKEND_URL}/users/roles`, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
+
+          const result = await res.json();
+
+          console.log("Roles fetched:", result);
+
+          if (result.status !== "success") {
+            console.error("Failed to load roles:", result);
+            return;
+          }
+
+          const roles = result.data;
+          const roleSelect = $("#userRole");
+
+          roleSelect.empty(); // Clear old values
+          roleSelect.append(`<option value="">Select Role</option>`);
+
+          roles.forEach((role) => {
+            roleSelect.append(
+              `<option value="${role.value}">${role.label}</option>`
+            );
+          });
+        } catch (error) {
+          console.error("Error loading roles:", error);
+        }
+      }
+      $("#addUserModal").on("shown.bs.modal", function () {
+        loadRoles();
+      });
+
+      $("#addUserBtn").on("click", async function () {
+        const data = {
           firstname: $("#firstName").val().trim(),
+          middlename: $("#middleName").val().trim(),
           lastname: $("#lastName").val().trim(),
+          email: $("#userEmail").val().trim(),
           phone: $("#userPhone").val().trim(),
           NIN: $("#userNIN").val().trim(),
-          email: $("#userEmail").val().trim(),
-          password: $("#userPassword").val().trim(),
-          stateOfOrigin: $("#userState").val().trim(),
-          lgaOfOrigin: $("#userLGA").val().trim(),
-          kindred: $("#userKindred").val().trim(),
+          role: $("#userRole").val(),
+          stateOfOrigin: $("#userState").val(),
+          lgaOfOrigin: $("#userLGA").val(),
+          DOB: $("#DOB").val().trim(),
         };
 
-        console.log("signUpData", signUpData);
+        // Validate
+        // for (let key in data) {
+        //   if (!data[key]) {
+        //     alert("Please complete all fields.");
+        //     return;
+        //   }
+        // }
 
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailPattern.test(signUpData.email)) {
-          showNotification("Please enter a valid email address", "warning");
-          return;
-        }
+        try {
+          $("#addUserBtn").prop("disabled", true).text("Processing...");
 
-        const pattern = /^0[7-9][0-1]\d{8}$/;
-        const phonePattern = new RegExp(pattern);
-        if (!phonePattern.test(signUpData.phone)) {
+          const res = await fetch(`${BACKEND_URL}/auth/admin-signup`, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+
+          const result = await res.json();
+
+          if (!res.ok) {
+            showNotification(result.message || "Error adding user", "danger");
+            return;
+          }
+
           showNotification(
-            "Please enter a valid Nigerian phone number",
-            "warning"
+            "User created successfully. Password sent to email",
+            "success"
           );
-          return;
+          $("#addUserModal").modal("hide");
+          $("#addUserForm")[0].reset();
+
+          initializeUsersPage();
+        } catch (error) {
+          console.error(error);
+          alert("Network error. Try again.");
         }
-
-        const password = $("#password").val();
-        const confirmPassword = $("#confirmPassword").val();
-
-        if (signUpData.password !== confirmPassword) {
-          showNotification("Passwords do not match", "warning");
-          return;
-        }
-
-        // Simple validation
-        if (
-          !signUpData.firstname ||
-          !signUpData.lastname ||
-          !signUpData.email ||
-          !signUpData.kindred ||
-          !signUpData.NIN ||
-          !signUpData.lgaOfOrigin ||
-          !signUpData.stateOfOrigin ||
-          !signUpData.password
-        ) {
-          showNotification("Please fill in all required fields", "warning");
-          return;
-        }
-
-        // AJAX call to NestJS admin-signup endpoint
-        $.ajax({
-          url: `${BACKEND_URL}/auth/admin-signup`,
-          type: "POST",
-          contentType: "application/json",
-          data: JSON.stringify(signUpData),
-          beforeSend: function () {
-            $("#addUserBtn").prop("disabled", true).text("Adding...");
-          },
-          success: function (response) {
-            showNotification("User added successfully!", "success");
-            $("#addUserModal").modal("hide");
-            $("#addUserForm")[0].reset();
-            // Optional: reload or refresh user table
-            if (typeof fetchData === "function") fetchData(1);
-          },
-          error: function (xhr) {
-            console.error(xhr);
-            const errorMsg =
-              xhr.responseJSON?.message ||
-              "Failed to add user. Please try again.";
-            showNotification(errorMsg, "danger");
-          },
-          complete: function () {
-            $("#addUserBtn").prop("disabled", false).text("Add User");
-          },
-        });
       });
     </script>
 

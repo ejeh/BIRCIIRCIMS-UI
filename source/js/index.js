@@ -2796,14 +2796,14 @@ $(document).ready(function () {
           }
         },
         error: function () {
-          Swal.fire("Oops...", "Failed to fetch countries data", "error");
+          console.log("Oops...", "Failed to fetch countries data", "error");
         },
       });
     },
     error: function (error) {
       const errorMessage =
         error.responseJSON?.message || "Failed to load user profile.";
-      Swal.fire("Oops...", errorMessage, "error");
+      // Swal.fire("Oops...", errorMessage, "error");
       $("#name").text("Error loading profile");
     },
   });

@@ -985,7 +985,12 @@
                 </div>
                 <div class="col-md-4 mb-3">
                   <label for="middlename" class="form-label">Middle Name</label>
-                  <input type="text" class="form-control" id="middlename" />
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="middlename"
+                    readonly
+                  />
                 </div>
                 <div class="col-md-4 mb-3">
                   <label for="lastname" class="form-label">Last Name</label>
@@ -1004,7 +1009,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                   <label for="phone" class="form-label">Phone</label>
-                  <input type="tel" class="form-control" id="phone" />
+                  <input type="tel" class="form-control" id="phone" readonly />
                 </div>
                 <div class="col-md-4 mb-3">
                   <label for="NIN" class="form-label">NIN</label>
@@ -1019,6 +1024,7 @@
                     class="form-control"
                     id="DOB"
                     min="1900-01-01"
+                    readonly
                   />
                 </div>
                 <div class="col-md-4 mb-3">
@@ -2296,6 +2302,7 @@
                       class="form-control"
                       id="idcardPhone"
                       required
+                      readonly
                     />
                   </div>
                 </div>
@@ -2375,6 +2382,7 @@
                       type="text"
                       class="form-control"
                       id="certMiddlename"
+                      readonly
                     />
                   </div>
                   <div class="col-md-6 mb-3">
@@ -2387,6 +2395,7 @@
                       id="certDOB"
                       min="1900-01-01"
                       required
+                      readonly
                     />
                   </div>
                 </div>
@@ -2449,6 +2458,7 @@
                       class="form-control"
                       id="certPhone"
                       required
+                      readonly
                     />
                   </div>
                   <div class="col-md-6 mb-3">
@@ -2739,10 +2749,11 @@
                     >First Name</label
                   >
                   <input
-                    type="email"
+                    type="text"
                     class="form-control"
                     id="resubmitIdcardFirstname"
                     required
+                    readonly
                   />
                 </div>
                 <div class="col-md-6 mb-3">
@@ -2754,6 +2765,7 @@
                     class="form-control"
                     id="resubmitIdcardLastname"
                     required
+                    readonly
                   />
                 </div>
               </div>
@@ -2778,6 +2790,7 @@
                     class="form-control"
                     id="resubmitIdcardPhone"
                     required
+                    readonly
                   />
                 </div>
               </div>
@@ -2858,6 +2871,8 @@
                     type="text"
                     class="form-control"
                     id="resubmitCertMiddlename"
+                    readonly
+                    required
                   />
                 </div>
                 <div class="col-md-6 mb-3">
@@ -2870,6 +2885,7 @@
                     id="resubmitCertDOB"
                     min="1900-01-01"
                     required
+                    readonly
                   />
                 </div>
               </div>
@@ -2941,6 +2957,7 @@
                     class="form-control"
                     id="resubmitCertPhone"
                     required
+                    readonly
                   />
                 </div>
                 <div class="col-md-6 mb-3">
@@ -4187,9 +4204,17 @@
               utilityBill: "#resubmitUtilityBill",
             };
 
+            // for (const [type, selector] of Object.entries(fileMap)) {
+            //   const input = $(selector)[0];
+            //   if (input?.files?.[0]) formData.append(type, input.files[0]);
+            // }
             for (const [type, selector] of Object.entries(fileMap)) {
               const input = $(selector)[0];
-              if (input?.files?.[0]) formData.append(type, input.files[0]);
+              if (input?.files?.[0]) {
+                mappedType = type;
+                formData.append(type, input.files[0]);
+                break;
+              }
             }
           }
 
@@ -4241,7 +4266,6 @@
               $("#resubmitModal").modal("hide");
               await initializeRequestsPage();
             } catch (error) {
-              console.error("Error resubmitting request:", error);
               showNotification(
                 error.responseJSON?.message ||
                   "Failed to resubmit request. Please try again.",
