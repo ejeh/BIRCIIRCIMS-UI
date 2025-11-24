@@ -1007,7 +1007,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
           <h2 class="mb-0">Identity Card Requests</h2>
           <div class="d-flex gap-2">
-            <button class="btn btn-primary">
+            <button id="exportTdcardRequestBtn" class="btn btn-primary">
               <i class="bi bi-download me-2"></i>Export Report
             </button>
             <!-- Toggle buttons -->
@@ -4815,15 +4815,17 @@
               method: "GET",
               headers: headers,
             });
+
+            console.log("Certificate Requests Response:", response);
             // ✅ Prepare table data
             const tableData = response.map((item, index) => ({
               _id: item._id, // Keep original ID for actions
               id: index + 1,
-              user: item.userId?.firstname
-                ? `${item.userId.firstname} ${item.userId.lastname}`
+              user: item.firstname
+                ? `${item.firstname} ${item.lastname}`
                 : "Unknown",
-              state: item.userId?.stateOfOrigin || "N/A",
-              lga: item.userId?.lgaOfOrigin || "N/A",
+              state: item.stateOfOrigin || "N/A",
+              lga: item.lgaOfOrigin || "N/A",
               status: item?.status || "Pending",
               requestTime: item.created_at
                 ? new Date(item.created_at).toLocaleString()
@@ -6411,6 +6413,279 @@
 
         // Note: For better error handling, you could use fetch() and create a Blob,
         // but a simple link is often sufficient for this use case.
+      }
+
+      // Add this code to your existing JavaScript file
+
+      // --- PDF Export Logic ---
+
+      // Assign jsPDF to a variable from the window object
+      const { jsPDF } = window.jspdf;
+
+      // Export functionality for Identity Cards
+      document.addEventListener("DOMContentLoaded", function () {
+        // Get the export button for ID cards
+        const exportIdcardBtn = document.getElementById(
+          "exportTdcardRequestBtn"
+        );
+
+        if (exportIdcardBtn) {
+          exportIdcardBtn.addEventListener("click", function () {
+            exportIdcardRequestsPDF();
+          });
+        }
+
+        // Get the export button for Certificates
+        const exportCertificateBtn = document.querySelector(
+          "#certificates-page .btn-primary"
+        );
+
+        if (exportCertificateBtn) {
+          // Add an ID to the button for easier reference if it doesn't have one
+          if (!exportCertificateBtn.id) {
+            exportCertificateBtn.id = "exportCertificateBtn";
+          }
+
+          exportCertificateBtn.addEventListener("click", function () {
+            exportCertificateRequestsPDF();
+          });
+        }
+      });
+
+      // Function to export ID card requests as PDF
+      function exportIdcardRequestsPDF() {
+        showLoadingIndicator();
+
+        $.ajax({
+          url: `${BACKEND_URL}/idcard/get-all-request`,
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          success: function (response) {
+            if (!Array.isArray(response)) {
+              console.error("Invalid response format:", response);
+              hideLoadingIndicator();
+              alert("Failed to load data for export.");
+              return;
+            }
+
+            // Process the data for the PDF table
+            const tableData = response.map((req) => [
+              req.userId?.firstname && req.userId?.lastname
+                ? `${req.userId.firstname} ${req.userId.lastname}`
+                : "Unknown",
+              req.userId?.stateOfOrigin || "N/A",
+              req.userId?.lgaOfOrigin || "N/A",
+              req.status
+                ? req.status.charAt(0).toUpperCase() + req.status.slice(1)
+                : "Pending",
+              req.created_at
+                ? new Date(req.created_at).toLocaleDateString()
+                : "N/A",
+              req.userId?.isProfileCompleted ? "Yes" : "No",
+              req.approvedBy
+                ? `${req.approvedBy?.firstname} ${req.approvedBy?.lastname}`
+                : req.status === "Rejected"
+                ? "Rejected by Admin"
+                : "Not yet approved",
+              req?.paymentStatus || "Pending",
+            ]);
+
+            // Generate filename with current date
+            const today = new Date().toISOString().split("T")[0];
+            const filename = `ID_Card_Requests_${today}.pdf`;
+
+            // Generate and download the PDF
+            generatePDF(tableData, filename, "Identity Card Requests Report");
+
+            hideLoadingIndicator();
+          },
+          error: function (xhr) {
+            console.error(
+              "Failed to fetch ID card requests:",
+              xhr.responseText
+            );
+            hideLoadingIndicator();
+            alert("Error exporting data. Please try again.");
+          },
+        });
+      }
+
+      // Function to export Certificate requests as PDF
+      function exportCertificateRequestsPDF() {
+        showLoadingIndicator();
+
+        $.ajax({
+          url: `${BACKEND_URL}/indigene/certificate/get-all-request`,
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          success: function (response) {
+            if (!Array.isArray(response)) {
+              console.error("Invalid response format:", response);
+              hideLoadingIndicator();
+              alert("Failed to load data for export.");
+              return;
+            }
+
+            // Process the data for the PDF table
+            const tableData = response.map((req) => [
+              req.userId?.firstname && req.userId?.lastname
+                ? `${req.userId.firstname} ${req.userId.lastname}`
+                : "Unknown",
+              req.userId?.stateOfOrigin || "N/A",
+              req.userId?.lgaOfOrigin || "N/A",
+              req.status
+                ? req.status.charAt(0).toUpperCase() + req.status.slice(1)
+                : "Pending",
+              req.created_at
+                ? new Date(req.created_at).toLocaleDateString()
+                : "N/A",
+              req.userId?.isProfileCompleted ? "Yes" : "No",
+              req.approvedBy
+                ? `${req.approvedBy?.firstname} ${req.approvedBy?.lastname}`
+                : req.status === "Rejected"
+                ? "Rejected by Admin"
+                : "Not yet approved",
+              req?.paymentStatus || "Pending",
+            ]);
+
+            // Generate filename with current date
+            const today = new Date().toISOString().split("T")[0];
+            const filename = `Certificate_Requests_${today}.pdf`;
+
+            // Generate and download the PDF
+            generatePDF(
+              tableData,
+              filename,
+              "Certificate of Origin Requests Report"
+            );
+
+            hideLoadingIndicator();
+          },
+          error: function (xhr) {
+            console.error(
+              "Failed to fetch certificate requests:",
+              xhr.responseText
+            );
+            hideLoadingIndicator();
+            alert("Error exporting data. Please try again.");
+          },
+        });
+      }
+
+      /**
+       * Generates a PDF document from the provided data and triggers a download.
+       * @param {Array<Array<any>>} data - The data to be displayed in the table (array of rows).
+       * @param {string} filename - The name of the file to be downloaded.
+       * @param {string} title - The title to be displayed at the top of the PDF.
+       */
+      function generatePDF(data, filename, title) {
+        // Initialize jsPDF
+        const doc = new jsPDF("l", "pt", "a4"); // 'l' for landscape orientation
+
+        // Add title to the PDF
+        doc.setFontSize(18);
+        doc.text(title, doc.internal.pageSize.getWidth() / 2, 40, {
+          align: "center",
+        });
+
+        // Add generation date
+        doc.setFontSize(10);
+        doc.text(
+          `Generated on: ${new Date().toLocaleString()}`,
+          doc.internal.pageSize.getWidth() / 2,
+          55,
+          { align: "center" }
+        );
+
+        // Define the table columns
+        const columns = [
+          { header: "User Name", dataKey: "user" },
+          { header: "State", dataKey: "state" },
+          { header: "LGA", dataKey: "lga" },
+          { header: "Status", dataKey: "status" },
+          { header: "Request Date", dataKey: "requestDate" },
+          { header: "Profile Completed", dataKey: "profileCompleted" },
+          { header: "Approved By", dataKey: "approvedBy" },
+          { header: "Payment Status", dataKey: "paymentStatus" },
+        ];
+
+        // Convert the array of arrays to an array of objects for autoTable
+        const tableData = data.map((row) => {
+          const obj = {};
+          columns.forEach((col, index) => {
+            obj[col.dataKey] = row[index];
+          });
+          return obj;
+        });
+
+        // Add the table to the PDF
+        doc.autoTable({
+          head: [columns.map((col) => col.header)],
+          body: data,
+          startY: 70, // Start the table 70 points from the top
+          theme: "grid",
+          styles: { fontSize: 9, cellPadding: 5 },
+          headStyles: { fillColor: [41, 128, 185], textColor: 255 }, // Blue header, white text
+          alternateRowStyles: { fillColor: [245, 245, 245] }, // Light grey for alternate rows
+          margin: { top: 70, left: 20, right: 20 },
+        });
+
+        // Save the PDF
+        doc.save(filename);
+      }
+
+      // --- Loading Indicator (Unchanged) ---
+
+      // You can reuse the same loading indicator functions from the previous solution
+      function showLoadingIndicator() {
+        let loader = document.getElementById("export-loader");
+
+        if (!loader) {
+          loader = document.createElement("div");
+          loader.id = "export-loader";
+          loader.innerHTML = `
+      <div style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+      ">
+        <div style="
+          background-color: white;
+          padding: 20px;
+          border-radius: 5px;
+          text-align: center;
+        ">
+          <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <p class="mt-3 mb-0">Preparing PDF export...</p>
+        </div>
+      </div>
+    `;
+          document.body.appendChild(loader);
+        } else {
+          loader.style.display = "flex";
+        }
+      }
+
+      function hideLoadingIndicator() {
+        const loader = document.getElementById("export-loader");
+        if (loader) {
+          loader.style.display = "none";
+        }
       }
 
       // 🔹 Initialize the stats after page load
