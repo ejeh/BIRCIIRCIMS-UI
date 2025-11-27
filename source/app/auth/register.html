@@ -750,13 +750,13 @@
                 <!-- State -->
                 <div class="mb-3">
                   <label for="stateOfOrigin" class="form-label">State</label>
-                  <!-- <select
+                  <!-- onchange="updateLocalGovernmentsOfOrigin()" -->
+                  <select
                     id="stateOfOrigin"
                     name="stateOfOrigin"
                     class="form-control"
                     required
                     aria-describedby="stateHelp"
-                    onchange="updateLocalGovernmentsOfOrigin()"
                   >
                     <option value="">Select State</option>
                     <option value="abia">Abia</option>
@@ -796,14 +796,15 @@
                     <option value="yobe">Yobe</option>
                     <option value="zamfara">Zamfara</option>
                     <option value="abuja">Abuja (FCT)</option>
-                  </select> -->
-                  <input
+                  </select>
+
+                  <!-- <input
                     id="stateOfOrigin"
                     name="stateOfOrigin"
                     class="form-control"
                     required
                     aria-describedby="stateHelp"
-                  />
+                  /> -->
                 </div>
 
                 <!-- LGA -->
@@ -1254,13 +1255,13 @@
                   // Set the value and trigger change to update LGA dropdown
                   $("#stateOfOrigin")
                     .val(formattedState)
-                    // .trigger("change")
+                    .trigger("change")
                     .prop("disabled", true);
 
                   // If you're using Bootstrap selectpicker
-                  // if ($("#stateOfOrigin").hasClass("selectpicker")) {
-                  //   $("#stateOfOrigin").selectpicker("refresh");
-                  // }
+                  if ($("#stateOfOrigin").hasClass("selectpicker")) {
+                    $("#stateOfOrigin").selectpicker("refresh");
+                  }
                   // Populate LGA after a small delay to ensure state change is processed
                   setTimeout(() => {
                     if (lga) {
