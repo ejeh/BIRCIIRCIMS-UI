@@ -750,7 +750,7 @@
                 <!-- State -->
                 <div class="mb-3">
                   <label for="stateOfOrigin" class="form-label">State</label>
-                  <select
+                  <!-- <select
                     id="stateOfOrigin"
                     name="stateOfOrigin"
                     class="form-control"
@@ -796,19 +796,32 @@
                     <option value="yobe">Yobe</option>
                     <option value="zamfara">Zamfara</option>
                     <option value="abuja">Abuja (FCT)</option>
-                  </select>
+                  </select> -->
+                  <input
+                    id="stateOfOrigin"
+                    name="stateOfOrigin"
+                    class="form-control"
+                    required
+                    aria-describedby="stateHelp"
+                  />
                 </div>
 
                 <!-- LGA -->
                 <div class="mb-3">
                   <label for="lgaOfOrigin" class="form-label">LGA</label>
-                  <select
+                  <!-- <select
                     id="lgaOfOrigin"
                     name="lgaOfOrigin"
                     class="form-control"
                   >
                     <option value="">Select Local Government</option>
-                  </select>
+                  </select> -->
+                  <input
+                    id="lgaOfOrigin"
+                    name="lgaOfOrigin"
+                    class="form-control"
+                    required
+                  />
                 </div>
 
                 <!-- Password -->
@@ -1241,25 +1254,24 @@
                   // Set the value and trigger change to update LGA dropdown
                   $("#stateOfOrigin")
                     .val(formattedState)
-                    .trigger("change")
+                    // .trigger("change")
                     .prop("disabled", true);
 
                   // If you're using Bootstrap selectpicker
-                  if ($("#stateOfOrigin").hasClass("selectpicker")) {
-                    $("#stateOfOrigin").selectpicker("refresh");
-                  }
+                  // if ($("#stateOfOrigin").hasClass("selectpicker")) {
+                  //   $("#stateOfOrigin").selectpicker("refresh");
+                  // }
                   // Populate LGA after a small delay to ensure state change is processed
                   setTimeout(() => {
                     if (lga) {
-                      console.log("Setting LGA:", lga);
                       $("#lgaOfOrigin")
                         .val(lga)
-                        .trigger("change")
+                        // .trigger("change")
                         .prop("disabled", true);
 
-                      if ($("#lgaOfOrigin").hasClass("selectpicker")) {
-                        $("#lgaOfOrigin").selectpicker("refresh");
-                      }
+                      // if ($("#lgaOfOrigin").hasClass("selectpicker")) {
+                      //   $("#lgaOfOrigin").selectpicker("refresh");
+                      // }
                     }
                   }, 200);
                 }
