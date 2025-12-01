@@ -42,6 +42,7 @@
         --border-radius: 12px;
         --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         --transition: all 0.3s ease;
+        --error-color: #dc3545;
       }
 
       * {
@@ -323,6 +324,12 @@
         );
       }
 
+      .btn-success:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
       .btn-outline-secondary {
         border-radius: 8px;
         padding: 0.75rem;
@@ -554,13 +561,70 @@
         width: 60px;
         height: 30px;
       }
+
+      /* Custom error message styling for existence checks */
+      .existence-error {
+        color: var(--error-color);
+        font-weight: 600;
+        font-size: 0.8rem;
+        margin-top: 0.25rem;
+        display: flex;
+        align-items: center;
+      }
+
+      .existence-error i {
+        margin-right: 0.25rem;
+      }
+
+      .existence-success {
+        color: var(--primary-color);
+        font-weight: 600;
+        font-size: 0.8rem;
+        margin-top: 0.25rem;
+        display: flex;
+        align-items: center;
+      }
+
+      .existence-success i {
+        margin-right: 0.25rem;
+      }
+
+      .checking-status {
+        color: #6c757d;
+        font-size: 0.8rem;
+        margin-top: 0.25rem;
+        display: flex;
+        align-items: center;
+      }
+
+      .checking-status i {
+        margin-right: 0.25rem;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Input styling for error state */
+      .form-control.is-invalid-existence {
+        border-color: var(--error-color);
+      }
+
+      .form-control.is-valid-existence {
+        border-color: var(--primary-color);
+      }
     </style>
   </head>
 
   <body>
     <div class="container-fluid p-0">
       <div class="row g-0">
-        <!-- Green sidebar -->
         <div
           class="col-12 col-md-5 green-sidebar p-4 text-white d-flex flex-column"
         >
@@ -571,17 +635,11 @@
           </div>
 
           <div class="sidebar-content">
-            <!-- <h2 class="sidebar-title fs-3">Benue State Integrated</h2>
-            <h2 class="sidebar-title fs-3">
-              Citizenship and Resident Identity
-            </h2>
-            <h2 class="sidebar-title fs-3">Registration Management System</h2> -->
             <h2 class="fs-3 fw-bold mb-2">Benue State Integrated</h2>
             <h2 class="fs-3 fw-bold mb-1">Citizenship and Resident Identity</h2>
             <h2 class="fs-3 fw-bold mb-1">Registration Management System</h2>
           </div>
 
-          <!-- Mobile buttons -->
           <div class="mobile-buttons gap-3 mb-4 w-100">
             <a
               href="register.html"
@@ -593,7 +651,6 @@
             >
           </div>
 
-          <!-- Certificate image -->
           <div class="d-flex justify-content-center">
             <img
               src="/assets/images/finger-print.svg"
@@ -603,12 +660,7 @@
           </div>
         </div>
 
-        <!-- Registration form -->
         <div class="col-12 col-md-7 registration-section p-4 p-md-5">
-          <!-- <div class="d-none d-md-flex justify-content-end mb-4">
-            <a href="register.html" class="btn btn-success">Register</a>
-          </div> -->
-
           <div class="registration-header">
             <h2 class="registration-title fs-4">Hello there!</h2>
             <p class="registration-subtitle">
@@ -642,7 +694,6 @@
           <div class="form-container">
             <form id="signUpForm">
               <div id="step1" class="step-content">
-                <!-- NIN -->
                 <div class="mb-3">
                   <label for="nin" class="form-label">NIN</label>
                   <input
@@ -662,9 +713,9 @@
                     Enter your 11-digit NIN
                   </small>
                   <div id="ninStatus" class="mt-1 text-sm text-info"></div>
+                  <div id="ninExistenceStatus" class="mt-1 text-sm"></div>
                 </div>
 
-                <!-- First name -->
                 <div class="mb-3">
                   <label for="firstname" class="form-label">First name</label>
                   <input
@@ -680,7 +731,6 @@
                   </small>
                 </div>
 
-                <!-- Last name -->
                 <div class="mb-3">
                   <label for="lastname" class="form-label">Last name</label>
                   <input
@@ -695,17 +745,14 @@
                   </small>
                 </div>
 
-                <!-- middlename name -->
                 <div class="mb-3">
                   <input id="middlename" type="text" hidden />
                 </div>
 
-                <!-- Date of birth -->
                 <div class="mb-3">
                   <input id="DOB" type="text" hidden />
                 </div>
 
-                <!-- Email -->
                 <div class="mb-3">
                   <label for="email" class="form-label">Email</label>
                   <input
@@ -718,9 +765,9 @@
                   <small id="emailHelp" class="form-text text-muted">
                     Enter a valid email address
                   </small>
+                  <div id="emailExistenceStatus" class="mt-1 text-sm"></div>
                 </div>
 
-                <!-- Phone number -->
                 <div class="mb-3">
                   <label for="phone" class="form-label">Phone number</label>
                   <input
@@ -736,6 +783,7 @@
                   <small id="phoneHelp" class="form-text text-muted">
                     Enter a valid Nigerian phone number
                   </small>
+                  <div id="phoneExistenceStatus" class="mt-1 text-sm"></div>
                 </div>
 
                 <div class="step-buttons">
@@ -745,12 +793,9 @@
                 </div>
               </div>
 
-              <!-- Step 2 -->
               <div id="step2" class="step-content d-none">
-                <!-- State -->
                 <div class="mb-3">
                   <label for="stateOfOrigin" class="form-label">State</label>
-                  <!-- onchange="updateLocalGovernmentsOfOrigin()" -->
                   <select
                     id="stateOfOrigin"
                     name="stateOfOrigin"
@@ -797,26 +842,10 @@
                     <option value="zamfara">Zamfara</option>
                     <option value="abuja">Abuja (FCT)</option>
                   </select>
-
-                  <!-- <input
-                    id="stateOfOrigin"
-                    name="stateOfOrigin"
-                    class="form-control"
-                    required
-                    aria-describedby="stateHelp"
-                  /> -->
                 </div>
 
-                <!-- LGA -->
                 <div class="mb-3">
                   <label for="lgaOfOrigin" class="form-label">LGA</label>
-                  <!-- <select
-                    id="lgaOfOrigin"
-                    name="lgaOfOrigin"
-                    class="form-control"
-                  >
-                    <option value="">Select Local Government</option>
-                  </select> -->
                   <input
                     id="lgaOfOrigin"
                     name="lgaOfOrigin"
@@ -825,7 +854,6 @@
                   />
                 </div>
 
-                <!-- Password -->
                 <div class="mb-3">
                   <label for="password" class="form-label">Password</label>
                   <div class="input-group">
@@ -849,7 +877,6 @@
                   </small>
                 </div>
 
-                <!-- Confirm Password -->
                 <div class="mb-3">
                   <label for="re_password" class="form-label"
                     >Confirm password</label
@@ -877,7 +904,6 @@
                   </small>
                 </div>
 
-                <!-- Password validation -->
                 <div class="password-validation d-flex flex-wrap gap-2 mt-2">
                   <div class="d-flex align-items-center small">
                     <i
@@ -931,15 +957,11 @@
             </form>
           </div>
 
-          <!-- Login link -->
           <div class="text-center mt-4">
             Already have an account?
             <a href="login.html" class="login-link">Login</a>
           </div>
 
-          <!-- <div class="copyright">
-            Powered By BDIC <br />© 2025 All Rights Reserved
-          </div> -->
           <div class="powered-by">
             <span>Powered by:</span>
             <span class="bdicl">
@@ -954,12 +976,9 @@
         </div>
       </div>
     </div>
-    <!-- Bootstrap 5.3.0 JS and dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-    <!-- jQuery (if still needed) -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
       $(document).ready(function () {
@@ -978,6 +997,23 @@
           confirmPassword: "",
         };
         let currentStep = 1;
+
+        // Track existence check status for each field
+        const existenceStatus = {
+          email: null, // null: not checked, true: exists, false: doesn't exist
+          phone: null,
+          nin: null,
+        };
+
+        // Debounce function to limit API calls
+        function debounce(func, wait) {
+          let timeout;
+          return function (...args) {
+            const context = this;
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(context, args), wait);
+          };
+        }
 
         $(".password-toggle").click(function () {
           const targetSelector = $(this).data("target");
@@ -1016,209 +1052,419 @@
         }
 
         // Helper function to display error messages
-        const showError = (input, message) => {
-          const formGroup = input.closest(".mb-3");
-          const errorElement = formGroup.querySelector(".error-message");
+        const showError = (inputId, message, isRealTimeCheck = false) => {
+          const inputElement = document.getElementById(inputId);
 
-          if (!errorElement) {
-            const errorDiv = document.createElement("div");
-            errorDiv.className = "error-message text-danger mt-1";
-            errorDiv.innerText = message;
-            formGroup.appendChild(errorDiv);
-          } else {
-            errorElement.innerText = message;
+          // Check if element exists
+          if (!inputElement) {
+            console.error(`Element with id ${inputId} not found`);
+            return false;
           }
 
-          input.classList.add("is-invalid");
-        };
+          const formGroup = inputElement.closest(".mb-3");
 
-        // Helper function to display error messages
-        const showNINError = (input, message) => {
-          const formGroup = input.closest(".mb-3");
-          const errorElement = formGroup.querySelector(".error-message");
-
-          if (!errorElement) {
-            const errorDiv = document.createElement("div");
-            errorDiv.className = "error-message text-danger mt-1";
-            errorDiv.innerText = message;
-            formGroup.appendChild(errorDiv);
-          } else {
-            errorElement.innerText = message;
+          // Check if form group exists
+          if (!formGroup) {
+            console.error(`Form group for ${inputId} not found`);
+            return false;
           }
 
-          input.classList.add("is-invalid");
+          // Use a different selector for real-time check errors
+          const errorElementId = isRealTimeCheck
+            ? `${inputId}ExistenceStatus`
+            : null;
+          let errorElement;
+
+          if (!isRealTimeCheck) {
+            // For general validation errors
+            errorElement = formGroup.querySelector(".error-message");
+            if (!errorElement) {
+              errorElement = document.createElement("div");
+              errorElement.className = "error-message text-danger mt-1";
+              formGroup.appendChild(errorElement);
+            }
+            errorElement.innerText = message;
+            inputElement.classList.add("is-invalid");
+          } else {
+            // For existence check errors
+            errorElement = document.getElementById(errorElementId);
+            if (errorElement) {
+              errorElement.innerHTML = `<div class="existence-error"><i class="fas fa-exclamation-circle"></i>${message}</div>`;
+              inputElement.classList.add("is-invalid-existence");
+              inputElement.classList.remove("is-valid-existence");
+            }
+          }
+          return true;
         };
 
         // Helper function to clear error messages
-        const clearError = (input) => {
-          const formGroup = input.closest(".mb-3");
-          const errorElement = formGroup.querySelector(".error-message");
+        const clearError = (inputId, isRealTimeCheck = false) => {
+          const inputElement = document.getElementById(inputId);
 
-          if (errorElement) {
-            errorElement.remove();
+          // Check if element exists
+          if (!inputElement) {
+            console.error(`Element with id ${inputId} not found`);
+            return false;
           }
 
-          input.classList.remove("is-invalid");
-        };
+          const formGroup = inputElement.closest(".mb-3");
 
-        const clearNINError = (input) => {
-          const formGroup = input.closest(".mb-3");
-          const errorElement = formGroup.querySelector(".error-message");
-
-          if (errorElement) {
-            errorElement.remove();
+          // Check if form group exists
+          if (!formGroup) {
+            console.error(`Form group for ${inputId} not found`);
+            return false;
           }
 
-          input.classList.remove("is-invalid");
+          if (!isRealTimeCheck) {
+            const errorElement = formGroup.querySelector(".error-message");
+            if (errorElement) {
+              errorElement.remove();
+            }
+            inputElement.classList.remove("is-invalid");
+          } else {
+            const statusElementId = `${inputId}ExistenceStatus`;
+            const statusElement = document.getElementById(statusElementId);
+            if (statusElement) {
+              statusElement.innerHTML = "";
+            }
+            // Only remove is-invalid if no other errors are present
+            if (
+              !formGroup.querySelector(".error-message") &&
+              !inputElement.classList.contains("is-invalid")
+            ) {
+              inputElement.classList.remove("is-invalid-existence");
+            }
+          }
+          return true;
         };
+
+        // Reusable function to show NIN-specific error
+        const showNINError = (inputId, message) => showError(inputId, message);
+        const clearNINError = (inputId) => clearError(inputId);
 
         // Validation functions for each field
-        const validateFirstName = (input) => {
-          const value = input.value.trim();
+        const validateFirstName = (inputId) => {
+          const inputElement = document.getElementById(inputId);
+          if (!inputElement) return false;
+
+          const value = inputElement.value.trim();
           if (!value) {
-            showNINError(input, "First name is required.");
+            showNINError(inputId, "First name is required.");
             return false;
           } else if (!/^[a-zA-Z]+$/.test(value)) {
-            showNINError(input, "First name should contain only letters.");
+            showNINError(inputId, "First name should contain only letters.");
             return false;
           } else {
-            clearNINError(input);
+            clearNINError(inputId);
             return true;
           }
         };
 
-        const validateLastName = (input) => {
-          const value = input.value.trim();
+        const validateLastName = (inputId) => {
+          const inputElement = document.getElementById(inputId);
+          if (!inputElement) return false;
+
+          const value = inputElement.value.trim();
           if (!value) {
-            showNINError(input, "Last name is required.");
+            showNINError(inputId, "Last name is required.");
             return false;
           } else if (!/^[a-zA-Z]+$/.test(value)) {
-            showNINError(input, "Last name should contain only letters.");
+            showNINError(inputId, "Last name should contain only letters.");
             return false;
           } else {
-            clearNINError(input);
+            clearNINError(inputId);
             return true;
           }
         };
 
-        const validateEmail = (input) => {
-          const value = input.value.trim();
+        const validateEmail = (inputId) => {
+          const inputElement = document.getElementById(inputId);
+          if (!inputElement) return false;
+
+          const value = inputElement.value.trim();
           const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
           if (!value) {
-            showError(input, "Email is required.");
+            showError(inputId, "Email is required.");
             return false;
           } else if (!emailRegex.test(value)) {
-            showError(input, "Please enter a valid email address.");
+            showError(inputId, "Please enter a valid email address.");
             return false;
           } else {
-            clearError(input);
+            clearError(inputId);
             return true;
           }
         };
 
-        const validatePhone = (input) => {
-          const value = input.value.trim();
+        const validatePhone = (inputId) => {
+          const inputElement = document.getElementById(inputId);
+          if (!inputElement) return false;
+
+          const value = inputElement.value.trim();
           const phoneRegex = /^0[7-9][0-1]\d{8}$/;
           if (!value) {
-            showError(input, "Phone number is required.");
+            showError(inputId, "Phone number is required.");
             return false;
           } else if (!phoneRegex.test(value)) {
-            showError(input, "Please enter a valid Nigerian phone number.");
+            showError(inputId, "Please enter a valid Nigerian phone number.");
             return false;
           } else {
-            clearError(input);
+            clearError(inputId);
             return true;
           }
         };
 
-        const validatePassword = (input) => {
-          const value = input.value.trim();
+        const validatePassword = (inputId) => {
+          const inputElement = document.getElementById(inputId);
+          if (!inputElement) return false;
+
+          const value = inputElement.value.trim();
           const passwordRegex =
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
 
           if (!value) {
-            showError(input, "Password is required.");
+            showError(inputId, "Password is required.");
             return false;
           } else if (!passwordRegex.test(value)) {
             showError(
-              input,
+              inputId,
               "Password must include uppercase, lowercase, number, and special character."
             );
             return false;
           } else {
-            clearError(input);
+            clearError(inputId);
             return true;
           }
         };
 
-        const validateConfirmPassword = (input) => {
-          const value = input.value.trim();
+        const validateConfirmPassword = (inputId) => {
+          const inputElement = document.getElementById(inputId);
+          if (!inputElement) return false;
+
+          const value = inputElement.value.trim();
           const password = $("#password").val().trim();
 
           if (!value) {
-            showError(input, "Please confirm your password.");
+            showError(inputId, "Please confirm your password.");
             return false;
           } else if (value !== password) {
-            showError(input, "Passwords do not match.");
+            showError(inputId, "Passwords do not match.");
             return false;
           } else {
-            clearError(input);
+            clearError(inputId);
             return true;
           }
         };
 
-        const validateNIN = (input) => {
-          const value = input.value.trim();
+        const validateNIN = (inputId) => {
+          const inputElement = document.getElementById(inputId);
+          if (!inputElement) return false;
+
+          const value = inputElement.value.trim();
           if (!value) {
-            showNINError(input, "NIN is required.");
+            showNINError(inputId, "NIN is required.");
             return false;
           } else if (!/^\d{11}$/.test(value)) {
             showNINError(
-              input,
+              inputId,
               "NIN should contain only numbers and be exactly 11 digits long."
             );
             return false;
           } else {
-            clearNINError(input);
+            clearNINError(inputId);
             return true;
           }
         };
 
-        // Attach event listeners for real-time validation
+        /**
+         * Checks backend for existence of NIN, email, or phone.
+         * @param {string} fieldName - 'nin', 'email', or 'phone'.
+         * @param {string} value - The value to check.
+         * @param {string} statusElementId - The ID of the status div (e.g., '#ninExistenceStatus').
+         */
+        const checkExistence = async (fieldName, value, statusElementId) => {
+          const inputId = fieldName === "nin" ? "NIN" : fieldName;
+          const inputElement = document.getElementById(inputId);
+
+          // Check if element exists
+          if (!inputElement) {
+            console.error(`Element with id ${inputId} not found`);
+            return false;
+          }
+
+          const payload = {};
+          payload[fieldName] = value;
+
+          // Clear previous error message and show loading
+          clearError(inputId, true);
+          $(statusElementId).html(
+            '<div class="checking-status"><i class="fas fa-spinner fa-spin"></i>Checking...</div>'
+          );
+
+          try {
+            const response = await $.ajax({
+              url: `${BACKEND_URL}/auth/check-existence`,
+              type: "POST",
+              contentType: "application/json",
+              data: JSON.stringify(payload),
+            });
+
+            // Check if the field exists based on the backend response structure
+            // The response structure is {fieldName: true/false} not {existing_fields: {fieldName: true/false}}
+            if (response[fieldName] === true) {
+              const message = `This ${fieldName.toUpperCase()} already exists and cannot be used.`;
+              showError(inputId, message, true);
+              existenceStatus[fieldName] = true;
+              updateNextButtonState(); // Update button state immediately
+              return true; // Exists
+            } else {
+              $(statusElementId).html(
+                '<div class="existence-success"><i class="fas fa-check-circle"></i>Available</div>'
+              );
+              inputElement.classList.add("is-valid-existence");
+              inputElement.classList.remove("is-invalid-existence");
+              existenceStatus[fieldName] = false;
+              updateNextButtonState(); // Update button state immediately
+              return false; // Does not exist
+            }
+          } catch (error) {
+            // Handle network errors or non-200 responses
+            const errorMessage =
+              error.responseJSON?.message || "Existence check failed.";
+            $(statusElementId).html(
+              `<div class="text-warning"><i class="fas fa-exclamation-triangle"></i>${errorMessage}</div>`
+            );
+            existenceStatus[fieldName] = null;
+            updateNextButtonState(); // Update button state immediately
+            return false;
+          }
+        };
+
+        // Create debounced versions of the checkExistence function
+        const debouncedCheckEmail = debounce((value) => {
+          checkExistence("email", value, "#emailExistenceStatus");
+        }, 500);
+
+        const debouncedCheckPhone = debounce((value) => {
+          checkExistence("phone", value, "#phoneExistenceStatus");
+        }, 500);
+
+        const debouncedCheckNIN = debounce((value) => {
+          checkExistence("nin", value, "#ninExistenceStatus");
+        }, 500);
+
+        // Function to check if any field has existence errors
+        const hasExistenceErrors = () => {
+          return (
+            existenceStatus.email === true ||
+            existenceStatus.phone === true ||
+            existenceStatus.nin === true
+          );
+        };
+
+        // Function to check if any required field hasn't been checked yet
+        const hasUncheckedFields = () => {
+          return (
+            existenceStatus.email === null ||
+            existenceStatus.phone === null ||
+            existenceStatus.nin === null
+          );
+        };
+
+        // Update next button state based on existence checks
+        const updateNextButtonState = () => {
+          if (hasExistenceErrors()) {
+            $("#nextButton").prop("disabled", true);
+          } else {
+            $("#nextButton").prop("disabled", false);
+          }
+        };
+
+        // Attach event listeners for real-time validation and existence checks
         $("#firstname").on("input blur", function () {
-          validateFirstName(this);
+          validateFirstName("firstname");
         });
 
         $("#lastname").on("input blur", function () {
-          validateLastName(this);
+          validateLastName("lastname");
         });
 
-        $("#email").on("input blur", function () {
-          validateEmail(this);
-        });
+        $("#email")
+          .on("input", function () {
+            if (validateEmail("email")) {
+              debouncedCheckEmail($(this).val().trim());
+            } else {
+              $("#emailExistenceStatus").html("");
+              existenceStatus.email = null;
+              updateNextButtonState();
+            }
+          })
+          .on("blur", function () {
+            // Force check on blur even if debounced
+            if (validateEmail("email")) {
+              checkExistence(
+                "email",
+                $(this).val().trim(),
+                "#emailExistenceStatus"
+              );
+            } else {
+              $("#emailExistenceStatus").html("");
+              existenceStatus.email = null;
+              updateNextButtonState();
+            }
+          });
 
-        $("#phone").on("input blur", function () {
-          validatePhone(this);
-        });
+        $("#phone")
+          .on("input", function () {
+            if (validatePhone("phone")) {
+              debouncedCheckPhone($(this).val().trim());
+            } else {
+              $("#phoneExistenceStatus").html("");
+              existenceStatus.phone = null;
+              updateNextButtonState();
+            }
+          })
+          .on("blur", function () {
+            // Force check on blur even if debounced
+            if (validatePhone("phone")) {
+              checkExistence(
+                "phone",
+                $(this).val().trim(),
+                "#phoneExistenceStatus"
+              );
+            } else {
+              $("#phoneExistenceStatus").html("");
+              existenceStatus.phone = null;
+              updateNextButtonState();
+            }
+          });
 
         $("#password").on("input blur", function () {
-          validatePassword(this);
+          validatePassword("password");
         });
 
         $("#re_password").on("input blur", function () {
-          validateConfirmPassword(this);
+          validateConfirmPassword("re_password");
         });
 
+        // NIN Validation and Verification/Existence Check
         $("#NIN").on("input blur", function () {
-          validateNIN(this);
+          if (validateNIN("NIN")) {
+            debouncedCheckNIN($(this).val().trim());
+          } else {
+            $("#ninExistenceStatus").html("");
+            existenceStatus.nin = null;
+            updateNextButtonState();
+          }
         });
 
+        // Existing NIN Verification Logic
         $("#NIN").on("blur", async function () {
           const nin = $(this).val().trim();
-          if (/^\d{11}$/.test(nin)) {
+          if (validateNIN("NIN")) {
+            // First, run the internal NIN verification (as it populates fields)
             try {
               $("#ninStatus").html(
-                '<span class="text-info">Verifying NIN...</span>'
+                '<div class="checking-status"><i class="fas fa-spinner fa-spin"></i>Verifying NIN...</div>'
               );
 
               const response = await $.ajax({
@@ -1243,7 +1489,7 @@
                 $("#lastname").val(lastname).prop("readonly", true);
                 $("#middlename").val(middlename).prop("readonly", true);
                 $("#DOB").val(dob).prop("readonly", true);
-                $("#phone").val(phone).prop("readonly", true);
+                $("#phone").val(phone).prop("readonly", true).trigger("blur"); // Trigger blur on phone to check existence if populated
 
                 // Populate state of origin
                 if (stateOfOrigin) {
@@ -1265,43 +1511,64 @@
                   // Populate LGA after a small delay to ensure state change is processed
                   setTimeout(() => {
                     if (lga) {
-                      $("#lgaOfOrigin")
-                        .val(lga)
-                        // .trigger("change")
-                        .prop("disabled", true);
-
-                      // if ($("#lgaOfOrigin").hasClass("selectpicker")) {
-                      //   $("#lgaOfOrigin").selectpicker("refresh");
-                      // }
+                      $("#lgaOfOrigin").val(lga).prop("disabled", true);
                     }
                   }, 200);
                 }
 
                 $("#ninStatus").html(
-                  '<span class="text-success">NIN Verified ✅</span>'
+                  '<div class="existence-success"><i class="fas fa-check-circle"></i>NIN Verified</div>'
                 );
               } else {
                 $("#ninStatus").html(
-                  '<span class="text-danger">NIN not found.</span>'
+                  '<div class="existence-error"><i class="fas fa-exclamation-circle"></i>NIN not found/invalid</div>'
                 );
               }
             } catch (error) {
               $("#ninStatus").html(
-                `<span class="text-danger">${
-                  error.responseJSON?.message || "Verification failed."
-                }</span>`
+                `<div class="existence-error"><i class="fas fa-exclamation-circle"></i>${
+                  error.responseJSON?.message || "Verification failed"
+                }</div>`
               );
             }
+
+            // Second, run the generic existence check for NIN
+            checkExistence("nin", nin, "#ninExistenceStatus");
+          } else {
+            $("#ninStatus").html("");
+            $("#ninExistenceStatus").html("");
+            existenceStatus.nin = null;
+            updateNextButtonState();
           }
         });
 
         // Next button click handler
         $("#nextButton").click(function () {
-          const isFirstNameValid = validateFirstName($("#firstname")[0]);
-          const isLastNameValid = validateLastName($("#lastname")[0]);
-          const isEmailValid = validateEmail($("#email")[0]);
-          const isPhoneValid = validatePhone($("#phone")[0]);
-          const isNINValid = validateNIN($("#NIN")[0]);
+          // Check for existence errors before proceeding to the next step
+          if (hasExistenceErrors()) {
+            Swal.fire(
+              "Validation Error",
+              "Please resolve the existing NIN, Email, or Phone errors before proceeding.",
+              "warning"
+            );
+            return;
+          }
+
+          // Check if any field hasn't been checked yet
+          if (hasUncheckedFields()) {
+            Swal.fire(
+              "Validation Error",
+              "Please wait for all existence checks to complete before proceeding.",
+              "warning"
+            );
+            return;
+          }
+
+          const isFirstNameValid = validateFirstName("firstname");
+          const isLastNameValid = validateLastName("lastname");
+          const isEmailValid = validateEmail("email");
+          const isPhoneValid = validatePhone("phone");
+          const isNINValid = validateNIN("NIN");
 
           if (
             isFirstNameValid &&
@@ -1331,10 +1598,8 @@
 
         // Proceed button click handler
         $("#proceedButton").click(function () {
-          const isPasswordValid = validatePassword($("#password")[0]);
-          const isConfirmPasswordValid = validateConfirmPassword(
-            $("#re_password")[0]
-          );
+          const isPasswordValid = validatePassword("password");
+          const isConfirmPasswordValid = validateConfirmPassword("re_password");
 
           if (isPasswordValid && isConfirmPasswordValid) {
             formData.stateOfOrigin = $("#stateOfOrigin").val().trim();
@@ -1362,8 +1627,8 @@
         // Submit form to backend
         const submitForm = async (formData) => {
           try {
-            $("#submitbtn")
-              .html('<i class="fa fa-spinner fa-spin"></i>')
+            $("#proceedButton")
+              .html('<i class="fa fa-spinner fa-spin"></i> Processing...')
               .prop("disabled", true);
 
             const response = await $.ajax({
@@ -1387,7 +1652,7 @@
               "error"
             );
           } finally {
-            $("#submitbtn").html("Sign Up").attr("disabled", false);
+            $("#proceedButton").html("Proceed").attr("disabled", false);
           }
         };
 
@@ -2223,25 +2488,6 @@
         ],
       };
 
-      // function updateLocalGovernmentsOfOrigin() {
-      //   const stateSelect = document.getElementById("stateOfOrigin");
-      //   const lgaSelect = document.getElementById("lgaOfOrigin");
-      //   const selectedState = stateSelect.value;
-
-      //   // Clear previous options
-      //   lgaSelect.innerHTML =
-      //     '<option value="">Select Local Government</option>';
-
-      //   if (nigerData[selectedState]) {
-      //     nigerData[selectedState].forEach((lga) => {
-      //       const option = document.createElement("option");
-      //       option.value = lga;
-      //       option.textContent = lga;
-      //       lgaSelect.appendChild(option);
-      //     });
-      //   }
-      // }
-
       function updateLocalGovernmentsOfOrigin() {
         const stateSelect = document.getElementById("stateOfOrigin");
         const lgaSelect = document.getElementById("lgaOfOrigin");
@@ -2268,6 +2514,11 @@
           });
         }
       }
+
+      // Add event listener to state dropdown
+      document
+        .getElementById("stateOfOrigin")
+        .addEventListener("change", updateLocalGovernmentsOfOrigin);
     </script>
 
     <!-- jQuery and Bootstrap JS -->
