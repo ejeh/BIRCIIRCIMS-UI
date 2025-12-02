@@ -656,7 +656,7 @@
       <button class="btn btn-light d-md-none me-3" id="sidebarToggle">
         <i class="bi bi-list"></i>
       </button>
-
+      <!-- 
       <div class="search-bar">
         <div class="input-group">
           <span class="input-group-text bg-transparent border-end-0">
@@ -668,7 +668,7 @@
             placeholder="Search users, requests..."
           />
         </div>
-      </div>
+      </div> -->
 
       <div class="header-actions">
         <div class="dropdown">
@@ -721,7 +721,7 @@
               alt="Admin"
               style="width: 40px; height: 40px; object-fit: cover"
             />
-            <span id="currentUser">Support Admin</span>
+            <span id="currentUser"></span>
           </button>
           <ul class="dropdown-menu dropdown-menu-end">
             <li>
@@ -3588,11 +3588,11 @@
                 {
                   data: null,
                   render: function (data, type, row) {
+                    // <button class="btn btn-sm btn-outline-primary edit-user-btn" data-id="${row._id}">
+                    //     <i class="bi bi-pencil"></i>
+                    // </button>
                     return `
                                       <div class="btn-group">
-                                          <button class="btn btn-sm btn-outline-primary edit-user-btn" data-id="${row._id}">
-                                              <i class="bi bi-pencil"></i>
-                                          </button>
                                           <button class="btn btn-sm btn-outline-warning change-role-btn" data-id="${row._id}" data-user="${row.firstname} ${row.lastname}" data-bs-toggle="modal" data-bs-target="#changeRoleModal">
                                               <i class="bi bi-person-badge"></i>
                                           </button>

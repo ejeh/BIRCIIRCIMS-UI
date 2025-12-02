@@ -657,7 +657,7 @@
         <i class="bi bi-list"></i>
       </button>
 
-      <div class="search-bar">
+      <!-- <div class="search-bar">
         <div class="input-group">
           <span class="input-group-text bg-transparent border-end-0">
             <i class="bi bi-search"></i>
@@ -668,7 +668,7 @@
             placeholder="Search..."
           />
         </div>
-      </div>
+      </div> -->
 
       <div class="header-actions">
         <div class="dropdown">
@@ -731,7 +731,7 @@
               alt="User"
               style="width: 40px; height: 40px; object-fit: cover"
             />
-            <span id="currentUser">John Doe</span>
+            <span id="currentUser"></span>
           </button>
           <ul class="dropdown-menu">
             <li>
@@ -1828,11 +1828,6 @@
                       <label for="disability" class="form-label"
                         >Disabilities</label
                       >
-                      <!-- <textarea
-                        class="form-control"
-                        id="disability"
-                        rows="3"
-                      ></textarea> -->
 
                       <select class="form-control" id="disability">
                         <option value="">Select Disability</option>
@@ -1857,21 +1852,6 @@
                       ></textarea>
                     </div>
                   </div>
-                  <!-- <div class="row">
-                    <div class="col-md-12 mb-3">
-                      <label for="disability" class="form-label"
-                        >Disabilities</label
-                      >
-                      <textarea
-                        class="form-control"
-                        id="disability"
-                        rows="3"
-                      ></textarea>
-
-                    </div>
-               
-                  
-                  </div> -->
                 </form>
               </div>
             </div>
@@ -1930,7 +1910,7 @@
                 class="card-header d-flex justify-content-between align-items-center"
               >
                 <h5 class="mb-0">Identity Card Requests</h5>
-                <div class="export-buttons">
+                <!-- <div class="export-buttons">
                   <button onclick="exportTable('csv', 'idcardRequestsTable')">
                     <i class="bi bi-file-earmark-csv me-1"></i>CSV
                   </button>
@@ -1940,7 +1920,7 @@
                   <button onclick="window.print()">
                     <i class="bi bi-printer me-1"></i>Print
                   </button>
-                </div>
+                </div> -->
               </div>
               <div class="card-body">
                 <table
@@ -1974,7 +1954,7 @@
                 class="card-header d-flex justify-content-between align-items-center"
               >
                 <h5 class="mb-0">Certificate of Origin Requests</h5>
-                <div class="export-buttons">
+                <!-- <div class="export-buttons">
                   <button
                     onclick="exportTable('csv', 'certificateRequestsTable')"
                   >
@@ -1988,7 +1968,7 @@
                   <button onclick="window.print()">
                     <i class="bi bi-printer me-1"></i>Print
                   </button>
-                </div>
+                </div> -->
               </div>
               <div class="card-body">
                 <table
@@ -2651,7 +2631,7 @@
                 <div class="row">
                   <div class="col-md-4 mb-3">
                     <label for="certPassportPhoto" class="form-label"
-                      >Passport Photo *</label
+                      >Passport Photo(Image) *</label
                     >
                     <input
                       type="file"
@@ -2662,7 +2642,9 @@
                     />
                   </div>
                   <div class="col-md-4 mb-3">
-                    <label for="certIdCard" class="form-label">ID Card *</label>
+                    <label for="certIdCard" class="form-label"
+                      >ID Card(Image or PDF) *</label
+                    >
                     <input
                       type="file"
                       class="form-control"
@@ -2673,7 +2655,7 @@
                   </div>
                   <div class="col-md-4 mb-3">
                     <label for="certBirthCertificate" class="form-label"
-                      >Birth Certificate *</label
+                      >Birth Certificate(Image or PDF) *</label
                     >
                     <input
                       type="file"
@@ -3412,374 +3394,6 @@
     <script type="text/javascript" src="../js/index.js"></script>
 
     <script>
-      // // Add these near the top of your script
-      // let allCertificateRequests = [];
-      // let allIdCardRequests = [];
-      // const mockAPI = {
-      //   // Current user data
-      //   currentUser: {
-      //     id: "64a1b2c3d4e5f6789012345", // MongoDB ObjectId format
-      //     email: "john.doe@example.com",
-      //     firstname: "John",
-      //     lastname: "Doe",
-      //     middlename: "Michael",
-      //     isActive: true,
-      //     DOB: "1990-05-15",
-      //     maritalStatus: "Single",
-      //     gender: "Male",
-      //     nationality: "Nigerian",
-      //     stateOfOrigin: "Lagos",
-      //     lgaOfOrigin: "Ikeja",
-      //     stateOfResidence: "Lagos",
-      //     lgaOfResidence: "Ikeja",
-      //     house_number: "123",
-      //     street_name: "Main Street",
-      //     nearest_bus_stop_landmark: "City Mall",
-      //     city_town: "Ikeja",
-      //     countryOfResidence: "Nigeria",
-      //     identification: "National ID",
-      //     id_number: "12345678901",
-      //     issue_date: "2020-01-15",
-      //     expiry_date: "2025-01-15",
-      //     passportPhoto: "https://picsum.photos/seed/user/150/150.jpg",
-      //     nextOfKin: [
-      //       {
-      //         name: "Jane Doe",
-      //         relationship: "Spouse",
-      //         phone: "+2348023456789",
-      //         address: "123 Main Street, Ikeja, Lagos",
-      //       },
-      //     ],
-      //     employmentHistory: [
-      //       {
-      //         company: "Tech Solutions Ltd",
-      //         position: "Software Developer",
-      //         start: "2018-01-15",
-      //         end: "",
-      //       },
-      //     ],
-      //     business: [
-      //       {
-      //         name: "Doe Enterprises",
-      //         type: "Technology",
-      //         registrationNumber: "RC123456",
-      //       },
-      //     ],
-      //     educationalHistory: [
-      //       {
-      //         institution: "University of Lagos",
-      //         qualification: "B.Sc Computer Science",
-      //         start: "2012-09-15",
-      //         end: "2016-06-30",
-      //       },
-      //     ],
-      //     healthInfo: {
-      //       blood_group: "O+",
-      //       genotype: "AA",
-      //       medical_condition: "None",
-      //       disability: "None",
-      //     },
-      //     neighbor: "James Smith",
-      //     family: "Doe Family",
-      //     phone: "+2348012345678",
-      //     NIN: "12345678901",
-      //     role: "user",
-      //     religion: "Christianity",
-      //     community: "Yoruba",
-      //     isVerified: true,
-      //     isProfileCompleted: true,
-      //     profileCompletionPercentage: 85,
-      //     twoFactorEnabled: false,
-      //     created_at: "2023-01-15T10:30:00Z",
-      //   },
-
-      //   // ID Card requests (updated to match IdCard schema)
-      //   idcardRequests: [
-      //     {
-      //       id: "ID2023001",
-      //       refNumber: "ID2023001",
-      //       userId: "64a1b2c3d4e5f6789012345",
-      //       firstname: "John",
-      //       lastname: "Doe",
-      //       email: "john.doe@example.com",
-      //       status: "Approved",
-      //       card_type: "National ID",
-      //       dateOfIssue: "2023-01-15",
-      //       dateOfExpiration: "2028-01-15",
-      //       phone: "+2348012345678",
-      //       lga: "Ikeja",
-      //       approvalDate: "2023-02-01",
-      //       approvedBy: "64a1b2c3d4e5f6789012346",
-      //     },
-      //     {
-      //       id: "ID2023002",
-      //       refNumber: "ID2023002",
-      //       userId: "64a1b2c3d4e5f6789012345",
-      //       firstname: "John",
-      //       lastname: "Doe",
-      //       email: "john.doe@example.com",
-      //       status: "Pending",
-      //       card_type: "Driver's License",
-      //       dateOfIssue: "2023-03-10",
-      //       dateOfExpiration: "2028-03-10",
-      //       phone: "+2348012345678",
-      //       lga: "Ikeja",
-      //     },
-      //     {
-      //       id: "ID2023003",
-      //       refNumber: "ID2023003",
-      //       userId: "64a1b2c3d4e5f6789012345",
-      //       firstname: "John",
-      //       lastname: "Doe",
-      //       email: "john.doe@example.com",
-      //       status: "Rejected",
-      //       card_type: "Voter's Card",
-      //       dateOfIssue: "2023-02-05",
-      //       dateOfExpiration: "2028-02-05",
-      //       phone: "+2348012345678",
-      //       lga: "Ikeja",
-      //       rejectionReason: "Invalid documents provided",
-      //     },
-      //   ],
-
-      //   // Certificate requests (updated to match Certificate schema)
-      //   certificateRequests: [
-      //     {
-      //       id: "CERT2023001",
-      //       refNumber: "CERT2023001",
-      //       userId: "64a1b2c3d4e5f6789012345",
-      //       status: "Approved",
-      //       email: "john.doe@example.com",
-      //       firstname: "John",
-      //       lastname: "Doe",
-      //       middlename: "Michael",
-      //       DOB: new Date("1990-05-15"),
-      //       maritalStatus: "Single",
-      //       gender: "Male",
-      //       stateOfOrigin: "Lagos",
-      //       lgaOfOrigin: "Ikeja",
-      //       ward: "Central Ward",
-      //       address: "123 Main Street, Ikeja, Lagos",
-      //       phone: "+2348012345678",
-      //       kindred: "Yoruba",
-      //       fathersName: "Richard Doe",
-      //       fathersStateOfOrigin: "Lagos",
-      //       mothersName: "Mary Doe",
-      //       mothersStateOfOrigin: "Lagos",
-      //       purpose: "Employment verification",
-      //       passportPhoto: "https://picsum.photos/seed/user/150/150.jpg",
-      //       idCard: "National ID",
-      //       birthCertificate: "Birth Certificate",
-      //       approvalDate: "2023-03-15",
-      //       approvedBy: "64a1b2c3d4e5f6789012346",
-      //     },
-      //     {
-      //       id: "CERT2023002",
-      //       refNumber: "CERT2023002",
-      //       userId: "64a1b2c3d4e5f6789012345",
-      //       status: "Pending",
-      //       email: "john.doe@example.com",
-      //       firstname: "John",
-      //       lastname: "Doe",
-      //       middlename: "Michael",
-      //       DOB: new Date("1990-05-15"),
-      //       maritalStatus: "Single",
-      //       gender: "Male",
-      //       stateOfOrigin: "Lagos",
-      //       lgaOfOrigin: "Ikeja",
-      //       ward: "Central Ward",
-      //       address: "123 Main Street, Ikeja, Lagos",
-      //       phone: "+2348012345678",
-      //       kindred: "Yoruba",
-      //       fathersName: "Richard Doe",
-      //       fathersStateOfOrigin: "Lagos",
-      //       mothersName: "Mary Doe",
-      //       mothersStateOfOrigin: "Lagos",
-      //       purpose: "Bank account opening",
-      //       passportPhoto: "https://picsum.photos/seed/user/150/150.jpg",
-      //       idCard: "National ID",
-      //       birthCertificate: "Birth Certificate",
-      //     },
-      //   ],
-
-      //   // Analytics data
-      //   analytics: {
-      //     idcardRequests: {
-      //       Jan: 2,
-      //       Feb: 1,
-      //       Mar: 3,
-      //       Apr: 2,
-      //     },
-      //     certificateRequests: {
-      //       Jan: 1,
-      //       Feb: 2,
-      //       Mar: 1,
-      //       Apr: 2,
-      //     },
-      //     requestStatus: {
-      //       Approved: 3,
-      //       Pending: 2,
-      //       Rejected: 1,
-      //     },
-      //     requestFrequency: {
-      //       Monday: 1,
-      //       Tuesday: 2,
-      //       Wednesday: 1,
-      //       Thursday: 2,
-      //       Friday: 1,
-      //       Saturday: 0,
-      //       Sunday: 0,
-      //     },
-      //   },
-
-      //   // Activity data
-      //   activities: [
-      //     { time: "2023-04-15 10:30", content: "Submitted ID card request" },
-      //     {
-      //       time: "2023-04-10 14:15",
-      //       content: "Certificate of Origin approved",
-      //     },
-      //     { time: "2023-03-15 09:45", content: "Updated profile information" },
-      //     {
-      //       time: "2023-03-10 16:20",
-      //       content: "Submitted Driver's License request",
-      //     },
-      //     {
-      //       time: "2023-02-05 11:30",
-      //       content: "Voter's Card request rejected",
-      //     },
-      //   ],
-
-      //   // Notifications
-      //   notifications: [
-      //     {
-      //       id: 1,
-      //       message: "Your ID card request has been approved",
-      //       read: false,
-      //     },
-      //     {
-      //       id: 2,
-      //       message: "Certificate of origin is ready for download",
-      //       read: false,
-      //     },
-      //     {
-      //       id: 3,
-      //       message: "Please complete your profile verification",
-      //       read: true,
-      //     },
-      //   ],
-
-      //   // Verification tokens data
-      //   verificationTokens: {
-      //     neighbor: [
-      //       {
-      //         id: "n1",
-      //         name: "James Smith",
-      //         phone: "+2348012345678",
-      //         address: "124 Main Street, Ikeja, Lagos",
-      //         verificationToken: "token123",
-      //         verificationLink: "https://example.com/verify/token123",
-      //         status: "verified",
-      //         verifiedAt: "2023-05-15T10:30:00Z",
-      //         comments: "Confirmed residence for 3 years",
-      //         verificationExpiresAt: "2023-06-15T23:59:59Z",
-      //       },
-      //       {
-      //         id: "n2",
-      //         name: "Sarah Johnson",
-      //         phone: "+2348023456789",
-      //         address: "126 Main Street, Ikeja, Lagos",
-      //         verificationToken: "token456",
-      //         verificationLink: "https://example.com/verify/token456",
-      //         status: "pending",
-      //         verificationExpiresAt: "2023-06-20T23:59:59Z",
-      //       },
-      //     ],
-      //     family: [
-      //       {
-      //         id: "f1",
-      //         name: "Richard Doe",
-      //         relationship: "Father",
-      //         phone: "+2348034567890",
-      //         address: "456 Oak Avenue, Ikeja, Lagos",
-      //         verificationToken: "token789",
-      //         verificationLink: "https://example.com/verify/token789",
-      //         status: "expired",
-      //         verificationExpiresAt: "2023-05-01T23:59:59Z",
-      //       },
-      //       {
-      //         id: "f2",
-      //         name: "Mary Doe",
-      //         relationship: "Mother",
-      //         phone: "+2348045678901",
-      //         address: "456 Oak Avenue, Ikeja, Lagos",
-      //         verificationToken: "token101",
-      //         verificationLink: "https://example.com/verify/token101",
-      //         status: "pending",
-      //         verificationExpiresAt: "2023-06-25T23:59:59Z",
-      //       },
-      //     ],
-
-      //     // Mock data for requests now includes paymentStatus
-      //     idcardRequests: [
-      //       {
-      //         _id: "id_req_1",
-      //         status: "Approved",
-      //         dateOfIssue: new Date().toISOString(),
-      //         dateOfExpiration: new Date(
-      //           Date.now() + 365 * 24 * 60 * 60 * 1000
-      //         ).toISOString(),
-      //         paymentStatus: "paid", // Can be 'pending', 'paid', 'failed'
-      //         // ... other fields
-      //       },
-      //       {
-      //         _id: "id_req_2",
-      //         status: "Approved",
-      //         dateOfIssue: new Date().toISOString(),
-      //         dateOfExpiration: new Date(
-      //           Date.now() + 365 * 24 * 60 * 60 * 1000
-      //         ).toISOString(),
-      //         paymentStatus: "pending", // This one needs payment
-      //       },
-      //     ],
-      //     certificateRequests: [
-      //       {
-      //         _id: "cert_req_1",
-      //         status: "Approved",
-      //         stateOfOrigin: "Benue",
-      //         lgaOfOrigin: "Makurdi",
-      //         kindred: "Ikyurav",
-      //         paymentStatus: "pending", // This one needs payment
-      //       },
-      //     ],
-      //   },
-
-      //   // Verification history data
-      //   verificationHistory: [
-      //     {
-      //       date: "2023-05-15T10:30:00Z",
-      //       status: "verified",
-      //       comments: "Confirmed residence for 3 years",
-      //       deviceInfo:
-      //         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-      //     },
-      //     {
-      //       date: "2023-05-10T14:22:00Z",
-      //       status: "pending",
-      //       comments: "Verification link sent",
-      //       deviceInfo:
-      //         "Mozilla/5.0 (iPhone; CPU iPhone OS 14_7_1 like Mac OS X)",
-      //     },
-      //   ],
-      // };
-
-      // // Global configuration and state (prevent ReferenceErrors when code references these before async load)
-      // const BACKEND_URL = window.BACKEND_URL || ""; // set your backend base URL here or via global variable
-      // const token = localStorage.getItem("token") || ""; // auth token (if any)
-      // // Global user object — loadUserData() will overwrite this when real data is fetched.
-      // // Initialize with mockAPI.currentUser to avoid runtime errors when code expects `user` immediately.
-      // let user = mockAPI.currentUser || null;
-      // Track unsaved changes on the profile page
       let formHasUnsavedChanges = false;
 
       // Initialize DataTables
@@ -3884,7 +3498,7 @@
 
           // Call your function and reset when done
           submitNewRequest().finally(() => {
-            $btn.prop("disabled", false).text("Submit Request"); // Or your original text
+            $btn.prop("disabled", false).text("Submit Request");
           });
         });
 
@@ -4290,7 +3904,44 @@
 
         // Initialize verification system
         initializeVerificationSystem();
+
+        // Apply Benue State restriction immediately
+        applyBenueStateRestriction();
       });
+
+      // Create a helper function to apply the restriction consistently
+
+      function applyBenueStateRestriction() {
+        if (
+          user.stateOfOrigin &&
+          user.stateOfOrigin.toLowerCase() !== "benue"
+        ) {
+          // Hide Certificate tab correctly
+          $("#certificate-tab").closest("li.nav-item").hide();
+
+          // Remove certificate option from dropdown
+          $('#requestType option[value="certificate"]').remove();
+
+          // Insert warning only once
+          if ($("#idcard .alert-warning").length === 0) {
+            $("#idcard .card-header").after(`
+        <div class="alert alert-warning m-3" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <strong>Access Restricted:</strong> Certificate of Origin requests are only available to indigenes of Benue State. Your state is <strong>${user.stateOfOrigin.toUpperCase()}</strong>.
+        </div>
+      `);
+          }
+
+          // If certificate tab is active, switch to ID card tab
+          if ($("#certificate").hasClass("active")) {
+            $("#idcard-tab").tab("show");
+          }
+        } else {
+          // User is from Benue → show tab
+          $("#certificate-tab").closest("li.nav-item").show();
+          $("#idcard .alert-warning").remove();
+        }
+      }
 
       function checkProfileAccess(idcardRequests, certificateRequests) {
         const hasPaidRequest =
@@ -6232,37 +5883,103 @@
               requests.certificateRequests
             );
             break;
+
+          //         case "requests":
+          //         // --- START: BENUE STATE RESTRICTION ---
+          //         // Check if the user is an indigene of Benue State
+          //         if (
+          //           user.stateOfOrigin &&
+          //           user.stateOfOrigin.toLowerCase() !== "benue"
+          //         ) {
+          //           // Hide the Certificate tab
+          //           $('a[href="#certificate"]').parent().hide();
+
+          //           // Show a permanent warning message on the ID Card tab
+          //           $("#idcard .card-header").after(`
+          //                 <div class="alert alert-warning m-3" role="alert">
+          //                     <i class="bi bi-exclamation-triangle-fill me-2"></i>
+          //                     <strong>Access Restricted:</strong> Certificate of Origin requests are only available to indigenes of Benue State. Your state of origin is listed as <strong>${user.stateOfOrigin.toUpperCase()}</strong>.
+          //                 </div>
+          //             `);
+
+          //           // If the certificate tab was active, switch to the ID card tab
+          //           if ($("#certificate").hasClass("active")) {
+          //             $("#idcard-tab").tab("show");
+          //           }
+          //         } else {
+          //           // If the user IS from Benue, ensure the tab is visible
+          //           $('a[href="#certificate"]').parent().show();
+          //           // Remove any previous warning messages
+          //           $("#idcard .alert").remove();
+          //         }
+          //         // Remove certificate option from request type dropdown if not from Benue
+          // if (user.stateOfOrigin && user.stateOfOrigin.toLowerCase() !== "benue") {
+          //     $('#requestType option[value="certificate"]').remove();
+          // }
+
+          //         initializeRequestsPage();
+          //         break;
+
+          //   case "requests":
+          //     // First, remove certificate option from request type dropdown if not from Benue
+          //     if (
+          //       user.stateOfOrigin &&
+          //       user.stateOfOrigin.toLowerCase() !== "benue"
+          //     ) {
+          //       $('#requestType option[value="certificate"]').remove();
+          //     }
+
+          //     // Then check if user is an indigene of Benue State
+          //     if (
+          //       user.stateOfOrigin &&
+          //       user.stateOfOrigin.toLowerCase() !== "benue"
+          //     ) {
+          //       // Hide the Certificate tab
+          //       $('a[href="#certificate"]').parent().hide();
+
+          //       // Show a permanent warning message on the ID Card tab
+          //       $("#idcard .card-header").after(`
+          //     <div class="alert alert-warning m-3" role="alert">
+          //         <i class="bi bi-exclamation-triangle-fill me-2"></i>
+          //         <strong>Access Restricted:</strong> Certificate of Origin requests are only available to indigenes of Benue State. Your state of origin is listed as <strong>${user.stateOfOrigin.toUpperCase()}</strong>.
+          //     </div>
+          // `);
+
+          //       // If the certificate tab was active, switch to ID card tab
+          //       if ($("#certificate").hasClass("active")) {
+          //         $("#idcard-tab").tab("show");
+          //       }
+          //     } else {
+          //       // If user IS from Benue, ensure the tab is visible
+          //       $('a[href="#certificate"]').parent().show();
+          //       // Remove any previous warning messages
+          //       $("#idcard .alert").remove();
+          //     }
+
+          //     initializeRequestsPage();
+          //     break;
+
+          // 2. Update the showPage function for the requests case
           case "requests":
-            // --- START: BENUE STATE RESTRICTION ---
-            // Check if the user is an indigene of Benue State
-            if (
-              user.stateOfOrigin &&
-              user.stateOfOrigin.toLowerCase() !== "benue"
-            ) {
-              // Hide the Certificate tab
-              $('a[href="#certificate"]').parent().hide();
-
-              // Show a permanent warning message on the ID Card tab
-              $("#idcard .card-header").after(`
-                    <div class="alert alert-warning m-3" role="alert">
-                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                        <strong>Access Restricted:</strong> Certificate of Origin requests are only available to indigenes of Benue State. Your state of origin is listed as <strong>${user.stateOfOrigin}</strong>.
-                    </div>
-                `);
-
-              // If the certificate tab was active, switch to the ID card tab
-              if ($("#certificate").hasClass("active")) {
-                $("#idcard-tab").tab("show");
-              }
-            } else {
-              // If the user IS from Benue, ensure the tab is visible
-              $('a[href="#certificate"]').parent().show();
-              // Remove any previous warning messages
-              $("#idcard .alert").remove();
-            }
-
+            // Apply the restriction
+            applyBenueStateRestriction();
             initializeRequestsPage();
             break;
+
+            // 3. Add an event listener for when the new request modal is shown
+            $("#newRequestModal").on("show.bs.modal", function () {
+              // Apply the restriction
+              if (
+                user.stateOfOrigin &&
+                user.stateOfOrigin.toLowerCase() !== "benue"
+              ) {
+                // Check if certificate option exists before removing
+                if ($('#requestType option[value="certificate"]').length > 0) {
+                  $('#requestType option[value="certificate"]').remove();
+                }
+              }
+            });
+
           case "analytics":
             initializeAnalyticsPage();
             break;
@@ -8900,6 +8617,58 @@
           // do not block unload; just ensure data is written
         });
       })();
+
+      // Add this function to your existing JavaScript
+      function handlePaymentRedirect() {
+        // Check if we're coming from a payment success page
+        const urlParams = new URLSearchParams(window.location.search);
+        const page = urlParams.get("page");
+        const payment = urlParams.get("payment");
+        const requestId = urlParams.get("requestId");
+        const requestType = urlParams.get("requestType");
+
+        // If payment was successful and we have request info
+        if (
+          page === "requests" &&
+          payment === "success" &&
+          requestId &&
+          requestType
+        ) {
+          // Show success notification
+          showNotification(
+            "Payment successful! Your request has been updated.",
+            "success"
+          );
+
+          // Refresh the requests page to show the updated status
+          initializeRequestsPage().then(() => {
+            // Find and highlight the paid request
+            setTimeout(() => {
+              const requestRow = document.querySelector(
+                `[data-id="${requestId}"]`
+              );
+              if (requestRow) {
+                requestRow.scrollIntoView({
+                  behavior: "smooth",
+                  block: "center",
+                });
+                requestRow.classList.add("table-success");
+                setTimeout(() => {
+                  requestRow.classList.remove("table-success");
+                }, 3000);
+              }
+            }, 500);
+          });
+        }
+      }
+
+      // Call this function when the page loads
+      $(document).ready(function () {
+        // Existing code...
+
+        // Add this line
+        handlePaymentRedirect();
+      });
     </script>
   </body>
 </html>

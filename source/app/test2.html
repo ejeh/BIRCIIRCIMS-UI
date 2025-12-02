@@ -3,23 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-      Login - Benue State Integrated Citizenship and Resident Identity
-      Registration Management System
-    </title>
-    <!-- Bootstrap CSS -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="styles.css" />
-    <!-- Font Awesome for icons -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
-    <script type="text/javascript" src="../../js/index.js"></script>
+    <title>User Dashboard - BICRIRMS System</title>
 
     <link
       rel="icon"
@@ -28,241 +12,1696 @@
       sizes="16x16"
     />
 
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"
+    />
+    <!-- DataTables CSS -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css"
+    />
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="https://pay.credocentral.com/inline.js"></script>
+
     <style>
-      .green-sidebar {
-        /* The gradient overlay is on top, the image is on the bottom */
-        background-image: linear-gradient(
-            rgba(25, 135, 84, 0.7),
-            rgba(25, 135, 84, 0.7)
-          ),
-          url("/assets/images/istockphoto-922266274-612x612.jpg");
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
+      :root {
+        --sidebar-width: 260px;
+        --sidebar-bg: #1a1d29;
+        --sidebar-text: #a0a9c9;
+        --sidebar-active: #4c5fd5;
+        --header-height: 60px;
+        --header-bg: #ffffff;
+        --main-bg: #f5f6fa;
+        --card-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+        --primary-color: #4c5fd5;
+        --success-color: #10b981;
+        --warning-color: #f59e0b;
+        --danger-color: #ef4444;
+        --info-color: #3b82f6;
       }
 
-      /* Optional: Add a drop shadow to the fingerprint image for better visibility */
-      .svg-position {
-        filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.3));
-        width: 75px;
-        height: auto;
+      [data-theme="dark"] {
+        --sidebar-bg: #0f0f14;
+        --sidebar-text: #8892b0;
+        --sidebar-active: #6366f1;
+        --header-bg: #1a1d29;
+        --main-bg: #111318;
+        --card-bg: #1a1d29;
+        --text-color: #e6e6e6;
+        --border-color: #2a2d3a;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--main-bg);
+        color: var(--text-color);
+        transition: all 0.3s ease;
+      }
+
+      /* Sidebar Styles */
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: var(--sidebar-width);
+        background-color: var(--sidebar-bg);
+        z-index: 1000;
+        transition: all 0.3s ease;
+        overflow-y: auto;
+      }
+
+      .sidebar-header {
+        padding: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .sidebar-menu {
+        padding: 20px 0;
+      }
+
+      .sidebar-menu .nav-link {
+        color: var(--sidebar-text);
+        padding: 12px 20px;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s ease;
+        border-radius: 0;
+      }
+
+      .sidebar-menu .nav-link:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+        color: #fff;
+      }
+
+      .sidebar-menu .nav-link.active {
+        background-color: var(--sidebar-active);
+        color: #fff;
+      }
+
+      .sidebar-menu .nav-link i {
+        margin-right: 10px;
+        font-size: 18px;
+      }
+
+      .sidebar-menu .nav-link .badge {
+        margin-left: auto;
+      }
+
+      /* Header Styles */
+      .header {
+        position: fixed;
+        top: 0;
+        left: var(--sidebar-width);
+        right: 0;
+        height: var(--header-height);
+        background-color: var(--header-bg);
+        z-index: 999;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        display: flex;
+        align-items: center;
+        padding: 0 20px;
+        gap: 20px;
+        transition: all 0.3s ease;
+      }
+
+      .header .search-bar {
+        flex: 1;
+        max-width: 400px;
+      }
+
+      .header .header-actions {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      /* Main Content */
+      .main-content {
+        margin-left: var(--sidebar-width);
+        margin-top: var(--header-height);
+        padding: 20px;
+        min-height: calc(100vh - var(--header-height));
+        transition: all 0.3s ease;
+      }
+
+      /* Card Styles */
+      .card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: var(--card-shadow);
+        margin-bottom: 20px;
+        background-color: var(--card-bg);
+        transition: all 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .card-header {
+        background-color: transparent;
+        border-bottom: 1px solid var(--border-color);
+        padding: 15px 20px;
+        font-weight: 600;
+      }
+
+      .card-body {
+        padding: 20px;
+      }
+
+      /* Profile Photo Upload */
+      .profile-photo-container {
+        position: relative;
+        width: 150px;
+        height: 150px;
+        margin: 0 auto 20px;
+      }
+
+      .profile-photo {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid var(--primary-color);
+      }
+      .profile-avatar {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+      }
+
+      .profile-photo-upload {
         position: absolute;
-        bottom: 20px;
-        left: 20px;
-        opacity: 0.6;
+        bottom: 0;
+        right: 0;
+        background-color: var(--primary-color);
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .profile-photo-upload:hover {
+        background-color: #3b4cdb;
+      }
+
+      /* Profile Completion Bar */
+      .profile-completion {
+        margin-bottom: 20px;
+      }
+
+      .progress {
+        height: 10px;
+        border-radius: 5px;
+      }
+
+      /* Status Badge */
+      .status-badge {
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .status-badge.approved {
+        background-color: #10b981;
+        color: white;
+      }
+
+      .status-badge.pending {
+        background-color: #f59e0b;
+        color: white;
+      }
+
+      .status-badge.rejected {
+        background-color: #ef4444;
+      }
+
+      .status-badge.verified {
+        background-color: var(--success-color);
+        color: white;
+      }
+
+      .status-badge.unverified {
+        background-color: var(--warning-color);
+        color: white;
+      }
+
+      /* Verification Status Badge */
+      .verification-status {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-weight: 600;
+      }
+
+      .verification-status.verified {
+        background-color: #28a745;
+        color: white;
+      }
+
+      .verification-status.pending {
+        background-color: #ffc107;
+        color: black;
+      }
+
+      .verification-status.denied {
+        background-color: #dc3545;
+        color: white;
+      }
+
+      .verification-status.expired {
+        background-color: #6c757d;
+        color: white;
+      }
+
+      .verification-status.not-added {
+        background-color: #e9ecef;
+        color: black;
+      }
+
+      /* Verification Actions */
+      .verification-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+      }
+
+      /* Dark Mode Toggle */
+      .theme-toggle {
+        position: relative;
+        width: 50px;
+        height: 26px;
+        background-color: #ccc;
+        border-radius: 34px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .theme-toggle.active {
+        background-color: var(--primary-color);
+      }
+
+      .theme-toggle-slider {
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 20px;
+        height: 20px;
+        background-color: white;
+        border-radius: 50%;
+        transition: transform 0.3s;
+      }
+
+      .theme-toggle.active .theme-toggle-slider {
+        transform: translateX(24px);
+      }
+
+      /* Two Factor Toggle */
+      .form-switch .form-check-input {
+        width: 50px;
+        height: 26px;
+        background-color: #ccc;
+        border: none;
+      }
+
+      .form-switch .form-check-input:checked {
+        background-color: var(--primary-color);
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .sidebar {
+          transform: translateX(-100%);
+        }
+
+        .sidebar.show {
+          transform: translateX(0);
+        }
+
+        .header {
+          left: 0;
+        }
+
+        .main-content {
+          margin-left: 0;
+        }
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+
+      /* Table Styles */
+      .dataTables_wrapper .dataTables_filter input {
+        border: 1px solid var(--border-color);
+        border-radius: 5px;
+        padding: 5px 10px;
+      }
+
+      .dataTables_wrapper .dataTables_length select {
+        border: 1px solid var(--border-color);
+        border-radius: 5px;
+        padding: 5px;
+      }
+
+      /* Chart Container */
+      .chart-container {
+        position: relative;
+        height: 300px;
+        margin-bottom: 20px;
+      }
+
+      /* Activity Timeline */
+      .activity-timeline {
+        position: relative;
+        padding-left: 30px;
+      }
+
+      .activity-timeline::before {
+        content: "";
+        position: absolute;
+        left: 10px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background-color: var(--border-color);
+      }
+
+      .activity-item {
+        position: relative;
+        margin-bottom: 20px;
+      }
+
+      .activity-item::before {
+        content: "";
+        position: absolute;
+        left: -24px;
+        top: 5px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: var(--sidebar-active);
+      }
+
+      .activity-item .activity-time {
+        font-size: 12px;
+        color: var(--sidebar-text);
+        margin-bottom: 5px;
+      }
+
+      .activity-item .activity-content {
+        font-size: 14px;
+      }
+
+      /* Expandable Panel */
+      .expandable-panel {
+        margin-bottom: 15px;
+      }
+
+      .expandable-panel .panel-header {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .expandable-panel .panel-body {
+        padding: 15px;
+        border: 1px solid var(--border-color);
+        border-top: none;
+        border-radius: 0 0 5px 5px;
+      }
+
+      /* Print Styles */
+      @media print {
+        .sidebar,
+        .header,
+        .btn-group,
+        .dataTables_paginate,
+        .dataTables_info,
+        .dataTables_length,
+        .dataTables_filter {
+          display: none !important;
+        }
+
+        .main-content {
+          margin-left: 0 !important;
+          margin-top: 0 !important;
+        }
+
+        .card {
+          break-inside: avoid;
+        }
+
+        /* Loading Indicator Styles */
+        #loadingIndicator {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(
+            255,
+            255,
+            255,
+            0.8
+          ); /* Semi-transparent white background */
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          /* z-index: 1000; Ensure it's on top of other elements */
+          z-index: 9999;
+        }
+        .loader {
+          border: 8px solid #f3f3f3; /* Light grey */
+          border-top: 8px solid #3498db; /* Blue */
+          border-radius: 50%;
+          width: 60px;
+          height: 60px;
+          animation: spin 1s linear infinite; /* Spin animation */
+        }
+
+        @keyframes spin {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+      }
+      /* Download Loading Overlay */
+      .download-loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none; /* Prevent interaction when hidden */
+      }
+
+      .download-loading-overlay.show {
+        opacity: 1;
+        pointer-events: auto; /* Enable interaction when shown */
+      }
+
+      .download-loading-content {
+        background-color: white;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        text-align: center;
+        max-width: 300px;
+      }
+
+      .download-spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #4c5fd5;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 15px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Session Warning Modal */
+      .session-warning {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 10000;
+        max-width: 350px;
+      }
+
+      /* Authentication Lock Screen */
+      .auth-lock-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10001;
+      }
+
+      .auth-lock-content {
+        background-color: white;
+        padding: 30px;
+        border-radius: 10px;
+        text-align: center;
+        max-width: 400px;
       }
     </style>
   </head>
   <body>
-    <div class="container-fluid p-0">
-      <div class="row g-0">
-        <!-- Green sidebar -->
-        <div class="col-md-5 green-sidebar p-4 text-white d-flex flex-column">
-          <div class="d-flex align-items-center mb-4">
-            <a href="../../index.html">
-              <div class="benue-logo me-3"></div>
+    <!-- Authentication Lock Overlay -->
+    <div id="authLockOverlay" class="auth-lock-overlay d-none">
+      <div class="auth-lock-content">
+        <i class="bi bi-lock-fill text-danger" style="font-size: 48px"></i>
+        <h4 class="mt-3">Session Expired</h4>
+        <p>Your session has expired. Please log in again.</p>
+        <button class="btn btn-primary" onclick="logout()">
+          <i class="bi bi-box-arrow-right me-2"></i>Login Again
+        </button>
+      </div>
+    </div>
+
+    <!-- Session Warning Toast -->
+    <div id="sessionWarningToast" class="toast session-warning" role="alert">
+      <div class="toast-header bg-warning text-dark">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <strong class="me-auto">Session Warning</strong>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="toast"
+        ></button>
+      </div>
+      <div class="toast-body">
+        Your session will expire in
+        <span id="sessionTimeRemaining">5:00</span> minutes.
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="d-flex align-items-center">
+          <img
+            src="/assets/images/benue-state-logo.png"
+            alt="Benue State Logo"
+            class="me-3"
+            width="40"
+          />
+          <div>
+            <h4 class="mb-0 fw-bold text-white">BICRIRMS</h4>
+            <small class="text-white" style="font-size: 0.8rem">
+              User Portal
+            </small>
+          </div>
+        </div>
+      </div>
+      <nav class="sidebar-menu">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link active" href="#" data-page="dashboard">
+              <i class="bi bi-speedometer2"></i>
+              Dashboard
             </a>
-          </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-page="profile">
+              <i class="bi bi-person-circle"></i>
+              Profile
+              <span class="badge bg-warning" id="profileCompletionBadge"
+                >0%</span
+              >
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-page="requests">
+              <i class="bi bi-file-earmark-text"></i>
+              Requests
+              <span class="badge bg-primary" id="pendingRequestsBadge">0</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-page="analytics">
+              <i class="bi bi-graph-up"></i>
+              Analytics
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-page="settings">
+              <i class="bi bi-gear"></i>
+              Settings
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
 
-          <h2 class="fs-3 fw-bold mb-2">Benue State Integrated</h2>
-          <h2 class="fs-3 fw-bold mb-1">Citizenship and Resident Identity</h2>
-          <h2 class="fs-3 fw-bold mb-1">Registration Management System</h2>
+    <!-- Header -->
+    <header class="header">
+      <button class="btn btn-light d-md-none me-3" id="sidebarToggle">
+        <i class="bi bi-list"></i>
+      </button>
 
-          <!-- Mobile buttons -->
-          <div class="d-flex d-md-none gap-3 mb-4 w-100">
-            <a href="register.html" class="btn btn-outline-light flex-grow-1"
-              >Register</a
+      <div class="header-actions">
+        <div class="dropdown">
+          <button
+            class="btn btn-light position-relative"
+            type="button"
+            data-bs-toggle="dropdown"
+            id="notificationDropdown"
+          >
+            <i class="bi bi-bell"></i>
+            <span
+              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+              id="notificationBadge"
             >
-            <a href="login.html" class="btn btn-light text-success flex-grow-1"
-              >Log in</a
-            >
-          </div>
+              <span id="notificationCount">0</span>
+            </span>
+          </button>
 
-          <!-- Certificate image -->
-          <div class="mt-3 mb-4 rounded overflow-hidden">
+          <ul
+            class="dropdown-menu dropdown-menu-end p-0 shadow-sm"
+            style="min-width: 300px; max-height: 400px; overflow-y: auto"
+            id="notificationList"
+          >
+            <li>
+              <h6 class="dropdown-header bg-light border-bottom">
+                Notifications
+              </h6>
+            </li>
+            <li id="notificationsContainer">
+              <div
+                class="text-center py-3 text-muted small"
+                id="noNotifications"
+              >
+                No new notifications
+              </div>
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <a
+                class="dropdown-item text-center fw-bold text-primary"
+                href="#"
+                id="viewAllNotifications"
+              >
+                View all notifications
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="dropdown">
+          <button
+            class="btn btn-light d-flex align-items-center"
+            type="button"
+            data-bs-toggle="dropdown"
+          >
             <img
-              src="/assets/images/Finger-print.svg"
-              alt="finger print"
-              class="img-fluid rounded svg-position"
+              id="userProfilePic"
+              src="https://picsum.photos/seed/user/40/40.jpg"
+              class="rounded-circle me-2 img-fluid profile-avatar"
+              alt="User"
+              style="width: 40px; height: 40px; object-fit: cover"
             />
+            <span id="currentUser"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" href="#" data-page="profile"
+                ><i class="bi bi-person me-2"></i>Profile</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="#" data-page="settings"
+                ><i class="bi bi-gear me-2"></i>Settings</a
+              >
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <a class="dropdown-item" href="#" id="logoutBtn"
+                ><i class="bi bi-box-arrow-right me-2"></i>Logout</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div class="theme-toggle" id="themeToggle">
+          <div class="theme-toggle-slider"></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Dashboard Page -->
+      <div id="dashboard-page" class="page-content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2 class="mb-0">Dashboard Overview</h2>
+          <div>
+            <button class="btn btn-primary me-2" id="refreshDashboard">
+              <i class="bi bi-arrow-clockwise me-2"></i>Refresh
+            </button>
           </div>
         </div>
 
-        <!-- Login form -->
-        <div class="col-md-7 p-4 p-md-5">
-          <div class="d-none d-md-flex justify-content-end mb-4">
-            <a href="login.html" class="btn btn-success">Login</a>
+        <!-- Summary Cards -->
+        <div class="row mb-4">
+          <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card">
+              <div class="card-body text-center">
+                <h3 class="text-primary" id="totalRequestsCard">0</h3>
+                <p class="mb-0">Total Requests</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card">
+              <div class="card-body text-center">
+                <h3 class="text-success" id="approvedRequestsCard">0</h3>
+                <p class="mb-0">Approved Requests</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card">
+              <div class="card-body text-center">
+                <h3 class="text-warning" id="pendingRequestsCard">0</h3>
+                <p class="mb-0">Pending Requests</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card">
+              <div class="card-body text-center">
+                <h3 class="text-info" id="profileCompletionCard">0%</h3>
+                <p class="mb-0">Profile Completion</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="row mb-4">
+          <div class="col-lg-6 mb-3">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0">Request Status</h5>
+              </div>
+              <div class="card-body">
+                <div class="chart-container">
+                  <canvas id="requestStatusChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 mb-3">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0">Request Frequency</h5>
+              </div>
+              <div class="card-body">
+                <div class="chart-container">
+                  <canvas id="requestFrequencyChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0">Recent Activity</h5>
+              </div>
+              <div class="card-body">
+                <div class="activity-timeline" id="activityTimeline">
+                  <!-- Activity items will be populated by JavaScript -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile Page -->
+      <div id="profile-page" class="page-content d-none">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2 class="mb-0">Profile Management</h2>
+          <button class="btn btn-primary" id="saveProfileBtn">
+            <i class="bi bi-check-circle me-2"></i>Save Changes
+          </button>
+        </div>
+
+        <!-- Profile Photo and Completion -->
+        <div class="card mb-4">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-4 text-center">
+                <div class="profile-photo-container">
+                  <img
+                    src="https://picsum.photos/seed/user/150/150.jpg"
+                    class="profile-photo"
+                    id="profilePhotoImg"
+                    alt="Profile"
+                  />
+                  <div class="profile-photo-upload" id="profilePhotoUpload">
+                    <i class="bi bi-camera"></i>
+                  </div>
+                  <input
+                    type="file"
+                    id="profilePhotoInput"
+                    accept="image/*"
+                    style="display: none"
+                  />
+                </div>
+                <div
+                  class="progress mt-3"
+                  id="uploadProgress"
+                  style="display: none"
+                >
+                  <div
+                    class="progress-bar"
+                    role="progressbar"
+                    style="width: 0%"
+                  ></div>
+                </div>
+              </div>
+              <div class="col-md-8">
+                <div class="profile-completion">
+                  <div
+                    class="d-flex justify-content-between align-items-center mb-2"
+                  >
+                    <h5>Profile Completion</h5>
+                    <span id="profileCompletionText">0%</span>
+                  </div>
+                  <div class="progress">
+                    <div
+                      class="progress-bar bg-success"
+                      id="profileCompletionBar"
+                      role="progressbar"
+                      style="width: 0%"
+                    ></div>
+                  </div>
+                  <div class="mt-2">
+                    <span class="status-badge" id="verificationStatus"
+                      >Unverified</span
+                    >
+                    <span class="status-badge ms-2" id="profileStatus"
+                      >Incomplete</span
+                    >
+                  </div>
+                </div>
+
+                <div class="mt-4">
+                  <h5>Account Security</h5>
+                  <div class="d-flex align-items-center mt-2">
+                    <span class="me-3">Two-Factor Authentication:</span>
+                    <div class="form-check form-switch">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="twoFactorToggle"
+                      />
+                      <label class="form-check-label" for="twoFactorToggle">
+                        <span id="twoFactorStatus">Disabled</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Personal Information -->
+        <div class="card mb-4">
+          <div class="card-header" id="personal-info-card">
+            <h5 class="mb-0">Personal Information</h5>
+          </div>
+          <div class="card-body">
+            <form id="personalInfoForm">
+              <div class="row">
+                <div class="col-md-4 mb-3">
+                  <label for="firstname" class="form-label">First Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="firstname"
+                    required
+                    readonly
+                  />
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label for="middlename" class="form-label">Middle Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="middlename"
+                    readonly
+                  />
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label for="lastname" class="form-label">Last Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="lastname"
+                    readonly
+                  />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4 mb-3">
+                  <label for="email" class="form-label">Email</label>
+                  <input type="email" class="form-control" id="email" />
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label for="phone" class="form-label">Phone</label>
+                  <input type="tel" class="form-control" id="phone" readonly />
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label for="NIN" class="form-label">NIN</label>
+                  <input type="text" class="form-control" id="NIN" readonly />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4 mb-3">
+                  <label for="DOB" class="form-label">Date of Birth</label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="DOB"
+                    min="1900-01-01"
+                    readonly
+                  />
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label for="gender" class="form-label">Gender</label>
+                  <select class="form-select" id="gender">
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label for="maritalStatus" class="form-label"
+                    >Marital Status</label
+                  >
+                  <select class="form-select" id="maritalStatus" required>
+                    <option value="">Select Status</option>
+                    <option value="Single">Single</option>
+                    <option value="Married">Married</option>
+                    <option value="Divorced">Divorced</option>
+                    <option value="Widowed">Widowed</option>
+                  </select>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Requests Page -->
+      <div id="requests-page" class="page-content d-none">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2 class="mb-0">My Requests</h2>
+          <div>
+            <button
+              class="btn btn-primary me-2"
+              data-bs-toggle="modal"
+              data-bs-target="#newRequestModal"
+            >
+              <i class="bi bi-plus-circle me-2"></i>New Request
+            </button>
+          </div>
+        </div>
+
+        <!-- Request Tabs -->
+        <ul class="nav nav-tabs mb-4" id="requestTabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button
+              class="nav-link active"
+              id="idcard-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#idcard"
+              type="button"
+              role="tab"
+            >
+              Identity Cards
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button
+              class="nav-link"
+              id="certificate-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#certificate"
+              type="button"
+              role="tab"
+            >
+              Certificates of Origin
+            </button>
+          </li>
+        </ul>
+
+        <div class="tab-content" id="requestTabsContent">
+          <!-- Identity Card Requests -->
+          <div class="tab-pane fade show active" id="idcard" role="tabpanel">
+            <div class="card">
+              <div
+                class="card-header d-flex justify-content-between align-items-center"
+              >
+                <h5 class="mb-0">Identity Card Requests</h5>
+              </div>
+              <div class="card-body">
+                <table
+                  id="idcardRequestsTable"
+                  class="table table-striped table-hover dt-responsive w-100"
+                >
+                  <thead>
+                    <tr>
+                      <th>S/N</th>
+                      <th>ID</th>
+                      <th>Full Name</th>
+                      <th>Date of Issue</th>
+                      <th>Date of Expiration</th>
+                      <th>Status</th>
+                      <th>Approval Date</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Table data will be populated by JavaScript -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
 
-          <h2 class="fs-4 fw-bold mb-4">
-            Welcome Back! Please log in to your account
-          </h2>
-
-          <form id="signInForm">
-            <div class="mb-3">
-              <label for="email" class="form-label">Email</label>
-              <input
-                type="email"
-                class="form-control"
-                id="email"
-                placeholder="Enter your email"
-                required
-              />
-            </div>
-
-            <div class="mb-3">
-              <label for="password" class="form-label">Password</label>
-              <div class="input-group">
-                <input
-                  type="password"
-                  class="form-control"
-                  id="password"
-                  placeholder="Enter your password"
-                  required
-                />
-                <button
-                  class="btn btn-outline-secondary toggle-password"
-                  id="togglePassword"
-                  type="button"
+          <!-- Certificate Requests -->
+          <div class="tab-pane fade" id="certificate" role="tabpanel">
+            <div class="card">
+              <div
+                class="card-header d-flex justify-content-between align-items-center"
+              >
+                <h5 class="mb-0">Certificate of Origin Requests</h5>
+              </div>
+              <div class="card-body">
+                <table
+                  id="certificateRequestsTable"
+                  class="table table-striped table-hover dt-responsive w-100"
                 >
-                  <i class="fa fa-eye-slash"></i>
+                  <thead>
+                    <tr>
+                      <th>S/N</th>
+                      <th>ID</th>
+                      <th>Full Name</th>
+                      <th>State of Origin</th>
+                      <th>LGA of Origin</th>
+                      <th>Kindred</th>
+                      <th>Status</th>
+                      <th>Approval Date</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Table data will be populated by JavaScript -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings Page -->
+      <div id="settings-page" class="page-content d-none">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2 class="mb-0">Settings & Security</h2>
+        </div>
+
+        <!-- Security Settings -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5 class="mb-0">Security Settings</h5>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <h6>Two-Factor Authentication</h6>
+              <div class="d-flex align-items-center">
+                <div class="form-check form-switch me-3">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="settingsTwoFactorToggle"
+                  />
+                  <label class="form-check-label" for="settingsTwoFactorToggle">
+                    Enable Two-Factor Authentication
+                  </label>
+                </div>
+                <button
+                  class="btn btn-outline-primary"
+                  id="generateBackupCodes"
+                >
+                  <i class="bi bi-shield-lock me-2"></i>Generate Backup Codes
                 </button>
               </div>
             </div>
-            <div class="mb-3 form-check">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                id="rememberMe"
-                name="rememberMe"
-              />
-              <label class="form-check-label" for="rememberMe"
-                >Remember Me</label
+
+            <div class="mb-3">
+              <h6>Password</h6>
+              <button
+                class="btn btn-outline-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#changePasswordModal"
               >
+                <i class="bi bi-key me-2"></i>Change Password
+              </button>
             </div>
-
-            <div class="text-end mb-4">
-              <a href="forgot-password.html" class="text-success"
-                >Forgot password?</a
-              >
-            </div>
-
-            <!-- Login button -->
-            <button type="submit" class="btn btn-success w-100 mt-2">
-              Log in
-            </button>
-          </form>
-
-          <!-- Register link -->
-          <div class="text-center mt-4">
-            Don't have an account?
-            <a href="register.html" class="text-success fw-medium">Register</a>
-          </div>
-
-          <div class="copyright">
-            Powered By BDIC <br />© 2025 All Rights Reserved
           </div>
         </div>
-        <img src="" alt="" />
+      </div>
+    </main>
+
+    <!-- Change Password Modal -->
+    <div
+      class="modal fade"
+      id="changePasswordModal"
+      tabindex="-1"
+      aria-labelledby="changePasswordModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="changePasswordModalLabel">
+              Change Password
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="changePasswordForm">
+              <div class="mb-3">
+                <label for="currentPassword" class="form-label"
+                  >Current Password</label
+                >
+                <input
+                  type="password"
+                  class="form-control"
+                  id="currentPassword"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="newPassword" class="form-label">New Password</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="newPassword"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="confirmPassword" class="form-label"
+                  >Confirm New Password</label
+                >
+                <input
+                  type="password"
+                  class="form-control"
+                  id="confirmPassword"
+                  required
+                />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="changePasswordBtn"
+            >
+              Change Password
+            </button>
+          </div>
+        </div>
       </div>
     </div>
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.0/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-    <!-- SweetAlert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <div id="loadingIndicator" style="display: none">
+      <div class="loader"></div>
+      <div class="loading-message">Loading...</div>
+    </div>
+
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Custom Script -->
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
 
     <script>
-      $(document).ready(function () {
-        // Check if there's a saved email in localStorage
-        const savedEmail = localStorage.getItem("rememberMeEmail");
-        if (savedEmail) {
-          $("#email").val(savedEmail);
-          $("#rememberMe").prop("checked", true);
+      // Global variables for authentication
+      let isAuthenticated = false;
+      let sessionTimeout;
+      let warningTimeout;
+      let tokenValidationInterval;
+      const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
+      const WARNING_TIMEOUT = 5 * 60 * 1000; // 5 minutes before timeout
+      const BACKEND_URL = "https://your-backend-url.com/api"; // Update with your backend URL
+
+      // Initialize DataTables
+      let idcardRequestsTable, certificateRequestsTable;
+
+      // Initialize Charts
+      let requestStatusChart, requestFrequencyChart;
+
+      // Check if token is valid
+      function isTokenValid() {
+        const token = localStorage.getItem("token");
+        if (!token) return false;
+
+        try {
+          // Decode JWT token to check expiration
+          const payload = JSON.parse(atob(token.split(".")[1]));
+          const currentTime = Date.now() / 1000;
+
+          return payload.exp > currentTime;
+        } catch (e) {
+          return false;
+        }
+      }
+
+      // Handle API errors
+      function handleApiError(xhr) {
+        if (xhr.status === 401) {
+          showNotification(
+            "Your session has expired. Please log in again.",
+            "warning"
+          );
+          logout();
+        }
+      }
+
+      // Reset session timeout
+      function resetSessionTimeout() {
+        clearTimeout(sessionTimeout);
+        clearTimeout(warningTimeout);
+
+        warningTimeout = setTimeout(() => {
+          showSessionWarning();
+        }, SESSION_TIMEOUT - WARNING_TIMEOUT);
+
+        sessionTimeout = setTimeout(() => {
+          showNotification(
+            "Your session has expired. Please log in again.",
+            "warning"
+          );
+          logout();
+        }, SESSION_TIMEOUT);
+      }
+
+      // Show session warning
+      function showSessionWarning() {
+        const toast = new bootstrap.Toast(
+          document.getElementById("sessionWarningToast")
+        );
+        toast.show();
+
+        // Update countdown timer
+        let timeRemaining = 300; // 5 minutes in seconds
+        const countdownInterval = setInterval(() => {
+          timeRemaining--;
+          const minutes = Math.floor(timeRemaining / 60);
+          const seconds = timeRemaining % 60;
+          document.getElementById(
+            "sessionTimeRemaining"
+          ).textContent = `${minutes}:${seconds.toString().padStart(2, "0")}`;
+
+          if (timeRemaining <= 0) {
+            clearInterval(countdownInterval);
+          }
+        }, 1000);
+      }
+
+      // Authenticated AJAX wrapper
+      function authenticatedAjax(options) {
+        if (!isTokenValid()) {
+          showNotification(
+            "Your session has expired. Please log in again.",
+            "warning"
+          );
+          logout();
+          return Promise.reject(new Error("Authentication expired"));
         }
 
-        // Toggle password visibility
-        $("#togglePassword").click(function () {
-          const passwordInput = $("#password");
-          const type =
-            passwordInput.attr("type") === "password" ? "text" : "password";
-          passwordInput.attr("type", type);
-          $(this).find("i").toggleClass("fa-eye fa-eye-slash");
+        // Add token to headers if not already present
+        if (!options.headers) {
+          options.headers = {};
+        }
+
+        if (!options.headers.Authorization) {
+          options.headers.Authorization = `Bearer ${localStorage.getItem(
+            "token"
+          )}`;
+        }
+
+        return $.ajax(options);
+      }
+
+      // Start token validation
+      function startTokenValidation() {
+        tokenValidationInterval = setInterval(() => {
+          if (!isTokenValid()) {
+            showNotification(
+              "Your session has expired. Please log in again.",
+              "warning"
+            );
+            logout();
+          }
+        }, 60000); // Check every minute
+      }
+
+      // Logout function
+      function logout() {
+        isAuthenticated = false;
+
+        // Clear all authentication data
+        localStorage.removeItem("token");
+        localStorage.removeItem("profileFormData");
+        sessionStorage.clear();
+
+        // Clear any session cookies
+        document.cookie.split(";").forEach(function (c) {
+          document.cookie = c
+            .replace(/^ +/, "")
+            .replace(
+              /=.*/,
+              "=;expires=" + new Date().toUTCString() + ";path=/"
+            );
         });
 
-        // Handle form submission
-        $("#signInForm").on("submit", function (e) {
+        // Clear timeouts
+        clearTimeout(sessionTimeout);
+        clearTimeout(warningTimeout);
+        clearInterval(tokenValidationInterval);
+
+        // Redirect to login page
+        window.location.href = "./auth/login.html";
+      }
+
+      // Show notification
+      function showNotification(message, type = "info") {
+        const alertClass =
+          type === "success"
+            ? "alert-success"
+            : type === "error"
+            ? "alert-danger"
+            : type === "warning"
+            ? "alert-warning"
+            : "alert-info";
+
+        const notification = $(`
+              <div class="alert ${alertClass} alert-dismissible fade show position-fixed" style="top: 80px; right: 20px; z-index: 9999; min-width: 300px;">
+                  ${message}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+          `);
+
+        $("body").append(notification);
+
+        setTimeout(() => {
+          notification.alert("close");
+        }, 5000);
+      }
+
+      // Page navigation with authentication check
+      async function showPage(pageName) {
+        // Check if user is authenticated before showing any page
+        if (!isTokenValid()) {
+          logout();
+          return;
+        }
+
+        // Hide all pages
+        $(".page-content").addClass("d-none");
+
+        // Show selected page
+        $(`#${pageName}-page`).removeClass("d-none");
+
+        // Update active state
+        $(".sidebar-menu .nav-link").removeClass("active");
+        $(`.nav-link[data-page="${pageName}"]`).addClass("active");
+
+        // Initialize page-specific components
+        switch (pageName) {
+          case "dashboard":
+            initializeDashboard();
+            break;
+          case "profile":
+            // Profile page initialization
+            break;
+          case "requests":
+            initializeRequestsPage();
+            break;
+          case "analytics":
+            initializeAnalyticsPage();
+            break;
+          case "settings":
+            // Settings page doesn't need special initialization
+            break;
+        }
+      }
+
+      // Initialize dashboard
+      function initializeDashboard() {
+        // Dashboard initialization code
+        console.log("Dashboard initialized");
+      }
+
+      // Initialize requests page
+      function initializeRequestsPage() {
+        // Requests page initialization code
+        console.log("Requests page initialized");
+      }
+
+      // Initialize analytics page
+      function initializeAnalyticsPage() {
+        // Analytics page initialization code
+        console.log("Analytics page initialized");
+      }
+
+      // Document ready
+      $(document).ready(async function () {
+        // Check if user is authenticated on page load
+        if (!isTokenValid()) {
+          $("#authLockOverlay").removeClass("d-none");
+          return;
+        }
+
+        isAuthenticated = true;
+
+        // Initialize authentication features
+        resetSessionTimeout();
+        startTokenValidation();
+
+        // Set up global AJAX error handler
+        $.ajaxSetup({
+          error: function (xhr) {
+            handleApiError(xhr);
+          },
+        });
+
+        // Set up user activity monitoring
+        $(document).on(
+          "mousemove mousedown keypress scroll touchstart",
+          resetSessionTimeout
+        );
+
+        // Sidebar navigation
+        $(".sidebar-menu .nav-link").on("click", function (e) {
           e.preventDefault();
-
-          const email = $("#email").val();
-          const password = $("#password").val();
-          const rememberMe = $("#rememberMe").is(":checked");
-
-          if (!email || !password) {
-            Swal.fire("Oops...", "Please fill in all fields", "error");
-            return;
-          }
-
-          // Save email to localStorage if "Remember Me" is checked
-          if (rememberMe) {
-            localStorage.setItem("rememberMeEmail", email);
-          } else {
-            localStorage.removeItem("rememberMeEmail");
-          }
-
-          $.ajax({
-            type: "POST",
-            url: `${BACKEND_URL}/auth/login`,
-            contentType: "application/json",
-            data: JSON.stringify({ email, password }),
-            beforeSend: function () {
-              $("button[type='submit']")
-                .html("<i class='fa fa-spinner fa-spin'></i>")
-                .prop("disabled", true);
-            },
-            success: function (data) {
-              const { role } = data.user;
-              console.log(role);
-              if (role === "global_admin") {
-                window.location.href = "../../app/global-admin-dashboard.html";
-              }
-              if (role === "super_admin" || role === "support_admin") {
-                // window.location.href = "../../app/index.html";
-                window.location.href = "../../app/support-admin-dashboard.html";
-              }
-
-              if (role === "user") {
-                // window.location.href = "../../app/user-dasboard.html";
-                window.location.href = "../../app/user-dashboard.html";
-              }
-
-              if (role === "kindred_head") {
-                window.location.href = "../../app/kindred-dasboard.html";
-              }
-            },
-            error: function (data) {
-              Swal.fire(
-                "Oops...",
-                data.responseJSON.message || "Login failed",
-                "error"
-              );
-            },
-            complete: function () {
-              $("button[type='submit']").html("Login").prop("disabled", false);
-            },
-          }).done((res) => {
-            const data = res;
-            localStorage.setItem("token", JSON.stringify(data));
-          });
+          const page = $(this).data("page");
+          showPage(page);
         });
+
+        // Toggle sidebar on small screens
+        $("#sidebarToggle").on("click", function (e) {
+          e.stopPropagation();
+          $("#sidebar").toggleClass("show");
+        });
+
+        // Prevent clicks inside the sidebar from closing it
+        $(".sidebar").on("click", function (e) {
+          e.stopPropagation();
+        });
+
+        // Hide sidebar when clicking outside
+        $(document).on("click", function () {
+          $(".sidebar").removeClass("show");
+        });
+
+        // Theme toggle
+        $("#themeToggle").on("click", function () {
+          $(this).toggleClass("active");
+          $("body").attr(
+            "data-theme",
+            $(this).hasClass("active") ? "dark" : "light"
+          );
+          localStorage.setItem(
+            "theme",
+            $(this).hasClass("active") ? "dark" : "light"
+          );
+        });
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem("theme");
+        if (savedTheme === "dark") {
+          $("#themeToggle").addClass("active");
+          $("body").attr("data-theme", "dark");
+        }
+
+        // Logout button
+        $("#logoutBtn").on("click", function (e) {
+          e.preventDefault();
+          logout();
+        });
+
+        // Change password button
+        $("#changePasswordBtn").on("click", function () {
+          changePassword();
+        });
+
+        // Initialize page
+        showPage("dashboard");
+      });
+
+      // Change password function
+      function changePassword() {
+        const currentPassword = $("#currentPassword").val();
+        const newPassword = $("#newPassword").val();
+        const confirmPassword = $("#confirmPassword").val();
+
+        // Validate form
+        if (!currentPassword || !newPassword || !confirmPassword) {
+          showNotification("Please fill in all fields", "danger");
+          return;
+        }
+
+        // Validate passwords match
+        if (newPassword !== confirmPassword) {
+          showNotification("New passwords do not match", "error");
+          return;
+        }
+
+        // Disable button
+        $("#changePasswordBtn").prop("disabled", true).text("Changing...");
+
+        authenticatedAjax({
+          url: `${BACKEND_URL}/auth/change-password`,
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          data: JSON.stringify({
+            currentPassword: currentPassword,
+            newPassword: newPassword,
+          }),
+        })
+          .done(function (response) {
+            showNotification("Password changed successfully", "success");
+            $("#changePasswordModal").modal("hide");
+            $("#changePasswordForm")[0].reset();
+          })
+          .fail(function (xhr) {
+            const errorMessage = xhr.responseJSON
+              ? xhr.responseJSON.message
+              : "Failed to change password";
+            showNotification(errorMessage, "danger");
+          })
+          .always(function () {
+            // Re-enable button
+            $("#changePasswordBtn")
+              .prop("disabled", false)
+              .text("Change Password");
+          });
+      }
+
+      // Handle unhandled promise rejections
+      window.addEventListener("unhandledrejection", function (event) {
+        if (event.reason && event.reason.status === 401) {
+          showNotification(
+            "Your session has expired. Please log in again.",
+            "warning"
+          );
+          logout();
+        }
       });
     </script>
-
-    <!-- jQuery and Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
