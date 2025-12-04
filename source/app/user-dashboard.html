@@ -753,9 +753,9 @@
           </ul>
         </div>
 
-        <div class="theme-toggle" id="themeToggle">
+        <!-- <div class="theme-toggle" id="themeToggle">
           <div class="theme-toggle-slider"></div>
-        </div>
+        </div> -->
       </div>
     </header>
 
@@ -2288,7 +2288,7 @@
                 </div>
                 <div class="mb-3">
                   <label for="passportPhoto" class="form-label"
-                    >passportPhoto</label
+                    >passport Photo (Image) *</label
                   >
                   <input
                     type="file"
@@ -2301,7 +2301,7 @@
 
                 <div class="mb-3">
                   <label for="ref_letter" class="form-label"
-                    >Reference Letter</label
+                    >Reference Letter (Image/PDF) *</label
                   >
                   <input
                     type="file"
@@ -2313,8 +2313,8 @@
                 </div>
                 <div class="mb-3">
                   <label for="utilityBill" class="form-label"
-                    >Utility Bill
-                  </label>
+                    >Utility Bill (Image/PDF) *</label
+                  >
                   <input
                     type="file"
                     class="form-control"
@@ -2643,7 +2643,7 @@
                   </div>
                   <div class="col-md-4 mb-3">
                     <label for="certIdCard" class="form-label"
-                      >ID Card(Image or PDF) *</label
+                      >ID Card(Image/PDF) *</label
                     >
                     <input
                       type="file"
@@ -2655,7 +2655,7 @@
                   </div>
                   <div class="col-md-4 mb-3">
                     <label for="certBirthCertificate" class="form-label"
-                      >Birth Certificate(Image or PDF) *</label
+                      >Birth Certificate(Image/PDF) *</label
                     >
                     <input
                       type="file"
@@ -2779,7 +2779,7 @@
 
               <div class="mb-3">
                 <label for="resubmitpassportPhoto" class="form-label"
-                  >Passport Photo</label
+                  >Passport Photo (Image) *</label
                 >
                 <input
                   type="file"
@@ -2792,7 +2792,7 @@
 
               <div class="mb-3">
                 <label for="resubmitRefLetter" class="form-label"
-                  >Reference Letter</label
+                  >Reference Letter (Image/PDF)</label
                 >
                 <input
                   type="file"
@@ -2804,7 +2804,7 @@
               </div>
               <div class="mb-3">
                 <label for="resubmitUtilityBill" class="form-label"
-                  >Utility Bill</label
+                  >Utility Bill (Image/PDF)</label
                 >
                 <input
                   type="file"
@@ -3147,7 +3147,7 @@
               <div class="row">
                 <div class="col-md-4 mb-3">
                   <label for="resubmitCertPassportPhoto" class="form-label"
-                    >Passport Photo *</label
+                    >Passport Photo (Image) *</label
                   >
                   <input
                     type="file"
@@ -3159,7 +3159,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                   <label for="resubmitCertIdCard" class="form-label"
-                    >ID Card *</label
+                    >ID Card (Image/PDF) *</label
                   >
                   <input
                     type="file"
@@ -3171,7 +3171,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                   <label for="resubmitCertBirthCertificate" class="form-label"
-                    >Birth Certificate *</label
+                    >Birth Certificate (Image/PDF) *</label
                   >
                   <input
                     type="file"
@@ -6666,7 +6666,6 @@
               },
             }),
             $.ajax({
-              // url: `${BACKEND_URL}/indigene/certificate/${user.id}`,
               url: `${BACKEND_URL}/indigene/certificate/${user.id}/requests`,
               method: "GET",
               headers: {

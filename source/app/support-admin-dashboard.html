@@ -738,9 +738,9 @@
           </ul>
         </div>
 
-        <div class="theme-toggle" id="themeToggle">
+        <!-- <div class="theme-toggle" id="themeToggle">
           <div class="theme-toggle-slider"></div>
-        </div>
+        </div> -->
       </div>
     </header>
 
@@ -960,7 +960,7 @@
                   <th>Status</th>
                   <!-- <th>Is Verified</th> -->
                   <!-- <th>Kindred</th> -->
-                  <th>Actions</th>
+                  <!-- <th>Actions</th> -->
                 </tr>
               </thead>
               <tbody>
@@ -3585,24 +3585,24 @@
                 //   },
                 // },
 
-                {
-                  data: null,
-                  render: function (data, type, row) {
-                    // <button class="btn btn-sm btn-outline-primary edit-user-btn" data-id="${row._id}">
-                    //     <i class="bi bi-pencil"></i>
-                    // </button>
-                    return `
-                                      <div class="btn-group">
-                                          <button class="btn btn-sm btn-outline-warning change-role-btn" data-id="${row._id}" data-user="${row.firstname} ${row.lastname}" data-bs-toggle="modal" data-bs-target="#changeRoleModal">
-                                              <i class="bi bi-person-badge"></i>
-                                          </button>
-                                          <button class="btn btn-sm btn-outline-danger deactivate-user-btn" data-id="${row._id}">
-                                              <i class="bi bi-person-x"></i>
-                                          </button>
-                                      </div>
-                                  `;
-                  },
-                },
+                // {
+                //   data: null,
+                //   render: function (data, type, row) {
+                //     // <button class="btn btn-sm btn-outline-primary edit-user-btn" data-id="${row._id}">
+                //     //     <i class="bi bi-pencil"></i>
+                //     // </button>
+                //     return `
+                //                       <div class="btn-group">
+                //                           <button class="btn btn-sm btn-outline-warning change-role-btn" data-id="${row._id}" data-user="${row.firstname} ${row.lastname}" data-bs-toggle="modal" data-bs-target="#changeRoleModal">
+                //                               <i class="bi bi-person-badge"></i>
+                //                           </button>
+                //                           <button class="btn btn-sm btn-outline-danger deactivate-user-btn" data-id="${row._id}">
+                //                               <i class="bi bi-person-x"></i>
+                //                           </button>
+                //                       </div>
+                //                   `;
+                //   },
+                // },
               ],
               responsive: true,
               pageLength: 10,

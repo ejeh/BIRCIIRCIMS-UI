@@ -4114,7 +4114,7 @@ $(document).ready(function () {
                       <div class="col-md-3 text-center">
                           <img 
                               src="${
-                                response.userId?.passportPhoto ||
+                                response.passportPhoto ||
                                 "/assets/images/avatar.jpeg"
                               }" 
                               alt="Passport Photo" 
@@ -4270,29 +4270,6 @@ $(document).ready(function () {
     new bootstrap.Toast(toastEl, { autohide: false }).show();
   }
 
-  // $(document).ready(function () {
-  //   if (typeof io === "undefined") {
-  //     console.error("Socket.io library is not loaded.");
-  //     return;
-  //   }
-
-  //   const eventName = `member-status-update-${user?.id}`;
-
-  //   const socket = io(`${BACKEND_URL}`, {
-  //     transports: ["websocket"],
-  //   });
-
-  //   socket.on(eventName, function (data) {
-  //     console.log("📥 Received data:", data);
-  //     showNotification(
-  //       "info",
-  //       `Status: Your request for identity card was ${data.status}. Reason: ${
-  //         data.reason || "N/A"
-  //       }`
-  //     );
-  //   });
-  // });
-
   $(document).on("click", ".btn-approve", function () {
     const requestId = $(this).data("id");
     handleApproval(requestId);
@@ -4330,22 +4307,6 @@ $(document).ready(function () {
   fetchData(currentPage);
 });
 $(document).ready(function () {
-  // Toggle sidebar on button click
-  // $("#sidebarToggle").click(function (e) {
-  //   e.stopPropagation(); // prevent the click from bubbling up to document
-  //   $(".sidebar").toggleClass("show");
-  // });
-
-  // // Prevent clicks inside the sidebar from closing it
-  // $(".sidebar").click(function (e) {
-  //   e.stopPropagation();
-  // });
-
-  // // Hide sidebar when clicking anywhere else in the document
-  // $(document).click(function () {
-  //   $(".sidebar").removeClass("show");
-  // });
-
   // Add hover effects to cards
   $(".stat-card").hover(
     function () {
