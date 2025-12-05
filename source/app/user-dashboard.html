@@ -3406,8 +3406,60 @@
         requestRatioChart,
         requestFrequencyAnalyticsChart;
 
+      function checkAuthentication() {
+        if (!token) {
+          showNotification(
+            "You are not logged in. Please log in to continue.",
+            "warning"
+          );
+          // Redirect to login page
+          setTimeout(() => {
+            logout();
+          }, 3500);
+          return false;
+        }
+
+        // Token exists, but we should verify it's still valid
+        try {
+          // Decode the JWT token to check expiration
+          const tokenPayload = JSON.parse(atob(token.split(".")[1]));
+          const currentTime = Date.now() / 1000;
+
+          if (tokenPayload.exp < currentTime) {
+            // Token has expired
+            showNotification(
+              "Your session has expired. Please log in again.",
+              "warning"
+            );
+            localStorage.removeItem("token"); // Clear the expired token
+            setTimeout(() => {
+              logout();
+            }, 2000);
+            return false;
+          }
+
+          // Token is valid
+          return true;
+        } catch (error) {
+          // Error parsing token, it might be malformed
+          showNotification(
+            "Authentication error. Please log in again.",
+            "danger"
+          );
+          localStorage.removeItem("token"); // Clear the invalid token
+          setTimeout(() => {
+            logout();
+          }, 2000);
+          return false;
+        }
+      }
+
       // Page Navigation
       $(document).ready(async function () {
+        // Check authentication at the start
+        if (!checkAuthentication()) {
+          return; // Stop execution if not authenticated
+        }
         // Initialize dashboard
         initializeDashboard();
 
@@ -5257,19 +5309,19 @@
           // Reset the form change tracking
           formHasUnsavedChanges = false;
         } catch (error) {
-          console.error("Failed to fetch current user:", error);
-          showNotification(
-            "Unable to load user profile. Please refresh or log in again.",
-            "danger"
-          );
+          // console.error("Failed to fetch current user:", error);
+          // showNotification(
+          //   "Unable to load user profile. Please refresh or log in again.",
+          //   "danger"
+          // );
 
           // If server load fails, try to load from localStorage
           const hasLocalData = loadProfileFormData();
           if (!hasLocalData) {
-            showNotification(
-              "No local data available. Please check your connection.",
-              "warning"
-            );
+            // showNotification(
+            //   "No local data available. Please check your connection.",
+            //   "warning"
+            // );
           }
         }
       }

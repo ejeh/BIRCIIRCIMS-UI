@@ -958,9 +958,6 @@
                   <th>Age</th>
                   <th>Sex</th>
                   <th>Status</th>
-                  <!-- <th>Is Verified</th> -->
-                  <!-- <th>Kindred</th> -->
-                  <!-- <th>Actions</th> -->
                 </tr>
               </thead>
               <tbody>
@@ -1630,176 +1627,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Add User Modal -->
-    <!-- <div
-      class="modal fade"
-      id="addUserModal"
-      tabindex="-1"
-      aria-labelledby="addUserModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="addUserModalLabel">Add New User</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <form id="addUserForm">
-              <div class="mb-3">
-                <label for="userNIN" class="form-label">NIN</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="userNIN"
-                  maxlength="11"
-                  minlength="11"
-                  autocomplete="on"
-                  inputmode="numeric"
-                  pattern="\d{11}"
-                  required
-                />
-              </div>
-              <div class="mb-3">
-                <label for="firstname" class="form-label">First Name</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="firstname"
-                  required
-                />
-              </div>
-              <div class="mb-3">
-                <label for="lastname" class="form-label">Last Name</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="lastname"
-                  required
-                />
-              </div>
-              <div class="mb-3">
-                <label for="userEmail" class="form-label">Email Address</label>
-                <input
-                  type="email"
-                  class="form-control"
-                  id="userEmail"
-                  required
-                />
-              </div>
-              <div class="mb-3">
-                <label for="userPhone" class="form-label">Phone Number</label>
-                <input
-                  type="tel"
-                  class="form-control"
-                  id="userPhone"
-                  maxlength="11"
-                  minlength="11"
-                  placeholder="e.g., 08012345678"
-                  autocomplete="on"
-                  required
-                />
-              </div>
-              <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <div class="input-group">
-                  <input
-                    type="password"
-                    class="form-control"
-                    id="password"
-                    required
-                  />
-                  <button
-                    class="btn btn-outline-secondary password-toggle"
-                    type="button"
-                    data-target="#password"
-                  >
-                    <i class="fa fa-eye-slash"></i>
-                  </button>
-                </div>
-                <small id="passwordHelp" class="form-text text-muted">
-                  Enter a strong password
-                </small>
-              </div>
-              <div class="mb-3">
-                <label for="confirmPass" class="form-label"
-                  >Confirm Password</label
-                >
-                <div class="input-group">
-                  <input
-                    type="password"
-                    class="form-control"
-                    id="confirmPass"
-                    required
-                  />
-                  <button
-                    class="btn btn-outline-secondary password-toggle"
-                    type="button"
-                    data-target="confirmPass"
-                  >
-                    <i class="fa fa-eye-slash"></i>
-                  </button>
-                </div>
-                <small id="rePasswordHelp" class="form-text text-muted">
-                  Re-type your password
-                </small>
-              </div>
-             
-              <div class="password-validation d-flex flex-wrap gap-2 mt-2">
-                <div class="d-flex align-items-center small">
-                  <i
-                    class="fas fa-check-circle me-1 invalid"
-                    id="lengthCheck"
-                  ></i>
-                  <span class="invalid" id="lengthText">8 Characters</span>
-                </div>
-                <div class="d-flex align-items-center small">
-                  <i
-                    class="fas fa-check-circle me-1 invalid"
-                    id="symbolCheck"
-                  ></i>
-                  <span class="invalid" id="symbolText">One symbol</span>
-                </div>
-                <div class="d-flex align-items-center small">
-                  <i
-                    class="fas fa-check-circle me-1 invalid"
-                    id="capitalCheck"
-                  ></i>
-                  <span class="invalid" id="capitalText"
-                    >One capital letter</span
-                  >
-                </div>
-                <div class="d-flex align-items-center small">
-                  <i
-                    class="fas fa-check-circle me-1 invalid"
-                    id="numberCheck"
-                  ></i>
-                  <span class="invalid" id="numberText">One number</span>
-                </div>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Cancel
-            </button>
-            <button type="button" class="btn btn-primary" id="saveUserBtn">
-              Add User
-            </button>
-          </div>
-        </div>
-      </div>
-    </div> -->
 
     <!-- Add User Modal -->
     <div
@@ -2565,10 +2392,7 @@
       let transactionsChart, lgaTrendChart;
 
       // Current LGA
-      let currentLGA = "Otukpo";
-
-      // Authentication token (simulated JWT)
-      let authToken = localStorage.getItem("token") || generateMockToken();
+      // let currentLGA = "Otukpo";
 
       // Flag to track unsaved changes on profile page
       let profileHasUnsavedChanges = false;
@@ -2583,6 +2407,67 @@
         startDate: null,
         endDate: null,
       };
+
+      function checkAuthentication() {
+        if (!token) {
+          showNotification(
+            "You are not logged in. Please log in to continue.",
+            "warning"
+          );
+          // Redirect to login page
+          setTimeout(() => {
+            logout();
+          }, 3500);
+          return false;
+        }
+
+        // Token exists, but we should verify it's still valid
+        try {
+          // Decode the JWT token to check expiration
+          const tokenPayload = JSON.parse(atob(token.split(".")[1]));
+          const currentTime = Date.now() / 1000;
+
+          if (tokenPayload.exp < currentTime) {
+            // Token has expired
+            showNotification(
+              "Your session has expired. Please log in again.",
+              "warning"
+            );
+            localStorage.removeItem("token"); // Clear the expired token
+            setTimeout(() => {
+              logout();
+            }, 2000);
+            return false;
+          }
+
+          // Token is valid
+          return true;
+        } catch (error) {
+          // Error parsing token, it might be malformed
+          showNotification(
+            "Authentication error. Please log in again.",
+            "danger"
+          );
+          localStorage.removeItem("token"); // Clear the invalid token
+          setTimeout(() => {
+            logout();
+          }, 2000);
+          return false;
+        }
+      }
+
+      $(document).ready(function () {
+        // Check authentication at the start
+        if (!checkAuthentication()) {
+          return; // Stop execution if not authenticated
+        }
+
+        // Load saved profile data before initializing
+        loadProfileFormData();
+        initializeTooltips();
+
+        // ... rest of the existing code
+      });
       $(document).ready(function () {
         // Populate states dropdown
         const states = Object.keys(nigerData).map((state) =>
@@ -2604,10 +2489,22 @@
         });
       });
 
+      // 1. Function to initialize tooltips
+      function initializeTooltips() {
+        // Select all elements that should have a tooltip
+        const tooltipTriggerList = document.querySelectorAll("[title]");
+
+        // Convert to array and map over them to create new Tooltip instances
+        const tooltipList = [...tooltipTriggerList].map(
+          (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
+        );
+      }
+
       // Page Navigation
       $(document).ready(function () {
         // Load saved profile data before initializing
         loadProfileFormData();
+        initializeTooltips();
 
         $(".password-toggle").click(function () {
           const targetSelector = $(this).data("target");
@@ -2642,9 +2539,6 @@
             $(textId).removeClass("valid").addClass("invalid");
           }
         }
-
-        // Check authentication
-        checkAuthentication();
 
         // Initialize dashboard
         initializeDashboard();
@@ -2815,14 +2709,6 @@
             DOB: $("#DOB").val().trim(),
           };
 
-          // Validate
-          // for (let key in data) {
-          //   if (!data[key]) {
-          //     alert("Please complete all fields.");
-          //     return;
-          //   }
-          // }
-
           try {
             $("#addUserBtn").text("Processing...").prop("disabled", true);
 
@@ -2975,6 +2861,8 @@
         $("#refreshAnalytics").on("click", function () {
           initializeAnalyticsPage();
         });
+
+        updateCurrentUserDisplay();
       });
 
       // Save profile form data to localStorage
@@ -3004,26 +2892,6 @@
           return true;
         }
         return false;
-      }
-
-      function checkAuthentication() {
-        // In a real implementation, this would validate the JWT token
-        // For now, we'll simulate authentication
-        if (!authToken) {
-          // Redirect to login page
-          window.location.href = "login.html";
-        }
-
-        // Set current user info
-        updateCurrentUserDisplay();
-      }
-
-      function generateMockToken() {
-        // Generate a mock JWT token
-        const token =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
-        localStorage.setItem("token", token);
-        return token;
       }
 
       function logout() {
@@ -3098,18 +2966,18 @@
           saveProfileFormData();
         } catch (error) {
           console.error("Failed to fetch current user:", error);
-          showNotification(
-            "Unable to load user profile. Please refresh or log in again.",
-            "danger"
-          );
+          // showNotification(
+          //   "Unable to load user profile. Please refresh or log in again.",
+          //   "danger"
+          // );
 
           // If server load fails, try to load from localStorage
           const hasLocalData = loadProfileFormData();
           if (!hasLocalData) {
-            showNotification(
-              "No local data available. Please check your connection.",
-              "warning"
-            );
+            // showNotification(
+            //   "No local data available. Please check your connection.",
+            //   "warning"
+            // );
           }
         }
       }
@@ -3196,20 +3064,12 @@
             break;
 
           case "profile":
-            // Profile page doesn't need special initialization
-            // check2FAStatus();
-            // Load profile form data when navigating to profile page
             loadProfileFormData();
             break;
         }
       }
 
       async function initializeDashboard() {
-        if (!token) {
-          toastr.error("You are not logged in.");
-          return;
-        }
-
         try {
           // Update KPI cards
           updateKPICards();
@@ -3291,19 +3151,60 @@
               },
             });
           }
-
           // 3️⃣ Demographics (Doughnut Chart)
           if (!demographicsChart) {
             const ctx2 = document
               .getElementById("demographicsChart")
               .getContext("2d");
+
+            // Create a clean array of values from the response
+            const demographicsValues = Array.isArray(
+              demographicsRes.combinedGroups.values
+            )
+              ? [...demographicsRes.combinedGroups.values] // Create a new array to avoid Chart.js modifications
+              : [];
+
+            // Check if all values are zero
+            const allZeros = demographicsValues.every((val) => val === 0);
+
+            // Determine which data to use
+            let chartData = {
+              labels: demographicsRes.combinedGroups.labels || [],
+              values: demographicsValues,
+            };
+
+            // If all values are zero, try using gender distribution as fallback
+            if (
+              allZeros &&
+              demographicsRes.genderDistribution.values.some((val) => val > 0)
+            ) {
+              console.log(
+                "All demographics values are zero, using gender distribution as fallback"
+              );
+              chartData = {
+                labels: demographicsRes.genderDistribution.labels || [],
+                values: demographicsRes.genderDistribution.values || [],
+              };
+            }
+
+            // If still all zeros, use sample data for demonstration
+            if (chartData.values.every((val) => val === 0)) {
+              console.log(
+                "No data available, using sample data for demonstration"
+              );
+              chartData = {
+                labels: demographicsRes.combinedGroups.labels || [],
+                values: [1, 2, 3, 4], // Sample data
+              };
+            }
+
             demographicsChart = new Chart(ctx2, {
               type: "doughnut",
               data: {
-                labels: demographicsRes.combinedGroups.labels || [],
+                labels: chartData.labels,
                 datasets: [
                   {
-                    data: demographicsRes.combinedGroups.values || [],
+                    data: chartData.values,
                     backgroundColor: [
                       "#4c5fd5",
                       "#ec4899",
@@ -3316,7 +3217,25 @@
               options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { position: "bottom" } },
+                plugins: {
+                  legend: { position: "bottom" },
+                  // Add a tooltip to show values
+                  tooltip: {
+                    callbacks: {
+                      label: function (context) {
+                        const label = context.label || "";
+                        const value = context.parsed || 0;
+                        return `${label}: ${value}`;
+                      },
+                    },
+                  },
+                },
+                // Ensure the chart renders even with zero values
+                cutout: "50%",
+                animation: {
+                  animateRotate: true,
+                  animateScale: false,
+                },
               },
             });
           }
@@ -3355,11 +3274,6 @@
       }
 
       async function updateKPICards() {
-        if (!token) {
-          toastr.error("You are not logged in.");
-          return;
-        }
-
         try {
           // Step 1️⃣: Get current logged-in user info
           const userRes = await $.ajax({
@@ -3435,9 +3349,9 @@
           $("#notificationCount").text(pendingApprovals);
         } catch (error) {
           console.error("❌ Failed to load KPI data:", error || error);
-          toastr.error(
-            "Unable to load KPI data. Please check your network or login status."
-          );
+          // toastr.error(
+          //   "Unable to load KPI data. Please check your network or login status."
+          // );
         }
       }
 
@@ -3682,6 +3596,9 @@
 
           // Initialize ID Card Requests Table
           $("#idcardsTable").DataTable({
+            drawCallback: function (settings) {
+              initializeTooltips();
+            },
             data: idcardResponse,
             columns: [
               {
@@ -3737,6 +3654,9 @@
 
           // Initialize Certificate Requests Table
           $("#certificatesTable").DataTable({
+            drawCallback: function (settings) {
+              initializeTooltips();
+            },
             data: certificateResponse,
             columns: [
               {
@@ -3777,6 +3697,7 @@
                     row.approvedBy?.lastname || ""
                   }`.trim() || "N/A",
               },
+
               {
                 data: null,
                 orderable: false,
@@ -3784,31 +3705,43 @@
                   let actionButtons = "";
                   let downloadButton = "";
 
+                  // Approve/Reject buttons (for pending status)
                   if (row.status === "Pending") {
                     actionButtons = `
-                  <button class="btn btn-sm btn-outline-success approve-request-btn" data-id="${row._id}" data-type="certificate" data-bs-toggle="modal" data-bs-target="#requestActionModal">
-                    <i class="bi bi-check-circle"></i>
-                  </button>
-                  <button class="btn btn-sm btn-outline-danger reject-request-btn" data-id="${row._id}" data-type="certificate" data-bs-toggle="modal" data-bs-target="#requestActionModal">
-                    <i class="bi bi-x-circle"></i>
-                  </button>`;
+            <button class="btn btn-sm btn-outline-success approve-request-btn" 
+                    data-id="${row._id}" data-type="certificate" 
+                    data-bs-toggle="modal" data-bs-target="#requestActionModal"
+                    title="Approve Request">
+                <i class="bi bi-check-circle"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-danger reject-request-btn" 
+                    data-id="${row._id}" data-type="certificate" 
+                    data-bs-toggle="modal" data-bs-target="#requestActionModal"
+                    title="Reject Request">
+                <i class="bi bi-x-circle"></i>
+            </button>`;
                   }
 
+                  // Download button (for approved status)
                   if (row.status === "Approved") {
                     downloadButton = `
-                  <button class="btn btn-sm btn-outline-danger btn-cert-download" data-id="${row._id}">
-                    <i class="bi bi-download"></i>
-                  </button>`;
+            <button class="btn btn-sm btn-outline-danger btn-cert-download" 
+                    data-id="${row._id}"
+                    title="Download Certificate">
+                <i class="bi bi-download"></i>
+            </button>`;
                   }
 
                   return `
-                <div class="btn-group">
-                  <button class="btn btn-sm btn-outline-primary btn-cert-view" data-id="${row._id}">
-                    <i class="bi bi-eye"></i>
-                  </button>
-                  ${actionButtons}
-                  ${downloadButton}
-                </div>`;
+        <div class="btn-group">
+            <button class="btn btn-sm btn-outline-primary btn-cert-view" 
+                    data-id="${row._id}"
+                    title="View Details">
+                <i class="bi bi-eye"></i>
+            </button>
+            ${actionButtons}
+            ${downloadButton}
+        </div>`;
                 },
               },
             ],
