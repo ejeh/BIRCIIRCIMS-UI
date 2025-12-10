@@ -396,8 +396,8 @@
       }
 
       .spinner-border {
-        width: 3rem;
-        height: 3rem;
+        width: 1.5rem;
+        height: 1.5rem;
       }
 
       /* Export Buttons */
@@ -583,6 +583,56 @@
       .profile-photo-upload:hover {
         background: #0b5ed7;
         transform: scale(1.05);
+      }
+
+      /* Download Loading Overlay */
+      .download-loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none; /* Prevent interaction when hidden */
+      }
+
+      .download-loading-overlay.show {
+        opacity: 1;
+        pointer-events: auto; /* Enable interaction when shown */
+      }
+
+      .download-loading-content {
+        background-color: white;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        text-align: center;
+        max-width: 300px;
+      }
+
+      .download-spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #4c5fd5;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 15px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
       }
     </style>
   </head>
@@ -2446,7 +2496,7 @@
           // Error parsing token, it might be malformed
           showNotification(
             "Authentication error. Please log in again.",
-            "danger"
+            "error"
           );
           localStorage.removeItem("token"); // Clear the invalid token
           setTimeout(() => {
@@ -2724,7 +2774,7 @@
             const result = await res.json();
 
             if (!res.ok) {
-              showNotification(result.message || "Error adding user", "danger");
+              showNotification(result.message || "Error adding user", "error");
               return;
             }
 
@@ -3028,7 +3078,7 @@
           showNotification("Profile photo uploaded successfully", "success");
         } catch (error) {
           console.error("Upload failed:", error);
-          showNotification("Failed to upload profile photo", "danger");
+          showNotification("Failed to upload profile photo", "error");
         } finally {
           // Hide loader after completion
           setTimeout(() => {
@@ -3725,7 +3775,7 @@
                   // Download button (for approved status)
                   if (row.status === "Approved") {
                     downloadButton = `
-            <button class="btn btn-sm btn-outline-danger btn-cert-download" 
+            <button class="btn btn-sm btn-outline-danger btn-certificate-download" 
                     data-id="${row._id}"
                     title="Download Certificate">
                 <i class="bi bi-download"></i>
@@ -3770,7 +3820,7 @@
           console.error("Error loading requests:", error);
           showNotification(
             "Failed to load requests. Please check your connection or credentials.",
-            "danger"
+            "error"
           );
         }
       }
@@ -4148,7 +4198,7 @@
           showNotification("Analytics loaded successfully", "success");
         } catch (error) {
           console.error("Error fetching analytics:", error);
-          showNotification("Failed to load analytics data", "danger");
+          showNotification("Failed to load analytics data", "error");
           $("#analyticsLoader").hide();
         }
       }
@@ -4462,7 +4512,7 @@
           const message =
             error.responseJSON?.message ||
             "Failed to add user. Please try again.";
-          showNotification(message, "danger");
+          showNotification(message, "error");
         }
       }
 
@@ -4493,7 +4543,7 @@
           error: function (xhr) {
             showNotification(
               xhr.responseJSON.message || "Failed to change role",
-              "danger"
+              "error"
             );
           },
         });
@@ -4506,7 +4556,7 @@
         const reason = $("#requestActionReason").val();
 
         if (!requestId || !action) {
-          showNotification("Invalid request. Please try again.", "danger");
+          showNotification("Invalid request. Please try again.", "error");
           return;
         }
 
@@ -4517,7 +4567,7 @@
         } else if (requestType === "certificate") {
           endpoint = `${BACKEND_URL}/indigene/certificate/${requestId}/${action}`;
         } else {
-          showNotification("Unknown request type.", "danger");
+          showNotification("Unknown request type.", "error");
           return;
         }
 
@@ -4557,7 +4607,7 @@
             console.error("Error:", xhr.responseText);
             showNotification(
               xhr.responseJSON?.message || `Failed to ${action} request.`,
-              "danger"
+              "error"
             );
           },
           complete: function () {
@@ -4574,7 +4624,7 @@
         const phone = $("#editProfilePhone").val().trim();
 
         if (!firstname || !lastname || !email || !phone) {
-          showNotification("All fields are required.", "danger");
+          showNotification("All fields are required.", "error");
           return;
         }
 
@@ -4616,7 +4666,7 @@
             console.error("Error updating profile:", xhr.responseText);
             const message =
               xhr.responseJSON?.message || "Failed to update profile.";
-            showNotification(message, "danger");
+            showNotification(message, "error");
           },
           complete: function () {
             $("#saveProfileBtn").prop("disabled", false).text("Save Changes");
@@ -5101,17 +5151,12 @@
           success: function () {
             $("#editUserModal").modal("hide");
             initializeUsersPage(); // refresh list
-            showNotification(
-              "Updated!",
-              "User details updated successfully.",
-              "success"
-            );
+            showNotification("User details updated successfully.", "success");
           },
           error: function (xhr) {
             showNotification(
-              "Error",
               xhr.responseText || "Failed to update user",
-              "danger"
+              "error"
             );
           },
         });
@@ -5145,7 +5190,7 @@
               error: function (xhr) {
                 showNotification(
                   xhr.responseJSON.message || "Failed to update user status",
-                  "danger"
+                  "error"
                 );
               },
             });
@@ -5334,12 +5379,12 @@
 
           // Validate form
           if (!currentPassword || !newPassword || !confirmPassword) {
-            showNotification("Please fill in all fields", "danger");
+            showNotification("Please fill in all fields", "error");
             return;
           }
 
           if (newPassword !== confirmPassword) {
-            showNotification("Passwords do not match", "danger");
+            showNotification("Passwords do not match", "error");
             return;
           }
 
@@ -5367,7 +5412,7 @@
               const errorMessage = xhr.responseJSON
                 ? xhr.responseJSON.message
                 : "Failed to change password";
-              showNotification(errorMessage, "danger");
+              showNotification(errorMessage, "error");
             },
             complete: function () {
               // Re-enable the button
@@ -5392,7 +5437,7 @@
           if (!verificationCode || verificationCode.length !== 6) {
             showNotification(
               "Please enter a valid 6-digit verification code",
-              "danger"
+              "error"
             );
             return;
           }
@@ -5427,7 +5472,7 @@
               const errorMessage = xhr.responseJSON
                 ? xhr.responseJSON.message
                 : "Invalid verification code";
-              showNotification(errorMessage, "danger");
+              showNotification(errorMessage, "error");
             },
             complete: function () {
               // Re-enable the button
@@ -5478,7 +5523,7 @@
               const errorMessage = xhr.responseJSON
                 ? xhr.responseJSON.message
                 : "Failed to enable two-factor authentication";
-              showNotification(errorMessage, "danger");
+              showNotification(errorMessage, "error");
             },
             complete: function () {
               // Re-enable the button
@@ -5524,7 +5569,7 @@
                   if (!statusResponse.hasSecret) {
                     showNotification(
                       "Failed to setup 2FA. Please try again.",
-                      "danger"
+                      "error"
                     );
                     $("#2faSetupStep1").html(`
                                 <div class="alert alert-danger">
@@ -5556,7 +5601,7 @@
                   console.error("Error checking 2FA status:", xhr);
                   showNotification(
                     "Failed to verify 2FA setup. Please try again.",
-                    "danger"
+                    "error"
                   );
                 },
               });
@@ -5566,7 +5611,7 @@
               const errorMessage = xhr.responseJSON
                 ? xhr.responseJSON.message
                 : "Failed to setup 2FA";
-              showNotification(errorMessage, "danger");
+              showNotification(errorMessage, "error");
 
               // Reset step 1 content with error message
               $("#2faSetupStep1").html(`
@@ -5635,7 +5680,7 @@
                 const errorMessage = xhr.responseJSON
                   ? xhr.responseJSON.message
                   : "Failed to disable two-factor authentication";
-                showNotification(errorMessage, "danger");
+                showNotification(errorMessage, "error");
               },
             });
           }
@@ -5708,6 +5753,144 @@
         $(this).closest(".dropdown-menu").removeClass("show");
         $(this).closest(".dropdown").removeClass("show");
       });
+
+      // Create the download overlay element
+      const downloadOverlay = document.createElement("div");
+      downloadOverlay.className = "download-loading-overlay";
+      downloadOverlay.innerHTML = `
+    <div class="download-loading-content">
+        <div class="download-spinner"></div>
+        <h5>Preparing Your Document</h5>
+        <p class="text-muted">Please wait while we prepare your document for download.</p>
+        <div class="progress mt-3" style="height: 6px;">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                 role="progressbar" style="width: 100%"></div>
+        </div>
+    </div>
+`;
+      document.body.appendChild(downloadOverlay);
+
+      // Download certificate & ID card
+      $(document).on("click", ".btn-certificate-download", function () {
+        if (
+          !confirm(
+            "Warning! Sure you want to download? Click ok to continue or else click cancel."
+          )
+        ) {
+          return;
+        }
+        const $button = $(this);
+        const requestId = $button.data("id");
+        const isCertificate = $button.hasClass("btn-certificate-download");
+        console.log("isCertificate", isCertificate);
+
+        // Store original button content
+        const originalContent = $button.html();
+
+        // Show spinner on button
+        $button.prop("disabled", true).html(`
+        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+        Downloading...
+    `);
+
+        // Show the overlay
+        $(downloadOverlay).addClass("show");
+
+        // Update overlay message based on document type
+        const documentType = isCertificate
+          ? "Certificate of Origin"
+          : "Identity Card";
+        $(downloadOverlay).find("h5").text(`Preparing Your ${documentType}`);
+
+        // Determine download URL
+        const downloadUrl = isCertificate
+          ? `${BACKEND_URL}/indigene/certificate/download/${requestId}`
+          : `${BACKEND_URL}/idcard/download/${requestId}`;
+
+        // Create a temporary link element
+        const link = document.createElement("a");
+        link.style.display = "none";
+        document.body.appendChild(link);
+
+        // Use fetch to handle the download
+        fetch(downloadUrl, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+
+            // Update overlay message
+            $(downloadOverlay).find("h5").text("Processing Your Document");
+            $(downloadOverlay)
+              .find("p")
+              .text(
+                "Your document is being processed. This may take a moment."
+              );
+
+            return response.blob();
+          })
+          .then((blob) => {
+            // Create URL for the blob
+            const url = window.URL.createObjectURL(blob);
+
+            // Set link properties
+            link.href = url;
+            link.download = isCertificate
+              ? `Certificate_${requestId}.pdf`
+              : `ID_Card_${requestId}.pdf`;
+
+            // Trigger the download
+            link.click();
+
+            // Clean up
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(link);
+
+            // Hide the overlay
+            $(downloadOverlay).removeClass("show");
+
+            // Show success state on button
+            $button.prop("disabled", false).html(`
+            <i class="bi bi-check-circle me-2"></i>
+            Downloaded
+        `);
+
+            // Reset button after a delay
+            setTimeout(() => {
+              $button.html(originalContent);
+            }, 3000);
+          })
+          .catch((error) => {
+            const errorMessage = error.responseJSON
+              ? error.responseJSON.message
+              : "Download window has expired. Please make a new request.";
+            showNotification(errorMessage, "error");
+            console.error("Download error:", error);
+
+            // Hide the overlay
+            $(downloadOverlay).removeClass("show");
+
+            // Show error state on button
+            $button.prop("disabled", false).html(`
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            Error
+        `);
+
+            // Reset button after a delay
+            setTimeout(() => {
+              $button.html(originalContent);
+            }, 3000);
+
+            // Show notification
+            showNotification("Download failed. Please try again.", "error");
+          });
+      });
+
       const nigerData = {
         adamawa: [
           "Demsa",

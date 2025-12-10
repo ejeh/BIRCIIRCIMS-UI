@@ -571,51 +571,51 @@ $(document).ready(function () {
     });
   };
 
-  // Fetch user data for the current page
-  const fetchUsersData = (page) => {
-    const url = `${BACKEND_URL}/users?page=${page}&limit=${pageSize}`;
-    const headers = { Authorization: `Bearer ${token}` };
+  // // Fetch user data for the current page
+  // const fetchUsersData = (page) => {
+  //   const url = `${BACKEND_URL}/users?page=${page}&limit=${pageSize}`;
+  //   const headers = { Authorization: `Bearer ${token}` };
 
-    apiRequest(url, "GET", headers, null, (response) => {
-      const { data, hasNextPage } = response;
-      const now = new Date();
-      const currentMonth = now.getMonth();
-      const currentYear = now.getFullYear();
+  //   apiRequest(url, "GET", headers, null, (response) => {
+  //     const { data, hasNextPage } = response;
+  //     const now = new Date();
+  //     const currentMonth = now.getMonth();
+  //     const currentYear = now.getFullYear();
 
-      const { activeCount, inactiveCount, newThisMonthCount } = data.reduce(
-        (acc, user) => {
-          // Count active/inactive users
-          if (user.isActive) {
-            acc.activeCount++;
-          } else {
-            acc.inactiveCount++;
-          }
+  //     const { activeCount, inactiveCount, newThisMonthCount } = data.reduce(
+  //       (acc, user) => {
+  //         // Count active/inactive users
+  //         if (user.isActive) {
+  //           acc.activeCount++;
+  //         } else {
+  //           acc.inactiveCount++;
+  //         }
 
-          // Count users created this month
-          const createdAt = new Date(user.created_at);
-          if (
-            createdAt.getMonth() === currentMonth &&
-            createdAt.getFullYear() === currentYear
-          ) {
-            acc.newThisMonthCount++;
-          }
+  //         // Count users created this month
+  //         const createdAt = new Date(user.created_at);
+  //         if (
+  //           createdAt.getMonth() === currentMonth &&
+  //           createdAt.getFullYear() === currentYear
+  //         ) {
+  //           acc.newThisMonthCount++;
+  //         }
 
-          return acc;
-        },
-        { activeCount: 0, inactiveCount: 0, newThisMonthCount: 0 }
-      );
+  //         return acc;
+  //       },
+  //       { activeCount: 0, inactiveCount: 0, newThisMonthCount: 0 }
+  //     );
 
-      updateTable(data, page);
-      $("#prev-btn-users").prop("disabled", page <= 1);
-      $("#next-btn-users").prop("disabled", !hasNextPage);
-      $("#usercount").text(data.length);
-      $(".usercount").text(data.length);
-      $(".isActive").text(activeCount);
-      $("#inActive").text(inactiveCount);
-      $("#new-this-month").text(newThisMonthCount);
-    });
-  };
-  // })
+  //     updateTable(data, page);
+  //     $("#prev-btn-users").prop("disabled", page <= 1);
+  //     $("#next-btn-users").prop("disabled", !hasNextPage);
+  //     $("#usercount").text(data.length);
+  //     $(".usercount").text(data.length);
+  //     $(".isActive").text(activeCount);
+  //     $("#inActive").text(inactiveCount);
+  //     $("#new-this-month").text(newThisMonthCount);
+  //   });
+  // };
+  // // })
 
   // Update the role of a specific user to any valid role
   const updateRole = (userId, newRole, lgaId = null) => {
@@ -766,9 +766,6 @@ $(document).ready(function () {
     currentPage.value++;
     fetchData(currentPage.value);
   });
-
-  // Load initial data
-  fetchData(currentPage.value);
 });
 
 function openModal(modalId) {
@@ -956,77 +953,77 @@ $(document).ready(function () {
     });
   }
 
-  function fetchData(page) {
-    $.ajax({
-      url: `${BACKEND_URL}/indigene/certificate/request?page=${page}&limit=${pageSize}&statuses=Pending,Rejected`,
-      method: "GET",
-      headers: apiHeaders,
-      success: function (response) {
-        const { data, hasNextPage } = response;
-        // console.log("data", data);
-        $("#cert-request").text(data.length);
+  // function fetchData(page) {
+  //   $.ajax({
+  //     url: `${BACKEND_URL}/indigene/certificate/request?page=${page}&limit=${pageSize}&statuses=Pending,Rejected`,
+  //     method: "GET",
+  //     headers: apiHeaders,
+  //     success: function (response) {
+  //       const { data, hasNextPage } = response;
+  //       // console.log("data", data);
+  //       $("#cert-request").text(data.length);
 
-        renderTable(data);
-        updatePaginationButtons(hasNextPage);
-        updateRequestCount(data.length);
+  //       renderTable(data);
+  //       updatePaginationButtons(hasNextPage);
+  //       updateRequestCount(data.length);
 
-        let pendingCount = 0;
-        let rejectedCount = 0;
+  //       let pendingCount = 0;
+  //       let rejectedCount = 0;
 
-        data.forEach((element) => {
-          if (element.status === "Pending") {
-            pendingCount++;
-          }
-          if (element.status === "Rejected") {
-            rejectedCount++;
-          }
-        });
+  //       data.forEach((element) => {
+  //         if (element.status === "Pending") {
+  //           pendingCount++;
+  //         }
+  //         if (element.status === "Rejected") {
+  //           rejectedCount++;
+  //         }
+  //       });
 
-        $("#pending").text(pendingCount);
-        $("#rejected").text(rejectedCount);
-      },
-      error: function (error) {
-        console.error("Error fetching data:", error);
-      },
-    });
-  }
+  //       $("#pending").text(pendingCount);
+  //       $("#rejected").text(rejectedCount);
+  //     },
+  //     error: function (error) {
+  //       console.error("Error fetching data:", error);
+  //     },
+  //   });
+  // }
 
-  function handleApproval(requestId) {
-    $.ajax({
-      url: `${BACKEND_URL}/indigene/certificate/${requestId}/approve`,
-      method: "PATCH",
-      headers: apiHeaders,
-      success: function () {
-        fetchData(currentPage);
-      },
-      error: function (error) {
-        console.error("Error approving request:", error);
-      },
-    });
-  }
+  // function handleApproval(requestId) {
+  //   $.ajax({
+  //     url: `${BACKEND_URL}/indigene/certificate/${requestId}/approve`,
+  //     method: "PATCH",
+  //     headers: apiHeaders,
+  //     success: function () {
+  //       fetchData(currentPage);
+  //     },
+  //     error: function (error) {
+  //       console.error("Error approving request:", error);
+  //     },
+  //   });
+  // }
 
-  function handleRejection(rejectionReason) {
-    if (!rejectionReason) {
-      alert("Please provide a rejection reason.");
-      return;
-    }
+  // function handleRejection(rejectionReason) {
+  //   if (!rejectionReason) {
+  //     alert("Please provide a rejection reason.");
+  //     return;
+  //   }
 
-    $.ajax({
-      url: `${BACKEND_URL}/indigene/certificate/${rejectionId}/reject`,
-      method: "PATCH",
-      contentType: "application/json",
-      data: JSON.stringify({ rejectionReason }),
-      headers: apiHeaders,
-      success: function () {
-        $("#rejectionModal").modal("hide");
-        $("#rejectionReason").val("");
-        fetchData(currentPage);
-      },
-      error: function (error) {
-        console.error("Error rejecting request:", error);
-      },
-    });
-  }
+  //   $.ajax({
+  //     url: `${BACKEND_URL}/indigene/certificate/${rejectionId}/reject`,
+  //     method: "PATCH",
+  //     contentType: "application/json",
+  //     data: JSON.stringify({ rejectionReason }),
+  //     headers: apiHeaders,
+  //     success: function () {
+  //       $("#rejectionModal").modal("hide");
+  //       $("#rejectionReason").val("");
+  //       fetchData(currentPage);
+  //     },
+  //     error: function (error) {
+  //       console.error("Error rejecting request:", error);
+  //     },
+  //   });
+  // }
 
   function handleVerification(requestId) {
     $.ajax({
@@ -1407,9 +1404,6 @@ $(document).ready(function () {
         // Handle Certificate Download
         async function handleDownload(certificateId) {
           if (
-            // !confirm(
-            //   "Warning! Sure you want to download? Click ok to continue or else click cancel. You can only download once."
-            // )
             !confirm(
               "Warning! Sure you want to download? Click ok to continue or else click cancel."
             )
@@ -1668,256 +1662,256 @@ $(document).ready(function () {
 });
 
 // Download Cert
-$(document).ready(function () {
-  let downloadUrl = `${BACKEND_URL}/indigene/certificate/download/`;
-  let currentPage = 1;
-  const pageSize = 10;
+// $(document).ready(function () {
+//   let downloadUrl = `${BACKEND_URL}/indigene/certificate/download/`;
+//   let currentPage = 1;
+//   const pageSize = 10;
 
-  function fetchData(page) {
-    $.ajax({
-      url: `${BACKEND_URL}/indigene/certificate/approval?page=${page}&limit=${pageSize}`,
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      success: function (response) {
-        const { data, hasNextPage } = response;
+//   function fetchData(page) {
+//     $.ajax({
+//       url: `${BACKEND_URL}/indigene/certificate/approval?page=${page}&limit=${pageSize}`,
+//       method: "GET",
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//       },
+//       success: function (response) {
+//         const { data, hasNextPage } = response;
 
-        const tableBody = $("#approval-table");
-        tableBody.empty();
+//         const tableBody = $("#approval-table");
+//         tableBody.empty();
 
-        data.forEach((item, index) => {
-          // Attach an event handler to trigger the download with authentication
-          tableBody.append(`
-            <tr>
-              <td>${(page - 1) * pageSize + index + 1}</td>
-              <td>${item.firstname} ${item.lastname}</td>
-              <td>${item.phone}</td>
-              <td>${item.email}</td>
-              <td>${item.status}</td>
-              <td>
-                <button class="btn btn-xs download-btn" data-id="${
-                  item._id
-                }">Download Certificate</button>
-              </td>
-            </tr>
-          `);
-        });
+//         data.forEach((item, index) => {
+//           // Attach an event handler to trigger the download with authentication
+//           tableBody.append(`
+//             <tr>
+//               <td>${(page - 1) * pageSize + index + 1}</td>
+//               <td>${item.firstname} ${item.lastname}</td>
+//               <td>${item.phone}</td>
+//               <td>${item.email}</td>
+//               <td>${item.status}</td>
+//               <td>
+//                 <button class="btn btn-xs download-btn" data-id="${
+//                   item._id
+//                 }">Download Certificate</button>
+//               </td>
+//             </tr>
+//           `);
+//         });
 
-        // Add click event listeners for download buttons
-        $(".download-btn").click(function () {
-          const certificateId = $(this).data("id");
-          $.ajax({
-            url: `${downloadUrl}${certificateId}`,
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-            xhrFields: {
-              responseType: "blob", // To handle file downloads
-            },
-            success: function (data) {
-              // Create a link element, trigger the download, and remove the element
-              const url = window.URL.createObjectURL(new Blob([data]));
-              const a = document.createElement("a");
-              a.href = url;
-              a.download = `certificate.pdf`; // Adjust filename if needed
-              document.body.appendChild(a);
-              a.click();
-              document.body.removeChild(a);
-              window.URL.revokeObjectURL(url);
-            },
-            error: function (xhr) {
-              const errorMessage = xhr.responseJSON
-                ? xhr.responseJSON.message
-                : "Failed to change password";
-              alert(errorMessage);
-            },
-          });
-        });
+//         // Add click event listeners for download buttons
+//         $(".download-btn").click(function () {
+//           const certificateId = $(this).data("id");
+//           $.ajax({
+//             url: `${downloadUrl}${certificateId}`,
+//             method: "GET",
+//             headers: {
+//               Authorization: `Bearer ${token}`,
+//             },
+//             xhrFields: {
+//               responseType: "blob", // To handle file downloads
+//             },
+//             success: function (data) {
+//               // Create a link element, trigger the download, and remove the element
+//               const url = window.URL.createObjectURL(new Blob([data]));
+//               const a = document.createElement("a");
+//               a.href = url;
+//               a.download = `certificate.pdf`; // Adjust filename if needed
+//               document.body.appendChild(a);
+//               a.click();
+//               document.body.removeChild(a);
+//               window.URL.revokeObjectURL(url);
+//             },
+//             error: function (xhr) {
+//               const errorMessage = xhr.responseJSON
+//                 ? xhr.responseJSON.message
+//                 : "Failed to change password";
+//               alert(errorMessage);
+//             },
+//           });
+//         });
 
-        // Update button states
-        $("#btnPrev").prop("disabled", page === 1);
-        $("#btnNext").prop("disabled", !hasNextPage);
-        $("#approvals").text(data.length);
-      },
-      error: function (error) {
-        console.error("Error fetching data:", error);
-      },
-    });
-  }
+//         // Update button states
+//         $("#btnPrev").prop("disabled", page === 1);
+//         $("#btnNext").prop("disabled", !hasNextPage);
+//         $("#approvals").text(data.length);
+//       },
+//       error: function (error) {
+//         console.error("Error fetching data:", error);
+//       },
+//     });
+//   }
 
-  $("#btnPrev").click(function () {
-    if (currentPage > 1) {
-      currentPage--;
-      fetchData(currentPage);
-    }
-  });
+//   $("#btnPrev").click(function () {
+//     if (currentPage > 1) {
+//       currentPage--;
+//       fetchData(currentPage);
+//     }
+//   });
 
-  $("#btnNext").click(function () {
-    currentPage++;
-    fetchData(currentPage);
-  });
+//   $("#btnNext").click(function () {
+//     currentPage++;
+//     fetchData(currentPage);
+//   });
 
-  // Initial data load
-  fetchData(currentPage);
-});
+//   // Initial data load
+//   fetchData(currentPage);
+// });
 
-$(document).ready(function () {
-  $.ajax({
-    url: `${BACKEND_URL}/indigene/certificate/latest`,
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    success: function (latestCertificate) {
-      // Function to format time ago
-      /**
-       * Formats the time difference between now and the given date.
-       * @param {string} date - The date to compare with the current time.
-       * @returns {string} - A human-readable string representing the time difference.
-       */
-      function timeAgo(date) {
-        const now = new Date();
-        const updated = new Date(date);
-        const diff = Math.floor((now - updated) / 1000); // in seconds
+// $(document).ready(function () {
+//   $.ajax({
+//     url: `${BACKEND_URL}/indigene/certificate/latest`,
+//     method: "GET",
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//     success: function (latestCertificate) {
+//       // Function to format time ago
+//       /**
+//        * Formats the time difference between now and the given date.
+//        * @param {string} date - The date to compare with the current time.
+//        * @returns {string} - A human-readable string representing the time difference.
+//        */
+//       function timeAgo(date) {
+//         const now = new Date();
+//         const updated = new Date(date);
+//         const diff = Math.floor((now - updated) / 1000); // in seconds
 
-        if (diff < 60) return "just now";
-        if (diff < 3600) return `${Math.floor(diff / 60)} minute(s) ago`;
-        if (diff < 86400) return `${Math.floor(diff / 3600)} hour(s) ago`;
-        if (diff < 604800) return `${Math.floor(diff / 86400)} day(s) ago`;
-        return updated.toLocaleDateString(); // fallback to actual date
-      }
+//         if (diff < 60) return "just now";
+//         if (diff < 3600) return `${Math.floor(diff / 60)} minute(s) ago`;
+//         if (diff < 86400) return `${Math.floor(diff / 3600)} hour(s) ago`;
+//         if (diff < 604800) return `${Math.floor(diff / 86400)} day(s) ago`;
+//         return updated.toLocaleDateString(); // fallback to actual date
+//       }
 
-      if (latestCertificate) {
-        // Handle the single latest record
-        $("#latest-cert-request").text(
-          latestCertificate.firstname + " " + latestCertificate.lastname
-        );
+//       if (latestCertificate) {
+//         // Handle the single latest record
+//         $("#latest-cert-request").text(
+//           latestCertificate.firstname + " " + latestCertificate.lastname
+//         );
 
-        $("#cert-pending").text(latestCertificate.status);
+//         $("#cert-pending").text(latestCertificate.status);
 
-        const updatedTime = timeAgo(latestCertificate.updated_at);
-        $(".cert-pending-date").text(updatedTime);
-      } else {
-        console.log("No approved certificates found");
-      }
-    },
-    error: function (error) {
-      console.error("Error fetching latest certificate:", error);
-    },
-  });
-});
+//         const updatedTime = timeAgo(latestCertificate.updated_at);
+//         $(".cert-pending-date").text(updatedTime);
+//       } else {
+//         console.log("No approved certificates found");
+//       }
+//     },
+//     error: function (error) {
+//       console.error("Error fetching latest certificate:", error);
+//     },
+//   });
+// });
 
-$(document).ready(function () {
-  $.ajax({
-    url: `${BACKEND_URL}/idcard/latest`,
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    success: function (latestCard) {
-      function timeAgo(date) {
-        const now = new Date();
-        const updated = new Date(date);
-        const diff = Math.floor((now - updated) / 1000); // in seconds
+// $(document).ready(function () {
+//   $.ajax({
+//     url: `${BACKEND_URL}/idcard/latest`,
+//     method: "GET",
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//     success: function (latestCard) {
+//       function timeAgo(date) {
+//         const now = new Date();
+//         const updated = new Date(date);
+//         const diff = Math.floor((now - updated) / 1000); // in seconds
 
-        if (diff < 60) return "just now";
-        if (diff < 3600) return `${Math.floor(diff / 60)} minute(s) ago`;
-        if (diff < 86400) return `${Math.floor(diff / 3600)} hour(s) ago`;
-        if (diff < 604800) return `${Math.floor(diff / 86400)} day(s) ago`;
-        return updated.toLocaleDateString(); // fallback to actual date
-      }
+//         if (diff < 60) return "just now";
+//         if (diff < 3600) return `${Math.floor(diff / 60)} minute(s) ago`;
+//         if (diff < 86400) return `${Math.floor(diff / 3600)} hour(s) ago`;
+//         if (diff < 604800) return `${Math.floor(diff / 86400)} day(s) ago`;
+//         return updated.toLocaleDateString(); // fallback to actual date
+//       }
 
-      // Handle the single latest record
-      $("#latest-card-request").text(
-        latestCard.firstname + " " + latestCard.lastname
-      );
+//       // Handle the single latest record
+//       $("#latest-card-request").text(
+//         latestCard.firstname + " " + latestCard.lastname
+//       );
 
-      $("#card-pending").text(latestCard.status);
-      const updatedTime = timeAgo(latestCard.updated_at);
-      $(".card-pending-date").text(updatedTime);
-    },
-    error: function (error) {
-      console.error("Error fetching latest card:", error);
-    },
-  });
-  // }
-});
+//       $("#card-pending").text(latestCard.status);
+//       const updatedTime = timeAgo(latestCard.updated_at);
+//       $(".card-pending-date").text(updatedTime);
+//     },
+//     error: function (error) {
+//       console.error("Error fetching latest card:", error);
+//     },
+//   });
+//   // }
+// });
 
-$(document).ready(function () {
-  $.ajax({
-    url: `${BACKEND_URL}/indigene/certificate/latest-approved`,
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    success: function (certificate) {
-      function timeAgo(date) {
-        const now = new Date();
-        const updated = new Date(date);
-        const diff = Math.floor((now - updated) / 1000); // in seconds
+// $(document).ready(function () {
+//   $.ajax({
+//     url: `${BACKEND_URL}/indigene/certificate/latest-approved`,
+//     method: "GET",
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//     success: function (certificate) {
+//       function timeAgo(date) {
+//         const now = new Date();
+//         const updated = new Date(date);
+//         const diff = Math.floor((now - updated) / 1000); // in seconds
 
-        if (diff < 60) return "just now";
-        if (diff < 3600) return `${Math.floor(diff / 60)} minute(s) ago`;
-        if (diff < 86400) return `${Math.floor(diff / 3600)} hour(s) ago`;
-        if (diff < 604800) return `${Math.floor(diff / 86400)} day(s) ago`;
-        return updated.toLocaleDateString(); // fallback to actual date
-      }
+//         if (diff < 60) return "just now";
+//         if (diff < 3600) return `${Math.floor(diff / 60)} minute(s) ago`;
+//         if (diff < 86400) return `${Math.floor(diff / 3600)} hour(s) ago`;
+//         if (diff < 604800) return `${Math.floor(diff / 86400)} day(s) ago`;
+//         return updated.toLocaleDateString(); // fallback to actual date
+//       }
 
-      if (certificate) {
-        // Update UI with this single record
-        $("#latest-cert-approved").text(
-          certificate.firstname + " " + certificate.lastname
-        );
-        $("#cert-approved").text(certificate.status);
+//       if (certificate) {
+//         // Update UI with this single record
+//         $("#latest-cert-approved").text(
+//           certificate.firstname + " " + certificate.lastname
+//         );
+//         $("#cert-approved").text(certificate.status);
 
-        const updatedTime = timeAgo(certificate.updated_at);
-        $(".cert-approved-date").text(updatedTime);
-      } else {
-        console.log("No approved certificates found");
-      }
-    },
-    error: function (error) {
-      console.error("Error:", error);
-    },
-  });
-});
+//         const updatedTime = timeAgo(certificate.updated_at);
+//         $(".cert-approved-date").text(updatedTime);
+//       } else {
+//         console.log("No approved certificates found");
+//       }
+//     },
+//     error: function (error) {
+//       console.error("Error:", error);
+//     },
+//   });
+// });
 
-$(document).ready(function () {
-  $.ajax({
-    url: `${BACKEND_URL}/idcard/latest-approved`,
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    success: function (card) {
-      function timeAgo(date) {
-        const now = new Date();
-        const updated = new Date(date);
-        const diff = Math.floor((now - updated) / 1000); // in seconds
+// $(document).ready(function () {
+//   $.ajax({
+//     url: `${BACKEND_URL}/idcard/latest-approved`,
+//     method: "GET",
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//     success: function (card) {
+//       function timeAgo(date) {
+//         const now = new Date();
+//         const updated = new Date(date);
+//         const diff = Math.floor((now - updated) / 1000); // in seconds
 
-        if (diff < 60) return "just now";
-        if (diff < 3600) return `${Math.floor(diff / 60)} minute(s) ago`;
-        if (diff < 86400) return `${Math.floor(diff / 3600)} hour(s) ago`;
-        if (diff < 604800) return `${Math.floor(diff / 86400)} day(s) ago`;
-        return updated.toLocaleDateString(); // fallback to actual date
-      }
-      if (card) {
-        // Update UI with this single record
-        $("#latest-card-approved").text(card.firstname + " " + card.lastname);
-        $("#card-approved").text(card.status);
-        const updatedTime = timeAgo(card.updated_at);
-        $(".card-approved-date").text(updatedTime);
-      } else {
-        console.log("No approved card found");
-      }
-    },
-    error: function (error) {
-      console.error("Error:", error);
-    },
-  });
-});
+//         if (diff < 60) return "just now";
+//         if (diff < 3600) return `${Math.floor(diff / 60)} minute(s) ago`;
+//         if (diff < 86400) return `${Math.floor(diff / 3600)} hour(s) ago`;
+//         if (diff < 604800) return `${Math.floor(diff / 86400)} day(s) ago`;
+//         return updated.toLocaleDateString(); // fallback to actual date
+//       }
+//       if (card) {
+//         // Update UI with this single record
+//         $("#latest-card-approved").text(card.firstname + " " + card.lastname);
+//         $("#card-approved").text(card.status);
+//         const updatedTime = timeAgo(card.updated_at);
+//         $(".card-approved-date").text(updatedTime);
+//       } else {
+//         console.log("No approved card found");
+//       }
+//     },
+//     error: function (error) {
+//       console.error("Error:", error);
+//     },
+//   });
+// });
 
 // LGA Data for Nigeria
 // const nigeriaData = {
@@ -2766,6 +2760,7 @@ $(document).ready(function () {
 // }
 
 // Select country of residence
+
 $(document).ready(function () {
   const countrySelect = $("#countryOfResidence");
 
@@ -2976,7 +2971,7 @@ $(document).ready(function () {
         async function handleDownload(cardId) {
           if (
             !confirm(
-              "Warning! Sure you want to download? Click ok to continue or else click cancel. You can only download once."
+              "Warning! Sure you want to download? Click ok to continue or else click cancel."
             )
           ) {
             return;
@@ -3242,87 +3237,87 @@ $(document).ready(function () {
   const pageSize = 10;
 
   // Utility function to make API requests
-  const apiRequest = (
-    url,
-    method,
-    headers = {},
-    data = null,
-    onSuccess,
-    onError
-  ) => {
-    $.ajax({
-      url,
-      method,
-      headers,
-      data,
-      success: onSuccess,
-      error: onError || ((error) => console.error("API Error:", error)),
-    });
-  };
+  // const apiRequest = (
+  //   url,
+  //   method,
+  //   headers = {},
+  //   data = null,
+  //   onSuccess,
+  //   onError
+  // ) => {
+  //   $.ajax({
+  //     url,
+  //     method,
+  //     headers,
+  //     data,
+  //     success: onSuccess,
+  //     error: onError || ((error) => console.error("API Error:", error)),
+  //   });
+  // };
 
-  // Update the table with user data
-  const updateTable = (data, page) => {
-    const tableBody = $("#transaction-table");
-    tableBody.empty(); // Clear existing table rows
+  // // Update the table with user data
+  // const updateTable = (data, page) => {
+  //   const tableBody = $("#transaction-table");
+  //   tableBody.empty(); // Clear existing table rows
 
-    // Populate table rows with user data
-    data.forEach((item, index) => {
-      const rowHtml = `
-        <tr>
-          <td>${(page - 1) * pageSize + index + 1}</td>
-          <td>${item.paymentType}</td>
-          <td>${item.amount}</td>
-          <td>${item.email}</td>
-          <td>${item.status}</td>
-          <td>${item.reference}</td>
+  //   // Populate table rows with user data
+  //   data.forEach((item, index) => {
+  //     const rowHtml = `
+  //       <tr>
+  //         <td>${(page - 1) * pageSize + index + 1}</td>
+  //         <td>${item.paymentType}</td>
+  //         <td>${item.amount}</td>
+  //         <td>${item.email}</td>
+  //         <td>${item.status}</td>
+  //         <td>${item.reference}</td>
 
-           <td>
-           <button class="btn btn-sm verify-btn" 
-                    data-id="${item.reference}" 
-                    style="background-color: #007BFF; color: #fff">
-              verify
-            </button>
-          </td>
-        </tr>`;
-      tableBody.append(rowHtml); // Add the row to the table
-    });
-  };
+  //          <td>
+  //          <button class="btn btn-sm verify-btn"
+  //                   data-id="${item.reference}"
+  //                   style="background-color: #007BFF; color: #fff">
+  //             verify
+  //           </button>
+  //         </td>
+  //       </tr>`;
+  //     tableBody.append(rowHtml); // Add the row to the table
+  //   });
+  // };
 
   // Fetch user data for the current page
-  const fetchData = (page) => {
-    const url = `${BACKEND_URL}/transaction?page=${page}&limit=${pageSize}`;
-    const headers = { Authorization: `Bearer ${token}` };
+  // const fetchData = (page) => {
+  //   const url = `${BACKEND_URL}/transaction?page=${page}&limit=${pageSize}`;
+  //   const headers = { Authorization: `Bearer ${token}` };
 
-    apiRequest(url, "GET", headers, null, (response) => {
-      const { data, hasNextPage } = response;
-      updateTable(data, page);
-      // Calculate the total amount
-      // Sum all amounts (in kobo) and convert to Naira
-      let totalAmountKobo = 0;
-      data.forEach((item) => {
-        totalAmountKobo += item.amount; // Assuming `amount` is in kobo
-      });
+  //   apiRequest(url, "GET", headers, null, (response) => {
+  //     const { data, hasNextPage } = response;
+  //     updateTable(data, page);
+  //     // Calculate the total amount
+  //     // Sum all amounts (in kobo) and convert to Naira
+  //     let totalAmountKobo = 0;
+  //     data.forEach((item) => {
+  //       totalAmountKobo += item.amount; // Assuming `amount` is in kobo
+  //     });
 
-      const totalAmountNaira = totalAmountKobo / 100; // Convert to Naira
+  //     const totalAmountNaira = totalAmountKobo / 100; // Convert to Naira
 
-      // Function to format numbers as ₦ with K, M, B
-      function formatCurrencyShort(amount) {
-        if (amount >= 1_000_000_000) {
-          return "₦" + (amount / 1_000_000_000).toFixed(1) + "B";
-        } else if (amount >= 1_000_000) {
-          return "₦" + (amount / 1_000_000).toFixed(1) + "M";
-        } else if (amount >= 1_000) {
-          return "₦" + (amount / 1_000).toFixed(1) + "K";
-        } else {
-          return "₦" + amount.toFixed(0);
-        }
-      }
-      const formattedAmount = formatCurrencyShort(totalAmountNaira);
-      $("#btnPrevTran").prop("disabled", page === 1);
-      $("#btnNextTran").prop("disabled", !hasNextPage);
-      $("#transaction").text(formattedAmount); // Display the total amount
-    });
-  };
+  //     // Function to format numbers as ₦ with K, M, B
+  //     function formatCurrencyShort(amount) {
+  //       if (amount >= 1_000_000_000) {
+  //         return "₦" + (amount / 1_000_000_000).toFixed(1) + "B";
+  //       } else if (amount >= 1_000_000) {
+  //         return "₦" + (amount / 1_000_000).toFixed(1) + "M";
+  //       } else if (amount >= 1_000) {
+  //         return "₦" + (amount / 1_000).toFixed(1) + "K";
+  //       } else {
+  //         return "₦" + amount.toFixed(0);
+  //       }
+  //     }
+  //     const formattedAmount = formatCurrencyShort(totalAmountNaira);
+  //     $("#btnPrevTran").prop("disabled", page === 1);
+  //     $("#btnNextTran").prop("disabled", !hasNextPage);
+  //     $("#transaction").text(formattedAmount); // Display the total amount
+  //   });
+  // };
 
   // Fetch and display user details in a modern profile modal
   const verifyPayment = (reference) => {
@@ -3336,7 +3331,7 @@ $(document).ready(function () {
       success: function (response) {
         console.log(response);
         alert(`Payment verification result: ${response.message}`);
-        fetchData(); // Reload to update transaction status
+        // fetchData(); // Reload to update transaction status
       },
       error: function (error) {
         console.error("Verification Error:", error);
@@ -3350,22 +3345,6 @@ $(document).ready(function () {
     const reference = $(this).data("id");
     verifyPayment(reference);
   });
-
-  // Handle pagination
-  $("#btnPrevTran").click(function () {
-    if (currentPage.value > 1) {
-      currentPage.value--;
-      fetchData(currentPage.value);
-    }
-  });
-
-  $("#btnNextTran").click(function () {
-    currentPage.value++;
-    fetchData(currentPage.value);
-  });
-
-  // Load initial data
-  fetchData(currentPage.value);
 });
 
 // Function to update the header title based on the current page
@@ -3409,1127 +3388,1127 @@ let currentPageUser = 1;
 const pageSize = 10;
 
 // Get All kindred
-function fetchAllKindred(page) {
-  $.ajax({
-    url: `${BACKEND_URL}/kindred?page=${page}&limit=${pageSize}`,
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    success: function (response) {
-      const { data, hasNextPage } = response;
+// function fetchAllKindred(page) {
+//   $.ajax({
+//     url: `${BACKEND_URL}/kindred?page=${page}&limit=${pageSize}`,
+//     method: "GET",
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//     success: function (response) {
+//       const { data, hasNextPage } = response;
 
-      const tableBody = $("#kindred-table");
-      tableBody.empty();
+//       const tableBody = $("#kindred-table");
+//       tableBody.empty();
 
-      data.forEach((item, index) => {
-        tableBody.append(`
-            <tr>
-              <td>${(page - 1) * pageSize + index + 1}</td>
-              <td>${item.firstname} ${item.lastname}</td>
-              <td>${item.phone}</td>
-              <td>${item.address}</td>
-              <td>${item.kindred}</td>
-              <td>${item.lga}</td>
+//       data.forEach((item, index) => {
+//         tableBody.append(`
+//             <tr>
+//               <td>${(page - 1) * pageSize + index + 1}</td>
+//               <td>${item.firstname} ${item.lastname}</td>
+//               <td>${item.phone}</td>
+//               <td>${item.address}</td>
+//               <td>${item.kindred}</td>
+//               <td>${item.lga}</td>
 
-            </tr>
-          `);
-      });
+//             </tr>
+//           `);
+//       });
 
-      $("#kindred-btn-prev").prop("disabled", page === 1);
-      $("#kindred-btn-next").prop("disabled", !hasNextPage);
-    },
-    error: function (error) {
-      console.error("Error fetching all kindred:", error);
-    },
-  });
-}
+//       $("#kindred-btn-prev").prop("disabled", page === 1);
+//       $("#kindred-btn-next").prop("disabled", !hasNextPage);
+//     },
+//     error: function (error) {
+//       console.error("Error fetching all kindred:", error);
+//     },
+//   });
+// }
 
-//Fetch kindred by userId
-function fetchUserKindred(page) {
-  $.ajax({
-    url: `${BACKEND_URL}/kindred/${user.id}?page=${page}&limit=${pageSize}`,
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    success: function (response) {
-      const { data, hasNextPage } = response;
-      const tableBody = $("#user-kindred-table");
-      tableBody.empty();
+// //Fetch kindred by userId
+// function fetchUserKindred(page) {
+//   $.ajax({
+//     url: `${BACKEND_URL}/kindred/${user.id}?page=${page}&limit=${pageSize}`,
+//     method: "GET",
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//     success: function (response) {
+//       const { data, hasNextPage } = response;
+//       const tableBody = $("#user-kindred-table");
+//       tableBody.empty();
 
-      data.forEach((data, index) => {
-        tableBody.append(`
-          <tr>
-            <td>${(page - 1) * pageSize + index + 1}</td>
-            <td>${data.firstname} ${data.lastname}</td>
-            <td>${data.phone}</td>
-            <td>${data.address}</td>
-            <td>${data.kindred}</td>
-            <td>${data.lga}</td>
-            <td>
-              <div class="dropdown">
-                <button class="btn btn-xs btn-action dropdown-toggle" data-bs-toggle="dropdown">
-                  <i class="fas fa-ellipsis-v"></i>
-                </button>
-                <ul class="dropdown-menu">
-                  <li>
-                    <button class="dropdown-item update-user-btn" data-id="${
-                      data._id
-                    }" data-info='${JSON.stringify(data)}'>
-                      Update User
-                    </button>
-                  </li>
-                  <li>
-                    <button class="dropdown-item delete-user-btn" data-id="${
-                      data._id
-                    }" style="color: red;">
-                      Delete User
-                    </button>
-                  </li>
-                </ul>
-              </div>
-            </td>
-          </tr>
-        `);
-      });
+//       data.forEach((data, index) => {
+//         tableBody.append(`
+//           <tr>
+//             <td>${(page - 1) * pageSize + index + 1}</td>
+//             <td>${data.firstname} ${data.lastname}</td>
+//             <td>${data.phone}</td>
+//             <td>${data.address}</td>
+//             <td>${data.kindred}</td>
+//             <td>${data.lga}</td>
+//             <td>
+//               <div class="dropdown">
+//                 <button class="btn btn-xs btn-action dropdown-toggle" data-bs-toggle="dropdown">
+//                   <i class="fas fa-ellipsis-v"></i>
+//                 </button>
+//                 <ul class="dropdown-menu">
+//                   <li>
+//                     <button class="dropdown-item update-user-btn" data-id="${
+//                       data._id
+//                     }" data-info='${JSON.stringify(data)}'>
+//                       Update User
+//                     </button>
+//                   </li>
+//                   <li>
+//                     <button class="dropdown-item delete-user-btn" data-id="${
+//                       data._id
+//                     }" style="color: red;">
+//                       Delete User
+//                     </button>
+//                   </li>
+//                 </ul>
+//               </div>
+//             </td>
+//           </tr>
+//         `);
+//       });
 
-      $("#btnPrevUser").prop("disabled", page === 1);
-      $("#btnNextUser").prop("disabled", !hasNextPage);
-    },
-    error: function (error) {
-      console.error("Error fetching user kindred:", error);
-    },
-  });
-}
+//       $("#btnPrevUser").prop("disabled", page === 1);
+//       $("#btnNextUser").prop("disabled", !hasNextPage);
+//     },
+//     error: function (error) {
+//       console.error("Error fetching user kindred:", error);
+//     },
+//   });
+// }
 
-// Handle Delete User
-function handleDelete(userId) {
-  Swal.fire({
-    title: "Are you sure?",
-    text: "This action cannot be undone!",
-    // icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#d33",
-    cancelButtonColor: "#3085d6",
-    confirmButtonText: "Yes, delete it!",
-  }).then((result) => {
-    if (result.value === true) {
-      $.ajax({
-        url: `${BACKEND_URL}/kindred/${userId}`,
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        success: function () {
-          Swal.fire("Deleted!", "User has been deleted.", "success");
-          fetchUserKindred(currentPageUser);
-        },
-        error: function (error) {
-          Swal.fire("Error!", "Failed to delete user.", "error");
-          console.error("Error deleting request:", error);
-        },
-      });
-    }
-  });
-}
+// // Handle Delete User
+// function handleDelete(userId) {
+//   Swal.fire({
+//     title: "Are you sure?",
+//     text: "This action cannot be undone!",
+//     // icon: "warning",
+//     showCancelButton: true,
+//     confirmButtonColor: "#d33",
+//     cancelButtonColor: "#3085d6",
+//     confirmButtonText: "Yes, delete it!",
+//   }).then((result) => {
+//     if (result.value === true) {
+//       $.ajax({
+//         url: `${BACKEND_URL}/kindred/${userId}`,
+//         method: "DELETE",
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//         },
+//         success: function () {
+//           Swal.fire("Deleted!", "User has been deleted.", "success");
+//           fetchUserKindred(currentPageUser);
+//         },
+//         error: function (error) {
+//           Swal.fire("Error!", "Failed to delete user.", "error");
+//           console.error("Error deleting request:", error);
+//         },
+//       });
+//     }
+//   });
+// }
 
-// Handle Update User
-function handleUpdate(userData) {
-  Swal.fire({
-    title: "Update User",
-    html: `
-      <input id="updateMiddlename" class="swal2-input" placeholder="Email" value=${userData.email}>
-      <input id="updatePhone" class="swal2-input" placeholder="Phone" value="${userData.phone}">
-      <input id="updateAddress" class="swal2-input" placeholder="Address" value="${userData.address}">
-      <input id="updateKindred" class="swal2-input" placeholder="Kindred" value="${userData.kindred}">
-    `,
-    showCancelButton: true,
-    confirmButtonText: "Update",
-    preConfirm: () => {
-      return {
-        middlename: $("#updateMiddlename").val().trim(),
-        phone: $("#updatePhone").val().trim(),
-        address: $("#updateAddress").val().trim(),
-        kindred: $("#updateKindred").val().trim(),
-      };
-    },
-  }).then((result) => {
-    if (result.value) {
-      $.ajax({
-        url: `${BACKEND_URL}/kindred/${userData._id}`,
-        method: "PUT",
-        contentType: "application/json",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        data: JSON.stringify(result.value),
-        success: function () {
-          Swal.fire(
-            "Updated!",
-            "User details updated successfully.",
-            "success"
-          );
-          fetchUserKindred(currentPageUser);
-        },
-        error: function (error) {
-          Swal.fire("Error!", "Failed to update user.", "error");
-          console.error("Error updating user:", error);
-        },
-      });
-    }
-  });
-}
+// // Handle Update User
+// function handleUpdate(userData) {
+//   Swal.fire({
+//     title: "Update User",
+//     html: `
+//       <input id="updateMiddlename" class="swal2-input" placeholder="Email" value=${userData.email}>
+//       <input id="updatePhone" class="swal2-input" placeholder="Phone" value="${userData.phone}">
+//       <input id="updateAddress" class="swal2-input" placeholder="Address" value="${userData.address}">
+//       <input id="updateKindred" class="swal2-input" placeholder="Kindred" value="${userData.kindred}">
+//     `,
+//     showCancelButton: true,
+//     confirmButtonText: "Update",
+//     preConfirm: () => {
+//       return {
+//         middlename: $("#updateMiddlename").val().trim(),
+//         phone: $("#updatePhone").val().trim(),
+//         address: $("#updateAddress").val().trim(),
+//         kindred: $("#updateKindred").val().trim(),
+//       };
+//     },
+//   }).then((result) => {
+//     if (result.value) {
+//       $.ajax({
+//         url: `${BACKEND_URL}/kindred/${userData._id}`,
+//         method: "PUT",
+//         contentType: "application/json",
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//         },
+//         data: JSON.stringify(result.value),
+//         success: function () {
+//           Swal.fire(
+//             "Updated!",
+//             "User details updated successfully.",
+//             "success"
+//           );
+//           fetchUserKindred(currentPageUser);
+//         },
+//         error: function (error) {
+//           Swal.fire("Error!", "Failed to update user.", "error");
+//           console.error("Error updating user:", error);
+//         },
+//       });
+//     }
+//   });
+// }
 
-function fetchKindredAll(page = 1, pageSize = 100) {
-  $.ajax({
-    url: `${BACKEND_URL}/kindred?page=${page}&limit=${pageSize}`,
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    success: function (response) {
-      if (response && response.data && response.data.length) {
-        const kindredSelect = $("#kindred");
-        kindredSelect.empty(); // Clear existing options
-        kindredSelect.append('<option value="">Select Kindred</option>'); // Default option
+// function fetchKindredAll(page = 1, pageSize = 100) {
+//   $.ajax({
+//     url: `${BACKEND_URL}/kindred?page=${page}&limit=${pageSize}`,
+//     method: "GET",
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//     success: function (response) {
+//       if (response && response.data && response.data.length) {
+//         const kindredSelect = $("#kindred");
+//         kindredSelect.empty(); // Clear existing options
+//         kindredSelect.append('<option value="">Select Kindred</option>'); // Default option
 
-        response.data.forEach(function (kindred) {
-          kindredSelect.append(
-            `<option value="${kindred.kindred}">${kindred.kindred}</option>`
-          );
-        });
-      } else {
-        console.warn("No kindred found in response.");
-      }
-    },
-    error: function (error) {
-      console.error("Error fetching all kindred:", error);
-    },
-  });
-}
+//         response.data.forEach(function (kindred) {
+//           kindredSelect.append(
+//             `<option value="${kindred.kindred}">${kindred.kindred}</option>`
+//           );
+//         });
+//       } else {
+//         console.warn("No kindred found in response.");
+//       }
+//     },
+//     error: function (error) {
+//       console.error("Error fetching all kindred:", error);
+//     },
+//   });
+// }
 
-$(document).ready(function () {
-  fetchKindredAll();
-});
+// $(document).ready(function () {
+//   fetchKindredAll();
+// });
 
-// Event Delegation for Delete & Update Buttons
-$(document).on("click", ".delete-user-btn", function () {
-  const userId = $(this).data("id");
-  handleDelete(userId);
-});
+// // Event Delegation for Delete & Update Buttons
+// $(document).on("click", ".delete-user-btn", function () {
+//   const userId = $(this).data("id");
+//   handleDelete(userId);
+// });
 
-$(document).on("click", ".update-user-btn", function () {
-  const userData = $(this).data("info");
-  handleUpdate(userData);
-});
+// $(document).on("click", ".update-user-btn", function () {
+//   const userData = $(this).data("info");
+//   handleUpdate(userData);
+// });
 
-$(document).ready(function () {
-  // Initial data load
-  fetchAllKindred(currentPageAll);
-  fetchUserKindred(currentPageUser);
+// $(document).ready(function () {
+//   // Initial data load
+//   fetchAllKindred(currentPageAll);
+//   fetchUserKindred(currentPageUser);
 
-  // Pagination handlers for All Kindred
-  $("#btnPrevAll").click(function () {
-    if (currentPageAll > 1) {
-      currentPageAll--;
-      fetchAllKindred(currentPageAll);
-    }
-  });
+//   // Pagination handlers for All Kindred
+//   $("#btnPrevAll").click(function () {
+//     if (currentPageAll > 1) {
+//       currentPageAll--;
+//       fetchAllKindred(currentPageAll);
+//     }
+//   });
 
-  $("#btnNextAll").click(function () {
-    currentPageAll++;
-    fetchAllKindred(currentPageAll);
-  });
+//   $("#btnNextAll").click(function () {
+//     currentPageAll++;
+//     fetchAllKindred(currentPageAll);
+//   });
 
-  // Pagination handlers for User Kindred
-  $("#btnPrevUser").click(function () {
-    if (currentPageUser > 1) {
-      currentPageUser--;
-      fetchUserKindred(currentPageUser);
-    }
-  });
+//   // Pagination handlers for User Kindred
+//   $("#btnPrevUser").click(function () {
+//     if (currentPageUser > 1) {
+//       currentPageUser--;
+//       fetchUserKindred(currentPageUser);
+//     }
+//   });
 
-  $("#btnNextUser").click(function () {
-    currentPageUser++;
-    fetchUserKindred(currentPageUser);
-  });
+//   $("#btnNextUser").click(function () {
+//     currentPageUser++;
+//     fetchUserKindred(currentPageUser);
+//   });
 
-  // // Handle form submission
-  $(document).ready(function () {
-    $("#kindredForm").on("submit", function (e) {
-      e.preventDefault();
+//   // // Handle form submission
+//   $(document).ready(function () {
+//     $("#kindredForm").on("submit", function (e) {
+//       e.preventDefault();
 
-      // Collect form data
-      const formData = {
-        fullname: $("#fullname").val().trim(),
-        phone: $("#phone").val().trim(),
-        lga: $("#lga").val().trim(),
-        address: $("#address").val().trim(),
-        kindred: $("#kindred").val().trim(),
-        userId: user?.id, // Ensure user is defined
-      };
+//       // Collect form data
+//       const formData = {
+//         fullname: $("#fullname").val().trim(),
+//         phone: $("#phone").val().trim(),
+//         lga: $("#lga").val().trim(),
+//         address: $("#address").val().trim(),
+//         kindred: $("#kindred").val().trim(),
+//         userId: user?.id, // Ensure user is defined
+//       };
 
-      // Validate form inputs
-      for (const field in formData) {
-        if (!formData[field]) {
-          Swal.fire("Oops...", `Please fill in the ${field} field`, "error");
-          return;
-        }
-      }
+//       // Validate form inputs
+//       for (const field in formData) {
+//         if (!formData[field]) {
+//           Swal.fire("Oops...", `Please fill in the ${field} field`, "error");
+//           return;
+//         }
+//       }
 
-      // Ensure token is available
-      if (!token) {
-        Swal.fire("Unauthorized", "User authentication required!", "error");
-        return;
-      }
+//       // Ensure token is available
+//       if (!token) {
+//         Swal.fire("Unauthorized", "User authentication required!", "error");
+//         return;
+//       }
 
-      // Disable submit button to prevent duplicate submissions
-      const $submitButton = $("#kindredForm button[type='submit']");
-      $submitButton.prop("disabled", true).text("Processing...");
+//       // Disable submit button to prevent duplicate submissions
+//       const $submitButton = $("#kindredForm button[type='submit']");
+//       $submitButton.prop("disabled", true).text("Processing...");
 
-      $.ajax({
-        type: "POST",
-        url: `${BACKEND_URL}/kindred/create`,
-        contentType: "application/json",
-        headers: { Authorization: `Bearer ${token}` },
-        data: JSON.stringify(formData),
-        success: function (response) {
-          Swal.fire(
-            "Success!",
-            response.message || "Kindred successfully created!",
-            "success"
-          );
+//       $.ajax({
+//         type: "POST",
+//         url: `${BACKEND_URL}/kindred/create`,
+//         contentType: "application/json",
+//         headers: { Authorization: `Bearer ${token}` },
+//         data: JSON.stringify(formData),
+//         success: function (response) {
+//           Swal.fire(
+//             "Success!",
+//             response.message || "Kindred successfully created!",
+//             "success"
+//           );
 
-          // Reset the form
-          $("#kindredForm")[0].reset();
+//           // Reset the form
+//           $("#kindredForm")[0].reset();
 
-          // Refresh tables
-          fetchAllKindred(currentPageAll);
-          fetchUserKindred(currentPageUser);
-        },
-        error: function (xhr) {
-          const errorMessage =
-            xhr.responseJSON?.message || "Kindred registration failed";
-          Swal.fire("Oops...", errorMessage, "error");
-        },
-        complete: function () {
-          // Re-enable the submit button
-          $submitButton.prop("disabled", false).text("Submit");
-        },
-      });
-    });
-  });
-});
+//           // Refresh tables
+//           fetchAllKindred(currentPageAll);
+//           fetchUserKindred(currentPageUser);
+//         },
+//         error: function (xhr) {
+//           const errorMessage =
+//             xhr.responseJSON?.message || "Kindred registration failed";
+//           Swal.fire("Oops...", errorMessage, "error");
+//         },
+//         complete: function () {
+//           // Re-enable the submit button
+//           $submitButton.prop("disabled", false).text("Submit");
+//         },
+//       });
+//     });
+//   });
+// });
 
-// Function to filter users and match LGAs for certificate requests
-function filterAndMatchLGAs() {
-  // First, fetch all users to get support admins
-  $.ajax({
-    url: `${BACKEND_URL}/users`,
-    method: "GET",
-    headers: { Authorization: `Bearer ${token}` },
-    success: function (usersResponse) {
-      // Filter support admins and get their LGAs
-      const supportAdmins = usersResponse.data.filter(
-        (user) => user.role === "support_admin"
-      );
-      const supportAdminLGAs = [
-        ...new Set(supportAdmins.map((admin) => admin.lgaOfOrigin)),
-      ];
+// // Function to filter users and match LGAs for certificate requests
+// function filterAndMatchLGAs() {
+//   // First, fetch all users to get support admins
+//   $.ajax({
+//     url: `${BACKEND_URL}/users`,
+//     method: "GET",
+//     headers: { Authorization: `Bearer ${token}` },
+//     success: function (usersResponse) {
+//       // Filter support admins and get their LGAs
+//       const supportAdmins = usersResponse.data.filter(
+//         (user) => user.role === "support_admin"
+//       );
+//       const supportAdminLGAs = [
+//         ...new Set(supportAdmins.map((admin) => admin.lgaOfOrigin)),
+//       ];
 
-      // Now fetch certificate requests
-      $.ajax({
-        url: `${BACKEND_URL}/indigene/certificate/request?status=Pending`,
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-        success: function (certificateResponse) {
-          console.log("certificateResponse", certificateResponse);
-          // Filter requests where LGA matches support admin LGAs
-          const matchingRequests = certificateResponse.data.filter((request) =>
-            supportAdminLGAs.includes(request.lgaOfOrigin)
-          );
+//       // Now fetch certificate requests
+//       $.ajax({
+//         url: `${BACKEND_URL}/indigene/certificate/request?status=Pending`,
+//         method: "GET",
+//         headers: { Authorization: `Bearer ${token}` },
+//         success: function (certificateResponse) {
+//           console.log("certificateResponse", certificateResponse);
+//           // Filter requests where LGA matches support admin LGAs
+//           const matchingRequests = certificateResponse.data.filter((request) =>
+//             supportAdminLGAs.includes(request.lgaOfOrigin)
+//           );
 
-          // Create a table with the matching requests
-          createLGAMatchTable(supportAdminLGAs, matchingRequests);
-        },
-        error: function (error) {
-          console.error("Error fetching certificate requests:", error);
-        },
-      });
-    },
-    error: function (error) {
-      console.error("Error fetching users:", error);
-    },
-  });
-}
+//           // Create a table with the matching requests
+//           createLGAMatchTable(supportAdminLGAs, matchingRequests);
+//         },
+//         error: function (error) {
+//           console.error("Error fetching certificate requests:", error);
+//         },
+//       });
+//     },
+//     error: function (error) {
+//       console.error("Error fetching users:", error);
+//     },
+//   });
+// }
 
 // Function to create the LGA match table
-function createLGAMatchTable(supportAdminLGAs, matchingRequests) {
-  const tableBody = $("#lga-match-table");
-  tableBody.empty();
+// function createLGAMatchTable(supportAdminLGAs, matchingRequests) {
+//   const tableBody = $("#lga-match-table");
+//   tableBody.empty();
 
-  // Add support admin LGAs section
-  tableBody.append(`
-    <tr class="table-info">
-      <td colspan="5"><strong>Support Admin LGAs</strong></td>
-    </tr>
-  `);
+//   // Add support admin LGAs section
+//   tableBody.append(`
+//     <tr class="table-info">
+//       <td colspan="5"><strong>Support Admin LGAs</strong></td>
+//     </tr>
+//   `);
 
-  supportAdminLGAs.forEach((lga) => {
-    tableBody.append(`
-      <tr>
-        <td>${lga}</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+//   supportAdminLGAs.forEach((lga) => {
+//     tableBody.append(`
+//       <tr>
+//         <td>${lga}</td>
+//         <td></td>
+//         <td></td>
+//         <td></td>
+//         <td></td>
 
 
-      </tr>
-    `);
-  });
+//       </tr>
+//     `);
+//   });
 
-  // Add matching requests section
-  tableBody.append(`
-    <tr class="table-info">
-      <td colspan="5"><strong>Matching Certificate Requests</strong></td>
-    </tr>
-  `);
+//   // Add matching requests section
+//   tableBody.append(`
+//     <tr class="table-info">
+//       <td colspan="5"><strong>Matching Certificate Requests</strong></td>
+//     </tr>
+//   `);
 
-  if (matchingRequests.length === 0) {
-    tableBody.append(`
-      <tr>
-        <td colspan="5">No matching requests found</td>
-      </tr>
-    `);
-  } else {
-    matchingRequests.forEach((request, index) => {
-      tableBody.append(`
-        <tr>
-          <td>${request.lgaOfOrigin}</td>
-          <td>${request.firstname} ${request.lastname}</td>
-          <td>${request.email}</td>
-          <td>${request.phone}</td>
-          <td>${request.kindred}</td>
+//   if (matchingRequests.length === 0) {
+//     tableBody.append(`
+//       <tr>
+//         <td colspan="5">No matching requests found</td>
+//       </tr>
+//     `);
+//   } else {
+//     matchingRequests.forEach((request, index) => {
+//       tableBody.append(`
+//         <tr>
+//           <td>${request.lgaOfOrigin}</td>
+//           <td>${request.firstname} ${request.lastname}</td>
+//           <td>${request.email}</td>
+//           <td>${request.phone}</td>
+//           <td>${request.kindred}</td>
 
-        </tr>
-      `);
-    });
-  }
-}
+//         </tr>
+//       `);
+//     });
+//   }
+// }
 
-// Call this function when needed, for example when a button is clicked
-$(document).on("click", "#filter-lga-btn", function () {
-  filterAndMatchLGAs();
-});
+// // Call this function when needed, for example when a button is clicked
+// $(document).on("click", "#filter-lga-btn", function () {
+//   filterAndMatchLGAs();
+// });
 
-function filterAndMatchKindredHeadLGAs() {
-  // First, fetch all users to get support admins
-  $.ajax({
-    url: `${BACKEND_URL}/users`,
-    method: "GET",
-    headers: { Authorization: `Bearer ${token}` },
-    success: function (usersResponse) {
-      // Filter support admins and get their LGAs
-      const kindredHead = usersResponse.data.filter(
-        (user) => user.role === "kindred_head"
-      );
-      const kindredHeadLGAs = [
-        ...new Set(kindredHead.map((admin) => admin.lgaOfOrigin)),
-      ];
+// function filterAndMatchKindredHeadLGAs() {
+//   // First, fetch all users to get support admins
+//   $.ajax({
+//     url: `${BACKEND_URL}/users`,
+//     method: "GET",
+//     headers: { Authorization: `Bearer ${token}` },
+//     success: function (usersResponse) {
+//       // Filter support admins and get their LGAs
+//       const kindredHead = usersResponse.data.filter(
+//         (user) => user.role === "kindred_head"
+//       );
+//       const kindredHeadLGAs = [
+//         ...new Set(kindredHead.map((admin) => admin.lgaOfOrigin)),
+//       ];
 
-      // Now fetch certificate requests
-      $.ajax({
-        url: `${BACKEND_URL}/indigene/certificate/request?status=Pending`,
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-        success: function (certificateResponse) {
-          // Filter requests where LGA matches support admin LGAs
-          const matchingRequests = certificateResponse.data.filter((request) =>
-            kindredHeadLGAs.includes(request.lgaOfOrigin)
-          );
+//       // Now fetch certificate requests
+//       $.ajax({
+//         url: `${BACKEND_URL}/indigene/certificate/request?status=Pending`,
+//         method: "GET",
+//         headers: { Authorization: `Bearer ${token}` },
+//         success: function (certificateResponse) {
+//           // Filter requests where LGA matches support admin LGAs
+//           const matchingRequests = certificateResponse.data.filter((request) =>
+//             kindredHeadLGAs.includes(request.lgaOfOrigin)
+//           );
 
-          $("#card-request-count").text(matchingRequests.length);
-          // Create a table with the matching requests
-          createKindredGroupedTable(kindredHeadLGAs, matchingRequests);
-        },
-        error: function (error) {
-          console.error("Error fetching certificate requests:", error);
-        },
-      });
-    },
-    error: function (error) {
-      console.error("Error fetching users:", error);
-    },
-  });
-}
+//           $("#card-request-count").text(matchingRequests.length);
+//           // Create a table with the matching requests
+//           createKindredGroupedTable(kindredHeadLGAs, matchingRequests);
+//         },
+//         error: function (error) {
+//           console.error("Error fetching certificate requests:", error);
+//         },
+//       });
+//     },
+//     error: function (error) {
+//       console.error("Error fetching users:", error);
+//     },
+//   });
+// }
 
-// Create table grouped by kindred
-function createKindredGroupedTable(kindredHeadLGAs, matchingRequests) {
-  const tableBody = $("#kindred-match-table");
-  tableBody.empty();
+// // Create table grouped by kindred
+// function createKindredGroupedTable(kindredHeadLGAs, matchingRequests) {
+//   const tableBody = $("#kindred-match-table");
+//   tableBody.empty();
 
-  // Add support admin LGAs section
-  tableBody.append(`
-    <tr class="table-info">
-      <td colspan="6"><strong>Kindred Head LGAs</strong></td>
-    </tr>
-  `);
+//   // Add support admin LGAs section
+//   tableBody.append(`
+//     <tr class="table-info">
+//       <td colspan="6"><strong>Kindred Head LGAs</strong></td>
+//     </tr>
+//   `);
 
-  kindredHeadLGAs.forEach((lga) => {
-    tableBody.append(`
-      <tr>
-        <td>${lga}</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-    `);
-  });
+//   kindredHeadLGAs.forEach((lga) => {
+//     tableBody.append(`
+//       <tr>
+//         <td>${lga}</td>
+//         <td></td>
+//         <td></td>
+//         <td></td>
+//         <td></td>
+//         <td></td>
+//       </tr>
+//     `);
+//   });
 
-  // Add matching requests section
-  tableBody.append(`
-    <tr class="table-info">
-      <td colspan="6"><strong>Matching Certificate Requests</strong></td>
-    </tr>
-  `);
+//   // Add matching requests section
+//   tableBody.append(`
+//     <tr class="table-info">
+//       <td colspan="6"><strong>Matching Certificate Requests</strong></td>
+//     </tr>
+//   `);
 
-  if (matchingRequests.length === 0) {
-    tableBody.append(`
-      <tr>
-      <td colspan="6">No matching requests found</td>
-      </tr>
-      `);
-  } else {
-    matchingRequests.forEach((request, index) => {
-      const isRejected = request.status === "Rejected";
-      const isVerified = request.isVerified === true;
+//   if (matchingRequests.length === 0) {
+//     tableBody.append(`
+//       <tr>
+//       <td colspan="6">No matching requests found</td>
+//       </tr>
+//       `);
+//   } else {
+//     matchingRequests.forEach((request, index) => {
+//       const isRejected = request.status === "Rejected";
+//       const isVerified = request.isVerified === true;
 
-      tableBody.append(`
-        <tr>
-          <td>${request.lgaOfOrigin}</td>
-          <td>${request.firstname} ${request.lastname}</td>
-          <td>${request.phone}</td>
-          <td>${request.isVerified}</td>
-          <td>${request.kindred}</td>
+//       tableBody.append(`
+//         <tr>
+//           <td>${request.lgaOfOrigin}</td>
+//           <td>${request.firstname} ${request.lastname}</td>
+//           <td>${request.phone}</td>
+//           <td>${request.isVerified}</td>
+//           <td>${request.kindred}</td>
 
-          <td>
-            <div class="dropdown">
-              <button class="btn btn-xs btn-action dropdown-toggle" data-bs-toggle="dropdown">
-                <i class="fas fa-ellipsis-v"></i>
-              </button>
-              <ul class="dropdown-menu">
-                <li><button class="dropdown-item btn-cert-verify" data-id="${
-                  request._id
-                }"
-                ${
-                  isVerified ? "disabled" : ""
-                }  style="color: green;">Verity Request</button></li>
-                <li><button class="dropdown-item btn-cert-reject" data-id="${
-                  request._id
-                }" ${
-        isRejected ? "disabled" : ""
-      } style="color: red;">Reject</button></li>
-                <li><button class="dropdown-item btn-cert-view" data-id="${
-                  request._id
-                }" style="color: blue;">View</button></li>
-              </ul>
-            </div>
-          </td>
+//           <td>
+//             <div class="dropdown">
+//               <button class="btn btn-xs btn-action dropdown-toggle" data-bs-toggle="dropdown">
+//                 <i class="fas fa-ellipsis-v"></i>
+//               </button>
+//               <ul class="dropdown-menu">
+//                 <li><button class="dropdown-item btn-cert-verify" data-id="${
+//                   request._id
+//                 }"
+//                 ${
+//                   isVerified ? "disabled" : ""
+//                 }  style="color: green;">Verity Request</button></li>
+//                 <li><button class="dropdown-item btn-cert-reject" data-id="${
+//                   request._id
+//                 }" ${
+//         isRejected ? "disabled" : ""
+//       } style="color: red;">Reject</button></li>
+//                 <li><button class="dropdown-item btn-cert-view" data-id="${
+//                   request._id
+//                 }" style="color: blue;">View</button></li>
+//               </ul>
+//             </div>
+//           </td>
 
-        </tr>
-      `);
-    });
-  }
-}
+//         </tr>
+//       `);
+//     });
+//   }
+// }
 
-$(document).ready(function () {
-  filterAndMatchKindredHeadLGAs();
-});
+// $(document).ready(function () {
+//   filterAndMatchKindredHeadLGAs();
+// });
 
-// Trigger on button click
-$(document).on("click", "#filter-kindred-btn", function () {
-  filterAndMatchKindredHeadLGAs();
-});
+// // Trigger on button click
+// $(document).on("click", "#filter-kindred-btn", function () {
+//   filterAndMatchKindredHeadLGAs();
+// });
 
 // // Id Card
-$(document).ready(function () {
-  const pageSize = 10;
-  let currentPage = 1;
-  let rejectionId = null;
+// $(document).ready(function () {
+//   const pageSize = 10;
+//   let currentPage = 1;
+//   let rejectionId = null;
 
-  const apiHeaders = {
-    Authorization: `Bearer ${token}`,
-  };
+//   const apiHeaders = {
+//     Authorization: `Bearer ${token}`,
+//   };
 
-  const tableBody = $("#view-all-card-table");
+//   const tableBody = $("#view-all-card-table");
 
-  function updatePaginationButtons(hasNextPage) {
-    $("#btn-prev").prop("disabled", currentPage === 1);
-    $("#btn-next").prop("disabled", !hasNextPage);
-  }
+//   function updatePaginationButtons(hasNextPage) {
+//     $("#btn-prev").prop("disabled", currentPage === 1);
+//     $("#btn-next").prop("disabled", !hasNextPage);
+//   }
 
-  function updateRequestCount(count) {
-    $("#request").text(count);
-  }
+//   function updateRequestCount(count) {
+//     $("#request").text(count);
+//   }
 
-  function renderTable(data) {
-    tableBody.empty();
-    data.forEach((item, index) => {
-      const statusBadge = {
-        Approved: `<span class="badge rounded-pill bg-success">Approved</span>`,
-        Pending: `<span class="badge rounded-pill bg-warning text-dark">Pending</span>`,
-        Rejected: `<span class="badge rounded-pill bg-danger">Rejected</span>`,
-      };
+//   function renderTable(data) {
+//     tableBody.empty();
+//     data.forEach((item, index) => {
+//       const statusBadge = {
+//         Approved: `<span class="badge rounded-pill bg-success">Approved</span>`,
+//         Pending: `<span class="badge rounded-pill bg-warning text-dark">Pending</span>`,
+//         Rejected: `<span class="badge rounded-pill bg-danger">Rejected</span>`,
+//       };
 
-      tableBody.append(`
-        <tr data-id="${item._id}">
-          <td>${(currentPage - 1) * pageSize + index + 1}</td>
-          <td>${item.firstname} ${item.lastname}</td>
-          <td>${item.phone}</td>
-          <td>${item.email}</td>
-           <td>${statusBadge[item.status] || item.status}</td>
-          <td>
-            <button class="btn btn-sm btn-success btn-approve" data-id="${
-              item._id
-            }" title="Approve">
-              <i class="fas fa-check"></i>
-            </button>
-            <button class="btn btn-sm btn-warning btn-view" data-id="${
-              item._id
-            }" title="View">
-              <i class="fas fa-eye"></i>
-            </button>
-            <button class="btn btn-sm btn-danger btn-reject" data-id="${
-              item._id
-            }" title="Reject" ${item.status === "Rejected" ? "disabled" : ""}>
-              <i class="fas fa-times"></i>
-            </button>
-          </td>
-        </tr>
-      `);
-    });
-  }
+//       tableBody.append(`
+//         <tr data-id="${item._id}">
+//           <td>${(currentPage - 1) * pageSize + index + 1}</td>
+//           <td>${item.firstname} ${item.lastname}</td>
+//           <td>${item.phone}</td>
+//           <td>${item.email}</td>
+//            <td>${statusBadge[item.status] || item.status}</td>
+//           <td>
+//             <button class="btn btn-sm btn-success btn-approve" data-id="${
+//               item._id
+//             }" title="Approve">
+//               <i class="fas fa-check"></i>
+//             </button>
+//             <button class="btn btn-sm btn-warning btn-view" data-id="${
+//               item._id
+//             }" title="View">
+//               <i class="fas fa-eye"></i>
+//             </button>
+//             <button class="btn btn-sm btn-danger btn-reject" data-id="${
+//               item._id
+//             }" title="Reject" ${item.status === "Rejected" ? "disabled" : ""}>
+//               <i class="fas fa-times"></i>
+//             </button>
+//           </td>
+//         </tr>
+//       `);
+//     });
+//   }
 
-  function fetchData(page) {
-    $.ajax({
-      url: `${BACKEND_URL}/idcard/card-request?page=${page}&limit=${pageSize}&statuses=Pending,Rejected`,
-      method: "GET",
-      headers: apiHeaders,
-      success: function (response) {
-        const { data, hasNextPage } = response;
-        $("#id-request").text(data.length);
-        renderTable(data);
-        updatePaginationButtons(hasNextPage);
-        updateRequestCount(data.length);
+//   function fetchData(page) {
+//     $.ajax({
+//       url: `${BACKEND_URL}/idcard/card-request?page=${page}&limit=${pageSize}&statuses=Pending,Rejected`,
+//       method: "GET",
+//       headers: apiHeaders,
+//       success: function (response) {
+//         const { data, hasNextPage } = response;
+//         $("#id-request").text(data.length);
+//         renderTable(data);
+//         updatePaginationButtons(hasNextPage);
+//         updateRequestCount(data.length);
 
-        let pendingCount = 0;
-        let rejectedCount = 0;
+//         let pendingCount = 0;
+//         let rejectedCount = 0;
 
-        data.forEach((element) => {
-          if (element.status === "Pending") {
-            pendingCount++;
-          }
-          if (element.status === "Rejected") {
-            rejectedCount++;
-          }
-        });
+//         data.forEach((element) => {
+//           if (element.status === "Pending") {
+//             pendingCount++;
+//           }
+//           if (element.status === "Rejected") {
+//             rejectedCount++;
+//           }
+//         });
 
-        $("#pending").text(pendingCount);
-        $("#rejected").text(rejectedCount);
-      },
-      error: function (error) {
-        console.error("Error fetching data:", error);
-      },
-    });
-  }
+//         $("#pending").text(pendingCount);
+//         $("#rejected").text(rejectedCount);
+//       },
+//       error: function (error) {
+//         console.error("Error fetching data:", error);
+//       },
+//     });
+//   }
 
-  // Handle card Approval
-  function handleApproval(requestId) {
-    $.ajax({
-      url: `${BACKEND_URL}/idcard/${requestId}/approve`,
-      method: "PATCH",
-      headers: apiHeaders,
-      success: function () {
-        showNotification("success", "Card approved successfully.");
-        fetchData(currentPage);
-      },
-      error: function (error) {
-        console.error("Error approving request:", error);
-      },
-    });
-  }
+//   // Handle card Approval
+//   function handleApproval(requestId) {
+//     $.ajax({
+//       url: `${BACKEND_URL}/idcard/${requestId}/approve`,
+//       method: "PATCH",
+//       headers: apiHeaders,
+//       success: function () {
+//         showNotification("success", "Card approved successfully.");
+//         fetchData(currentPage);
+//       },
+//       error: function (error) {
+//         console.error("Error approving request:", error);
+//       },
+//     });
+//   }
 
-  // Handle card rejection
-  function handleIDRejection(rejectionReason) {
-    if (!rejectionReason) {
-      alert("Please provide a reason for rejection.");
-      return;
-    }
+//   // Handle card rejection
+//   function handleIDRejection(rejectionReason) {
+//     if (!rejectionReason) {
+//       alert("Please provide a reason for rejection.");
+//       return;
+//     }
 
-    $.ajax({
-      url: `${BACKEND_URL}/idcard/${rejectionId}/reject`,
-      method: "PATCH",
-      contentType: "application/json",
-      data: JSON.stringify({ rejectionReason }),
-      headers: apiHeaders,
-      success: function () {
-        $("#rejectionModal").modal("hide");
-        $("#idRejectionReason").val("");
-        showNotification("success", "Request rejected successfully.");
+//     $.ajax({
+//       url: `${BACKEND_URL}/idcard/${rejectionId}/reject`,
+//       method: "PATCH",
+//       contentType: "application/json",
+//       data: JSON.stringify({ rejectionReason }),
+//       headers: apiHeaders,
+//       success: function () {
+//         $("#rejectionModal").modal("hide");
+//         $("#idRejectionReason").val("");
+//         showNotification("success", "Request rejected successfully.");
 
-        fetchData(currentPage);
-      },
-      error: function (error) {
-        console.error("Error rejecting request:", error);
-        showNotification(
-          "danger",
-          xhr.responseJSON?.message || "Error occurred."
-        );
-      },
-    });
-  }
+//         fetchData(currentPage);
+//       },
+//       error: function (error) {
+//         console.error("Error rejecting request:", error);
+//         showNotification(
+//           "danger",
+//           xhr.responseJSON?.message || "Error occurred."
+//         );
+//       },
+//     });
+//   }
 
-  // Handle View Modal Function
-  function handleView(requestId) {
-    $.ajax({
-      url: `${BACKEND_URL}/idcard/${requestId}/request`,
-      method: "GET",
-      headers: apiHeaders,
-      success: function (response) {
-        const docTypes = ["utilityBill", "ref_letter"];
-        const documentTitles = ["Utility Bill", "Reference Letter"];
+//   // Handle View Modal Function
+//   function handleView(requestId) {
+//     $.ajax({
+//       url: `${BACKEND_URL}/idcard/${requestId}/request`,
+//       method: "GET",
+//       headers: apiHeaders,
+//       success: function (response) {
+//         const docTypes = ["utilityBill", "ref_letter"];
+//         const documentTitles = ["Utility Bill", "Reference Letter"];
 
-        // Filter documents that actually exist in response
-        const validDocuments = docTypes
-          .map((key, index) => ({ key, title: documentTitles[index] }))
-          .filter((doc) => response[doc.key]); // Check if document exists
+//         // Filter documents that actually exist in response
+//         const validDocuments = docTypes
+//           .map((key, index) => ({ key, title: documentTitles[index] }))
+//           .filter((doc) => response[doc.key]); // Check if document exists
 
-        let modalContent = `
-              <div class="container-fluid">
-                  <div class="row mb-3">
-                      <div class="col-md-3 text-center">
-                          <img 
-                              src="${
-                                response.passportPhoto ||
-                                "/assets/images/avatar.jpeg"
-                              }" 
-                              alt="Passport Photo" 
-                              class="img-fluid rounded shadow-sm profile-photo"
-                              style="max-height: 150px;"
-                              crossOrigin="anonymous"
-                          >
-                      </div>
-                      <div class="col-md-9">
-                          <h5 class="fw-bold mb-2">${response.firstname} ${
-          response.lastname
-        }</h5>
-                          <p class="mb-1"><strong>Phone:</strong> ${
-                            response.phone
-                          }</p>
-                          <p class="mb-1"><strong>Email:</strong> ${
-                            response.email
-                          }</p>
-                          <p class="mb-1"><strong>Status:</strong> <span class="badge bg-info">${
-                            response.status
-                          }</span></p>
-                          <p><strong>State:</strong> ${
-                            response.userId?.stateOfOrigin
-                          }</p>
-                          <p><strong>LGA:</strong> ${
-                            response.userId?.lgaOfOrigin
-                          }</p>
-                          <p><strong>isProfileCompleted:</strong> ${
-                            response.userId?.isProfileCompleted
-                          }</p>
-                      </div>
-                  </div>
+//         let modalContent = `
+//               <div class="container-fluid">
+//                   <div class="row mb-3">
+//                       <div class="col-md-3 text-center">
+//                           <img 
+//                               src="${
+//                                 response.passportPhoto ||
+//                                 "/assets/images/avatar.jpeg"
+//                               }" 
+//                               alt="Passport Photo" 
+//                               class="img-fluid rounded shadow-sm profile-photo"
+//                               style="max-height: 150px;"
+//                               crossOrigin="anonymous"
+//                           >
+//                       </div>
+//                       <div class="col-md-9">
+//                           <h5 class="fw-bold mb-2">${response.firstname} ${
+//           response.lastname
+//         }</h5>
+//                           <p class="mb-1"><strong>Phone:</strong> ${
+//                             response.phone
+//                           }</p>
+//                           <p class="mb-1"><strong>Email:</strong> ${
+//                             response.email
+//                           }</p>
+//                           <p class="mb-1"><strong>Status:</strong> <span class="badge bg-info">${
+//                             response.status
+//                           }</span></p>
+//                           <p><strong>State:</strong> ${
+//                             response.userId?.stateOfOrigin
+//                           }</p>
+//                           <p><strong>LGA:</strong> ${
+//                             response.userId?.lgaOfOrigin
+//                           }</p>
+//                           <p><strong>isProfileCompleted:</strong> ${
+//                             response.userId?.isProfileCompleted
+//                           }</p>
+//                       </div>
+//                   </div>
 
-                  <hr class="my-3">
-                  <h6 class="text-primary">Uploaded Documents</h6>
-          `;
+//                   <hr class="my-3">
+//                   <h6 class="text-primary">Uploaded Documents</h6>
+//           `;
 
-        if (validDocuments.length === 0) {
-          modalContent += `<p class="text-muted">No documents uploaded.</p>`;
-        }
+//         if (validDocuments.length === 0) {
+//           modalContent += `<p class="text-muted">No documents uploaded.</p>`;
+//         }
 
-        // Generate HTML for each existing document
-        validDocuments.forEach((doc, index) => {
-          const fileUrl = `${BACKEND_URL}/idcard/${requestId}/document/${doc.key}`;
+//         // Generate HTML for each existing document
+//         validDocuments.forEach((doc, index) => {
+//           const fileUrl = `${BACKEND_URL}/idcard/${requestId}/document/${doc.key}`;
 
-          modalContent += `
-                  <div class="card my-3 shadow-sm">
-                      <div class="card-header bg-light fw-semibold">
-                          ${doc.title}
-                      </div>
-                      <div class="card-body">
-                          <div id="pdf-viewer-container-${index}" style="width:100%; height:400px;" class="pdf-container"></div>
-                          <div class="text-end mt-2">
-                             <button class="btn btn-sm btn-outline-primary me-2" onclick="window.open('${fileUrl}', '_blank')">Open in New Tab</button>
-                             <button class="btn btn-sm btn-outline-secondary" data-doc-index="${index}" data-url="${fileUrl}" onclick="downloadPDF(this)">Download</button>
-                          </div>
-                      </div>
-                  </div>
-              `;
-        });
+//           modalContent += `
+//                   <div class="card my-3 shadow-sm">
+//                       <div class="card-header bg-light fw-semibold">
+//                           ${doc.title}
+//                       </div>
+//                       <div class="card-body">
+//                           <div id="pdf-viewer-container-${index}" style="width:100%; height:400px;" class="pdf-container"></div>
+//                           <div class="text-end mt-2">
+//                              <button class="btn btn-sm btn-outline-primary me-2" onclick="window.open('${fileUrl}', '_blank')">Open in New Tab</button>
+//                              <button class="btn btn-sm btn-outline-secondary" data-doc-index="${index}" data-url="${fileUrl}" onclick="downloadPDF(this)">Download</button>
+//                           </div>
+//                       </div>
+//                   </div>
+//               `;
+//         });
 
-        modalContent += `</div>`;
-        $("#viewModal .modal-body").html(modalContent);
-        $("#viewModal").modal("show");
+//         modalContent += `</div>`;
+//         $("#viewModal .modal-body").html(modalContent);
+//         $("#viewModal").modal("show");
 
-        // Load PDFs with authorization
-        validDocuments.forEach((doc, index) => {
-          const fileUrl = `${BACKEND_URL}/idcard/${requestId}/document/${doc.key}`;
-          const container = document.getElementById(
-            `pdf-viewer-container-${index}`
-          );
-          // Show loader while fetching
-          $(`#pdf-viewer-container-${index}`).html(`
-                  <div class="d-flex justify-content-center align-items-center h-100">
-                      <div class="spinner-border text-primary" role="status">
-                          <span class="visually-hidden">Loading...</span>
-                      </div>
-                  </div>
-              `);
+//         // Load PDFs with authorization
+//         validDocuments.forEach((doc, index) => {
+//           const fileUrl = `${BACKEND_URL}/idcard/${requestId}/document/${doc.key}`;
+//           const container = document.getElementById(
+//             `pdf-viewer-container-${index}`
+//           );
+//           // Show loader while fetching
+//           $(`#pdf-viewer-container-${index}`).html(`
+//                   <div class="d-flex justify-content-center align-items-center h-100">
+//                       <div class="spinner-border text-primary" role="status">
+//                           <span class="visually-hidden">Loading...</span>
+//                       </div>
+//                   </div>
+//               `);
 
-          // Fetch document with authorization
-          fetch(fileUrl, {
-            headers: {
-              Authorization: apiHeaders.Authorization,
-            },
-          })
-            // .then((res) => {
-            //   if (!res.ok) throw new Error("Failed to fetch PDF");
-            //   return res.blob();
-            // })
-            // .then((blob) => {
-            //   const blobUrl = URL.createObjectURL(blob);
-            //   loadPDFJ(
-            //     blobUrl,
-            //     document.getElementById(`pdf-viewer-container-${index}`)
-            //   );
-            // })
-            .then((res) => {
-              if (!res.ok) throw new Error("Failed to fetch document");
+//           // Fetch document with authorization
+//           fetch(fileUrl, {
+//             headers: {
+//               Authorization: apiHeaders.Authorization,
+//             },
+//           })
+//             // .then((res) => {
+//             //   if (!res.ok) throw new Error("Failed to fetch PDF");
+//             //   return res.blob();
+//             // })
+//             // .then((blob) => {
+//             //   const blobUrl = URL.createObjectURL(blob);
+//             //   loadPDFJ(
+//             //     blobUrl,
+//             //     document.getElementById(`pdf-viewer-container-${index}`)
+//             //   );
+//             // })
+//             .then((res) => {
+//               if (!res.ok) throw new Error("Failed to fetch document");
 
-              // --- KEY LOGIC: Get the content type from the response header ---
-              const contentType = res.headers.get("Content-Type");
+//               // --- KEY LOGIC: Get the content type from the response header ---
+//               const contentType = res.headers.get("Content-Type");
 
-              // Return both the blob and the content type for the next .then()
-              return res.blob().then((blob) => ({ blob, contentType }));
-            })
-            .then(({ blob, contentType }) => {
-              const blobUrl = URL.createObjectURL(blob);
+//               // Return both the blob and the content type for the next .then()
+//               return res.blob().then((blob) => ({ blob, contentType }));
+//             })
+//             .then(({ blob, contentType }) => {
+//               const blobUrl = URL.createObjectURL(blob);
 
-              // --- Check the content type and call the correct renderer ---
-              if (contentType === "application/pdf") {
-                loadPDFJ(blobUrl, container);
-              } else if (contentType && contentType.startsWith("image/")) {
-                loadImage(blobUrl, container);
-              } else {
-                // Handle unknown or missing content type
-                throw new Error(
-                  `Unsupported file type: ${contentType || "Unknown"}`
-                );
-              }
-            })
-            .catch((err) => {
-              console.error(`Error loading PDF [${doc.key}]:`, err);
-              $(`#pdf-viewer-container-${index}`).html(`
-                      <div class="alert alert-danger">
-                          Failed to load document: ${err.message}
-                          <div class="mt-2">
-                              <a href="${fileUrl}" target="_blank" class="btn btn-sm btn-primary">Open in New Tab</a>
-                          </div>
-                      </div>
-                  `);
-            });
-        });
-      },
-      error: function (error) {
-        console.error("Error fetching request details:", error);
-        alert("Failed to fetch request details.");
-      },
-    });
-  }
+//               // --- Check the content type and call the correct renderer ---
+//               if (contentType === "application/pdf") {
+//                 loadPDFJ(blobUrl, container);
+//               } else if (contentType && contentType.startsWith("image/")) {
+//                 loadImage(blobUrl, container);
+//               } else {
+//                 // Handle unknown or missing content type
+//                 throw new Error(
+//                   `Unsupported file type: ${contentType || "Unknown"}`
+//                 );
+//               }
+//             })
+//             .catch((err) => {
+//               console.error(`Error loading PDF [${doc.key}]:`, err);
+//               $(`#pdf-viewer-container-${index}`).html(`
+//                       <div class="alert alert-danger">
+//                           Failed to load document: ${err.message}
+//                           <div class="mt-2">
+//                               <a href="${fileUrl}" target="_blank" class="btn btn-sm btn-primary">Open in New Tab</a>
+//                           </div>
+//                       </div>
+//                   `);
+//             });
+//         });
+//       },
+//       error: function (error) {
+//         console.error("Error fetching request details:", error);
+//         alert("Failed to fetch request details.");
+//       },
+//     });
+//   }
 
-  function showNotification(type, message) {
-    const toastHtml = `
-            <div class="toast align-items-center text-white bg-${type} border-0 mb-2" role="alert" aria-live="assertive" aria-atomic="true">
-              <div class="d-flex">
-                <div class="toast-body">${message}</div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-              </div>
-            </div>`;
-    $("#toast-container").append(toastHtml);
-    const toastEl = $("#toast-container .toast:last")[0];
-    // new bootstrap.Toast(toastEl, { delay: 60000 }).show();
-    new bootstrap.Toast(toastEl, { autohide: false }).show();
-  }
+//   function showNotification(type, message) {
+//     const toastHtml = `
+//             <div class="toast align-items-center text-white bg-${type} border-0 mb-2" role="alert" aria-live="assertive" aria-atomic="true">
+//               <div class="d-flex">
+//                 <div class="toast-body">${message}</div>
+//                 <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+//               </div>
+//             </div>`;
+//     $("#toast-container").append(toastHtml);
+//     const toastEl = $("#toast-container .toast:last")[0];
+//     // new bootstrap.Toast(toastEl, { delay: 60000 }).show();
+//     new bootstrap.Toast(toastEl, { autohide: false }).show();
+//   }
 
-  $(document).on("click", ".btn-approve", function () {
-    const requestId = $(this).data("id");
-    handleApproval(requestId);
-  });
+//   $(document).on("click", ".btn-approve", function () {
+//     const requestId = $(this).data("id");
+//     handleApproval(requestId);
+//   });
 
-  $(document).on("click", ".btn-reject", function () {
-    rejectionId = $(this).data("id");
-    $("#rejectionModal").modal("show");
-  });
+//   $(document).on("click", ".btn-reject", function () {
+//     rejectionId = $(this).data("id");
+//     $("#rejectionModal").modal("show");
+//   });
 
-  $("#idcardsTable").on("click", ".btn-view", function () {
-    const requestId = $(this).data("id");
+//   $("#idcardsTable").on("click", ".btn-view", function () {
+//     const requestId = $(this).data("id");
 
-    handleView(requestId);
-  });
+//     handleView(requestId);
+//   });
 
-  $("#submitIDRejection").click(function () {
-    const reason = $("#idRejectionReason").val();
-    handleIDRejection(reason);
-  });
+//   $("#submitIDRejection").click(function () {
+//     const reason = $("#idRejectionReason").val();
+//     handleIDRejection(reason);
+//   });
 
-  $("#btn-prev").click(function () {
-    if (currentPage > 1) {
-      currentPage--;
-      fetchData(currentPage);
-    }
-  });
+//   $("#btn-prev").click(function () {
+//     if (currentPage > 1) {
+//       currentPage--;
+//       fetchData(currentPage);
+//     }
+//   });
 
-  $("#btn-next").click(function () {
-    currentPage++;
-    fetchData(currentPage);
-  });
+//   $("#btn-next").click(function () {
+//     currentPage++;
+//     fetchData(currentPage);
+//   });
 
-  // Initial data load
-  fetchData(currentPage);
-});
-$(document).ready(function () {
-  // Add hover effects to cards
-  $(".stat-card").hover(
-    function () {
-      $(this).addClass("shadow");
-    },
-    function () {
-      $(this).removeClass("shadow");
-    }
-  );
+//   // Initial data load
+//   fetchData(currentPage);
+// });
+// $(document).ready(function () {
+//   // Add hover effects to cards
+//   $(".stat-card").hover(
+//     function () {
+//       $(this).addClass("shadow");
+//     },
+//     function () {
+//       $(this).removeClass("shadow");
+//     }
+//   );
 
-  // Add click effect to quick action buttons
-  $(".quick-action-btn").click(function () {
-    $(this).addClass("active");
-    setTimeout(() => {
-      $(this).removeClass("active");
-    }, 200);
-  });
-});
+//   // Add click effect to quick action buttons
+//   $(".quick-action-btn").click(function () {
+//     $(this).addClass("active");
+//     setTimeout(() => {
+//       $(this).removeClass("active");
+//     }, 200);
+//   });
+// });
 
-// ✅ Active Page Highlight Script
-$(document).ready(function () {
-  const currentPage = window.location.pathname.split("/").pop(); // e.g., profile.html
-  $("#sidebar-links .nav-link").each(function () {
-    const linkPage = $(this).attr("href");
-    if (linkPage === currentPage) {
-      $(this).addClass("active");
-    }
-  });
-});
+// // ✅ Active Page Highlight Script
+// $(document).ready(function () {
+//   const currentPage = window.location.pathname.split("/").pop(); // e.g., profile.html
+//   $("#sidebar-links .nav-link").each(function () {
+//     const linkPage = $(this).attr("href");
+//     if (linkPage === currentPage) {
+//       $(this).addClass("active");
+//     }
+//   });
+// });
 
-//Fetch kindred by userId
-function fetchAllLga(page) {
-  $.ajax({
-    url: `${BACKEND_URL}/lgas?page=${page}&limit=${pageSize}`,
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    success: function (response) {
-      const { data, hasNextPage } = response;
-      const tableBody = $("#lga-table");
-      tableBody.empty();
+// //Fetch kindred by userId
+// function fetchAllLga(page) {
+//   $.ajax({
+//     url: `${BACKEND_URL}/lgas?page=${page}&limit=${pageSize}`,
+//     method: "GET",
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//     success: function (response) {
+//       const { data, hasNextPage } = response;
+//       const tableBody = $("#lga-table");
+//       tableBody.empty();
 
-      data.forEach((data, index) => {
-        tableBody.append(`
-          <tr>
-            <td>${(page - 1) * pageSize + index + 1}</td>
-            <td>${data.name} 
-            <td>${data.headquaters}</td>
+//       data.forEach((data, index) => {
+//         tableBody.append(`
+//           <tr>
+//             <td>${(page - 1) * pageSize + index + 1}</td>
+//             <td>${data.name} 
+//             <td>${data.headquaters}</td>
             
-            <td>
-              <div class="dropdown">
-                <button class="btn btn-xs btn-action dropdown-toggle" data-bs-toggle="dropdown">
-                  <i class="fas fa-ellipsis-v"></i>
-                </button>
-                <ul class="dropdown-menu">
-                  <li>
-                    <button class="dropdown-item update-lga-btn" data-id="${
-                      data._id
-                    }" data-info='${JSON.stringify(data)}'>
-                      Update User
-                    </button>
-                  </li>
-                  <li>
-                    <button class="dropdown-item delete-lga-btn" data-id="${
-                      data._id
-                    }" style="color: red;">
-                      Delete User
-                    </button>
-                  </li>
-                </ul>
-              </div>
-            </td>
-          </tr>
-        `);
-      });
+//             <td>
+//               <div class="dropdown">
+//                 <button class="btn btn-xs btn-action dropdown-toggle" data-bs-toggle="dropdown">
+//                   <i class="fas fa-ellipsis-v"></i>
+//                 </button>
+//                 <ul class="dropdown-menu">
+//                   <li>
+//                     <button class="dropdown-item update-lga-btn" data-id="${
+//                       data._id
+//                     }" data-info='${JSON.stringify(data)}'>
+//                       Update User
+//                     </button>
+//                   </li>
+//                   <li>
+//                     <button class="dropdown-item delete-lga-btn" data-id="${
+//                       data._id
+//                     }" style="color: red;">
+//                       Delete User
+//                     </button>
+//                   </li>
+//                 </ul>
+//               </div>
+//             </td>
+//           </tr>
+//         `);
+//       });
 
-      $("#btnPrevUser").prop("disabled", page === 1);
-      $("#btnNextUser").prop("disabled", !hasNextPage);
-    },
-    error: function (error) {
-      console.error("Error fetching user kindred:", error);
-    },
-  });
-}
-$(document).ready(function () {
-  fetchAllLga(currentPageAll);
-});
+//       $("#btnPrevUser").prop("disabled", page === 1);
+//       $("#btnNextUser").prop("disabled", !hasNextPage);
+//     },
+//     error: function (error) {
+//       console.error("Error fetching user kindred:", error);
+//     },
+//   });
+// }
+// $(document).ready(function () {
+//   fetchAllLga(currentPageAll);
+// });
 
-// Handle Delete User
-function handleDeleteLga(userId) {
-  Swal.fire({
-    title: "Are you sure?",
-    text: "This action cannot be undone!",
-    // icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#d33",
-    cancelButtonColor: "#3085d6",
-    confirmButtonText: "Yes, delete it!",
-  }).then((result) => {
-    if (result.value === true) {
-      $.ajax({
-        url: `${BACKEND_URL}/lgas/${userId}`,
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        success: function () {
-          Swal.fire("Deleted!", "User has been deleted.", "success");
-          fetchAllLga(currentPageUser);
-        },
-        error: function (xhr) {
-          const errorMessage =
-            xhr.responseJSON?.message || "Failed to delete LGA.";
-          Swal.fire("Error!", errorMessage, "error");
-        },
-      });
-    }
-  });
-}
+// // Handle Delete User
+// function handleDeleteLga(userId) {
+//   Swal.fire({
+//     title: "Are you sure?",
+//     text: "This action cannot be undone!",
+//     // icon: "warning",
+//     showCancelButton: true,
+//     confirmButtonColor: "#d33",
+//     cancelButtonColor: "#3085d6",
+//     confirmButtonText: "Yes, delete it!",
+//   }).then((result) => {
+//     if (result.value === true) {
+//       $.ajax({
+//         url: `${BACKEND_URL}/lgas/${userId}`,
+//         method: "DELETE",
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//         },
+//         success: function () {
+//           Swal.fire("Deleted!", "User has been deleted.", "success");
+//           fetchAllLga(currentPageUser);
+//         },
+//         error: function (xhr) {
+//           const errorMessage =
+//             xhr.responseJSON?.message || "Failed to delete LGA.";
+//           Swal.fire("Error!", errorMessage, "error");
+//         },
+//       });
+//     }
+//   });
+// }
 
-// Handle Update User
-function handleUpdateLga(userData) {
-  Swal.fire({
-    title: "Update User",
-    html: `
-       <select id="updateName" name="lga"  class="swal2-input">
-            <option value="${userData.name}">${userData.name}</option>
-            <option value="Agatu">Agatu</option>
-            <option value="Apa">Apa</option>
-            <option value="Ado">Ado</option>
-            <option value="Buruku">Buruku</option>
-            <option value="Gboko">Gboko</option>
-            <option value="Guma">Guma</option>
-            <option value="Gwer East">Gwer East</option>
-            <option value="Gwer West">Gwer West</option>
-            <option value="Katsina-Ala">Katsina-Ala</option>
-            <option value="Konshisha">Konshisha</option>
-            <option value="Kwande">Kwande</option>
-            <option value="Logo">Logo</option>
-            <option value="Makurdi">Makurdi</option>
-            <option value="Obi">Obi</option>
-            <option value="Ogbadibo">Ogbadibo</option>
-            <option value="Ohimini">Ohimini</option>
-            <option value="Oju">Oju</option>
-            <option value="Okpokwu">Okpokwu</option>
-            <option value="Oturkpo">Oturkpo</option>
-            <option value="Tarka">Tarka</option>
-            <option value="Ukum">Ukum</option>
-            <option value="Ushongo">Ushongo</option>
-            <option value="Vandeikya">Vandeikya</option>
+// // Handle Update User
+// function handleUpdateLga(userData) {
+//   Swal.fire({
+//     title: "Update User",
+//     html: `
+//        <select id="updateName" name="lga"  class="swal2-input">
+//             <option value="${userData.name}">${userData.name}</option>
+//             <option value="Agatu">Agatu</option>
+//             <option value="Apa">Apa</option>
+//             <option value="Ado">Ado</option>
+//             <option value="Buruku">Buruku</option>
+//             <option value="Gboko">Gboko</option>
+//             <option value="Guma">Guma</option>
+//             <option value="Gwer East">Gwer East</option>
+//             <option value="Gwer West">Gwer West</option>
+//             <option value="Katsina-Ala">Katsina-Ala</option>
+//             <option value="Konshisha">Konshisha</option>
+//             <option value="Kwande">Kwande</option>
+//             <option value="Logo">Logo</option>
+//             <option value="Makurdi">Makurdi</option>
+//             <option value="Obi">Obi</option>
+//             <option value="Ogbadibo">Ogbadibo</option>
+//             <option value="Ohimini">Ohimini</option>
+//             <option value="Oju">Oju</option>
+//             <option value="Okpokwu">Okpokwu</option>
+//             <option value="Oturkpo">Oturkpo</option>
+//             <option value="Tarka">Tarka</option>
+//             <option value="Ukum">Ukum</option>
+//             <option value="Ushongo">Ushongo</option>
+//             <option value="Vandeikya">Vandeikya</option>
 
-        </select>
-      <select id="updateLgaHeadqtrs" class="swal2-input" placeholder="LGA Headquaters">
-              <option value="${userData.headquaters}">${userData.headquaters}</option>
-            <option value="Obagaji">Obagaji</option>
-            <option value="Ugbokpo">Ugbokpo</option>
-            <option value="Igumale">Igumale</option>
-            <option value="Buruku">Buruku</option>
-            <option value="Gboko">Gboko</option>
-            <option value="Gbajimba">Gbajimba</option>
-            <option value="Aliade">Aliade</option>
-            <option value="Naka">Naka</option>
-            <option value="Katsina-Ala">Katsina-Ala</option>
-            <option value="Tse-Agberagba">Tse-Agberagba</option>
-            <option value="Adikpo">Adikpo</option>
-            <option value="Ugba">Ugba</option>
-            <option value="Makurdi">Makurdi</option>
-            <option value="Obarike-Ito">Obarike-Ito</option>
-            <option value="Otukpa">Otukpa</option>
-            <option value="Idekpa">Idekpa</option>
-            <option value="Oju">Oju</option>
-            <option value="Okpoga">Okpoga</option>
-            <option value="Oturkpo">Oturkpo</option>
-            <option value="Wannune">Wannune</option>
-            <option value="Sankera">Sankera</option>
-            <option value="Lessel">Lessel</option>
-            <option value="Vandeikya">Vandeikya</option>
+//         </select>
+//       <select id="updateLgaHeadqtrs" class="swal2-input" placeholder="LGA Headquaters">
+//               <option value="${userData.headquaters}">${userData.headquaters}</option>
+//             <option value="Obagaji">Obagaji</option>
+//             <option value="Ugbokpo">Ugbokpo</option>
+//             <option value="Igumale">Igumale</option>
+//             <option value="Buruku">Buruku</option>
+//             <option value="Gboko">Gboko</option>
+//             <option value="Gbajimba">Gbajimba</option>
+//             <option value="Aliade">Aliade</option>
+//             <option value="Naka">Naka</option>
+//             <option value="Katsina-Ala">Katsina-Ala</option>
+//             <option value="Tse-Agberagba">Tse-Agberagba</option>
+//             <option value="Adikpo">Adikpo</option>
+//             <option value="Ugba">Ugba</option>
+//             <option value="Makurdi">Makurdi</option>
+//             <option value="Obarike-Ito">Obarike-Ito</option>
+//             <option value="Otukpa">Otukpa</option>
+//             <option value="Idekpa">Idekpa</option>
+//             <option value="Oju">Oju</option>
+//             <option value="Okpoga">Okpoga</option>
+//             <option value="Oturkpo">Oturkpo</option>
+//             <option value="Wannune">Wannune</option>
+//             <option value="Sankera">Sankera</option>
+//             <option value="Lessel">Lessel</option>
+//             <option value="Vandeikya">Vandeikya</option>
 
-        </select>
-    `,
-    showCancelButton: true,
-    confirmButtonText: "Update",
-    preConfirm: () => {
-      return {
-        name: $("#updateName").val().trim(),
-        headquaters: $("#updateLgaHeadqtrs").val().trim(),
-      };
-    },
-  }).then((result) => {
-    if (result.value) {
-      $.ajax({
-        url: `${BACKEND_URL}/lgas/${userData._id}`,
-        method: "PATCH",
-        contentType: "application/json",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        data: JSON.stringify(result.value),
-        success: function () {
-          Swal.fire(
-            "Updated!",
-            "User details updated successfully.",
-            "success"
-          );
-          fetchAllLga(currentPageUser);
-        },
-        error: function (error) {
-          Swal.fire("Error!", "Failed to update user.", "error");
-          console.error("Error updating user:", error);
-        },
-      });
-    }
-  });
-}
+//         </select>
+//     `,
+//     showCancelButton: true,
+//     confirmButtonText: "Update",
+//     preConfirm: () => {
+//       return {
+//         name: $("#updateName").val().trim(),
+//         headquaters: $("#updateLgaHeadqtrs").val().trim(),
+//       };
+//     },
+//   }).then((result) => {
+//     if (result.value) {
+//       $.ajax({
+//         url: `${BACKEND_URL}/lgas/${userData._id}`,
+//         method: "PATCH",
+//         contentType: "application/json",
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//         },
+//         data: JSON.stringify(result.value),
+//         success: function () {
+//           Swal.fire(
+//             "Updated!",
+//             "User details updated successfully.",
+//             "success"
+//           );
+//           fetchAllLga(currentPageUser);
+//         },
+//         error: function (error) {
+//           Swal.fire("Error!", "Failed to update user.", "error");
+//           console.error("Error updating user:", error);
+//         },
+//       });
+//     }
+//   });
+// }
 
-// Event Delegation for Delete & Update Buttons
-$(document).on("click", ".delete-lga-btn", function () {
-  const userId = $(this).data("id");
-  handleDeleteLga(userId);
-});
+// // Event Delegation for Delete & Update Buttons
+// $(document).on("click", ".delete-lga-btn", function () {
+//   const userId = $(this).data("id");
+//   handleDeleteLga(userId);
+// });
 
-$(document).on("click", ".update-lga-btn", function () {
-  const userData = $(this).data("info");
-  handleUpdateLga(userData);
-});
+// $(document).on("click", ".update-lga-btn", function () {
+//   const userData = $(this).data("info");
+//   handleUpdateLga(userData);
+// });

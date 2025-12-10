@@ -1268,7 +1268,7 @@
         <!-- Expandable Sections -->
         <div class="accordion" id="expandableSections">
           <!-- Next of Kin -->
-          <div class="accordion-item">
+          <!-- <div class="accordion-item">
             <h2 class="accordion-header" id="nextOfKinHeading">
               <button
                 class="accordion-button"
@@ -1349,6 +1349,77 @@
                   >
                     <i class="bi bi-plus-circle"></i> Add Next of Kin
                   </button>
+                </div>
+              </div>
+            </div>
+          </div> -->
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="nextOfKinHeading">
+              <button
+                class="accordion-button collapsed"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#nextOfKinCollapse"
+              >
+                Next of Kin
+              </button>
+            </h2>
+            <div
+              id="nextOfKinCollapse"
+              class="accordion-collapse collapse"
+              data-bs-parent="#expandableSections"
+            >
+              <div class="accordion-body">
+                <div id="nextOfKinContainer">
+                  <div class="next-of-kin-item mb-3">
+                    <div class="card">
+                      <div class="card-body">
+                        <div class="row">
+                          <div class="col-md-6 mb-3">
+                            <label class="form-label">Full Name</label>
+                            <input
+                              type="text"
+                              class="form-control next-of-kin-name"
+                              required
+                            />
+                          </div>
+                          <div class="col-md-6 mb-3">
+                            <label class="form-label">Relationship</label>
+                            <input
+                              type="text"
+                              class="form-control next-of-kin-relationship"
+                            />
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6 mb-3">
+                            <label class="form-label">Phone</label>
+                            <input
+                              type="tel"
+                              class="form-control next-of-kin-phone"
+                            />
+                          </div>
+                          <div class="col-md-6 mb-3">
+                            <label class="form-label">Email</label>
+                            <input
+                              type="email"
+                              class="form-control next-of-kin-email"
+                            />
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-12 mb-3">
+                            <label class="form-label">Address</label>
+                            <input
+                              type="text"
+                              class="form-control next-of-kin-address"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1779,6 +1850,7 @@
           </div>
 
           <!-- Health Information -->
+
           <div class="accordion-item">
             <h2 class="accordion-header" id="healthInfoHeading">
               <button
@@ -3444,7 +3516,7 @@
           // Error parsing token, it might be malformed
           showNotification(
             "Authentication error. Please log in again.",
-            "danger"
+            "error"
           );
           localStorage.removeItem("token"); // Clear the invalid token
           setTimeout(() => {
@@ -4447,67 +4519,67 @@
             '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...'
           );
 
-        if (mockMode) {
-          // Simulate API delay
-          setTimeout(function () {
-            const response = {
-              success: true,
-              message: "Verification links sent successfully",
-              updatedTokens: {
-                neighbor: [
-                  {
-                    id: "n2",
-                    name: "Sarah Johnson",
-                    phone: "+2348023456789",
-                    address: "126 Main Street, Ikeja, Lagos",
-                    verificationToken: "token456",
-                    verificationLink: "https://example.com/verify/token456",
-                    status: "pending",
-                    verificationExpiresAt: "2023-06-20T23:59:59Z",
-                  },
-                ],
-                family: [
-                  {
-                    id: "f2",
-                    name: "Mary Doe",
-                    relationship: "Mother",
-                    phone: "+2348045678901",
-                    address: "456 Oak Avenue, Ikeja, Lagos",
-                    verificationToken: "token101",
-                    verificationLink: "https://example.com/verify/token101",
-                    status: "pending",
-                    verificationExpiresAt: "2023-06-25T23:59:59Z",
-                  },
-                ],
-              },
-              profileCompletionPercentage: 90,
-            };
+        // if (mockMode) {
+        //   // Simulate API delay
+        //   setTimeout(function () {
+        //     const response = {
+        //       success: true,
+        //       message: "Verification links sent successfully",
+        //       updatedTokens: {
+        //         neighbor: [
+        //           {
+        //             id: "n2",
+        //             name: "Sarah Johnson",
+        //             phone: "+2348023456789",
+        //             address: "126 Main Street, Ikeja, Lagos",
+        //             verificationToken: "token456",
+        //             verificationLink: "https://example.com/verify/token456",
+        //             status: "pending",
+        //             verificationExpiresAt: "2023-06-20T23:59:59Z",
+        //           },
+        //         ],
+        //         family: [
+        //           {
+        //             id: "f2",
+        //             name: "Mary Doe",
+        //             relationship: "Mother",
+        //             phone: "+2348045678901",
+        //             address: "456 Oak Avenue, Ikeja, Lagos",
+        //             verificationToken: "token101",
+        //             verificationLink: "https://example.com/verify/token101",
+        //             status: "pending",
+        //             verificationExpiresAt: "2023-06-25T23:59:59Z",
+        //           },
+        //         ],
+        //       },
+        //       profileCompletionPercentage: 90,
+        //     };
 
-            if (response.success) {
-              showToast(response.message, "success");
-              verificationTokens = response.updatedTokens;
-              updateVerificationUI();
+        //     if (response.success) {
+        //       showToast(response.message, "success");
+        //       verificationTokens = response.updatedTokens;
+        //       updateVerificationUI();
 
-              // Update profile completion if returned
-              if (response.profileCompletionPercentage) {
-                updateProfileCompletion(
-                  response.profileCompletionPercentage,
-                  true
-                );
-              }
-            } else {
-              showToast(
-                response.message || "Failed to initiate verification",
-                "error"
-              );
-            }
+        //       // Update profile completion if returned
+        //       if (response.profileCompletionPercentage) {
+        //         updateProfileCompletion(
+        //           response.profileCompletionPercentage,
+        //           true
+        //         );
+        //       }
+        //     } else {
+        //       showToast(
+        //         response.message || "Failed to initiate verification",
+        //         "error"
+        //       );
+        //     }
 
-            verifyBtn
-              .prop("disabled", false)
-              .html('<i class="bi bi-shield-check"></i> Verify My References');
-          }, 1500);
-          return;
-        }
+        //     verifyBtn
+        //       .prop("disabled", false)
+        //       .html('<i class="bi bi-shield-check"></i> Verify My References');
+        //   }, 1500);
+        //   return;
+        // }
 
         // Real API call
         $.ajax({
@@ -6371,7 +6443,7 @@
         const buttonConfig = {
           idcard: {
             download: {
-              cssClass: "btn-outline-primary btn-card-download",
+              cssClass: "btn-outline-primary btn-idcard-download",
               icon: "download",
               text: "Download",
             },
@@ -6393,7 +6465,7 @@
           },
           certificate: {
             download: {
-              cssClass: "btn-outline-primary btn-cert-download",
+              cssClass: "btn-outline-primary btn-certificate-download",
               icon: "download",
               text: "Download",
             },
@@ -6499,11 +6571,18 @@
 
       $(document).on(
         "click",
-        ".btn-cert-download, .btn-card-download",
+        ".btn-certificate-download, .btn-idcard-download",
         function () {
+          if (
+            !confirm(
+              "Warning! Sure you want to download? Click ok to continue or else click cancel."
+            )
+          ) {
+            return;
+          }
           const $button = $(this);
           const requestId = $button.data("id");
-          const isCertificate = $button.hasClass("btn-cert-download");
+          const isCertificate = $button.hasClass("btn-certificate-download");
 
           // Store original button content
           const originalContent = $button.html();
@@ -6590,8 +6669,7 @@
               const errorMessage = error.responseJSON
                 ? error.responseJSON.message
                 : "Download window has expired. Please make a new request.";
-              showNotification(errorMessage, "danger");
-              console.error("Download error:", error);
+              showNotification(errorMessage, "error");
 
               // Hide the overlay
               $(downloadOverlay).removeClass("show");
@@ -6606,12 +6684,10 @@
               setTimeout(() => {
                 $button.html(originalContent);
               }, 3000);
-
-              // Show notification
-              showNotification("Download failed. Please try again.", "error");
             });
         }
       );
+
       /**
        * Initializes a new DataTable or updates an existing one with new data.
        * @param {string} selector - The jQuery selector for the table.
@@ -6940,7 +7016,7 @@
           console.error("Error loading analytics:", error.message);
           showNotification(
             "Failed to load analytics. Please try again.",
-            "danger"
+            "error"
           );
         } finally {
           // Hide loader if you have one
@@ -6994,8 +7070,8 @@
           loadUserData();
         } catch (error) {
           error.responseJSON && error.responseJSON.message
-            ? showNotification(error.responseJSON.message, "danger")
-            : showNotification("Failed to upload profile photo", "danger");
+            ? showNotification(error.responseJSON.message, "error")
+            : showNotification("Failed to upload profile photo", "error");
         } finally {
           // Hide loader after completion
           setTimeout(() => {
@@ -7304,7 +7380,7 @@
 
         // Validate form
         if (!currentPassword || !newPassword || !confirmPassword) {
-          showNotification("Please fill in all fields", "danger");
+          showNotification("Please fill in all fields", "error");
           return;
         }
 
@@ -7344,7 +7420,7 @@
             const errorMessage = xhr.responseJSON
               ? xhr.responseJSON.message
               : "Failed to change password";
-            showNotification(errorMessage, "danger");
+            showNotification(errorMessage, "error");
           },
           complete: function () {
             // Re-enable the button
