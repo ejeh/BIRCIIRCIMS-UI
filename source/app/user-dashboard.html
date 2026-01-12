@@ -6157,51 +6157,52 @@
         const container = $("#nextOfKinContainer");
         container.empty();
 
-        nextOfKinData.forEach((kin) => {
-          const kinItem = $(`
-            <div class="next-of-kin-item mb-3">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Full Name</label>
-                                <input type="text" class="form-control next-of-kin-name" value="${kin.nok_name}" required>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Relationship</label>
-                                <input type="text" class="form-control next-of-kin-relationship" value="${kin.nok_relationship}" required>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Phone</label>
-                                <input type="tel" class="form-control next-of-kin-phone" value="${kin.nok_phone}" required>
-                            </div>
+        if (nextOfKinData && nextOfKinData.length > 0) {
+          nextOfKinData.forEach((kin) => {
+            const kinItem = $(`
+        <div class="next-of-kin-item mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-control next-of-kin-name" value="${kin.nok_name}" required>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Address</label>
-                                <input type="text" class="form-control next-of-kin-address" value="${kin.nok_address}" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Email</label>
-                                <input type="text" class="form-control next-of-kin-email" value="${kin.nok_email}" required>
-                            </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Relationship</label>
+                            <input type="text" class="form-control next-of-kin-relationship" value="${kin.nok_relationship}" required>
                         </div>
-
-   
-                    
-                        <div class="text-end">
-                            <button type="button" class="btn btn-sm btn-outline-danger remove-next-of-kin">
-                                <i class="bi bi-trash"></i> Remove
-                            </button>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Phone</label>
+                            <input type="tel" class="form-control next-of-kin-phone" value="${kin.nok_phone}" required>
                         </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Address</label>
+                            <input type="text" class="form-control next-of-kin-address" value="${kin.nok_address}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="text" class="form-control next-of-kin-email" value="${kin.nok_email}" required>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <button type="button" class="btn btn-sm btn-outline-danger remove-next-of-kin">
+                            <i class="bi bi-trash"></i> Remove
+                        </button>
                     </div>
                 </div>
             </div>
-        `);
-          container.append(kinItem);
-        });
+        </div>
+    `);
+            container.append(kinItem);
+          });
+        } else {
+          // Add empty next of kin item if none exist
+          addNextOfKin();
+        }
       }
-
       function populateEmploymentHistory(employmentData) {
         const container = $("#employmentHistoryContainer");
         container.empty();
