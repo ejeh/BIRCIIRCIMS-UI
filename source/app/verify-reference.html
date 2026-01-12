@@ -152,7 +152,6 @@
           })
           .catch((error) => {
             alert(error.message);
-            // window.location.href = "/source";
           });
 
         // Handle form submission
@@ -192,7 +191,7 @@
                   icon: "success",
                   confirmButtonText: "OK",
                 }).then(() => {
-                  window.location.href = "index.html";
+                  window.location.href = `${FRONTEND_URL}/index.html`;
                 });
               } else {
                 throw new Error("Verification failed");
