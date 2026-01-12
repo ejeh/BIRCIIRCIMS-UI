@@ -735,9 +735,14 @@
           </button>
           <ul class="dropdown-menu">
             <li>
-              <a class="dropdown-item" href="#" data-page="profile"
-                ><i class="bi bi-person me-2"></i>Profile</a
+              <a
+                class="dropdown-item"
+                href="#"
+                id="profileNavLink"
+                data-page="profile"
               >
+                <i class="bi bi-person me-2"></i>Profile
+              </a>
             </li>
             <li>
               <a class="dropdown-item" href="#" data-page="settings"
@@ -3535,17 +3540,21 @@
         // Initialize dashboard
         initializeDashboard();
 
-        // Sidebar navigation
-        $(".sidebar-menu .nav-link").on("click", function (e) {
+        // SPA Navigation (for both sidebar and header profile link)
+        $(".sidebar-menu .nav-link, #profileNavLink").on("click", function (e) {
           e.preventDefault();
-          // const page = $(this).data("page");
-          // await showPage(page);
           const page = $(this).data("page");
           showPage(page);
 
-          // Update active state
+          // Update active state in the sidebar
           $(".sidebar-menu .nav-link").removeClass("active");
-          $(this).addClass("active");
+          $(`.sidebar-menu .nav-link[data-page="${page}"]`).addClass("active");
+
+          // Close the header dropdown if it's open
+          $("#profileNavLink")
+            .closest(".dropdown")
+            .find(".dropdown-toggle")
+            .dropdown("hide");
         });
 
         // Toggle sidebar on small screens
@@ -6432,12 +6441,22 @@
       }
 
       /**
-       * Creates a renderer for DataTables action buttons.
-       * This advanced version uses a helper function for maximum code reuse and clarity.
-       *
-       * @param {string} documentType - The type of document ('idcard' or 'certificate').
-       * @returns {function} A DataTables render function.
+       * Navigates the user to the profile page by programmatically clicking
+       * the correct link in the sidebar, which triggers the app's router.
        */
+      function goToProfile() {
+        // Find the profile navigation link in the SIDEBAR (not the header dropdown)
+        const sidebarProfileLink = document.querySelector(
+          'a.nav-link[data-page="profile"]'
+        );
+
+        if (sidebarProfileLink) {
+          // Trigger a click on the sidebar link to run the app's navigation logic
+          sidebarProfileLink.click();
+        } else {
+          console.error("Sidebar profile link not found!");
+        }
+      }
 
       function createActionsRenderer(documentType) {
         const buttonConfig = {
@@ -6492,9 +6511,18 @@
 
           const isPaid = row.paymentStatus === "paid";
 
-          // Check for profile completion only if payment is paid
+          // // Check for profile completion only if payment is paid
+
           if (isPaid && row.userId && row.userId.isProfileCompleted === false) {
-            return '<span class="text-warning fw-bold">Please complete your profile</span>';
+            return `
+    <button 
+      class="btn btn-sm btn-warning" 
+      onclick="goToProfile()"
+      data-bs-toggle="tooltip" 
+      title="Your profile is incomplete. Please complete it to download this document.">
+      <i class="fas fa-user-edit"></i> Complete Profile
+    </button>
+  `;
           }
 
           if (row.status === "Approved") {

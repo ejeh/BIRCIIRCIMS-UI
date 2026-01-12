@@ -775,9 +775,14 @@
           </button>
           <ul class="dropdown-menu dropdown-menu-end">
             <li>
-              <a class="dropdown-item" href="#" data-page="profile"
-                ><i class="bi bi-person me-2"></i>Profile</a
+              <a
+                class="dropdown-item"
+                href="#"
+                id="profileNavLink"
+                data-page="profile"
               >
+                <i class="bi bi-person me-2"></i>Profile
+              </a>
             </li>
             <li><hr class="dropdown-divider" /></li>
             <li>
@@ -2593,15 +2598,21 @@
         // Initialize dashboard
         initializeDashboard();
 
-        // Sidebar navigation
-        $(".sidebar-menu .nav-link").on("click", function (e) {
+        // SPA Navigation (for both sidebar and header profile link)
+        $(".sidebar-menu .nav-link, #profileNavLink").on("click", function (e) {
           e.preventDefault();
           const page = $(this).data("page");
           showPage(page);
 
-          // Update active state
+          // Update active state in the sidebar
           $(".sidebar-menu .nav-link").removeClass("active");
-          $(this).addClass("active");
+          $(`.sidebar-menu .nav-link[data-page="${page}"]`).addClass("active");
+
+          // Close the header dropdown if it's open
+          $("#profileNavLink")
+            .closest(".dropdown")
+            .find(".dropdown-toggle")
+            .dropdown("hide");
         });
 
         // Toggle sidebar on small screens
