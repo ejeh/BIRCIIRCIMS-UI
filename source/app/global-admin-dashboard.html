@@ -55,9 +55,6 @@
     </script>
 
     <style>
-      * {
-        zoom: normal !important;
-      }
       :root {
         --sidebar-width: 260px;
         --sidebar-bg: #1a1d29;
@@ -193,8 +190,7 @@
       }
 
       .card:hover {
-        /* transform: translateY(-5px); */
-        transform: none !important;
+        transform: translateY(-5px);
         box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
       }
 
@@ -4610,10 +4606,12 @@
                         }
 
                         return `
-        <div class="btn-group" data-bs-toggle="tooltip">
+        <div class="btn-group" >
           <button class="btn btn-sm btn-outline-primary btn-card-view" 
                   data-id="${row._id}"
-                  title="View Details">
+                  title="View Details"
+                  data-bs-toggle="tooltip"
+                  >
             <i class="bi bi-eye"></i>
           </button>
           ${actionButtons}
@@ -4625,7 +4623,7 @@
                   ],
                   responsive: true,
                   pageLength: 10,
-                  retrieve: true,
+                  // retrieve: true,
                 });
               },
               error: function (xhr) {
@@ -5111,10 +5109,12 @@
                     }
 
                     return `
-        <div class="btn-group" data-bs-toggle="tooltip">
+        <div class="btn-group" >
           <button class="btn btn-sm btn-outline-primary btn-cert-view" 
                   data-id="${row._id}"
-                  title="View Details">
+                  title="View Details"
+                  data-bs-toggle="tooltip"
+                  >
             <i class="bi bi-eye"></i>
           </button>
           ${actionButtons}

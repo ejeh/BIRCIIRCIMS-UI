@@ -1365,6 +1365,10 @@ $(document).ready(function () {
   $("#submitRejection").click(function () {
     const reason = $("#rejectionReason").val();
     handleRejection(reason);
+    $("#idcardsTable").on("click", ".btn-card-view", function () {
+      const requestId = $(this).data("id");
+      handleCardView(requestId);
+    });
   });
 
   $("#btn-prev").click(function () {
