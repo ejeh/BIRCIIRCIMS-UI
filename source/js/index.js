@@ -915,43 +915,43 @@ $(document).ready(function () {
     $("#request").text(count);
   }
 
-  function renderTable(data) {
-    tableBody.empty();
-    data.forEach((item, index) => {
-      const statusBadge = {
-        Approved: `<span class="badge rounded-pill bg-success">Approved</span>`,
-        Pending: `<span class="badge rounded-pill bg-warning text-dark">Pending</span>`,
-        Rejected: `<span class="badge rounded-pill bg-danger">Rejected</span>`,
-      };
+  // function renderTable(data) {
+  //   tableBody.empty();
+  //   data.forEach((item, index) => {
+  //     const statusBadge = {
+  //       Approved: `<span class="badge rounded-pill bg-success">Approved</span>`,
+  //       Pending: `<span class="badge rounded-pill bg-warning text-dark">Pending</span>`,
+  //       Rejected: `<span class="badge rounded-pill bg-danger">Rejected</span>`,
+  //     };
 
-      tableBody.append(`
-        <tr data-id="${item._id}">
-         <td>${(currentPage - 1) * pageSize + index + 1}</td>
-          <td>${item.firstname} ${item.lastname}</td>
-          <td>${item.phone}</td>
-          <td>${item.isVerified}</td>
-          <td>${statusBadge[item.status] || item.status}</td>
-          <td>
-            <button class="btn btn-sm btn-success btn-cert-approve" data-id="${
-              item._id
-            }" title="Approve">
-              <i class="fas fa-check"></i>
-            </button>
-            <button class="btn btn-sm btn-warning btn-cert-view" data-id="${
-              item._id
-            }" title="View">
-              <i class="fas fa-eye"></i>
-            </button>
-            <button class="btn btn-sm btn-danger btn-cert-reject" data-id="${
-              item._id
-            }" title="Reject" ${item.status === "Rejected" ? "disabled" : ""}>
-              <i class="fas fa-times"></i>
-            </button>
-          </td>
-        </tr>
-      `);
-    });
-  }
+  //     tableBody.append(`
+  //       <tr data-id="${item._id}">
+  //        <td>${(currentPage - 1) * pageSize + index + 1}</td>
+  //         <td>${item.firstname} ${item.lastname}</td>
+  //         <td>${item.phone}</td>
+  //         <td>${item.isVerified}</td>
+  //         <td>${statusBadge[item.status] || item.status}</td>
+  //         <td>
+  //           <button class="btn btn-sm btn-success btn-cert-approve" data-id="${
+  //             item._id
+  //           }" title="Approve">
+  //             <i class="fas fa-check"></i>
+  //           </button>
+  //           <button class="btn btn-sm btn-warning btn-cert-view" data-id="${
+  //             item._id
+  //           }" title="View">
+  //             <i class="fas fa-eye"></i>
+  //           </button>
+  //           <button class="btn btn-sm btn-danger btn-cert-reject" data-id="${
+  //             item._id
+  //           }" title="Reject" ${item.status === "Rejected" ? "disabled" : ""}>
+  //             <i class="fas fa-times"></i>
+  //           </button>
+  //         </td>
+  //       </tr>
+  //     `);
+  //   });
+  // }
 
   // function fetchData(page) {
   //   $.ajax({
@@ -1357,7 +1357,7 @@ $(document).ready(function () {
     handleView(requestId);
   });
 
-  $("#idcardsTable").on("click", ".btn-view", function () {
+  $("#idcardsTable").on("click", ".btn-card-view", function () {
     const requestId = $(this).data("id");
     handleCardView(requestId);
   });

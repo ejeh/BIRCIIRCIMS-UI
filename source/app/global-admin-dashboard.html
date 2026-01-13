@@ -3120,6 +3120,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <!-- Your Custom Script -->
+    <script type="text/javascript" src="../js/index.js"></script>
+
     <script>
       // Initialize DataTables
       let usersTable,
@@ -4604,7 +4607,7 @@
 
                         return `
         <div class="btn-group" data-bs-toggle="tooltip">
-          <button class="btn btn-sm btn-outline-primary btn-view" 
+          <button class="btn btn-sm btn-outline-primary btn-card-view" 
                   data-id="${row._id}"
                   title="View Details">
             <i class="bi bi-eye"></i>
@@ -8767,6 +8770,5 @@
       };
       // })
     </script>
-    <script type="text/javascript" src="../js/index.js"></script>
   </body>
 </html>
