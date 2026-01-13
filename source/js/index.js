@@ -1040,147 +1040,147 @@ $(document).ready(function () {
     });
   }
 
-  function handleView(requestId) {
-    $.ajax({
-      url: `${BACKEND_URL}/indigene/certificate/${requestId}/request`,
-      method: "GET",
-      headers: apiHeaders,
-      success: function (response) {
-        const docTypes = ["idCard", "birthCertificate"];
-        const documentTitles = ["Identity Card", "Birth Certificate"];
+  // function handleView(requestId) {
+  //   $.ajax({
+  //     url: `${BACKEND_URL}/indigene/certificate/${requestId}/request`,
+  //     method: "GET",
+  //     headers: apiHeaders,
+  //     success: function (response) {
+  //       const docTypes = ["idCard", "birthCertificate"];
+  //       const documentTitles = ["Identity Card", "Birth Certificate"];
 
-        // Filter documents that actually exist in response
-        const validDocuments = docTypes
-          .map((key, index) => ({ key, title: documentTitles[index] }))
-          .filter((doc) => response[doc.key]);
+  //       // Filter documents that actually exist in response
+  //       const validDocuments = docTypes
+  //         .map((key, index) => ({ key, title: documentTitles[index] }))
+  //         .filter((doc) => response[doc.key]);
 
-        let modalContent = `
-        <div class="container-fluid">
-          <div class="row mb-3">
-            <div class="col-md-3 text-center">
-              <img 
-                src="${response.passportPhoto || "/assets/images/avatar.jpeg"}" 
-                alt="Passport Photo" 
-                class="img-fluid rounded shadow-sm profile-photo"
-                style="max-height: 150px;"
-                crossOrigin="anonymous"
-              >
-            </div>
-            <div class="col-md-9">
-              <h5 class="fw-bold mb-2">${response.firstname} ${
-          response.lastname
-        }</h5>
-              <p class="mb-1"><strong>Phone:</strong> ${response.phone}</p>
-              <p class="mb-1"><strong>Email:</strong> ${response.email}</p>
-              <p class="mb-1"><strong>Status:</strong> <span class="badge bg-info">${
-                response.status
-              }</span></p>
-              <p><strong>State:</strong> ${response.stateOfOrigin}</p>
-              <p><strong>LGA:</strong> ${response.lgaOfOrigin}</p>
-              <p><strong>Kindred:</strong> ${response.kindred}</p>
-              <p><strong>isProfileCompleted:</strong> ${
-                response.userId?.isProfileCompleted
-              }</p>
-            </div>
-          </div>
+  //       let modalContent = `
+  //       <div class="container-fluid">
+  //         <div class="row mb-3">
+  //           <div class="col-md-3 text-center">
+  //             <img 
+  //               src="${response.passportPhoto || "/assets/images/avatar.jpeg"}" 
+  //               alt="Passport Photo" 
+  //               class="img-fluid rounded shadow-sm profile-photo"
+  //               style="max-height: 150px;"
+  //               crossOrigin="anonymous"
+  //             >
+  //           </div>
+  //           <div class="col-md-9">
+  //             <h5 class="fw-bold mb-2">${response.firstname} ${
+  //         response.lastname
+  //       }</h5>
+  //             <p class="mb-1"><strong>Phone:</strong> ${response.phone}</p>
+  //             <p class="mb-1"><strong>Email:</strong> ${response.email}</p>
+  //             <p class="mb-1"><strong>Status:</strong> <span class="badge bg-info">${
+  //               response.status
+  //             }</span></p>
+  //             <p><strong>State:</strong> ${response.stateOfOrigin}</p>
+  //             <p><strong>LGA:</strong> ${response.lgaOfOrigin}</p>
+  //             <p><strong>Kindred:</strong> ${response.kindred}</p>
+  //             <p><strong>isProfileCompleted:</strong> ${
+  //               response.userId?.isProfileCompleted
+  //             }</p>
+  //           </div>
+  //         </div>
   
-          <hr class="my-3">
-          <h6 class="text-primary">Uploaded Documents</h6>
-      `;
+  //         <hr class="my-3">
+  //         <h6 class="text-primary">Uploaded Documents</h6>
+  //     `;
 
-        if (validDocuments.length === 0) {
-          modalContent += `<p class="text-muted">No documents uploaded.</p>`;
-        }
+  //       if (validDocuments.length === 0) {
+  //         modalContent += `<p class="text-muted">No documents uploaded.</p>`;
+  //       }
 
-        // Generate HTML for each existing document
-        validDocuments.forEach((doc, index) => {
-          const fileUrl = `${BACKEND_URL}/indigene/certificate/${requestId}/document/${doc.key}`;
+  //       // Generate HTML for each existing document
+  //       validDocuments.forEach((doc, index) => {
+  //         const fileUrl = `${BACKEND_URL}/indigene/certificate/${requestId}/document/${doc.key}`;
 
-          modalContent += `
-          <div class="card my-3 shadow-sm">
-            <div class="card-header bg-light fw-semibold">
-              ${doc.title}
-            </div>
-            <div class="card-body p-0"> <!-- Use p-0 for full-width viewer -->
-              <!-- Renamed ID for clarity, added responsive container -->
-              <div id="viewer-container-${index}" style="width:100%; max-height:75vh; overflow:auto;" class="border bg-light p-2"></div>
-              <div class="p-2 text-end">
-                 <button class="btn btn-sm btn-outline-primary me-2" onclick="window.open('${fileUrl}', '_blank')">Open in New Tab</button>
-                 <!-- Updated onclick to call the generic downloadFile function -->
-                 <button class="btn btn-sm btn-outline-secondary" data-doc-index="${index}" data-url="${fileUrl}" onclick="downloadFile(this)">Download</button>
-              </div>
-            </div>
-          </div>
-        `;
-        });
+  //         modalContent += `
+  //         <div class="card my-3 shadow-sm">
+  //           <div class="card-header bg-light fw-semibold">
+  //             ${doc.title}
+  //           </div>
+  //           <div class="card-body p-0"> <!-- Use p-0 for full-width viewer -->
+  //             <!-- Renamed ID for clarity, added responsive container -->
+  //             <div id="viewer-container-${index}" style="width:100%; max-height:75vh; overflow:auto;" class="border bg-light p-2"></div>
+  //             <div class="p-2 text-end">
+  //                <button class="btn btn-sm btn-outline-primary me-2" onclick="window.open('${fileUrl}', '_blank')">Open in New Tab</button>
+  //                <!-- Updated onclick to call the generic downloadFile function -->
+  //                <button class="btn btn-sm btn-outline-secondary" data-doc-index="${index}" data-url="${fileUrl}" onclick="downloadFile(this)">Download</button>
+  //             </div>
+  //           </div>
+  //         </div>
+  //       `;
+  //       });
 
-        modalContent += `</div>`;
-        $("#viewModal .modal-body").html(modalContent);
-        $("#viewModal").modal("show");
+  //       modalContent += `</div>`;
+  //       $("#viewModal .modal-body").html(modalContent);
+  //       $("#viewModal").modal("show");
 
-        // Load documents with authorization and type-checking
-        validDocuments.forEach((doc, index) => {
-          const fileUrl = `${BACKEND_URL}/indigene/certificate/${requestId}/document/${doc.key}`;
-          const container = document.getElementById(
-            `viewer-container-${index}`
-          );
+  //       // Load documents with authorization and type-checking
+  //       validDocuments.forEach((doc, index) => {
+  //         const fileUrl = `${BACKEND_URL}/indigene/certificate/${requestId}/document/${doc.key}`;
+  //         const container = document.getElementById(
+  //           `viewer-container-${index}`
+  //         );
 
-          // Show loader while fetching
-          container.innerHTML = `
-          <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-        `;
+  //         // Show loader while fetching
+  //         container.innerHTML = `
+  //         <div class="spinner-border text-primary" role="status">
+  //           <span class="visually-hidden">Loading...</span>
+  //         </div>
+  //       `;
 
-          // Fetch document with authorization
-          fetch(fileUrl, {
-            headers: {
-              Authorization: apiHeaders.Authorization,
-            },
-          })
-            .then((res) => {
-              if (!res.ok) throw new Error("Failed to fetch document");
+  //         // Fetch document with authorization
+  //         fetch(fileUrl, {
+  //           headers: {
+  //             Authorization: apiHeaders.Authorization,
+  //           },
+  //         })
+  //           .then((res) => {
+  //             if (!res.ok) throw new Error("Failed to fetch document");
 
-              // --- KEY LOGIC: Get the content type from the response header ---
-              const contentType = res.headers.get("Content-Type");
+  //             // --- KEY LOGIC: Get the content type from the response header ---
+  //             const contentType = res.headers.get("Content-Type");
 
-              // Return both the blob and the content type for the next .then()
-              return res.blob().then((blob) => ({ blob, contentType }));
-            })
-            .then(({ blob, contentType }) => {
-              const blobUrl = URL.createObjectURL(blob);
+  //             // Return both the blob and the content type for the next .then()
+  //             return res.blob().then((blob) => ({ blob, contentType }));
+  //           })
+  //           .then(({ blob, contentType }) => {
+  //             const blobUrl = URL.createObjectURL(blob);
 
-              // --- Check the content type and call the correct renderer ---
-              if (contentType === "application/pdf") {
-                loadPDFJ(blobUrl, container);
-              } else if (contentType && contentType.startsWith("image/")) {
-                loadImage(blobUrl, container);
-              } else {
-                // Handle unknown or missing content type
-                throw new Error(
-                  `Unsupported file type: ${contentType || "Unknown"}`
-                );
-              }
-            })
-            .catch((err) => {
-              console.error(`Error loading document [${doc.key}]:`, err);
-              container.innerHTML = `
-              <div class="alert alert-danger m-2">
-                Failed to load document: ${err.message}
-                <div class="mt-2">
-                  <a href="${fileUrl}" target="_blank" class="btn btn-sm btn-primary">Try Opening in New Tab</a>
-                </div>
-              </div>
-            `;
-            });
-        });
-      },
-      error: function (error) {
-        console.error("Error fetching request details:", error);
-        alert("Failed to fetch request details.");
-      },
-    });
-  }
+  //             // --- Check the content type and call the correct renderer ---
+  //             if (contentType === "application/pdf") {
+  //               loadPDFJ(blobUrl, container);
+  //             } else if (contentType && contentType.startsWith("image/")) {
+  //               loadImage(blobUrl, container);
+  //             } else {
+  //               // Handle unknown or missing content type
+  //               throw new Error(
+  //                 `Unsupported file type: ${contentType || "Unknown"}`
+  //               );
+  //             }
+  //           })
+  //           .catch((err) => {
+  //             console.error(`Error loading document [${doc.key}]:`, err);
+  //             container.innerHTML = `
+  //             <div class="alert alert-danger m-2">
+  //               Failed to load document: ${err.message}
+  //               <div class="mt-2">
+  //                 <a href="${fileUrl}" target="_blank" class="btn btn-sm btn-primary">Try Opening in New Tab</a>
+  //               </div>
+  //             </div>
+  //           `;
+  //           });
+  //       });
+  //     },
+  //     error: function (error) {
+  //       console.error("Error fetching request details:", error);
+  //       alert("Failed to fetch request details.");
+  //     },
+  //   });
+  // }
 
   //   // Handle View Modal Function
   function handleCardView(requestId) {
@@ -1204,12 +1204,12 @@ $(document).ready(function () {
               <div class="container-fluid">
                   <div class="row mb-3">
                       <div class="col-md-3 text-center">
-                          <img 
+                          <img
                             src="${
                               response.passportPhoto ||
                               "/assets/images/avatar.jpeg"
-                            }" 
-                            alt="Passport Photo" 
+                            }"
+                            alt="Passport Photo"
                             class="img-fluid rounded shadow-sm profile-photo"
                             style="max-height: 150px;"
                             crossOrigin="anonymous"
@@ -1231,7 +1231,7 @@ $(document).ready(function () {
                           <p><strong>State:</strong> ${
                             response.userId?.stateOfOrigin
                           }</p>
-                          <p><strong>LGA:</strong> 
+                          <p><strong>LGA:</strong>
                           ${response.userId?.lgaOfOrigin}
                           </p>
                           <p><strong>isProfileCompleted:</strong> ${
@@ -1352,23 +1352,19 @@ $(document).ready(function () {
     $("#rejectionModal").modal("show");
   });
 
-  $("#certificatesTable").on("click", ".btn-cert-view", function () {
-    const requestId = $(this).data("id");
-    handleView(requestId);
-  });
+  // $("#certificatesTable").on("click", ".btn-cert-view", function () {
+  //   const requestId = $(this).data("id");
+  //   handleView(requestId);
+  // });
 
-  $("#idcardsTable").on("click", ".btn-card-view", function () {
-    const requestId = $(this).data("id");
-    handleCardView(requestId);
-  });
+  // $("#idcardsTable").on("click", ".btn-card-view", function () {
+  //   const requestId = $(this).data("id");
+  //   handleCardView(requestId);
+  // });
 
   $("#submitRejection").click(function () {
     const reason = $("#rejectionReason").val();
     handleRejection(reason);
-    $("#idcardsTable").on("click", ".btn-card-view", function () {
-      const requestId = $(this).data("id");
-      handleCardView(requestId);
-    });
   });
 
   $("#btn-prev").click(function () {
