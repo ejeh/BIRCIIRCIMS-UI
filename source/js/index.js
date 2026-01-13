@@ -4081,7 +4081,6 @@ function handleCardView(requestId) {
     method: "GET",
     headers: apiHeaders,
     success: function (response) {
-      console.log(" View Response:", response);
       const docTypes = ["utilityBill", "ref_letter"];
       const documentTitles = ["Utility Bill", "Reference Letter"];
 
