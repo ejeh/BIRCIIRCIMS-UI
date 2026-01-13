@@ -4227,7 +4227,6 @@ function handleCardView(requestId) {
 }
 $("#idcardsTable").on("click", ".btn-view", function () {
   const requestId = $(this).data("id");
-
   handleCardView(requestId);
 });
 
