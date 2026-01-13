@@ -3764,7 +3764,6 @@ const pageSize = 10;
 //         <td></td>
 //         <td></td>
 
-
 //       </tr>
 //     `);
 //   });
@@ -4073,167 +4072,165 @@ const pageSize = 10;
 //   }
 
 //   // Handle View Modal Function
-//   function handleView(requestId) {
-//     $.ajax({
-//       url: `${BACKEND_URL}/idcard/${requestId}/request`,
-//       method: "GET",
-//       headers: apiHeaders,
-//       success: function (response) {
-//         const docTypes = ["utilityBill", "ref_letter"];
-//         const documentTitles = ["Utility Bill", "Reference Letter"];
+function handleCardView(requestId) {
+  const apiHeaders = {
+    Authorization: `Bearer ${token}`,
+  };
+  $.ajax({
+    url: `${BACKEND_URL}/idcard/${requestId}/request`,
+    method: "GET",
+    headers: apiHeaders,
+    success: function (response) {
+      console.log(" View Response:", response);
+      const docTypes = ["utilityBill", "ref_letter"];
+      const documentTitles = ["Utility Bill", "Reference Letter"];
 
-//         // Filter documents that actually exist in response
-//         const validDocuments = docTypes
-//           .map((key, index) => ({ key, title: documentTitles[index] }))
-//           .filter((doc) => response[doc.key]); // Check if document exists
+      // Filter documents that actually exist in response
+      const validDocuments = docTypes
+        .map((key, index) => ({ key, title: documentTitles[index] }))
+        .filter((doc) => response[doc.key]); // Check if document exists
 
-//         let modalContent = `
-//               <div class="container-fluid">
-//                   <div class="row mb-3">
-//                       <div class="col-md-3 text-center">
-//                           <img 
-//                               src="${
-//                                 response.passportPhoto ||
-//                                 "/assets/images/avatar.jpeg"
-//                               }" 
-//                               alt="Passport Photo" 
-//                               class="img-fluid rounded shadow-sm profile-photo"
-//                               style="max-height: 150px;"
-//                               crossOrigin="anonymous"
-//                           >
-//                       </div>
-//                       <div class="col-md-9">
-//                           <h5 class="fw-bold mb-2">${response.firstname} ${
-//           response.lastname
-//         }</h5>
-//                           <p class="mb-1"><strong>Phone:</strong> ${
-//                             response.phone
-//                           }</p>
-//                           <p class="mb-1"><strong>Email:</strong> ${
-//                             response.email
-//                           }</p>
-//                           <p class="mb-1"><strong>Status:</strong> <span class="badge bg-info">${
-//                             response.status
-//                           }</span></p>
-//                           <p><strong>State:</strong> ${
-//                             response.userId?.stateOfOrigin
-//                           }</p>
-//                           <p><strong>LGA:</strong> ${
-//                             response.userId?.lgaOfOrigin
-//                           }</p>
-//                           <p><strong>isProfileCompleted:</strong> ${
-//                             response.userId?.isProfileCompleted
-//                           }</p>
-//                       </div>
-//                   </div>
+      let modalContent = `
+              <div class="container-fluid">
+                  <div class="row mb-3">
+                      <div class="col-md-3 text-center">
+                          <img 
+                            src="${
+                              response.passportPhoto ||
+                              "/assets/images/avatar.jpeg"
+                            }" 
+                            alt="Passport Photo" 
+                            class="img-fluid rounded shadow-sm profile-photo"
+                            style="max-height: 150px;"
+                            crossOrigin="anonymous"
+                          >
+                      </div>
+                      <div class="col-md-9">
+                          <h5 class="fw-bold mb-2">${response.firstname} ${
+        response.lastname
+      }</h5>
+                          <p class="mb-1"><strong>Phone:</strong> ${
+                            response.phone
+                          }</p>
+                          <p class="mb-1"><strong>Email:</strong> ${
+                            response.email
+                          }</p>
+                          <p class="mb-1"><strong>Status:</strong> <span class="badge bg-info">${
+                            response.status
+                          }</span></p>
+                          <p><strong>State:</strong> ${
+                            response.userId?.stateOfOrigin
+                          }</p>
+                          <p><strong>LGA:</strong> 
+                          ${response.userId?.lgaOfOrigin}
+                          </p>
+                          <p><strong>isProfileCompleted:</strong> ${
+                            response.userId?.isProfileCompleted
+                          }</p>
+                      </div>
+                  </div>
 
-//                   <hr class="my-3">
-//                   <h6 class="text-primary">Uploaded Documents</h6>
-//           `;
+                  <hr class="my-3">
+                  <h6 class="text-primary">Uploaded Documents</h6>
+          `;
 
-//         if (validDocuments.length === 0) {
-//           modalContent += `<p class="text-muted">No documents uploaded.</p>`;
-//         }
+      if (validDocuments.length === 0) {
+        modalContent += `<p class="text-muted">No documents uploaded.</p>`;
+      }
 
-//         // Generate HTML for each existing document
-//         validDocuments.forEach((doc, index) => {
-//           const fileUrl = `${BACKEND_URL}/idcard/${requestId}/document/${doc.key}`;
+      // Generate HTML for each existing document
+      validDocuments.forEach((doc, index) => {
+        const fileUrl = `${BACKEND_URL}/idcard/${requestId}/document/${doc.key}`;
 
-//           modalContent += `
-//                   <div class="card my-3 shadow-sm">
-//                       <div class="card-header bg-light fw-semibold">
-//                           ${doc.title}
-//                       </div>
-//                       <div class="card-body">
-//                           <div id="pdf-viewer-container-${index}" style="width:100%; height:400px;" class="pdf-container"></div>
-//                           <div class="text-end mt-2">
-//                              <button class="btn btn-sm btn-outline-primary me-2" onclick="window.open('${fileUrl}', '_blank')">Open in New Tab</button>
-//                              <button class="btn btn-sm btn-outline-secondary" data-doc-index="${index}" data-url="${fileUrl}" onclick="downloadPDF(this)">Download</button>
-//                           </div>
-//                       </div>
-//                   </div>
-//               `;
-//         });
+        modalContent += `
+                  <div class="card my-3 shadow-sm">
+                      <div class="card-header bg-light fw-semibold">
+                          ${doc.title}
+                      </div>
+                      <div class="card-body">
+                          <div id="pdf-viewer-container-${index}" style="width:100%; height:400px;" class="pdf-container"></div>
+                          <div class="text-end mt-2">
+                             <button class="btn btn-sm btn-outline-primary me-2" onclick="window.open('${fileUrl}', '_blank')">Open in New Tab</button>
+                             <button class="btn btn-sm btn-outline-secondary" data-doc-index="${index}" data-url="${fileUrl}" onclick="downloadPDF(this)">Download</button>
+                          </div>
+                      </div>
+                  </div>
+              `;
+      });
 
-//         modalContent += `</div>`;
-//         $("#viewModal .modal-body").html(modalContent);
-//         $("#viewModal").modal("show");
+      modalContent += `</div>`;
+      $("#viewModal .modal-body").html(modalContent);
+      $("#viewModal").modal("show");
 
-//         // Load PDFs with authorization
-//         validDocuments.forEach((doc, index) => {
-//           const fileUrl = `${BACKEND_URL}/idcard/${requestId}/document/${doc.key}`;
-//           const container = document.getElementById(
-//             `pdf-viewer-container-${index}`
-//           );
-//           // Show loader while fetching
-//           $(`#pdf-viewer-container-${index}`).html(`
-//                   <div class="d-flex justify-content-center align-items-center h-100">
-//                       <div class="spinner-border text-primary" role="status">
-//                           <span class="visually-hidden">Loading...</span>
-//                       </div>
-//                   </div>
-//               `);
+      // Load PDFs with authorization
+      validDocuments.forEach((doc, index) => {
+        const fileUrl = `${BACKEND_URL}/idcard/${requestId}/document/${doc.key}`;
+        const container = document.getElementById(
+          `pdf-viewer-container-${index}`
+        );
+        // Show loader while fetching
+        $(`#pdf-viewer-container-${index}`).html(`
+                  <div class="d-flex justify-content-center align-items-center h-100">
+                      <div class="spinner-border text-primary" role="status">
+                          <span class="visually-hidden">Loading...</span>
+                      </div>
+                  </div>
+              `);
 
-//           // Fetch document with authorization
-//           fetch(fileUrl, {
-//             headers: {
-//               Authorization: apiHeaders.Authorization,
-//             },
-//           })
-//             // .then((res) => {
-//             //   if (!res.ok) throw new Error("Failed to fetch PDF");
-//             //   return res.blob();
-//             // })
-//             // .then((blob) => {
-//             //   const blobUrl = URL.createObjectURL(blob);
-//             //   loadPDFJ(
-//             //     blobUrl,
-//             //     document.getElementById(`pdf-viewer-container-${index}`)
-//             //   );
-//             // })
-//             .then((res) => {
-//               if (!res.ok) throw new Error("Failed to fetch document");
+        // Fetch document with authorization
+        fetch(fileUrl, {
+          headers: {
+            Authorization: apiHeaders.Authorization,
+          },
+        })
+          .then((res) => {
+            if (!res.ok) throw new Error("Failed to fetch document");
 
-//               // --- KEY LOGIC: Get the content type from the response header ---
-//               const contentType = res.headers.get("Content-Type");
+            // --- KEY LOGIC: Get the content type from the response header ---
+            const contentType = res.headers.get("Content-Type");
 
-//               // Return both the blob and the content type for the next .then()
-//               return res.blob().then((blob) => ({ blob, contentType }));
-//             })
-//             .then(({ blob, contentType }) => {
-//               const blobUrl = URL.createObjectURL(blob);
+            // Return both the blob and the content type for the next .then()
+            return res.blob().then((blob) => ({ blob, contentType }));
+          })
+          .then(({ blob, contentType }) => {
+            const blobUrl = URL.createObjectURL(blob);
 
-//               // --- Check the content type and call the correct renderer ---
-//               if (contentType === "application/pdf") {
-//                 loadPDFJ(blobUrl, container);
-//               } else if (contentType && contentType.startsWith("image/")) {
-//                 loadImage(blobUrl, container);
-//               } else {
-//                 // Handle unknown or missing content type
-//                 throw new Error(
-//                   `Unsupported file type: ${contentType || "Unknown"}`
-//                 );
-//               }
-//             })
-//             .catch((err) => {
-//               console.error(`Error loading PDF [${doc.key}]:`, err);
-//               $(`#pdf-viewer-container-${index}`).html(`
-//                       <div class="alert alert-danger">
-//                           Failed to load document: ${err.message}
-//                           <div class="mt-2">
-//                               <a href="${fileUrl}" target="_blank" class="btn btn-sm btn-primary">Open in New Tab</a>
-//                           </div>
-//                       </div>
-//                   `);
-//             });
-//         });
-//       },
-//       error: function (error) {
-//         console.error("Error fetching request details:", error);
-//         alert("Failed to fetch request details.");
-//       },
-//     });
-//   }
+            // --- Check the content type and call the correct renderer ---
+            if (contentType === "application/pdf") {
+              loadPDFJ(blobUrl, container);
+            } else if (contentType && contentType.startsWith("image/")) {
+              loadImage(blobUrl, container);
+            } else {
+              // Handle unknown or missing content type
+              throw new Error(
+                `Unsupported file type: ${contentType || "Unknown"}`
+              );
+            }
+          })
+          .catch((err) => {
+            console.error(`Error loading PDF [${doc.key}]:`, err);
+            $(`#pdf-viewer-container-${index}`).html(`
+                      <div class="alert alert-danger">
+                          Failed to load document: ${err.message}
+                          <div class="mt-2">
+                              <a href="${fileUrl}" target="_blank" class="btn btn-sm btn-primary">Open in New Tab</a>
+                          </div>
+                      </div>
+                  `);
+          });
+      });
+    },
+    error: function (error) {
+      console.error("Error fetching request details:", error);
+      alert("Failed to fetch request details.");
+    },
+  });
+}
+$("#idcardsTable").on("click", ".btn-view", function () {
+  const requestId = $(this).data("id");
+
+  handleCardView(requestId);
+});
 
 //   function showNotification(type, message) {
 //     const toastHtml = `
@@ -4257,12 +4254,6 @@ const pageSize = 10;
 //   $(document).on("click", ".btn-reject", function () {
 //     rejectionId = $(this).data("id");
 //     $("#rejectionModal").modal("show");
-//   });
-
-//   $("#idcardsTable").on("click", ".btn-view", function () {
-//     const requestId = $(this).data("id");
-
-//     handleView(requestId);
 //   });
 
 //   $("#submitIDRejection").click(function () {
@@ -4333,9 +4324,9 @@ const pageSize = 10;
 //         tableBody.append(`
 //           <tr>
 //             <td>${(page - 1) * pageSize + index + 1}</td>
-//             <td>${data.name} 
+//             <td>${data.name}
 //             <td>${data.headquaters}</td>
-            
+
 //             <td>
 //               <div class="dropdown">
 //                 <button class="btn btn-xs btn-action dropdown-toggle" data-bs-toggle="dropdown">
