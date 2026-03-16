@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -402,6 +402,50 @@
           height: 100vh;
         }
       }
+
+      /* The wrapper controls the size and creates the positioning context */
+      .map-identity-container {
+        position: relative;
+        width: 100%;
+        max-width: 650px; /* Limits size on desktop */
+        margin: 0 auto;
+        display: block;
+      }
+
+      /* Ensure the image behaves well and stays responsive */
+      .map-outline-img {
+        width: 100%;
+        height: auto;
+        display: block;
+        /* Soften the map so it doesn't compete with the text */
+        opacity: 0.4;
+      }
+
+      /* The magic for centering text over the image */
+      .overlay-text {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+
+        /* Flexbox centering */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        text-align: center;
+        padding: 20px;
+        pointer-events: none; /* User can click through text to items behind it */
+      }
+
+      /* Optional: Mobile adjustments to keep text inside the map boundaries */
+      @media (max-width: 768px) {
+        .overlay-text .fs-3 {
+          font-size: 1.1rem !important; /* Scale down text on smaller screens */
+        }
+      }
     </style>
   </head>
   <body>
@@ -414,11 +458,22 @@
               <div class="benue-logo me-3"></div>
             </a>
           </div>
+          <
 
-          <div class="sidebar-content">
-            <h2 class="fs-3 fw-bold mb-2">Benue State Integrated</h2>
-            <h2 class="fs-3 fw-bold mb-1">Citizenship and Resident Identity</h2>
-            <h2 class="fs-3 fw-bold mb-1">Registration Management System</h2>
+          <div class="map-identity-container">
+            <img
+              src="/assets/images/Benue-map.svg"
+              alt="Benue State Map Outline"
+              class="map-outline-img"
+            />
+
+            <div class="sidebar-content overlay-text">
+              <h2 class="fs-3 fw-bold mb-2">Benue State Integrated</h2>
+              <h2 class="fs-3 fw-bold mb-1">
+                Citizenship and Resident Identity
+              </h2>
+              <h2 class="fs-3 fw-bold mb-1">Registration Management System</h2>
+            </div>
           </div>
 
           <!-- Mobile buttons -->
@@ -617,7 +672,7 @@
               Swal.fire(
                 "Oops...",
                 data.responseJSON.message || "Login failed",
-                "error"
+                "error",
               );
             },
             complete: function () {

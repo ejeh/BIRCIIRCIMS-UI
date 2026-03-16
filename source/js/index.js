@@ -1,4 +1,6 @@
-const isDevelopment = window.location.hostname === "127.0.0.1";
+const isDevelopment =
+  window.location.hostname === "localhost" ||
+  window.location.hostname === "127.0.0.1";
 
 const BACKEND_URL = isDevelopment
   ? "http://localhost:5000/api"
@@ -7,6 +9,8 @@ const BACKEND_URL = isDevelopment
 const FRONTEND_URL = isDevelopment
   ? "http://127.0.0.1:5503"
   : "https://citizenship.benuestate.gov.ng";
+
+const basePath = isDevelopment ? "/source" : "";
 
 // Get user info from localStorage
 const userData = JSON.parse(localStorage.getItem("token") || "{}");
@@ -152,17 +156,16 @@ function downloadFile(buttonElement) {
 
 /**
  * Renders an image into a specified container.
- */
 function loadImage(url, container) {
-  const img = document.createElement("img");
-  img.src = url;
-  img.className = "img-fluid"; // Makes the image responsive
-  img.style.maxHeight = "400px"; // Consistent max height with PDF viewer
-  img.style.display = "block"; // Removes bottom space under image
-  img.style.margin = "auto"; // Centers the image
-  container.innerHTML = ""; // Clear the loading spinner
-  container.appendChild(img);
-}
+ */
+const img = document.createElement("img");
+img.src = url;
+img.className = "img-fluid"; // Makes the image responsive
+img.style.maxHeight = "400px"; // Consistent max height with PDF viewer
+img.style.display = "block"; // Removes bottom space under image
+img.style.margin = "auto"; // Centers the image
+container.innerHTML = ""; // Clear the loading spinner
+container.appendChild(img);
 
 /**
  * Triggers the download of a file (PDF or image) from a URL.
@@ -230,12 +233,12 @@ $(document).ready(function () {
   $("#sidebar-user-label").text(
     ["super_admin", "support_admin", "kindred_head"].includes(userRole)
       ? "Administration"
-      : "User"
+      : "User",
   );
 
   // First, hide all role-specific menus
   $(
-    ".nav-item.user-menu, .nav-item.kindred_head, .nav-item.support-admin-menu, .nav-item.super-admin-menu"
+    ".nav-item.user-menu, .nav-item.kindred_head, .nav-item.support-admin-menu, .nav-item.super-admin-menu",
   ).hide();
 
   // Show only what’s allowed per role
@@ -273,16 +276,16 @@ $(document).ready(function () {
 
   if (!user || user.stateOfOrigin !== allowedState) {
     // Restrict access to Certificate Request Page and Request Page
-    $('a[href="certificate.html"], a[href="request.html"]').click(function (
-      event
-    ) {
-      event.preventDefault(); // Prevent navigation
-      alert(
-        "Access Denied: Only users from " +
-          allowedState +
-          " can access this page."
-      );
-    });
+    $('a[href="certificate.html"], a[href="request.html"]').click(
+      function (event) {
+        event.preventDefault(); // Prevent navigation
+        alert(
+          "Access Denied: Only users from " +
+            allowedState +
+            " can access this page.",
+        );
+      },
+    );
 
     // Redirect if the user tries to access exactly "certificate.html" or "request.html"
     const restrictedPages = ["certificate.html", "request.html"];
@@ -460,7 +463,7 @@ $(document).ready(function () {
         community: community,
       };
       Object.entries(mainFields).forEach(([id, value]) =>
-        setInputValue(id, value)
+        setInputValue(id, value),
       );
 
       // Populate next of kin details
@@ -532,7 +535,7 @@ $(document).ready(function () {
     headers = {},
     data = null,
     onSuccess,
-    onError
+    onError,
   ) => {
     $.ajax({
       url,
@@ -618,6 +621,7 @@ $(document).ready(function () {
   // // })
 
   // Update the role of a specific user to any valid role
+
   const updateRole = (userId, newRole, lgaId = null) => {
     if (!userId || !newRole) {
       alert("Invalid user ID or role.");
@@ -640,7 +644,7 @@ $(document).ready(function () {
         alert("Role updated successfully!");
         fetchUsersData(currentPage.value);
       },
-      () => alert("Failed to update role.")
+      () => alert("Failed to update role."),
     );
   };
   $(document).ready(function () {
@@ -666,7 +670,7 @@ $(document).ready(function () {
         // Find the LGA object that matches the user's lgaOfOrigin
         const originLga = data.find(
           (lga) =>
-            lga.name.toLowerCase() === response.lgaOfOrigin?.toLowerCase()
+            lga.name.toLowerCase() === response.lgaOfOrigin?.toLowerCase(),
         );
 
         const lgaSelect = originLga
@@ -685,7 +689,7 @@ $(document).ready(function () {
               (role) =>
                 `<option value="${role}" ${
                   role === response.role ? "selected" : ""
-                }>${role}</option>`
+                }>${role}</option>`,
             )
             .join("")}
         </select>
@@ -705,8 +709,8 @@ $(document).ready(function () {
               crossOrigin="anonymous"
             >
             <h2 class="profile-name">${response.firstname} ${
-          response.lastname
-        }</h2>
+              response.lastname
+            }</h2>
             <p class="profile-role">Current Role: ${response.role}</p>
           </div>
           <div class="profile-details">
@@ -1040,147 +1044,147 @@ $(document).ready(function () {
     });
   }
 
-  // function handleView(requestId) {
-  //   $.ajax({
-  //     url: `${BACKEND_URL}/indigene/certificate/${requestId}/request`,
-  //     method: "GET",
-  //     headers: apiHeaders,
-  //     success: function (response) {
-  //       const docTypes = ["idCard", "birthCertificate"];
-  //       const documentTitles = ["Identity Card", "Birth Certificate"];
+  function handleView(requestId) {
+    $.ajax({
+      url: `${BACKEND_URL}/indigene/certificate/${requestId}/request`,
+      method: "GET",
+      headers: apiHeaders,
+      success: function (response) {
+        const docTypes = ["idCard", "birthCertificate"];
+        const documentTitles = ["Identity Card", "Birth Certificate"];
 
-  //       // Filter documents that actually exist in response
-  //       const validDocuments = docTypes
-  //         .map((key, index) => ({ key, title: documentTitles[index] }))
-  //         .filter((doc) => response[doc.key]);
+        // Filter documents that actually exist in response
+        const validDocuments = docTypes
+          .map((key, index) => ({ key, title: documentTitles[index] }))
+          .filter((doc) => response[doc.key]);
 
-  //       let modalContent = `
-  //       <div class="container-fluid">
-  //         <div class="row mb-3">
-  //           <div class="col-md-3 text-center">
-  //             <img 
-  //               src="${response.passportPhoto || "/assets/images/avatar.jpeg"}" 
-  //               alt="Passport Photo" 
-  //               class="img-fluid rounded shadow-sm profile-photo"
-  //               style="max-height: 150px;"
-  //               crossOrigin="anonymous"
-  //             >
-  //           </div>
-  //           <div class="col-md-9">
-  //             <h5 class="fw-bold mb-2">${response.firstname} ${
-  //         response.lastname
-  //       }</h5>
-  //             <p class="mb-1"><strong>Phone:</strong> ${response.phone}</p>
-  //             <p class="mb-1"><strong>Email:</strong> ${response.email}</p>
-  //             <p class="mb-1"><strong>Status:</strong> <span class="badge bg-info">${
-  //               response.status
-  //             }</span></p>
-  //             <p><strong>State:</strong> ${response.stateOfOrigin}</p>
-  //             <p><strong>LGA:</strong> ${response.lgaOfOrigin}</p>
-  //             <p><strong>Kindred:</strong> ${response.kindred}</p>
-  //             <p><strong>isProfileCompleted:</strong> ${
-  //               response.userId?.isProfileCompleted
-  //             }</p>
-  //           </div>
-  //         </div>
+        let modalContent = `
+        <div class="container-fluid">
+          <div class="row mb-3">
+            <div class="col-md-3 text-center">
+              <img 
+                src="${response.passportPhoto || "/assets/images/avatar.jpeg"}" 
+                alt="Passport Photo" 
+                class="img-fluid rounded shadow-sm profile-photo"
+                style="max-height: 150px;"
+                crossOrigin="anonymous"
+              >
+            </div>
+            <div class="col-md-9">
+              <h5 class="fw-bold mb-2">${response.firstname} ${
+                response.lastname
+              }</h5>
+              <p class="mb-1"><strong>Phone:</strong> ${response.phone}</p>
+              <p class="mb-1"><strong>Email:</strong> ${response.email}</p>
+              <p class="mb-1"><strong>Status:</strong> <span class="badge bg-info">${
+                response.status
+              }</span></p>
+              <p><strong>State:</strong> ${response.stateOfOrigin}</p>
+              <p><strong>LGA:</strong> ${response.lgaOfOrigin}</p>
+              <p><strong>Kindred:</strong> ${response.kindred}</p>
+              <p><strong>isProfileCompleted:</strong> ${
+                response.userId?.isProfileCompleted
+              }</p>
+            </div>
+          </div>
   
-  //         <hr class="my-3">
-  //         <h6 class="text-primary">Uploaded Documents</h6>
-  //     `;
+          <hr class="my-3">
+          <h6 class="text-primary">Uploaded Documents</h6>
+      `;
 
-  //       if (validDocuments.length === 0) {
-  //         modalContent += `<p class="text-muted">No documents uploaded.</p>`;
-  //       }
+        if (validDocuments.length === 0) {
+          modalContent += `<p class="text-muted">No documents uploaded.</p>`;
+        }
 
-  //       // Generate HTML for each existing document
-  //       validDocuments.forEach((doc, index) => {
-  //         const fileUrl = `${BACKEND_URL}/indigene/certificate/${requestId}/document/${doc.key}`;
+        // Generate HTML for each existing document
+        validDocuments.forEach((doc, index) => {
+          const fileUrl = `${BACKEND_URL}/indigene/certificate/${requestId}/document/${doc.key}`;
 
-  //         modalContent += `
-  //         <div class="card my-3 shadow-sm">
-  //           <div class="card-header bg-light fw-semibold">
-  //             ${doc.title}
-  //           </div>
-  //           <div class="card-body p-0"> <!-- Use p-0 for full-width viewer -->
-  //             <!-- Renamed ID for clarity, added responsive container -->
-  //             <div id="viewer-container-${index}" style="width:100%; max-height:75vh; overflow:auto;" class="border bg-light p-2"></div>
-  //             <div class="p-2 text-end">
-  //                <button class="btn btn-sm btn-outline-primary me-2" onclick="window.open('${fileUrl}', '_blank')">Open in New Tab</button>
-  //                <!-- Updated onclick to call the generic downloadFile function -->
-  //                <button class="btn btn-sm btn-outline-secondary" data-doc-index="${index}" data-url="${fileUrl}" onclick="downloadFile(this)">Download</button>
-  //             </div>
-  //           </div>
-  //         </div>
-  //       `;
-  //       });
+          modalContent += `
+          <div class="card my-3 shadow-sm">
+            <div class="card-header bg-light fw-semibold">
+              ${doc.title}
+            </div>
+            <div class="card-body p-0"> <!-- Use p-0 for full-width viewer -->
+              <!-- Renamed ID for clarity, added responsive container -->
+              <div id="viewer-container-${index}" style="width:100%; max-height:75vh; overflow:auto;" class="border bg-light p-2"></div>
+              <div class="p-2 text-end">
+                 <button class="btn btn-sm btn-outline-primary me-2" onclick="window.open('${fileUrl}', '_blank')">Open in New Tab</button>
+                 <!-- Updated onclick to call the generic downloadFile function -->
+                 <button class="btn btn-sm btn-outline-secondary" data-doc-index="${index}" data-url="${fileUrl}" onclick="downloadFile(this)">Download</button>
+              </div>
+            </div>
+          </div>
+        `;
+        });
 
-  //       modalContent += `</div>`;
-  //       $("#viewModal .modal-body").html(modalContent);
-  //       $("#viewModal").modal("show");
+        modalContent += `</div>`;
+        $("#viewModal .modal-body").html(modalContent);
+        $("#viewModal").modal("show");
 
-  //       // Load documents with authorization and type-checking
-  //       validDocuments.forEach((doc, index) => {
-  //         const fileUrl = `${BACKEND_URL}/indigene/certificate/${requestId}/document/${doc.key}`;
-  //         const container = document.getElementById(
-  //           `viewer-container-${index}`
-  //         );
+        // Load documents with authorization and type-checking
+        validDocuments.forEach((doc, index) => {
+          const fileUrl = `${BACKEND_URL}/indigene/certificate/${requestId}/document/${doc.key}`;
+          const container = document.getElementById(
+            `viewer-container-${index}`,
+          );
 
-  //         // Show loader while fetching
-  //         container.innerHTML = `
-  //         <div class="spinner-border text-primary" role="status">
-  //           <span class="visually-hidden">Loading...</span>
-  //         </div>
-  //       `;
+          // Show loader while fetching
+          container.innerHTML = `
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        `;
 
-  //         // Fetch document with authorization
-  //         fetch(fileUrl, {
-  //           headers: {
-  //             Authorization: apiHeaders.Authorization,
-  //           },
-  //         })
-  //           .then((res) => {
-  //             if (!res.ok) throw new Error("Failed to fetch document");
+          // Fetch document with authorization
+          fetch(fileUrl, {
+            headers: {
+              Authorization: apiHeaders.Authorization,
+            },
+          })
+            .then((res) => {
+              if (!res.ok) throw new Error("Failed to fetch document");
 
-  //             // --- KEY LOGIC: Get the content type from the response header ---
-  //             const contentType = res.headers.get("Content-Type");
+              // --- KEY LOGIC: Get the content type from the response header ---
+              const contentType = res.headers.get("Content-Type");
 
-  //             // Return both the blob and the content type for the next .then()
-  //             return res.blob().then((blob) => ({ blob, contentType }));
-  //           })
-  //           .then(({ blob, contentType }) => {
-  //             const blobUrl = URL.createObjectURL(blob);
+              // Return both the blob and the content type for the next .then()
+              return res.blob().then((blob) => ({ blob, contentType }));
+            })
+            .then(({ blob, contentType }) => {
+              const blobUrl = URL.createObjectURL(blob);
 
-  //             // --- Check the content type and call the correct renderer ---
-  //             if (contentType === "application/pdf") {
-  //               loadPDFJ(blobUrl, container);
-  //             } else if (contentType && contentType.startsWith("image/")) {
-  //               loadImage(blobUrl, container);
-  //             } else {
-  //               // Handle unknown or missing content type
-  //               throw new Error(
-  //                 `Unsupported file type: ${contentType || "Unknown"}`
-  //               );
-  //             }
-  //           })
-  //           .catch((err) => {
-  //             console.error(`Error loading document [${doc.key}]:`, err);
-  //             container.innerHTML = `
-  //             <div class="alert alert-danger m-2">
-  //               Failed to load document: ${err.message}
-  //               <div class="mt-2">
-  //                 <a href="${fileUrl}" target="_blank" class="btn btn-sm btn-primary">Try Opening in New Tab</a>
-  //               </div>
-  //             </div>
-  //           `;
-  //           });
-  //       });
-  //     },
-  //     error: function (error) {
-  //       console.error("Error fetching request details:", error);
-  //       alert("Failed to fetch request details.");
-  //     },
-  //   });
-  // }
+              // --- Check the content type and call the correct renderer ---
+              if (contentType === "application/pdf") {
+                loadPDFJ(blobUrl, container);
+              } else if (contentType && contentType.startsWith("image/")) {
+                loadImage(blobUrl, container);
+              } else {
+                // Handle unknown or missing content type
+                throw new Error(
+                  `Unsupported file type: ${contentType || "Unknown"}`,
+                );
+              }
+            })
+            .catch((err) => {
+              console.error(`Error loading document [${doc.key}]:`, err);
+              container.innerHTML = `
+              <div class="alert alert-danger m-2">
+                Failed to load document: ${err.message}
+                <div class="mt-2">
+                  <a href="${fileUrl}" target="_blank" class="btn btn-sm btn-primary">Try Opening in New Tab</a>
+                </div>
+              </div>
+            `;
+            });
+        });
+      },
+      error: function (error) {
+        console.error("Error fetching request details:", error);
+        alert("Failed to fetch request details.");
+      },
+    });
+  }
 
   //   // Handle View Modal Function
   function handleCardView(requestId) {
@@ -1204,12 +1208,12 @@ $(document).ready(function () {
               <div class="container-fluid">
                   <div class="row mb-3">
                       <div class="col-md-3 text-center">
-                          <img
+                          <img 
                             src="${
                               response.passportPhoto ||
                               "/assets/images/avatar.jpeg"
-                            }"
-                            alt="Passport Photo"
+                            }" 
+                            alt="Passport Photo" 
                             class="img-fluid rounded shadow-sm profile-photo"
                             style="max-height: 150px;"
                             crossOrigin="anonymous"
@@ -1217,8 +1221,8 @@ $(document).ready(function () {
                       </div>
                       <div class="col-md-9">
                           <h5 class="fw-bold mb-2">${response.firstname} ${
-          response.lastname
-        }</h5>
+                            response.lastname
+                          }</h5>
                           <p class="mb-1"><strong>Phone:</strong> ${
                             response.phone
                           }</p>
@@ -1231,7 +1235,7 @@ $(document).ready(function () {
                           <p><strong>State:</strong> ${
                             response.userId?.stateOfOrigin
                           }</p>
-                          <p><strong>LGA:</strong>
+                          <p><strong>LGA:</strong> 
                           ${response.userId?.lgaOfOrigin}
                           </p>
                           <p><strong>isProfileCompleted:</strong> ${
@@ -1276,7 +1280,7 @@ $(document).ready(function () {
         validDocuments.forEach((doc, index) => {
           const fileUrl = `${BACKEND_URL}/idcard/${requestId}/document/${doc.key}`;
           const container = document.getElementById(
-            `pdf-viewer-container-${index}`
+            `pdf-viewer-container-${index}`,
           );
           // Show loader while fetching
           $(`#pdf-viewer-container-${index}`).html(`
@@ -1313,7 +1317,7 @@ $(document).ready(function () {
               } else {
                 // Handle unknown or missing content type
                 throw new Error(
-                  `Unsupported file type: ${contentType || "Unknown"}`
+                  `Unsupported file type: ${contentType || "Unknown"}`,
                 );
               }
             })
@@ -1352,15 +1356,15 @@ $(document).ready(function () {
     $("#rejectionModal").modal("show");
   });
 
-  // $("#certificatesTable").on("click", ".btn-cert-view", function () {
-  //   const requestId = $(this).data("id");
-  //   handleView(requestId);
-  // });
+  $("#certificatesTable").on("click", ".btn-cert-view", function () {
+    const requestId = $(this).data("id");
+    handleView(requestId);
+  });
 
-  // $("#idcardsTable").on("click", ".btn-card-view", function () {
-  //   const requestId = $(this).data("id");
-  //   handleCardView(requestId);
-  // });
+  $("#idcardsTable").on("click", ".btn-card-view", function () {
+    const requestId = $(this).data("id");
+    handleCardView(requestId);
+  });
 
   $("#submitRejection").click(function () {
     const reason = $("#rejectionReason").val();
@@ -1435,7 +1439,7 @@ $(document).ready(function () {
         const appendRow = (isDisabled, showPayButton) => {
           // Initialize tooltips immediately after appending
           var tooltipTriggerList = [].slice.call(
-            document.querySelectorAll('[data-bs-toggle="tooltip"]')
+            document.querySelectorAll('[data-bs-toggle="tooltip"]'),
           );
           tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl);
@@ -1449,8 +1453,8 @@ $(document).ready(function () {
                 data.status === "Approved"
                   ? "success"
                   : data.status === "Rejected"
-                  ? "danger"
-                  : "warning"
+                    ? "danger"
+                    : "warning"
               }">${data.status}</span></td>
               <td>${resubmissionAttempts}</td>
               <td>
@@ -1520,7 +1524,7 @@ $(document).ready(function () {
         $("#profile-status").text(
           data.userId?.isProfileCompleted
             ? "Profile Completed"
-            : "Profile Incomplete"
+            : "Profile Incomplete",
         );
 
         if (data.status === "Rejected" || data.status === "Pending") {
@@ -1534,7 +1538,7 @@ $(document).ready(function () {
             },
             success: function (transactions) {
               let matchingTransaction = transactions.find(
-                (t) => t.certificateId === data._id
+                (t) => t.certificateId === data._id,
               );
 
               if (matchingTransaction) {
@@ -1565,7 +1569,7 @@ $(document).ready(function () {
         async function handleDownload(certificateId) {
           if (
             !confirm(
-              "Warning! Sure you want to download? Click ok to continue or else click cancel."
+              "Warning! Sure you want to download? Click ok to continue or else click cancel.",
             )
           ) {
             return;
@@ -1718,102 +1722,12 @@ $(document).ready(function () {
     });
   }
 
-  function initiatePayment(certificateId) {
-    // Define the amount clearly (5000 Naira in this case)
-    const amountInNaira = 5000; // Display value
-
-    // Show confirmation with amount before proceeding
-    if (
-      !confirm(
-        `You are about to pay ₦${amountInNaira} for your ID card. Proceed to payment?`
-      )
-    ) {
-      return;
-    }
-    // Retrieve user authentication data
-    if (!userData?.token || !userData?.user?.id) {
-      Swal.fire("Error", "User authentication failed!", "error");
-      return;
-    }
-
-    const { token, user } = userData;
-    const userId = user.id;
-    const email = user.email;
-    const firstName = user.firstname || "User";
-    const lastName = user.lastname || " ";
-    const phone = user.phone || "0000000000";
-    const amount = 500000; // In kobo
-    const reference = generatePaymentReference(); // Unique for each attempt
-
-    if (!token) {
-      alert("Please log in to proceed with payment");
-      return;
-    }
-
-    $.ajax({
-      url: `${BACKEND_URL}/transaction/pay`,
-      method: "POST",
-      contentType: "application/json",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      data: JSON.stringify({
-        certificateId,
-        userId,
-        amount,
-        email,
-        paymentType: "certificate", // ✅ FIX: Include paymentType to match backend expectations
-        reference,
-      }),
-      success: function (response) {
-        console.log("response", response);
-        if (response.status === 200 && response.data?.reference) {
-          const paymentRef = response.data.reference;
-
-          const handler = CredoWidget.setup({
-            key: "0PUB0972HedMpDz1VtV8El1zNNC6m9Ji",
-            customerFirstName: firstName,
-            customerLastName: lastName,
-            email: email,
-            amount: amount,
-            currency: "NGN",
-            renderSize: 0,
-            channels: ["card", "bank"],
-            reference: paymentRef,
-            customerPhoneNumber: phone,
-            callbackUrl: `${FRONTEND_URL}/app/success.html`,
-            onClose: function () {
-              console.log("Payment widget closed");
-            },
-            callBack: function (response) {
-              window.location.href = `${FRONTEND_URL}/app/success.html`;
-            },
-          });
-
-          handler.openIframe();
-        } else {
-          alert("Payment initiation failed!");
-        }
-      },
-      error: function (error) {
-        console.error("Error initiating payment:", error);
-        alert("Failed to initiate payment. Please try again.");
-      },
-    });
-  }
-
-  // Event listener for certificate payment buttons
-  $(document).on("click", ".btn-cert-pay", function () {
-    const certificateId = $(this).data("id");
-    initiatePayment(certificateId);
-  });
-
   fetchData();
 
   // Initialize tooltips after content is rendered
   $(document).ajaxStop(function () {
     var tooltipTriggerList = [].slice.call(
-      document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      document.querySelectorAll('[data-bs-toggle="tooltip"]'),
     );
     tooltipTriggerList.map(function (tooltipTriggerEl) {
       return new bootstrap.Tooltip(tooltipTriggerEl);
@@ -2966,7 +2880,7 @@ $(document).ready(function () {
 
 function toggleOtherInput(selectElement) {
   const otherContainer = document.getElementById(
-    "other-identification-container"
+    "other-identification-container",
   );
   if (selectElement.value === "others") {
     otherContainer.style.display = "block";
@@ -2998,7 +2912,7 @@ $(document).ready(function () {
         const appendRow = (isDisabled, showPayButton) => {
           // Initialize tooltips immediately after appending
           var tooltipTriggerList = [].slice.call(
-            document.querySelectorAll('[data-bs-toggle="tooltip"]')
+            document.querySelectorAll('[data-bs-toggle="tooltip"]'),
           );
           tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl);
@@ -3012,8 +2926,8 @@ $(document).ready(function () {
         data.status === "Approved"
           ? "success"
           : data.status === "Rejected"
-          ? "danger"
-          : "warning"
+            ? "danger"
+            : "warning"
       }">${data.status}</span></td>
       <td>${resubmissionAttempts}</td>
 
@@ -3101,7 +3015,7 @@ $(document).ready(function () {
             },
             success: function (transactions) {
               let matchingTransaction = transactions.find(
-                (t) => t.cardId === data._id
+                (t) => t.cardId === data._id,
               );
               if (matchingTransaction) {
                 if (matchingTransaction.status === "success") {
@@ -3131,7 +3045,7 @@ $(document).ready(function () {
         async function handleDownload(cardId) {
           if (
             !confirm(
-              "Warning! Sure you want to download? Click ok to continue or else click cancel."
+              "Warning! Sure you want to download? Click ok to continue or else click cancel.",
             )
           ) {
             return;
@@ -3297,94 +3211,6 @@ $(document).ready(function () {
       const requestId = $(this).data("id");
       handleDelete(requestId);
     });
-
-    //Card Payment
-    function initiateCardPayment(cardId) {
-      // Define the amount clearly (5000 Naira in this case)
-      const amountInNaira = 5000; // Display value
-
-      // Show confirmation with amount before proceeding
-      if (
-        !confirm(
-          `You are about to pay ₦${amountInNaira} for your ID card. Proceed to payment?`
-        )
-      ) {
-        return;
-      }
-      // Retrieve user authentication data
-      if (!userData?.token || !userData?.user?.id) {
-        Swal.fire("Error", "User authentication failed!", "error");
-        return;
-      }
-      const { token, user } = userData;
-
-      const email = user.email;
-      const userId = user.id;
-      const firstName = user.firstname || "User";
-      const lastName = user.lastname || " ";
-      const phone = user.phone || "0000000000";
-      const amount = 500000; // In kobo
-      const reference = generatePaymentReference(); // Unique for each attempt
-
-      if (!token) {
-        alert("Please log in to proceed with payment");
-        return;
-      }
-      $.ajax({
-        url: `${BACKEND_URL}/transaction/pay`,
-        method: "POST",
-        contentType: "application/json",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        data: JSON.stringify({
-          cardId,
-          userId,
-          amount,
-          email,
-          paymentType: "card", // ✅ FIX: Include paymentType to match backend expectations
-          reference,
-        }),
-        success: function (response) {
-          if (response.status === 200 && response.data?.reference) {
-            const paymentRef = response.data.reference;
-
-            const handler = CredoWidget.setup({
-              key: "0PUB0972HedMpDz1VtV8El1zNNC6m9Ji",
-              customerFirstName: firstName,
-              customerLastName: lastName,
-              email: email,
-              amount: amount,
-              currency: "NGN",
-              renderSize: 0,
-              channels: ["card", "bank"],
-              reference: paymentRef,
-              customerPhoneNumber: phone,
-              callbackUrl: `${FRONTEND_URL}/app/success.html`,
-              onClose: function () {
-                console.log("Payment widget closed");
-              },
-              callBack: function (response) {
-                window.location.href = `${FRONTEND_URL}/app/success.html`;
-              },
-            });
-
-            handler.openIframe();
-          } else {
-            alert("Payment initiation failed!");
-          }
-        },
-        error: function (error) {
-          console.error("Error initiating payment:", error.message);
-          alert("Failed to initiate payment. Please try again.");
-        },
-      });
-    }
-
-    $(document).on("click", ".btn-card-pay", function () {
-      const cardId = $(this).data("id");
-      initiateCardPayment(cardId);
-    });
   }
   // Initial fetch
   fetchData();
@@ -3396,90 +3222,6 @@ $(document).ready(function () {
   const currentPage = { value: 1 };
   const pageSize = 10;
 
-  // Utility function to make API requests
-  // const apiRequest = (
-  //   url,
-  //   method,
-  //   headers = {},
-  //   data = null,
-  //   onSuccess,
-  //   onError
-  // ) => {
-  //   $.ajax({
-  //     url,
-  //     method,
-  //     headers,
-  //     data,
-  //     success: onSuccess,
-  //     error: onError || ((error) => console.error("API Error:", error)),
-  //   });
-  // };
-
-  // // Update the table with user data
-  // const updateTable = (data, page) => {
-  //   const tableBody = $("#transaction-table");
-  //   tableBody.empty(); // Clear existing table rows
-
-  //   // Populate table rows with user data
-  //   data.forEach((item, index) => {
-  //     const rowHtml = `
-  //       <tr>
-  //         <td>${(page - 1) * pageSize + index + 1}</td>
-  //         <td>${item.paymentType}</td>
-  //         <td>${item.amount}</td>
-  //         <td>${item.email}</td>
-  //         <td>${item.status}</td>
-  //         <td>${item.reference}</td>
-
-  //          <td>
-  //          <button class="btn btn-sm verify-btn"
-  //                   data-id="${item.reference}"
-  //                   style="background-color: #007BFF; color: #fff">
-  //             verify
-  //           </button>
-  //         </td>
-  //       </tr>`;
-  //     tableBody.append(rowHtml); // Add the row to the table
-  //   });
-  // };
-
-  // Fetch user data for the current page
-  // const fetchData = (page) => {
-  //   const url = `${BACKEND_URL}/transaction?page=${page}&limit=${pageSize}`;
-  //   const headers = { Authorization: `Bearer ${token}` };
-
-  //   apiRequest(url, "GET", headers, null, (response) => {
-  //     const { data, hasNextPage } = response;
-  //     updateTable(data, page);
-  //     // Calculate the total amount
-  //     // Sum all amounts (in kobo) and convert to Naira
-  //     let totalAmountKobo = 0;
-  //     data.forEach((item) => {
-  //       totalAmountKobo += item.amount; // Assuming `amount` is in kobo
-  //     });
-
-  //     const totalAmountNaira = totalAmountKobo / 100; // Convert to Naira
-
-  //     // Function to format numbers as ₦ with K, M, B
-  //     function formatCurrencyShort(amount) {
-  //       if (amount >= 1_000_000_000) {
-  //         return "₦" + (amount / 1_000_000_000).toFixed(1) + "B";
-  //       } else if (amount >= 1_000_000) {
-  //         return "₦" + (amount / 1_000_000).toFixed(1) + "M";
-  //       } else if (amount >= 1_000) {
-  //         return "₦" + (amount / 1_000).toFixed(1) + "K";
-  //       } else {
-  //         return "₦" + amount.toFixed(0);
-  //       }
-  //     }
-  //     const formattedAmount = formatCurrencyShort(totalAmountNaira);
-  //     $("#btnPrevTran").prop("disabled", page === 1);
-  //     $("#btnNextTran").prop("disabled", !hasNextPage);
-  //     $("#transaction").text(formattedAmount); // Display the total amount
-  //   });
-  // };
-
-  // Fetch and display user details in a modern profile modal
   const verifyPayment = (reference) => {
     // Handle Verify Payment button clicks
     const verifyUrl = `${BACKEND_URL}/transaction/verify/${reference}`;
@@ -3507,998 +3249,6 @@ $(document).ready(function () {
   });
 });
 
-// Function to update the header title based on the current page
-// function updateHeaderTitle() {
-//   const path = window.location.pathname;
-//   const page = path.split("/").pop().replace(".html", "");
-//   const titleMap = {
-//     index: "Admin Panel",
-//     "user-dasboard": "User Dashboard",
-//     approvals: "Approvals",
-//     request: "View Certificate Status",
-//     idcard: "View Card Status",
-//     "all-request": "View Certificate Request",
-//     "all-card": "View Card Request",
-//     citizens: "Users",
-//     certificate: "Request Certificate",
-//     profile: "Profile",
-//     transaction: "Transactions",
-//     login: "Login",
-//     card: "Request Card",
-//     "support-admin-lga": "Admin LGAs",
-//     "user-kindred": "Kindreds",
-//     "user-kindred": "Kindreds",
-//     "kindred-dasboard": "Kindred Head Dashboard",
-//     "kindred-head": "View All Request",
-//     kindred: "All Kindred Heads",
-//   };
-
-//   const pageTitle = titleMap[page] || "Dashboard";
-//   document.title =
-//     pageTitle +
-//     " | Benue State Integrated Citizenship and Resident Identity Registration Management System";
-//   document.querySelector(".dashboard_bar").textContent = pageTitle;
-// }
-
-// Call the function when the page loads
-// document.addEventListener("DOMContentLoaded", updateHeaderTitle);
-
 let currentPageAll = 1;
 let currentPageUser = 1;
 const pageSize = 10;
-
-// Get All kindred
-// function fetchAllKindred(page) {
-//   $.ajax({
-//     url: `${BACKEND_URL}/kindred?page=${page}&limit=${pageSize}`,
-//     method: "GET",
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//     },
-//     success: function (response) {
-//       const { data, hasNextPage } = response;
-
-//       const tableBody = $("#kindred-table");
-//       tableBody.empty();
-
-//       data.forEach((item, index) => {
-//         tableBody.append(`
-//             <tr>
-//               <td>${(page - 1) * pageSize + index + 1}</td>
-//               <td>${item.firstname} ${item.lastname}</td>
-//               <td>${item.phone}</td>
-//               <td>${item.address}</td>
-//               <td>${item.kindred}</td>
-//               <td>${item.lga}</td>
-
-//             </tr>
-//           `);
-//       });
-
-//       $("#kindred-btn-prev").prop("disabled", page === 1);
-//       $("#kindred-btn-next").prop("disabled", !hasNextPage);
-//     },
-//     error: function (error) {
-//       console.error("Error fetching all kindred:", error);
-//     },
-//   });
-// }
-
-// //Fetch kindred by userId
-// function fetchUserKindred(page) {
-//   $.ajax({
-//     url: `${BACKEND_URL}/kindred/${user.id}?page=${page}&limit=${pageSize}`,
-//     method: "GET",
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//     },
-//     success: function (response) {
-//       const { data, hasNextPage } = response;
-//       const tableBody = $("#user-kindred-table");
-//       tableBody.empty();
-
-//       data.forEach((data, index) => {
-//         tableBody.append(`
-//           <tr>
-//             <td>${(page - 1) * pageSize + index + 1}</td>
-//             <td>${data.firstname} ${data.lastname}</td>
-//             <td>${data.phone}</td>
-//             <td>${data.address}</td>
-//             <td>${data.kindred}</td>
-//             <td>${data.lga}</td>
-//             <td>
-//               <div class="dropdown">
-//                 <button class="btn btn-xs btn-action dropdown-toggle" data-bs-toggle="dropdown">
-//                   <i class="fas fa-ellipsis-v"></i>
-//                 </button>
-//                 <ul class="dropdown-menu">
-//                   <li>
-//                     <button class="dropdown-item update-user-btn" data-id="${
-//                       data._id
-//                     }" data-info='${JSON.stringify(data)}'>
-//                       Update User
-//                     </button>
-//                   </li>
-//                   <li>
-//                     <button class="dropdown-item delete-user-btn" data-id="${
-//                       data._id
-//                     }" style="color: red;">
-//                       Delete User
-//                     </button>
-//                   </li>
-//                 </ul>
-//               </div>
-//             </td>
-//           </tr>
-//         `);
-//       });
-
-//       $("#btnPrevUser").prop("disabled", page === 1);
-//       $("#btnNextUser").prop("disabled", !hasNextPage);
-//     },
-//     error: function (error) {
-//       console.error("Error fetching user kindred:", error);
-//     },
-//   });
-// }
-
-// // Handle Delete User
-// function handleDelete(userId) {
-//   Swal.fire({
-//     title: "Are you sure?",
-//     text: "This action cannot be undone!",
-//     // icon: "warning",
-//     showCancelButton: true,
-//     confirmButtonColor: "#d33",
-//     cancelButtonColor: "#3085d6",
-//     confirmButtonText: "Yes, delete it!",
-//   }).then((result) => {
-//     if (result.value === true) {
-//       $.ajax({
-//         url: `${BACKEND_URL}/kindred/${userId}`,
-//         method: "DELETE",
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//         },
-//         success: function () {
-//           Swal.fire("Deleted!", "User has been deleted.", "success");
-//           fetchUserKindred(currentPageUser);
-//         },
-//         error: function (error) {
-//           Swal.fire("Error!", "Failed to delete user.", "error");
-//           console.error("Error deleting request:", error);
-//         },
-//       });
-//     }
-//   });
-// }
-
-// // Handle Update User
-// function handleUpdate(userData) {
-//   Swal.fire({
-//     title: "Update User",
-//     html: `
-//       <input id="updateMiddlename" class="swal2-input" placeholder="Email" value=${userData.email}>
-//       <input id="updatePhone" class="swal2-input" placeholder="Phone" value="${userData.phone}">
-//       <input id="updateAddress" class="swal2-input" placeholder="Address" value="${userData.address}">
-//       <input id="updateKindred" class="swal2-input" placeholder="Kindred" value="${userData.kindred}">
-//     `,
-//     showCancelButton: true,
-//     confirmButtonText: "Update",
-//     preConfirm: () => {
-//       return {
-//         middlename: $("#updateMiddlename").val().trim(),
-//         phone: $("#updatePhone").val().trim(),
-//         address: $("#updateAddress").val().trim(),
-//         kindred: $("#updateKindred").val().trim(),
-//       };
-//     },
-//   }).then((result) => {
-//     if (result.value) {
-//       $.ajax({
-//         url: `${BACKEND_URL}/kindred/${userData._id}`,
-//         method: "PUT",
-//         contentType: "application/json",
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//         },
-//         data: JSON.stringify(result.value),
-//         success: function () {
-//           Swal.fire(
-//             "Updated!",
-//             "User details updated successfully.",
-//             "success"
-//           );
-//           fetchUserKindred(currentPageUser);
-//         },
-//         error: function (error) {
-//           Swal.fire("Error!", "Failed to update user.", "error");
-//           console.error("Error updating user:", error);
-//         },
-//       });
-//     }
-//   });
-// }
-
-// function fetchKindredAll(page = 1, pageSize = 100) {
-//   $.ajax({
-//     url: `${BACKEND_URL}/kindred?page=${page}&limit=${pageSize}`,
-//     method: "GET",
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//     },
-//     success: function (response) {
-//       if (response && response.data && response.data.length) {
-//         const kindredSelect = $("#kindred");
-//         kindredSelect.empty(); // Clear existing options
-//         kindredSelect.append('<option value="">Select Kindred</option>'); // Default option
-
-//         response.data.forEach(function (kindred) {
-//           kindredSelect.append(
-//             `<option value="${kindred.kindred}">${kindred.kindred}</option>`
-//           );
-//         });
-//       } else {
-//         console.warn("No kindred found in response.");
-//       }
-//     },
-//     error: function (error) {
-//       console.error("Error fetching all kindred:", error);
-//     },
-//   });
-// }
-
-// $(document).ready(function () {
-//   fetchKindredAll();
-// });
-
-// // Event Delegation for Delete & Update Buttons
-// $(document).on("click", ".delete-user-btn", function () {
-//   const userId = $(this).data("id");
-//   handleDelete(userId);
-// });
-
-// $(document).on("click", ".update-user-btn", function () {
-//   const userData = $(this).data("info");
-//   handleUpdate(userData);
-// });
-
-// $(document).ready(function () {
-//   // Initial data load
-//   fetchAllKindred(currentPageAll);
-//   fetchUserKindred(currentPageUser);
-
-//   // Pagination handlers for All Kindred
-//   $("#btnPrevAll").click(function () {
-//     if (currentPageAll > 1) {
-//       currentPageAll--;
-//       fetchAllKindred(currentPageAll);
-//     }
-//   });
-
-//   $("#btnNextAll").click(function () {
-//     currentPageAll++;
-//     fetchAllKindred(currentPageAll);
-//   });
-
-//   // Pagination handlers for User Kindred
-//   $("#btnPrevUser").click(function () {
-//     if (currentPageUser > 1) {
-//       currentPageUser--;
-//       fetchUserKindred(currentPageUser);
-//     }
-//   });
-
-//   $("#btnNextUser").click(function () {
-//     currentPageUser++;
-//     fetchUserKindred(currentPageUser);
-//   });
-
-//   // // Handle form submission
-//   $(document).ready(function () {
-//     $("#kindredForm").on("submit", function (e) {
-//       e.preventDefault();
-
-//       // Collect form data
-//       const formData = {
-//         fullname: $("#fullname").val().trim(),
-//         phone: $("#phone").val().trim(),
-//         lga: $("#lga").val().trim(),
-//         address: $("#address").val().trim(),
-//         kindred: $("#kindred").val().trim(),
-//         userId: user?.id, // Ensure user is defined
-//       };
-
-//       // Validate form inputs
-//       for (const field in formData) {
-//         if (!formData[field]) {
-//           Swal.fire("Oops...", `Please fill in the ${field} field`, "error");
-//           return;
-//         }
-//       }
-
-//       // Ensure token is available
-//       if (!token) {
-//         Swal.fire("Unauthorized", "User authentication required!", "error");
-//         return;
-//       }
-
-//       // Disable submit button to prevent duplicate submissions
-//       const $submitButton = $("#kindredForm button[type='submit']");
-//       $submitButton.prop("disabled", true).text("Processing...");
-
-//       $.ajax({
-//         type: "POST",
-//         url: `${BACKEND_URL}/kindred/create`,
-//         contentType: "application/json",
-//         headers: { Authorization: `Bearer ${token}` },
-//         data: JSON.stringify(formData),
-//         success: function (response) {
-//           Swal.fire(
-//             "Success!",
-//             response.message || "Kindred successfully created!",
-//             "success"
-//           );
-
-//           // Reset the form
-//           $("#kindredForm")[0].reset();
-
-//           // Refresh tables
-//           fetchAllKindred(currentPageAll);
-//           fetchUserKindred(currentPageUser);
-//         },
-//         error: function (xhr) {
-//           const errorMessage =
-//             xhr.responseJSON?.message || "Kindred registration failed";
-//           Swal.fire("Oops...", errorMessage, "error");
-//         },
-//         complete: function () {
-//           // Re-enable the submit button
-//           $submitButton.prop("disabled", false).text("Submit");
-//         },
-//       });
-//     });
-//   });
-// });
-
-// // Function to filter users and match LGAs for certificate requests
-// function filterAndMatchLGAs() {
-//   // First, fetch all users to get support admins
-//   $.ajax({
-//     url: `${BACKEND_URL}/users`,
-//     method: "GET",
-//     headers: { Authorization: `Bearer ${token}` },
-//     success: function (usersResponse) {
-//       // Filter support admins and get their LGAs
-//       const supportAdmins = usersResponse.data.filter(
-//         (user) => user.role === "support_admin"
-//       );
-//       const supportAdminLGAs = [
-//         ...new Set(supportAdmins.map((admin) => admin.lgaOfOrigin)),
-//       ];
-
-//       // Now fetch certificate requests
-//       $.ajax({
-//         url: `${BACKEND_URL}/indigene/certificate/request?status=Pending`,
-//         method: "GET",
-//         headers: { Authorization: `Bearer ${token}` },
-//         success: function (certificateResponse) {
-//           console.log("certificateResponse", certificateResponse);
-//           // Filter requests where LGA matches support admin LGAs
-//           const matchingRequests = certificateResponse.data.filter((request) =>
-//             supportAdminLGAs.includes(request.lgaOfOrigin)
-//           );
-
-//           // Create a table with the matching requests
-//           createLGAMatchTable(supportAdminLGAs, matchingRequests);
-//         },
-//         error: function (error) {
-//           console.error("Error fetching certificate requests:", error);
-//         },
-//       });
-//     },
-//     error: function (error) {
-//       console.error("Error fetching users:", error);
-//     },
-//   });
-// }
-
-// Function to create the LGA match table
-// function createLGAMatchTable(supportAdminLGAs, matchingRequests) {
-//   const tableBody = $("#lga-match-table");
-//   tableBody.empty();
-
-//   // Add support admin LGAs section
-//   tableBody.append(`
-//     <tr class="table-info">
-//       <td colspan="5"><strong>Support Admin LGAs</strong></td>
-//     </tr>
-//   `);
-
-//   supportAdminLGAs.forEach((lga) => {
-//     tableBody.append(`
-//       <tr>
-//         <td>${lga}</td>
-//         <td></td>
-//         <td></td>
-//         <td></td>
-//         <td></td>
-
-//       </tr>
-//     `);
-//   });
-
-//   // Add matching requests section
-//   tableBody.append(`
-//     <tr class="table-info">
-//       <td colspan="5"><strong>Matching Certificate Requests</strong></td>
-//     </tr>
-//   `);
-
-//   if (matchingRequests.length === 0) {
-//     tableBody.append(`
-//       <tr>
-//         <td colspan="5">No matching requests found</td>
-//       </tr>
-//     `);
-//   } else {
-//     matchingRequests.forEach((request, index) => {
-//       tableBody.append(`
-//         <tr>
-//           <td>${request.lgaOfOrigin}</td>
-//           <td>${request.firstname} ${request.lastname}</td>
-//           <td>${request.email}</td>
-//           <td>${request.phone}</td>
-//           <td>${request.kindred}</td>
-
-//         </tr>
-//       `);
-//     });
-//   }
-// }
-
-// // Call this function when needed, for example when a button is clicked
-// $(document).on("click", "#filter-lga-btn", function () {
-//   filterAndMatchLGAs();
-// });
-
-// function filterAndMatchKindredHeadLGAs() {
-//   // First, fetch all users to get support admins
-//   $.ajax({
-//     url: `${BACKEND_URL}/users`,
-//     method: "GET",
-//     headers: { Authorization: `Bearer ${token}` },
-//     success: function (usersResponse) {
-//       // Filter support admins and get their LGAs
-//       const kindredHead = usersResponse.data.filter(
-//         (user) => user.role === "kindred_head"
-//       );
-//       const kindredHeadLGAs = [
-//         ...new Set(kindredHead.map((admin) => admin.lgaOfOrigin)),
-//       ];
-
-//       // Now fetch certificate requests
-//       $.ajax({
-//         url: `${BACKEND_URL}/indigene/certificate/request?status=Pending`,
-//         method: "GET",
-//         headers: { Authorization: `Bearer ${token}` },
-//         success: function (certificateResponse) {
-//           // Filter requests where LGA matches support admin LGAs
-//           const matchingRequests = certificateResponse.data.filter((request) =>
-//             kindredHeadLGAs.includes(request.lgaOfOrigin)
-//           );
-
-//           $("#card-request-count").text(matchingRequests.length);
-//           // Create a table with the matching requests
-//           createKindredGroupedTable(kindredHeadLGAs, matchingRequests);
-//         },
-//         error: function (error) {
-//           console.error("Error fetching certificate requests:", error);
-//         },
-//       });
-//     },
-//     error: function (error) {
-//       console.error("Error fetching users:", error);
-//     },
-//   });
-// }
-
-// // Create table grouped by kindred
-// function createKindredGroupedTable(kindredHeadLGAs, matchingRequests) {
-//   const tableBody = $("#kindred-match-table");
-//   tableBody.empty();
-
-//   // Add support admin LGAs section
-//   tableBody.append(`
-//     <tr class="table-info">
-//       <td colspan="6"><strong>Kindred Head LGAs</strong></td>
-//     </tr>
-//   `);
-
-//   kindredHeadLGAs.forEach((lga) => {
-//     tableBody.append(`
-//       <tr>
-//         <td>${lga}</td>
-//         <td></td>
-//         <td></td>
-//         <td></td>
-//         <td></td>
-//         <td></td>
-//       </tr>
-//     `);
-//   });
-
-//   // Add matching requests section
-//   tableBody.append(`
-//     <tr class="table-info">
-//       <td colspan="6"><strong>Matching Certificate Requests</strong></td>
-//     </tr>
-//   `);
-
-//   if (matchingRequests.length === 0) {
-//     tableBody.append(`
-//       <tr>
-//       <td colspan="6">No matching requests found</td>
-//       </tr>
-//       `);
-//   } else {
-//     matchingRequests.forEach((request, index) => {
-//       const isRejected = request.status === "Rejected";
-//       const isVerified = request.isVerified === true;
-
-//       tableBody.append(`
-//         <tr>
-//           <td>${request.lgaOfOrigin}</td>
-//           <td>${request.firstname} ${request.lastname}</td>
-//           <td>${request.phone}</td>
-//           <td>${request.isVerified}</td>
-//           <td>${request.kindred}</td>
-
-//           <td>
-//             <div class="dropdown">
-//               <button class="btn btn-xs btn-action dropdown-toggle" data-bs-toggle="dropdown">
-//                 <i class="fas fa-ellipsis-v"></i>
-//               </button>
-//               <ul class="dropdown-menu">
-//                 <li><button class="dropdown-item btn-cert-verify" data-id="${
-//                   request._id
-//                 }"
-//                 ${
-//                   isVerified ? "disabled" : ""
-//                 }  style="color: green;">Verity Request</button></li>
-//                 <li><button class="dropdown-item btn-cert-reject" data-id="${
-//                   request._id
-//                 }" ${
-//         isRejected ? "disabled" : ""
-//       } style="color: red;">Reject</button></li>
-//                 <li><button class="dropdown-item btn-cert-view" data-id="${
-//                   request._id
-//                 }" style="color: blue;">View</button></li>
-//               </ul>
-//             </div>
-//           </td>
-
-//         </tr>
-//       `);
-//     });
-//   }
-// }
-
-// $(document).ready(function () {
-//   filterAndMatchKindredHeadLGAs();
-// });
-
-// // Trigger on button click
-// $(document).on("click", "#filter-kindred-btn", function () {
-//   filterAndMatchKindredHeadLGAs();
-// });
-
-// // Id Card
-// $(document).ready(function () {
-//   const pageSize = 10;
-//   let currentPage = 1;
-//   let rejectionId = null;
-
-//   const apiHeaders = {
-//     Authorization: `Bearer ${token}`,
-//   };
-
-//   const tableBody = $("#view-all-card-table");
-
-//   function updatePaginationButtons(hasNextPage) {
-//     $("#btn-prev").prop("disabled", currentPage === 1);
-//     $("#btn-next").prop("disabled", !hasNextPage);
-//   }
-
-//   function updateRequestCount(count) {
-//     $("#request").text(count);
-//   }
-
-//   function renderTable(data) {
-//     tableBody.empty();
-//     data.forEach((item, index) => {
-//       const statusBadge = {
-//         Approved: `<span class="badge rounded-pill bg-success">Approved</span>`,
-//         Pending: `<span class="badge rounded-pill bg-warning text-dark">Pending</span>`,
-//         Rejected: `<span class="badge rounded-pill bg-danger">Rejected</span>`,
-//       };
-
-//       tableBody.append(`
-//         <tr data-id="${item._id}">
-//           <td>${(currentPage - 1) * pageSize + index + 1}</td>
-//           <td>${item.firstname} ${item.lastname}</td>
-//           <td>${item.phone}</td>
-//           <td>${item.email}</td>
-//            <td>${statusBadge[item.status] || item.status}</td>
-//           <td>
-//             <button class="btn btn-sm btn-success btn-approve" data-id="${
-//               item._id
-//             }" title="Approve">
-//               <i class="fas fa-check"></i>
-//             </button>
-//             <button class="btn btn-sm btn-warning btn-view" data-id="${
-//               item._id
-//             }" title="View">
-//               <i class="fas fa-eye"></i>
-//             </button>
-//             <button class="btn btn-sm btn-danger btn-reject" data-id="${
-//               item._id
-//             }" title="Reject" ${item.status === "Rejected" ? "disabled" : ""}>
-//               <i class="fas fa-times"></i>
-//             </button>
-//           </td>
-//         </tr>
-//       `);
-//     });
-//   }
-
-//   function fetchData(page) {
-//     $.ajax({
-//       url: `${BACKEND_URL}/idcard/card-request?page=${page}&limit=${pageSize}&statuses=Pending,Rejected`,
-//       method: "GET",
-//       headers: apiHeaders,
-//       success: function (response) {
-//         const { data, hasNextPage } = response;
-//         $("#id-request").text(data.length);
-//         renderTable(data);
-//         updatePaginationButtons(hasNextPage);
-//         updateRequestCount(data.length);
-
-//         let pendingCount = 0;
-//         let rejectedCount = 0;
-
-//         data.forEach((element) => {
-//           if (element.status === "Pending") {
-//             pendingCount++;
-//           }
-//           if (element.status === "Rejected") {
-//             rejectedCount++;
-//           }
-//         });
-
-//         $("#pending").text(pendingCount);
-//         $("#rejected").text(rejectedCount);
-//       },
-//       error: function (error) {
-//         console.error("Error fetching data:", error);
-//       },
-//     });
-//   }
-
-//   // Handle card Approval
-//   function handleApproval(requestId) {
-//     $.ajax({
-//       url: `${BACKEND_URL}/idcard/${requestId}/approve`,
-//       method: "PATCH",
-//       headers: apiHeaders,
-//       success: function () {
-//         showNotification("success", "Card approved successfully.");
-//         fetchData(currentPage);
-//       },
-//       error: function (error) {
-//         console.error("Error approving request:", error);
-//       },
-//     });
-//   }
-
-//   // Handle card rejection
-//   function handleIDRejection(rejectionReason) {
-//     if (!rejectionReason) {
-//       alert("Please provide a reason for rejection.");
-//       return;
-//     }
-
-//     $.ajax({
-//       url: `${BACKEND_URL}/idcard/${rejectionId}/reject`,
-//       method: "PATCH",
-//       contentType: "application/json",
-//       data: JSON.stringify({ rejectionReason }),
-//       headers: apiHeaders,
-//       success: function () {
-//         $("#rejectionModal").modal("hide");
-//         $("#idRejectionReason").val("");
-//         showNotification("success", "Request rejected successfully.");
-
-//         fetchData(currentPage);
-//       },
-//       error: function (error) {
-//         console.error("Error rejecting request:", error);
-//         showNotification(
-//           "danger",
-//           xhr.responseJSON?.message || "Error occurred."
-//         );
-//       },
-//     });
-//   }
-
-//   function showNotification(type, message) {
-//     const toastHtml = `
-//             <div class="toast align-items-center text-white bg-${type} border-0 mb-2" role="alert" aria-live="assertive" aria-atomic="true">
-//               <div class="d-flex">
-//                 <div class="toast-body">${message}</div>
-//                 <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-//               </div>
-//             </div>`;
-//     $("#toast-container").append(toastHtml);
-//     const toastEl = $("#toast-container .toast:last")[0];
-//     // new bootstrap.Toast(toastEl, { delay: 60000 }).show();
-//     new bootstrap.Toast(toastEl, { autohide: false }).show();
-//   }
-
-//   $(document).on("click", ".btn-approve", function () {
-//     const requestId = $(this).data("id");
-//     handleApproval(requestId);
-//   });
-
-//   $(document).on("click", ".btn-reject", function () {
-//     rejectionId = $(this).data("id");
-//     $("#rejectionModal").modal("show");
-//   });
-
-//   $("#submitIDRejection").click(function () {
-//     const reason = $("#idRejectionReason").val();
-//     handleIDRejection(reason);
-//   });
-
-//   $("#btn-prev").click(function () {
-//     if (currentPage > 1) {
-//       currentPage--;
-//       fetchData(currentPage);
-//     }
-//   });
-
-//   $("#btn-next").click(function () {
-//     currentPage++;
-//     fetchData(currentPage);
-//   });
-
-//   // Initial data load
-//   fetchData(currentPage);
-// });
-// $(document).ready(function () {
-//   // Add hover effects to cards
-//   $(".stat-card").hover(
-//     function () {
-//       $(this).addClass("shadow");
-//     },
-//     function () {
-//       $(this).removeClass("shadow");
-//     }
-//   );
-
-//   // Add click effect to quick action buttons
-//   $(".quick-action-btn").click(function () {
-//     $(this).addClass("active");
-//     setTimeout(() => {
-//       $(this).removeClass("active");
-//     }, 200);
-//   });
-// });
-
-// // ✅ Active Page Highlight Script
-// $(document).ready(function () {
-//   const currentPage = window.location.pathname.split("/").pop(); // e.g., profile.html
-//   $("#sidebar-links .nav-link").each(function () {
-//     const linkPage = $(this).attr("href");
-//     if (linkPage === currentPage) {
-//       $(this).addClass("active");
-//     }
-//   });
-// });
-
-// //Fetch kindred by userId
-// function fetchAllLga(page) {
-//   $.ajax({
-//     url: `${BACKEND_URL}/lgas?page=${page}&limit=${pageSize}`,
-//     method: "GET",
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//     },
-//     success: function (response) {
-//       const { data, hasNextPage } = response;
-//       const tableBody = $("#lga-table");
-//       tableBody.empty();
-
-//       data.forEach((data, index) => {
-//         tableBody.append(`
-//           <tr>
-//             <td>${(page - 1) * pageSize + index + 1}</td>
-//             <td>${data.name}
-//             <td>${data.headquaters}</td>
-
-//             <td>
-//               <div class="dropdown">
-//                 <button class="btn btn-xs btn-action dropdown-toggle" data-bs-toggle="dropdown">
-//                   <i class="fas fa-ellipsis-v"></i>
-//                 </button>
-//                 <ul class="dropdown-menu">
-//                   <li>
-//                     <button class="dropdown-item update-lga-btn" data-id="${
-//                       data._id
-//                     }" data-info='${JSON.stringify(data)}'>
-//                       Update User
-//                     </button>
-//                   </li>
-//                   <li>
-//                     <button class="dropdown-item delete-lga-btn" data-id="${
-//                       data._id
-//                     }" style="color: red;">
-//                       Delete User
-//                     </button>
-//                   </li>
-//                 </ul>
-//               </div>
-//             </td>
-//           </tr>
-//         `);
-//       });
-
-//       $("#btnPrevUser").prop("disabled", page === 1);
-//       $("#btnNextUser").prop("disabled", !hasNextPage);
-//     },
-//     error: function (error) {
-//       console.error("Error fetching user kindred:", error);
-//     },
-//   });
-// }
-// $(document).ready(function () {
-//   fetchAllLga(currentPageAll);
-// });
-
-// // Handle Delete User
-// function handleDeleteLga(userId) {
-//   Swal.fire({
-//     title: "Are you sure?",
-//     text: "This action cannot be undone!",
-//     // icon: "warning",
-//     showCancelButton: true,
-//     confirmButtonColor: "#d33",
-//     cancelButtonColor: "#3085d6",
-//     confirmButtonText: "Yes, delete it!",
-//   }).then((result) => {
-//     if (result.value === true) {
-//       $.ajax({
-//         url: `${BACKEND_URL}/lgas/${userId}`,
-//         method: "DELETE",
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//         },
-//         success: function () {
-//           Swal.fire("Deleted!", "User has been deleted.", "success");
-//           fetchAllLga(currentPageUser);
-//         },
-//         error: function (xhr) {
-//           const errorMessage =
-//             xhr.responseJSON?.message || "Failed to delete LGA.";
-//           Swal.fire("Error!", errorMessage, "error");
-//         },
-//       });
-//     }
-//   });
-// }
-
-// // Handle Update User
-// function handleUpdateLga(userData) {
-//   Swal.fire({
-//     title: "Update User",
-//     html: `
-//        <select id="updateName" name="lga"  class="swal2-input">
-//             <option value="${userData.name}">${userData.name}</option>
-//             <option value="Agatu">Agatu</option>
-//             <option value="Apa">Apa</option>
-//             <option value="Ado">Ado</option>
-//             <option value="Buruku">Buruku</option>
-//             <option value="Gboko">Gboko</option>
-//             <option value="Guma">Guma</option>
-//             <option value="Gwer East">Gwer East</option>
-//             <option value="Gwer West">Gwer West</option>
-//             <option value="Katsina-Ala">Katsina-Ala</option>
-//             <option value="Konshisha">Konshisha</option>
-//             <option value="Kwande">Kwande</option>
-//             <option value="Logo">Logo</option>
-//             <option value="Makurdi">Makurdi</option>
-//             <option value="Obi">Obi</option>
-//             <option value="Ogbadibo">Ogbadibo</option>
-//             <option value="Ohimini">Ohimini</option>
-//             <option value="Oju">Oju</option>
-//             <option value="Okpokwu">Okpokwu</option>
-//             <option value="Oturkpo">Oturkpo</option>
-//             <option value="Tarka">Tarka</option>
-//             <option value="Ukum">Ukum</option>
-//             <option value="Ushongo">Ushongo</option>
-//             <option value="Vandeikya">Vandeikya</option>
-
-//         </select>
-//       <select id="updateLgaHeadqtrs" class="swal2-input" placeholder="LGA Headquaters">
-//               <option value="${userData.headquaters}">${userData.headquaters}</option>
-//             <option value="Obagaji">Obagaji</option>
-//             <option value="Ugbokpo">Ugbokpo</option>
-//             <option value="Igumale">Igumale</option>
-//             <option value="Buruku">Buruku</option>
-//             <option value="Gboko">Gboko</option>
-//             <option value="Gbajimba">Gbajimba</option>
-//             <option value="Aliade">Aliade</option>
-//             <option value="Naka">Naka</option>
-//             <option value="Katsina-Ala">Katsina-Ala</option>
-//             <option value="Tse-Agberagba">Tse-Agberagba</option>
-//             <option value="Adikpo">Adikpo</option>
-//             <option value="Ugba">Ugba</option>
-//             <option value="Makurdi">Makurdi</option>
-//             <option value="Obarike-Ito">Obarike-Ito</option>
-//             <option value="Otukpa">Otukpa</option>
-//             <option value="Idekpa">Idekpa</option>
-//             <option value="Oju">Oju</option>
-//             <option value="Okpoga">Okpoga</option>
-//             <option value="Oturkpo">Oturkpo</option>
-//             <option value="Wannune">Wannune</option>
-//             <option value="Sankera">Sankera</option>
-//             <option value="Lessel">Lessel</option>
-//             <option value="Vandeikya">Vandeikya</option>
-
-//         </select>
-//     `,
-//     showCancelButton: true,
-//     confirmButtonText: "Update",
-//     preConfirm: () => {
-//       return {
-//         name: $("#updateName").val().trim(),
-//         headquaters: $("#updateLgaHeadqtrs").val().trim(),
-//       };
-//     },
-//   }).then((result) => {
-//     if (result.value) {
-//       $.ajax({
-//         url: `${BACKEND_URL}/lgas/${userData._id}`,
-//         method: "PATCH",
-//         contentType: "application/json",
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//         },
-//         data: JSON.stringify(result.value),
-//         success: function () {
-//           Swal.fire(
-//             "Updated!",
-//             "User details updated successfully.",
-//             "success"
-//           );
-//           fetchAllLga(currentPageUser);
-//         },
-//         error: function (error) {
-//           Swal.fire("Error!", "Failed to update user.", "error");
-//           console.error("Error updating user:", error);
-//         },
-//       });
-//     }
-//   });
-// }
-
-// // Event Delegation for Delete & Update Buttons
-// $(document).on("click", ".delete-lga-btn", function () {
-//   const userId = $(this).data("id");
-//   handleDeleteLga(userId);
-// });
-
-// $(document).on("click", ".update-lga-btn", function () {
-//   const userData = $(this).data("info");
-//   handleUpdateLga(userData);
-// });

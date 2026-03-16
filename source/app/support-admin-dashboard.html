@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -1137,11 +1137,11 @@
                       <th>S/N</th>
                       <th>ID</th>
                       <th>User</th>
+                      <th>LGA</th>
+                      <th>Village</th>
                       <th>Kindred</th>
                       <th>Status</th>
                       <th>Request Date</th>
-                      <th>State</th>
-                      <th>LGA</th>
                       <th>IsProfileCompleted</th>
                       <th>ApprovedBy</th>
                       <th>Actions</th>
@@ -2467,7 +2467,7 @@
         if (!token) {
           showNotification(
             "You are not logged in. Please log in to continue.",
-            "warning"
+            "warning",
           );
           // Redirect to login page
           setTimeout(() => {
@@ -2486,7 +2486,7 @@
             // Token has expired
             showNotification(
               "Your session has expired. Please log in again.",
-              "warning"
+              "warning",
             );
             localStorage.removeItem("token"); // Clear the expired token
             setTimeout(() => {
@@ -2501,7 +2501,7 @@
           // Error parsing token, it might be malformed
           showNotification(
             "Authentication error. Please log in again.",
-            "error"
+            "error",
           );
           localStorage.removeItem("token"); // Clear the invalid token
           setTimeout(() => {
@@ -2526,7 +2526,7 @@
       $(document).ready(function () {
         // Populate states dropdown
         const states = Object.keys(nigerData).map((state) =>
-          state.replace("_", " ").toUpperCase()
+          state.replace("_", " ").toUpperCase(),
         );
         states.forEach((state) => {
           $("#userState").append(new Option(state, state));
@@ -2551,7 +2551,7 @@
 
         // Convert to array and map over them to create new Tooltip instances
         const tooltipList = [...tooltipTriggerList].map(
-          (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
+          (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl),
         );
       }
 
@@ -2636,11 +2636,11 @@
           $(this).toggleClass("active");
           $("body").attr(
             "data-theme",
-            $(this).hasClass("active") ? "dark" : "light"
+            $(this).hasClass("active") ? "dark" : "light",
           );
           localStorage.setItem(
             "theme",
-            $(this).hasClass("active") ? "dark" : "light"
+            $(this).hasClass("active") ? "dark" : "light",
           );
         });
 
@@ -2679,7 +2679,7 @@
           if (/^\d{11}$/.test(nin)) {
             try {
               $("#ninStatus").html(
-                '<span class="text-info">Verifying NIN...</span>'
+                '<span class="text-info">Verifying NIN...</span>',
               );
 
               const response = await $.ajax({
@@ -2739,18 +2739,18 @@
                 }
 
                 $("#ninStatus").html(
-                  '<span class="text-success">NIN Verified ✅</span>'
+                  '<span class="text-success">NIN Verified ✅</span>',
                 );
               } else {
                 $("#ninStatus").html(
-                  '<span class="text-danger">NIN not found.</span>'
+                  '<span class="text-danger">NIN not found.</span>',
                 );
               }
             } catch (error) {
               $("#ninStatus").html(
                 `<span class="text-danger">${
                   error.responseJSON?.message || "Verification failed."
-                }</span>`
+                }</span>`,
               );
             }
           }
@@ -2791,7 +2791,7 @@
 
             showNotification(
               "User created successfully. Password sent to email",
-              "success"
+              "success",
             );
             $("#addUserModal").modal("hide");
             $("#addUserForm")[0].reset();
@@ -2861,7 +2861,7 @@
 
         // Profile form change tracking
         $(
-          "#editProfileFirstName, #editProfileLastName, #editProfileEmail, #editProfilePhone"
+          "#editProfileFirstName, #editProfileLastName, #editProfileEmail, #editProfilePhone",
         ).on("input change", function () {
           profileHasUnsavedChanges = true;
           saveProfileFormData();
@@ -2888,10 +2888,10 @@
 
         // Report Page Listeners
         $("#generateReport").on("click", () =>
-          $("#generateReportModal").modal("show")
+          $("#generateReportModal").modal("show"),
         );
         $("#scheduleReport").on("click", () =>
-          $("#scheduleReportModal").modal("show")
+          $("#scheduleReportModal").modal("show"),
         );
         // Analytics Page Listeners
         $("#analyticsDateRangeBtn").on("click", function () {
@@ -2996,24 +2996,24 @@
           $("#lgaState").text(user.stateOfOrigin.toUpperCase() || "N/A");
           $("#profileName").text(user.lastname || "N/A");
           $("#profileRole").text(
-            `${user.role || "User"} - ${user.lgaOfOrigin || ""} LGA`
+            `${user.role || "User"} - ${user.lgaOfOrigin || ""} LGA`,
           );
           $("#profileEmail").text(user.email || "N/A");
           $("#profileFullName").text(
-            `${user.firstname} ${user.lastname}` || "N/A"
+            `${user.firstname} ${user.lastname}` || "N/A",
           );
           $("#profileEmailFull").text(user.email || "N/A");
           $("#profilePhone").text(user.phone || "N/A");
           $("#profileLGA").text(
-            `${user.lgaOfOrigin || ""}, ${user.stateOfOrigin || ""} State`
+            `${user.lgaOfOrigin || ""}, ${user.stateOfOrigin || ""} State`,
           );
           $("#profileDateJoined").text(
             user.created_at
               ? new Date(user.created_at).toLocaleDateString()
-              : "N/A"
+              : "N/A",
           );
           $("#profileLastLogin").text(
-            user.lastLogin ? new Date(user.lastLogin).toLocaleString() : "N/A"
+            user.lastLogin ? new Date(user.lastLogin).toLocaleString() : "N/A",
           );
 
           // Pre-fill edit profile form
@@ -3072,7 +3072,7 @@
                   const percentComplete = (e.loaded / e.total) * 100;
                   $("#uploadProgress .progress-bar").css(
                     "width",
-                    percentComplete + "%"
+                    percentComplete + "%",
                   );
                 }
               });
@@ -3152,25 +3152,25 @@
             await Promise.all([
               $.ajax({
                 url: `${BACKEND_URL}/users/trends?lga=${encodeURIComponent(
-                  currentLGA
+                  currentLGA,
                 )}`,
                 headers: { Authorization: `Bearer ${token}` },
               }),
               $.ajax({
                 url: `${BACKEND_URL}/users/demographics?lga=${encodeURIComponent(
-                  currentLGA
+                  currentLGA,
                 )}`,
                 headers: { Authorization: `Bearer ${token}` },
               }),
               $.ajax({
                 url: `${BACKEND_URL}/users/kindred-activity?lga=${encodeURIComponent(
-                  currentLGA
+                  currentLGA,
                 )}`,
                 headers: { Authorization: `Bearer ${token}` },
               }),
               $.ajax({
                 url: `${BACKEND_URL}/users/recent-activities?lga=${encodeURIComponent(
-                  currentLGA
+                  currentLGA,
                 )}`,
                 headers: { Authorization: `Bearer ${token}` },
               }),
@@ -3202,6 +3202,14 @@
                     tension: 0.4,
                     fill: true,
                   },
+                   {
+                    label: "Auctioneer Requests",
+                    data: trendRes.monthly.auctioneerRequests || [],
+                    borderColor: "#10b981",
+                    backgroundColor: "rgba(16, 185, 129, 0.1)",
+                    tension: 0.4,
+                    fill: true,
+                  },
                 ],
               },
               options: {
@@ -3220,7 +3228,7 @@
 
             // Create a clean array of values from the response
             const demographicsValues = Array.isArray(
-              demographicsRes.combinedGroups.values
+              demographicsRes.combinedGroups.values,
             )
               ? [...demographicsRes.combinedGroups.values] // Create a new array to avoid Chart.js modifications
               : [];
@@ -3240,7 +3248,7 @@
               demographicsRes.genderDistribution.values.some((val) => val > 0)
             ) {
               console.log(
-                "All demographics values are zero, using gender distribution as fallback"
+                "All demographics values are zero, using gender distribution as fallback",
               );
               chartData = {
                 labels: demographicsRes.genderDistribution.labels || [],
@@ -3251,7 +3259,7 @@
             // If still all zeros, use sample data for demonstration
             if (chartData.values.every((val) => val === 0)) {
               console.log(
-                "No data available, using sample data for demonstration"
+                "No data available, using sample data for demonstration",
               );
               chartData = {
                 labels: demographicsRes.combinedGroups.labels || [],
@@ -3353,7 +3361,7 @@
           const [usersRes, idcardRes, certRes] = await Promise.all([
             $.ajax({
               url: `${BACKEND_URL}/users/by-lga?lga=${encodeURIComponent(
-                currentLGA
+                currentLGA,
               )}`,
               method: "GET",
               headers: {
@@ -3363,7 +3371,7 @@
             }),
             $.ajax({
               url: `${BACKEND_URL}/idcard/requests?lga=${encodeURIComponent(
-                currentLGA
+                currentLGA,
               )}`,
               method: "GET",
               headers: {
@@ -3373,7 +3381,7 @@
             }),
             $.ajax({
               url: `${BACKEND_URL}/indigene/certificate/by-lga?lga=${encodeURIComponent(
-                currentLGA
+                currentLGA,
               )}`,
               method: "GET",
               headers: {
@@ -3395,7 +3403,7 @@
             idcardRequests.filter((r) => r.status === "Pending").length +
             certificateRequests.filter((r) => r.status === "Pending").length;
           const certificatesIssued = certificateRequests.filter(
-            (r) => r.status === "Approved" && r.downloaded === true
+            (r) => r.status === "Approved" && r.downloaded === true,
           ).length;
 
           // Step 4️⃣: Update dashboard KPIs
@@ -3448,7 +3456,7 @@
           // Step 2: Fetch all users for this LGA
           const usersResponse = await $.ajax({
             url: `${BACKEND_URL}/users/by-lga?lga=${encodeURIComponent(
-              currentLGA
+              currentLGA,
             )}`,
             method: "GET",
             headers: {
@@ -3588,7 +3596,7 @@
           const totalUsers = users.length;
           const activeUsers = users.filter((u) => u.isActive).length;
           const kindredHeads = users.filter(
-            (u) => u.role === "kindred_head"
+            (u) => u.role === "kindred_head",
           ).length;
           const newUsers = users.filter((u) => {
             const regDate = new Date(u.created_at);
@@ -3606,7 +3614,7 @@
         } catch (error) {
           console.error("Error initializing users page:", error);
           alert(
-            "Failed to load users data. Please check your network or try again later."
+            "Failed to load users data. Please check your network or try again later.",
           );
         }
       }
@@ -3634,7 +3642,7 @@
           // Fetch ID Card Requests for current LGA
           const idcardResponse = await $.ajax({
             url: `${BACKEND_URL}/idcard/requests?lga=${encodeURIComponent(
-              currentLGA
+              currentLGA,
             )}`,
             method: "GET",
             headers: {
@@ -3646,7 +3654,7 @@
           // Fetch Certificate Requests for current LGA
           const certificateResponse = await $.ajax({
             url: `${BACKEND_URL}/indigene/certificate/by-lga?lga=${encodeURIComponent(
-              currentLGA
+              currentLGA,
             )}`,
             method: "GET",
             headers: {
@@ -3733,6 +3741,8 @@
                 data: null,
                 render: (row) => `${row.firstname || ""} ${row.lastname || ""}`,
               },
+              { data: "lgaOfOrigin", defaultContent: "N/A" },
+              { data: "village", defaultContent: "N/A" },
               { data: "kindred", defaultContent: "N/A" },
               {
                 data: "status",
@@ -3748,8 +3758,6 @@
                 data: "created_at",
                 render: (data) => new Date(data).toLocaleDateString(),
               },
-              { data: "stateOfOrigin", defaultContent: "N/A" },
-              { data: "lgaOfOrigin", defaultContent: "N/A" },
               { data: "IsProfileCompleted", defaultContent: "N/A" },
               {
                 data: null,
@@ -3831,7 +3839,7 @@
           console.error("Error loading requests:", error);
           showNotification(
             "Failed to load requests. Please check your connection or credentials.",
-            "error"
+            "error",
           );
         }
       }
@@ -3870,7 +3878,7 @@
                 //   currentLGA
                 // )}`,
                 url: `${BACKEND_URL}/users/demographics?lga=${encodeURIComponent(
-                  currentLGA
+                  currentLGA,
                 )}&${filterString}`,
                 method: "GET",
                 headers: {
@@ -3878,12 +3886,9 @@
                   "Content-Type": "application/json",
                 },
               }),
-              $.ajax({
-                // url: `${BACKEND_URL}/users/trends?lga=${encodeURIComponent(
-                //   currentLGA
-                // )}`,
+              $.ajax({               
                 url: `${BACKEND_URL}/users/trends?lga=${encodeURIComponent(
-                  currentLGA
+                  currentLGA,
                 )}&${filterString}`,
                 method: "GET",
                 headers: {
@@ -3892,12 +3897,9 @@
                 },
               }),
 
-              $.ajax({
-                // url: `${BACKEND_URL}/transaction/by-lga?lga=${encodeURIComponent(
-                //   currentLGA
-                // )}`,
+              $.ajax({              
                 url: `${BACKEND_URL}/transaction/by-lga?lga=${encodeURIComponent(
-                  currentLGA
+                  currentLGA,
                 )}&${filterString}`,
                 method: "GET",
                 headers: {
@@ -3906,8 +3908,7 @@
                 },
               }),
 
-              $.ajax({
-                // url: `${BACKEND_URL}/users/lga-trends`,
+              $.ajax({          
                 url: `${BACKEND_URL}/users/lga-trends?${filterString}`,
                 method: "GET",
                 headers: {
@@ -3963,7 +3964,7 @@
                 plugins: { legend: { display: false } },
                 scales: { y: { beginAtZero: true } },
               },
-            })
+            }),
           );
 
           // === GENDER DISTRIBUTION ===
@@ -3986,7 +3987,7 @@
                 maintainAspectRatio: false,
                 plugins: { legend: { position: "bottom" } },
               },
-            })
+            }),
           );
 
           // === DAY TREND (by date) ===
@@ -4007,6 +4008,11 @@
                   {
                     label: "Certificate Requests",
                     data: trends?.daily?.certificateRequests || [],
+                    backgroundColor: "rgba(236,72,153,0.8)",
+                  },
+                  {
+                    label: "Auctioneer Requests",
+                    data: trends?.daily?.auctioneerRequests || [],
                     backgroundColor: "rgba(236,72,153,0.8)",
                   },
                 ],
@@ -4037,7 +4043,7 @@
                   x: { title: { display: true, text: "Date" } },
                 },
               },
-            })
+            }),
           );
 
           // === TIME TREND (hourly) ===
@@ -4063,6 +4069,16 @@
                     label: "Certificate Requests",
                     // ✅ Correctly access the pre-aligned data array
                     data: trends?.hourly?.certificateRequests || [],
+                    borderColor: "#ec4899",
+                    backgroundColor: "rgba(236,72,153,0.1)",
+                    tension: 0.3,
+                    fill: true,
+                    pointRadius: 3,
+                  },
+                    {
+                    label: "Auctioneer Requests",
+                    // ✅ Correctly access the pre-aligned data array
+                    data: trends?.hourly?.auctioneerRequests || [],
                     borderColor: "#ec4899",
                     backgroundColor: "rgba(236,72,153,0.1)",
                     tension: 0.3,
@@ -4100,7 +4116,7 @@
                 },
                 interaction: { mode: "index", intersect: false },
               },
-            })
+            }),
           );
 
           const transactionsObject =
@@ -4152,7 +4168,7 @@
                   },
                 },
               },
-            })
+            }),
           );
 
           // Use the createOrUpdateChart pattern for consistency
@@ -4202,7 +4218,7 @@
                   },
                 },
               },
-            })
+            }),
           );
           // Step 6: Done
           $("#analyticsLoader").hide();
@@ -4351,13 +4367,13 @@
           if (!response.ok) {
             const errorData = await response.json();
             throw new Error(
-              errorData.message || `HTTP error! status: ${response.status}`
+              errorData.message || `HTTP error! status: ${response.status}`,
             );
           }
 
           // Get the report name from the response headers if available, otherwise use a default
           const contentDisposition = response.headers.get(
-            "content-disposition"
+            "content-disposition",
           );
           let filename = `report_${reportId}.pdf`;
           if (contentDisposition) {
@@ -4387,7 +4403,7 @@
           console.error("Download failed:", error);
           showNotification(
             `Failed to download report: ${error.message}`,
-            "error"
+            "error",
           );
         }
       }
@@ -4459,7 +4475,7 @@
         if (!phonePattern.test(phone)) {
           showNotification(
             "Please enter a valid Nigerian phone number",
-            "warning"
+            "warning",
           );
           return;
         }
@@ -4548,13 +4564,13 @@
             showNotification(
               "Success",
               "User role updated successfully",
-              "success"
+              "success",
             );
           },
           error: function (xhr) {
             showNotification(
               xhr.responseJSON.message || "Failed to change role",
-              "error"
+              "error",
             );
           },
         });
@@ -4618,7 +4634,7 @@
             console.error("Error:", xhr.responseText);
             showNotification(
               xhr.responseJSON?.message || `Failed to ${action} request.`,
-              "error"
+              "error",
             );
           },
           complete: function () {
@@ -4653,7 +4669,7 @@
           success: function (response) {
             // ✅ Update UI with new data
             $("#currentUser").text(
-              `${response.firstname} ${response.lastname}` || firstname
+              `${response.firstname} ${response.lastname}` || firstname,
             );
             $("#currentUserEmail").text(response.email || email);
             $("#currentUserPhone").text(response.phone || phone);
@@ -4709,7 +4725,7 @@
         // In a real implementation, this would fetch fresh data from the API
         // GET /api/support-admin/analytics/lga/:lgaId
         console.log(
-          "API Call: GET /api/support-admin/analytics/lga/" + currentLGA
+          "API Call: GET /api/support-admin/analytics/lga/" + currentLGA,
         );
 
         // Simulate API delay
@@ -4754,7 +4770,7 @@
           // --- 1. Call the main analytics endpoint ---
           const analyticsResponse = await $.ajax({
             url: `${BACKEND_URL}/users/refresh-analytics?lga=${encodeURIComponent(
-              currentLGA
+              currentLGA,
             )}&${filterString}`,
             method: "GET",
             headers: { Authorization: `Bearer ${token}` },
@@ -4766,7 +4782,7 @@
           // NOTE: We assume this endpoint returns an ARRAY of raw transaction objects.
           const transactionsArray = await $.ajax({
             url: `${BACKEND_URL}/transaction/by-lga?lga=${encodeURIComponent(
-              currentLGA
+              currentLGA,
             )}&${filterString}`,
             method: "GET",
             headers: { Authorization: `Bearer ${token}` },
@@ -4776,27 +4792,27 @@
 
           // Age & Gender Distribution Charts
           ageDistributionChart.data.datasets[0].data = Object.values(
-            demographics.ageDistribution.values
+            demographics.ageDistribution.values,
           );
           ageDistributionChart.update();
           genderDistributionChart.data.datasets[0].data = Object.values(
-            demographics.genderDistribution.values
+            demographics.genderDistribution.values,
           );
           genderDistributionChart.update();
 
           // Day & Time Trend Charts
           dayTrendChart.data.datasets[0].data = Object.values(
-            trends.daily.idCardRequests
+            trends.daily.idCardRequests,
           );
           dayTrendChart.data.datasets[1].data = Object.values(
-            trends.daily.certificateRequests
+            trends.daily.certificateRequests,
           );
           dayTrendChart.update();
           timeTrendChart.data.datasets[0].data = Object.values(
-            trends.hourly.idCardRequests
+            trends.hourly.idCardRequests,
           );
           timeTrendChart.data.datasets[1].data = Object.values(
-            trends.hourly.certificateRequests
+            trends.hourly.certificateRequests,
           );
           timeTrendChart.update();
 
@@ -4846,7 +4862,7 @@
           if (!response.ok) {
             const errorData = await response.json();
             throw new Error(
-              errorData.message || `HTTP error! status: ${response.status}`
+              errorData.message || `HTTP error! status: ${response.status}`,
             );
           }
 
@@ -4856,7 +4872,7 @@
           link.href = downloadUrl;
           link.setAttribute(
             "download",
-            `dashboard_report_${new Date().toISOString().slice(0, 10)}.pdf`
+            `dashboard_report_${new Date().toISOString().slice(0, 10)}.pdf`,
           );
           document.body.appendChild(link);
           link.click();
@@ -4865,13 +4881,13 @@
 
           showNotification(
             "Dashboard report exported successfully!",
-            "success"
+            "success",
           );
         } catch (error) {
           console.error("Export failed:", error);
           showNotification(
             `Failed to export report: ${error.message}`,
-            "error"
+            "error",
           );
         }
       }
@@ -4892,7 +4908,7 @@
           if (!response.ok) {
             const errorData = await response.json();
             throw new Error(
-              errorData.message || `HTTP error! status: ${response.status}`
+              errorData.message || `HTTP error! status: ${response.status}`,
             );
           }
 
@@ -4902,7 +4918,7 @@
           link.href = downloadUrl;
           link.setAttribute(
             "download",
-            `requests_report_${new Date().toISOString().slice(0, 10)}.pdf`
+            `requests_report_${new Date().toISOString().slice(0, 10)}.pdf`,
           );
           document.body.appendChild(link);
           link.click();
@@ -4914,7 +4930,7 @@
           console.error("Export failed:", error);
           showNotification(
             `Failed to export report: ${error.message}`,
-            "error"
+            "error",
           );
         }
       }
@@ -4924,10 +4940,10 @@
           type === "success"
             ? "alert-success"
             : type === "error"
-            ? "alert-danger"
-            : type === "warning"
-            ? "alert-warning"
-            : "alert-info";
+              ? "alert-danger"
+              : type === "warning"
+                ? "alert-warning"
+                : "alert-info";
 
         const notification = $(`
                               <div class="alert ${alertClass} alert-dismissible fade show position-fixed" style="top: 80px; right: 20px; z-index: 9999; min-width: 300px;">
@@ -4947,7 +4963,7 @@
       function exportTable(format, tableId) {
         showNotification(
           `Exporting table as ${format.toUpperCase()}...`,
-          "info"
+          "info",
         );
 
         // Get table data
@@ -4981,7 +4997,7 @@
           "API Call: GET /api/reports/lga/" +
             currentLGA +
             "/export?format=" +
-            format
+            format,
         );
       }
 
@@ -5009,7 +5025,7 @@
         link.setAttribute("href", url);
         link.setAttribute(
           "download",
-          filename + "_" + new Date().toISOString().split("T")[0] + ".csv"
+          filename + "_" + new Date().toISOString().split("T")[0] + ".csv",
         );
         link.style.visibility = "hidden";
         document.body.appendChild(link);
@@ -5029,7 +5045,7 @@
         doc.text(
           filename.replace(/([A-Z])/g, " $1").trim() + " Report",
           14,
-          22
+          22,
         );
 
         // Add date
@@ -5064,7 +5080,7 @@
 
         // Save PDF
         doc.save(
-          filename + "_" + new Date().toISOString().split("T")[0] + ".pdf"
+          filename + "_" + new Date().toISOString().split("T")[0] + ".pdf",
         );
 
         showNotification(`Table exported successfully as PDF`, "success");
@@ -5090,7 +5106,7 @@
           setTimeout(() => {
             showNotification(
               `${report.name} downloaded successfully`,
-              "success"
+              "success",
             );
           }, 1000);
         }
@@ -5167,7 +5183,7 @@
           error: function (xhr) {
             showNotification(
               xhr.responseText || "Failed to update user",
-              "error"
+              "error",
             );
           },
         });
@@ -5201,7 +5217,7 @@
               error: function (xhr) {
                 showNotification(
                   xhr.responseJSON.message || "Failed to update user status",
-                  "error"
+                  "error",
                 );
               },
             });
@@ -5251,14 +5267,14 @@
                           request.status === "Approved"
                             ? "success"
                             : request.status === "Rejected"
-                            ? "danger"
-                            : "warning"
+                              ? "danger"
+                              : "warning"
                         } text-uppercase">${request.status}</span>
                       </div>
                       <div class="col-md-6 mb-3">
                         <strong>User:</strong> ${request.firstname || ""} ${
-            request.lastname || ""
-          }
+                          request.lastname || ""
+                        }
                       </div>
                       <div class="col-md-6 mb-3">
                         <strong>Kindred:</strong> ${request.kindred || "N/A"}
@@ -5268,7 +5284,7 @@
                       </div>
                       <div class="col-md-6 mb-3">
                         <strong>Request Date:</strong> ${new Date(
-                          request.created_at
+                          request.created_at,
                         ).toLocaleString()}
                       </div>
                       <div class="col-12 mt-3">
@@ -5304,7 +5320,7 @@
           $("#requestActionType").val(action);
           $("#requestActionModal").data("requestId", requestId);
           $("#requestActionModal").data("requestType", requestType);
-        }
+        },
       );
       //
     </script>
@@ -5313,10 +5329,10 @@
       $(document).ready(function () {
         // Initialize modals
         const changePasswordModal = new bootstrap.Modal(
-          document.getElementById("changePasswordModal")
+          document.getElementById("changePasswordModal"),
         );
         const enable2FAModal = new bootstrap.Modal(
-          document.getElementById("enable2FAModal")
+          document.getElementById("enable2FAModal"),
         );
 
         // Change Password Button Click
@@ -5448,7 +5464,7 @@
           if (!verificationCode || verificationCode.length !== 6) {
             showNotification(
               "Please enter a valid 6-digit verification code",
-              "error"
+              "error",
             );
             return;
           }
@@ -5496,7 +5512,7 @@
           if (!$("#backupCodesSaved").is(":checked")) {
             showNotification(
               "Please confirm you have saved your backup codes",
-              "warning"
+              "warning",
             );
             return;
           }
@@ -5515,11 +5531,11 @@
             success: function (response) {
               showNotification(
                 "Two-factor authentication enabled successfully",
-                "success"
+                "success",
               );
               enable2FAModal.hide();
               $("#enable2FABtn").html(
-                '<i class="bi bi-shield-check me-2"></i>Disable Two-Factor Authentication'
+                '<i class="bi bi-shield-check me-2"></i>Disable Two-Factor Authentication',
               );
               $("#enable2FABtn")
                 .removeClass("btn-outline-primary")
@@ -5580,7 +5596,7 @@
                   if (!statusResponse.hasSecret) {
                     showNotification(
                       "Failed to setup 2FA. Please try again.",
-                      "error"
+                      "error",
                     );
                     $("#2faSetupStep1").html(`
                                 <div class="alert alert-danger">
@@ -5601,8 +5617,8 @@
                   $(".qr-code img").attr(
                     "src",
                     `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(
-                      response.qrCodeUrl
-                    )}`
+                      response.qrCodeUrl,
+                    )}`,
                   );
 
                   // Update the manual entry code
@@ -5612,7 +5628,7 @@
                   console.error("Error checking 2FA status:", xhr);
                   showNotification(
                     "Failed to verify 2FA setup. Please try again.",
-                    "error"
+                    "error",
                   );
                 },
               });
@@ -5649,7 +5665,7 @@
           // Reset QR code to placeholder
           $(".qr-code img").attr(
             "src",
-            "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=otpauth://totp/Example:demo@example.com?secret=JBSWY3DPEHPK3PXP&issuer=Example"
+            "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=otpauth://totp/Example:demo@example.com?secret=JBSWY3DPEHPK3PXP&issuer=Example",
           );
           $(".qr-code p strong").text("JBSWY3DPEHPK3PXP");
         }
@@ -5657,7 +5673,7 @@
         function disable2FA() {
           if (
             confirm(
-              "Are you sure you want to disable two-factor authentication? This will make your account less secure."
+              "Are you sure you want to disable two-factor authentication? This will make your account less secure.",
             )
           ) {
             // API call to disable 2FA
@@ -5671,10 +5687,10 @@
               success: function (response) {
                 showNotification(
                   "Two-factor authentication disabled",
-                  "success"
+                  "success",
                 );
                 $("#enable2FABtn").html(
-                  '<i class="bi bi-shield-check me-2"></i>Enable Two-Factor Authentication'
+                  '<i class="bi bi-shield-check me-2"></i>Enable Two-Factor Authentication',
                 );
                 $("#enable2FABtn")
                   .removeClass("btn-outline-danger")
@@ -5710,7 +5726,7 @@
               // Update the button based on 2FA status
               if (response.isEnabled) {
                 $("#enable2FABtn").html(
-                  '<i class="bi bi-shield-check me-2"></i>Disable Two-Factor Authentication'
+                  '<i class="bi bi-shield-check me-2"></i>Disable Two-Factor Authentication',
                 );
                 $("#enable2FABtn")
                   .removeClass("btn-outline-primary")
@@ -5722,7 +5738,7 @@
                   });
               } else {
                 $("#enable2FABtn").html(
-                  '<i class="bi bi-shield-check me-2"></i>Enable Two-Factor Authentication'
+                  '<i class="bi bi-shield-check me-2"></i>Enable Two-Factor Authentication',
                 );
                 $("#enable2FABtn")
                   .removeClass("btn-outline-danger")
@@ -5785,7 +5801,7 @@
       $(document).on("click", ".btn-certificate-download", function () {
         if (
           !confirm(
-            "Warning! Sure you want to download? Click ok to continue or else click cancel."
+            "Warning! Sure you want to download? Click ok to continue or else click cancel.",
           )
         ) {
           return;
@@ -5840,7 +5856,7 @@
             $(downloadOverlay)
               .find("p")
               .text(
-                "Your document is being processed. This may take a moment."
+                "Your document is being processed. This may take a moment.",
               );
 
             return response.blob();

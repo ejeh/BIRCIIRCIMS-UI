@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -522,7 +522,9 @@
 
       /* Step transition animation */
       .step-content {
-        transition: opacity 0.3s ease, transform 0.3s ease;
+        transition:
+          opacity 0.3s ease,
+          transform 0.3s ease;
       }
 
       .step-content.d-none {
@@ -639,6 +641,49 @@
       .form-control.is-valid-existence {
         border-color: var(--primary-color);
       }
+      /* The wrapper controls the size and creates the positioning context */
+      .map-identity-container {
+        position: relative;
+        width: 100%;
+        max-width: 650px; /* Limits size on desktop */
+        margin: 0 auto;
+        display: block;
+      }
+
+      /* Ensure the image behaves well and stays responsive */
+      .map-outline-img {
+        width: 100%;
+        height: auto;
+        display: block;
+        /* Soften the map so it doesn't compete with the text */
+        opacity: 0.4;
+      }
+
+      /* The magic for centering text over the image */
+      .overlay-text {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+
+        /* Flexbox centering */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        text-align: center;
+        padding: 20px;
+        pointer-events: none; /* User can click through text to items behind it */
+      }
+
+      /* Optional: Mobile adjustments to keep text inside the map boundaries */
+      @media (max-width: 768px) {
+        .overlay-text .fs-3 {
+          font-size: 1.1rem !important; /* Scale down text on smaller screens */
+        }
+      }
     </style>
   </head>
 
@@ -654,10 +699,20 @@
             </a>
           </div>
 
-          <div class="sidebar-content">
-            <h2 class="fs-3 fw-bold mb-2">Benue State Integrated</h2>
-            <h2 class="fs-3 fw-bold mb-1">Citizenship and Resident Identity</h2>
-            <h2 class="fs-3 fw-bold mb-1">Registration Management System</h2>
+          <div class="map-identity-container">
+            <img
+              src="/assets/images/Benue-map.svg"
+              alt="Benue State Map Outline"
+              class="map-outline-img"
+            />
+
+            <div class="sidebar-content overlay-text">
+              <h2 class="fs-3 fw-bold mb-2">Benue State Integrated</h2>
+              <h2 class="fs-3 fw-bold mb-1">
+                Citizenship and Resident Identity
+              </h2>
+              <h2 class="fs-3 fw-bold mb-1">Registration Management System</h2>
+            </div>
           </div>
 
           <div class="mobile-buttons gap-3 mb-4 w-100">
@@ -823,7 +878,7 @@
               </div>
 
               <div id="step2" class="step-content d-none">
-                <div class="mb-3">
+                <!-- <div class="mb-3">
                   <label for="stateOfOrigin" class="form-label">State</label>
                   <select
                     id="stateOfOrigin"
@@ -831,6 +886,7 @@
                     class="form-control"
                     required
                     aria-describedby="stateHelp"
+                    aria-readonly="true"
                   >
                     <option value="">Select State</option>
                     <option value="abia">Abia</option>
@@ -871,6 +927,17 @@
                     <option value="zamfara">Zamfara</option>
                     <option value="abuja">Abuja (FCT)</option>
                   </select>
+                </div> -->
+
+                <div class="mb-3">
+                  <label for="stateOfOrigin" class="form-label">State</label>
+                  <input
+                    id="stateOfOrigin"
+                    name="stateOfOrigin"
+                    class="form-control"
+                    required
+                    readonly
+                  />
                 </div>
 
                 <div class="mb-3">
@@ -880,6 +947,7 @@
                     name="lgaOfOrigin"
                     class="form-control"
                     required
+                    readonly
                   />
                 </div>
 
@@ -1263,7 +1331,7 @@
           } else if (!passwordRegex.test(value)) {
             showError(
               inputId,
-              "Password must include uppercase, lowercase, number, and special character."
+              "Password must include uppercase, lowercase, number, and special character.",
             );
             return false;
           } else {
@@ -1302,7 +1370,7 @@
           } else if (!/^\d{11}$/.test(value)) {
             showNINError(
               inputId,
-              "NIN should contain only numbers and be exactly 11 digits long."
+              "NIN should contain only numbers and be exactly 11 digits long.",
             );
             return false;
           } else {
@@ -1333,7 +1401,7 @@
           // Clear previous error message and show loading
           clearError(inputId, true);
           $(statusElementId).html(
-            '<div class="checking-status"><i class="fas fa-spinner fa-spin"></i>Checking...</div>'
+            '<div class="checking-status"><i class="fas fa-spinner fa-spin"></i>Checking...</div>',
           );
 
           try {
@@ -1347,14 +1415,14 @@
             // Check if the field exists based on the backend response structure
             // The response structure is {fieldName: true/false} not {existing_fields: {fieldName: true/false}}
             if (response[fieldName] === true) {
-              const message = `This ${fieldName.toUpperCase()} already exists and cannot be used.`;
+              const message = `This ${fieldName.toUpperCase()} number already exists and cannot be used.`;
               showError(inputId, message, true);
               existenceStatus[fieldName] = true;
               updateNextButtonState(); // Update button state immediately
               return true; // Exists
             } else {
               $(statusElementId).html(
-                '<div class="existence-success"><i class="fas fa-check-circle"></i>Available</div>'
+                '<div class="existence-success"><i class="fas fa-check-circle"></i>Available</div>',
               );
               inputElement.classList.add("is-valid-existence");
               inputElement.classList.remove("is-invalid-existence");
@@ -1367,7 +1435,7 @@
             const errorMessage =
               error.responseJSON?.message || "Existence check failed.";
             $(statusElementId).html(
-              `<div class="text-warning"><i class="fas fa-exclamation-triangle"></i>${errorMessage}</div>`
+              `<div class="text-warning"><i class="fas fa-exclamation-triangle"></i>${errorMessage}</div>`,
             );
             existenceStatus[fieldName] = null;
             updateNextButtonState(); // Update button state immediately
@@ -1440,7 +1508,7 @@
               checkExistence(
                 "email",
                 $(this).val().trim(),
-                "#emailExistenceStatus"
+                "#emailExistenceStatus",
               );
             } else {
               $("#emailExistenceStatus").html("");
@@ -1465,7 +1533,7 @@
               checkExistence(
                 "phone",
                 $(this).val().trim(),
-                "#phoneExistenceStatus"
+                "#phoneExistenceStatus",
               );
             } else {
               $("#phoneExistenceStatus").html("");
@@ -1500,7 +1568,7 @@
             // First, run the internal NIN verification (as it populates fields)
             try {
               $("#ninStatus").html(
-                '<div class="checking-status"><i class="fas fa-spinner fa-spin"></i>Verifying NIN...</div>'
+                '<div class="checking-status"><i class="fas fa-spinner fa-spin"></i>Verifying NIN...</div>',
               );
 
               const response = await $.ajax({
@@ -1537,7 +1605,7 @@
                   // Set the value and trigger change to update LGA dropdown
                   $("#stateOfOrigin")
                     .val(formattedState)
-                    .trigger("change")
+                    // .trigger("change")
                     .prop("disabled", true);
 
                   // If you're using Bootstrap selectpicker
@@ -1553,18 +1621,18 @@
                 }
 
                 $("#ninStatus").html(
-                  '<div class="existence-success"><i class="fas fa-check-circle"></i>NIN Verified</div>'
+                  '<div class="existence-success"><i class="fas fa-check-circle"></i>NIN Verified</div>',
                 );
               } else {
                 $("#ninStatus").html(
-                  '<div class="existence-error"><i class="fas fa-exclamation-circle"></i>NIN not found/invalid</div>'
+                  '<div class="existence-error"><i class="fas fa-exclamation-circle"></i>NIN not found/invalid</div>',
                 );
               }
             } catch (error) {
               $("#ninStatus").html(
                 `<div class="existence-error"><i class="fas fa-exclamation-circle"></i>${
                   error.responseJSON?.message || "Verification failed"
-                }</div>`
+                }</div>`,
               );
             }
 
@@ -1585,7 +1653,7 @@
             Swal.fire(
               "Validation Error",
               "Please resolve the existing NIN, Email, or Phone errors before proceeding.",
-              "warning"
+              "warning",
             );
             return;
           }
@@ -1595,7 +1663,7 @@
             Swal.fire(
               "Validation Error",
               "Please wait for all existence checks to complete before proceeding.",
-              "warning"
+              "warning",
             );
             return;
           }
@@ -1677,7 +1745,7 @@
             Swal.fire(
               "Welcome",
               "Please check your email inbox or spam to activate your account. Click OK to continue.",
-              "success"
+              "success",
             ).then(() => {
               window.location.href = "../auth/login.html";
             });
@@ -1685,7 +1753,7 @@
             Swal.fire(
               "Oops...",
               error.responseJSON?.message || "An error occurred.",
-              "error"
+              "error",
             );
           } finally {
             $("#proceedButton").html("Proceed").attr("disabled", false);
@@ -2537,9 +2605,6 @@
         // Clear previous options
         lgaSelect.innerHTML =
           '<option value="">Select Local Government</option>';
-
-        console.log("Selected key:", selectedState);
-        console.log("LGAs:", nigerData[selectedState]);
 
         if (nigerData[selectedState]) {
           nigerData[selectedState].forEach((lga) => {

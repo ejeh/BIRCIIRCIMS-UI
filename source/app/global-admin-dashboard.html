@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -606,6 +606,13 @@
             </a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" href="#" data-page="auctioneer">
+              <i class="bi bi-award"></i>
+              Auctioneer Licence
+              <span class="badge bg-danger totalAuctioneerRequests">0</span>
+            </a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="#" data-page="transactions">
               <i class="bi bi-currency-dollar"></i>
               Transactions
@@ -623,12 +630,7 @@
               Role Management
             </a>
           </li>
-          <!-- <li class="nav-item">
-            <a class="nav-link" href="#" data-page="profile">
-              <i class="bi bi-person-circle"></i>
-              Profile
-            </a>
-          </li> -->
+
           <li class="nav-item">
             <a
               class="nav-link"
@@ -799,14 +801,14 @@
           </div>
           <div class="col-xl-3 col-md-6 mb-3">
             <div class="kpi-card warning">
-              <div class="kpi-value" id="pending">231</div>
+              <div class="kpi-value" id="pendingRequests">231</div>
               <div class="kpi-label">Pending Requests</div>
               <div class="kpi-icon"><i class="bi bi-clock-history"></i></div>
             </div>
           </div>
           <div class="col-xl-3 col-md-6 mb-3">
             <div class="kpi-card info">
-              <div class="kpi-value">₦2.4M</div>
+              <div class="kpi-value total-revenue">₦2.4M</div>
               <div class="kpi-label">Total Revenue</div>
               <div class="kpi-icon"><i class="bi bi-currency-dollar"></i></div>
             </div>
@@ -1108,7 +1110,7 @@
             <div class="col-md-3 mb-3">
               <div class="card">
                 <div class="card-body text-center">
-                  <h3 class="text-warning" id="pendingRequests">142</h3>
+                  <h3 class="text-warning" id="pendingIdCardRequests">142</h3>
                   <p class="mb-0">Pending</p>
                 </div>
               </div>
@@ -1296,10 +1298,12 @@
                     <th>S/N</th>
                     <th>ID</th>
                     <th>User</th>
-                    <th>State</th>
                     <th>LGA</th>
-                    <th>Status</th>
+                    <th>Village</th>
+                    <th>Kindred</th>
+                    <!-- <th>State</th> -->
                     <th>Request Time</th>
+                    <th>Status</th>
                     <th>IsProfileCompleted</th>
                     <th>ApprovedBy</th>
                     <th>Actions</th>
@@ -1328,6 +1332,133 @@
                   <span class="visually-hidden">Loading...</span>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Auctioneer Page -->
+      <div id="auctioneer-page" class="page-content d-none">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2 class="mb-0">Auctioneer Licence Requests</h2>
+          <div class="d-flex gap-2">
+            <button class="btn btn-primary" id="exportAuctioneerBtn">
+              <i class="bi bi-download me-2"></i>Export Report
+            </button>
+            <!-- Toggle buttons -->
+            <div class="btn-group" role="group">
+              <button
+                type="button"
+                class="btn btn-outline-primary active"
+                id="auctioneerChartsBtn"
+              >
+                <i class="bi bi-bar-chart me-1"></i>Charts & Summary
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-primary"
+                id="auctioneerTableBtn"
+              >
+                <i class="bi bi-table me-1"></i>Table View
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts and Summary View -->
+        <div id="auctioneer-charts-view">
+          <div class="row mb-4">
+            <div class="col-md-3 mb-3">
+              <div class="card">
+                <div class="card-body text-center">
+                  <h3 class="text-primary totalAuctioneerRequests">0</h3>
+                  <p class="mb-0">Total Requests</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 mb-3">
+              <div class="card">
+                <div class="card-body text-center">
+                  <h3 class="text-success" id="approvedAuctioneerRequests">
+                    0
+                  </h3>
+                  <p class="mb-0">Approved</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 mb-3">
+              <div class="card">
+                <div class="card-body text-center">
+                  <h3 class="text-warning" id="pendingAuctioneerRequests">0</h3>
+                  <p class="mb-0">Pending</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 mb-3">
+              <div class="card">
+                <div class="card-body text-center">
+                  <h3 class="text-danger" id="rejectedAuctioneerRequests">0</h3>
+                  <p class="mb-0">Rejected</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-4">
+            <div class="col-lg-6 mb-3">
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="mb-0">Request Trend</h5>
+                </div>
+                <div class="card-body">
+                  <div class="chart-container">
+                    <canvas id="auctioneerTrendChart"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 mb-3">
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="mb-0">Status Distribution</h5>
+                </div>
+                <div class="card-body">
+                  <div class="chart-container">
+                    <canvas id="auctioneerStatusChart"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Table View -->
+        <div id="auctioneer-table-view" class="d-none">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="mb-0">All Requests</h5>
+            </div>
+            <div class="card-body">
+              <table
+                id="auctioneerTable"
+                class="table table-striped table-hover dt-responsive w-100"
+              >
+                <thead>
+                  <tr>
+                    <th>S/N</th>
+                    <th>ID</th>
+                    <th>User</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Payment</th>
+                    <th>Request Date</th>
+                    <th>Approved By</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -2980,9 +3111,10 @@
                 </select>
               </div>
               <div class="mb-3">
-                <label for="requestActionReason" class="form-label"
-                  >Reason</label
-                >
+                <label for="requestActionReason" class="form-label">
+                  Reason
+                  <small class="text-muted">(Required if rejecting)</small>
+                </label>
                 <textarea
                   class="form-control"
                   id="requestActionReason"
@@ -3139,6 +3271,7 @@
       let transactionTrendChart, revenueStateChart;
       let growthComparisonChart, processingTimeChart, requestTypeChart;
       let roleDistributionChart;
+      let auctioneerTrendChart, auctioneerStatusChart;
 
       // Add this to your script to store the current date range
       let currentDashboardFilters = {
@@ -3234,11 +3367,11 @@
           $(this).toggleClass("active");
           $("body").attr(
             "data-theme",
-            $(this).hasClass("active") ? "dark" : "light"
+            $(this).hasClass("active") ? "dark" : "light",
           );
           localStorage.setItem(
             "theme",
-            $(this).hasClass("active") ? "dark" : "light"
+            $(this).hasClass("active") ? "dark" : "light",
           );
         });
 
@@ -3249,28 +3382,43 @@
           $("body").attr("data-theme", "dark");
         }
 
-        // // Request action form submission
-        // $("#submitRequestActionBtn").on("click", function () {
-
-        //   submitRequestAction();
-        // });
-
         $("#submitRequestActionBtn").on("click", function () {
           const action = $("#requestActionType").val(); // "approve" or "reject"
           const requestType = $("#requestActionModal").data("requestType");
           const reason = $("#requestActionReason").val();
 
+          // VALIDATION: Check if rejecting without a reason
+          if (action === "reject" && !reason) {
+            Swal.fire(
+              "Validation Error",
+              "Please provide a reason for rejection.",
+              "error",
+            );
+            return; // Stop execution here
+          }
+
           // Create appropriate warning message based on action
           const actionText = action === "approve" ? "approve" : "reject";
-          const requestTypeText =
-            requestType === "idcard" ? "ID Card" : "Certificate";
+
+          // UPDATED: Handle all request types specifically
+          let requestTypeText = "";
+          if (requestType === "idcard") {
+            requestTypeText = "ID Card";
+          } else if (requestType === "certificate") {
+            requestTypeText = "Certificate";
+          } else if (requestType === "auctioneer") {
+            requestTypeText = "Auctioneer Licence";
+          } else {
+            requestTypeText = "Request"; // Fallback
+          }
+
           let warningMessage = `Are you sure you want to ${actionText} this ${requestTypeText} request?`;
 
           // If rejecting and no reason is provided, warn about that too
-          if (action === "reject" && !reason) {
-            warningMessage +=
-              "\n\nNote: You haven't provided a reason for rejection. It's recommended to add one.";
-          }
+          // if (action === "reject" && !reason) {
+          //   warningMessage +=
+          //     "\n\nNote: You haven't provided a reason for rejection. It's recommended to add one.";
+          // }
 
           // Show confirmation modal
           $("#confirmActionMessage").text(warningMessage);
@@ -3278,7 +3426,6 @@
           $("#confirmActionModal").modal("show");
         });
 
-        // Handle confirmation button click
         $("#confirmActionBtn").on("click", function () {
           $("#confirmActionModal").modal("hide");
           submitRequestAction();
@@ -3290,7 +3437,7 @@
           const currentType = apiKeyInput.attr("type");
           apiKeyInput.attr(
             "type",
-            currentType === "password" ? "text" : "password"
+            currentType === "password" ? "text" : "password",
           );
           $(this).find("i").toggleClass("bi-eye bi-eye-slash");
         });
@@ -3330,7 +3477,7 @@
 
         // Profile form change tracking
         $(
-          "#editProfileFirstName, #editProfileLastName, #editProfileEmail, #editProfilePhone"
+          "#editProfileFirstName, #editProfileLastName, #editProfileEmail, #editProfilePhone",
         ).on("input change", function () {
           profileHasUnsavedChanges = true;
           saveProfileFormData();
@@ -3398,17 +3545,17 @@
           $("#profilePhotoImg").attr("src", user.passportPhoto);
 
           $("#currentUser").text(
-            `${user?.firstname} ${user?.lastname}` || "N/A"
+            `${user?.firstname} ${user?.lastname}` || "N/A",
           );
           $("#currentLGA").text(user?.lgaOfOrigin || "N/A");
           $("#lgaState").text(user?.stateOfOrigin?.toUpperCase() || "N/A");
           $("#profileName").text(user?.lastname || "N/A");
           $("#profileRole").text(
-            `${user?.role || "User"} - ${user?.lgaOfOrigin || ""} LGA`
+            `${user?.role || "User"} - ${user?.lgaOfOrigin || ""} LGA`,
           );
           $("#profileEmail").text(user?.email || "N/A");
           $("#profileFullName").text(
-            `${user?.firstname} ${user?.lastname}` || "N/A"
+            `${user?.firstname} ${user?.lastname}` || "N/A",
           );
           $("#profileEmailFull").text(user?.email || "N/A");
           $("#profilePhone").text(user?.phone || "N/A");
@@ -3416,10 +3563,12 @@
           $("#profileDateJoined").text(
             user?.created_at
               ? new Date(user?.created_at).toLocaleDateString()
-              : "N/A"
+              : "N/A",
           );
           $("#profileLastLogin").text(
-            user?.lastLogin ? new Date(user?.lastLogin).toLocaleString() : "N/A"
+            user?.lastLogin
+              ? new Date(user?.lastLogin).toLocaleString()
+              : "N/A",
           );
 
           // Pre-fill edit profile form
@@ -3435,7 +3584,7 @@
           console.error("Failed to fetch current user:", error);
           showNotification(
             "Unable to load user profile. Please refresh or log in again.",
-            "error"
+            "error",
           );
 
           // If server load fails, try to load from localStorage
@@ -3443,7 +3592,7 @@
           if (!hasLocalData) {
             showNotification(
               "No local data available. Please check your connection.",
-              "warning"
+              "warning",
             );
           }
         }
@@ -3478,7 +3627,7 @@
                   const percentComplete = (e.loaded / e.total) * 100;
                   $("#uploadProgress .progress-bar").css(
                     "width",
-                    percentComplete + "%"
+                    percentComplete + "%",
                   );
                 }
               });
@@ -3497,7 +3646,7 @@
           console.error("Upload failed:", xhr);
           showNotification(
             xhr.responseJSON?.message || "Failed to upload profile photo",
-            "error"
+            "error",
           );
         } finally {
           // Hide loader after completion
@@ -3534,7 +3683,7 @@
           success: function (response) {
             // ✅ Update UI with new data
             $("#currentUser").text(
-              `${response.firstname} ${response.lastname}` || firstname
+              `${response.firstname} ${response.lastname}` || firstname,
             );
             $("#currentUserEmail").text(response.email || email);
             $("#currentUserPhone").text(response.phone || phone);
@@ -3599,6 +3748,10 @@
           case "settings":
             // Settings page doesn't need special initialization
             break;
+
+          case "auctioneer":
+            initializeAuctioneerPage();
+            break;
         }
       }
 
@@ -3628,13 +3781,12 @@
           console.error("Failed to fetch current user:", error);
           showNotification(
             "Unable to load user profile. Please refresh or log in again.",
-            "error"
+            "error",
           );
         }
       }
 
       async function initializeDashboard() {
-        // Construct the query string from filters
         const queryParams = new URLSearchParams();
         if (currentDashboardFilters.startDate)
           queryParams.append("startDate", currentDashboardFilters.startDate);
@@ -3646,11 +3798,16 @@
           method: "GET",
           headers: { Authorization: `Bearer ${token}` },
           success: function (data) {
-            // --- Destroy old charts if they exist ---
+            // --- Destroy old charts ---
             if (registrationTrendChart) registrationTrendChart.destroy();
             if (requestStatusChart) requestStatusChart.destroy();
             if (topLGAChart) topLGAChart.destroy();
-            // --- Registration Trend ---
+
+            // --- Update Summary Cards (Optional) ---
+            // If you have a specific card for auctioneers:
+            // if(data.totals.auctioneers) $('#totalAuctioneers').text(data.totals.auctioneers);
+
+            // --- Registration Trend Chart (Unchanged) ---
             const ctx1 = document
               .getElementById("registrationTrendChart")
               .getContext("2d");
@@ -3689,7 +3846,8 @@
               },
             });
 
-            // --- Request Status ---
+            // --- Request Status Chart ---
+            // Data now automatically includes Auctioneers because of backend changes
             const ctx2 = document
               .getElementById("requestStatusChart")
               .getContext("2d");
@@ -3715,13 +3873,14 @@
               },
             });
 
+            // --- Render Recent Activity ---
             function renderRecentActivity(activityList) {
               const container = $(".activity-timeline");
               container.empty();
 
               if (!activityList || activityList.length === 0) {
                 container.append(
-                  '<div class="text-muted text-center">No recent activity</div>'
+                  '<div class="text-muted text-center">No recent activity</div>',
                 );
                 return;
               }
@@ -3729,14 +3888,18 @@
               activityList.forEach((item) => {
                 const timeAgo = timeSince(new Date(item.createdAt));
                 let actionText = "";
+
                 switch (item.type) {
                   case "certificate":
-                    actionText = `<strong>${
-                      item.name
-                    }</strong>'s certificate of origin is <span class="text-primary">${item.status.toLowerCase()}</span>`;
+                    actionText = `<strong>${item.name}</strong>'s certificate of origin is <span class="text-primary">${item.status.toLowerCase()}</span>`;
                     break;
                   case "idcard":
                     actionText = `<strong>${item.name}</strong> submitted an identity card request`;
+                    break;
+
+                  // NEW: Handle Auctioneer Activity
+                  case "auctioneer":
+                    actionText = `<strong>${item.name}</strong> submitted an auctioneer request (<span class="text-info">${item.status}</span>)`;
                     break;
 
                   case "transaction":
@@ -3747,24 +3910,21 @@
                       item.status === "success"
                         ? "text-success"
                         : item.status === "failed"
-                        ? "text-danger"
-                        : "text-warning";
-
+                          ? "text-danger"
+                          : "text-warning";
                     actionText = `<strong>Payment</strong> of ₦${amountInNaira} for ${item.paymentType} <span class="${badgeClass}">(${item.status})</span>`;
                     break;
+
                   case "user":
                     if (
-                      item.role === "global_admin" ||
-                      item.role === "support_admin" ||
-                      item.role === "kindred_head" ||
-                      item.role === "user"
+                      [
+                        "global_admin",
+                        "support_admin",
+                        "kindred_head",
+                        "user",
+                      ].includes(item.role)
                     ) {
-                      actionText = `<strong>${
-                        item.name
-                      }</strong> was assigned <span class="text-info">${item.role.replace(
-                        "_",
-                        " "
-                      )}</span> role`;
+                      actionText = `<strong>${item.name}</strong> was assigned <span class="text-info">${item.role.replace("_", " ")}</span> role`;
                     } else {
                       actionText = `<strong>${item.name}</strong> registered as a new user`;
                     }
@@ -3773,17 +3933,15 @@
                     actionText = `${item.name} performed an action`;
                 }
 
-                const activityItem = `
-                        <div class="activity-item">
-                            <div class="activity-time">${timeAgo}</div>
-                            <div class="activity-content">${actionText}</div>
-                        </div>
-                        `;
-                container.append(activityItem);
+                container.append(`
+                  <div class="activity-item">
+                      <div class="activity-time">${timeAgo}</div>
+                      <div class="activity-content">${actionText}</div>
+                  </div>
+                `);
               });
             }
 
-            // Helper to convert date → “2 hours ago”
             function timeSince(date) {
               const seconds = Math.floor((new Date() - date) / 1000);
               const intervals = [
@@ -3793,7 +3951,6 @@
                 { label: "hour", seconds: 3600 },
                 { label: "minute", seconds: 60 },
               ];
-
               for (const i of intervals) {
                 const count = Math.floor(seconds / i.seconds);
                 if (count >= 1)
@@ -3801,9 +3958,10 @@
               }
               return "just now";
             }
+
             renderRecentActivity(data.recentActivities);
 
-            // --- Top LGAs ---
+            // --- Top LGAs Chart (Unchanged) ---
             const ctx3 = document
               .getElementById("topLGAChart")
               .getContext("2d");
@@ -3860,7 +4018,7 @@
             // If the server responds with an error, throw it to be caught by the catch block
             const errorData = await response.json();
             throw new Error(
-              errorData.message || `HTTP error! status: ${response.status}`
+              errorData.message || `HTTP error! status: ${response.status}`,
             );
           }
 
@@ -3890,13 +4048,13 @@
 
           showNotification(
             "Dashboard report exported successfully!",
-            "success"
+            "success",
           );
         } catch (error) {
           console.error("Error exporting dashboard report:", error);
           showNotification(
             `Failed to export report: ${error.message}`,
-            "error"
+            "error",
           );
         }
       }
@@ -4050,20 +4208,20 @@
                         //     <i class="bi bi-pencil"></i>
                         // </button>
                         return `
-            <div class="btn-group">
-                <button class="btn btn-sm btn-outline-warning change-role-btn"
-                        data-id="${row._id}" data-user="${row.firstname}"
-                        data-bs-toggle="modal" data-bs-target="#changeRoleModal"
-                        title="Change User Role">
-                    <i class="bi bi-person-badge"></i>
-                </button>
-                <button class="btn btn-sm btn-outline-danger deactivate-user-btn" 
-                        data-id="${row._id}"
-                        title="Deactivate User">
-                    <i class="bi bi-person-x"></i>
-                </button>
-            </div>
-        `;
+                  <div class="btn-group">
+                      <button class="btn btn-sm btn-outline-warning change-role-btn"
+                              data-id="${row._id}" data-user="${row.firstname}"
+                              data-bs-toggle="modal" data-bs-target="#changeRoleModal"
+                              title="Change User Role">
+                          <i class="bi bi-person-badge"></i>
+                      </button>
+                      <button class="btn btn-sm btn-outline-danger deactivate-user-btn"
+                              data-id="${row._id}"
+                              title="Deactivate User">
+                          <i class="bi bi-person-x"></i>
+                      </button>
+                  </div>
+              `;
                       },
                     },
                   ],
@@ -4258,14 +4416,14 @@
             showNotification(
               "Updated!",
               "User details updated successfully.",
-              "success"
+              "success",
             );
           },
           error: function (xhr) {
             showNotification(
               "Error",
               xhr.responseText || "Failed to update user",
-              "error"
+              "error",
             );
           },
         });
@@ -4290,7 +4448,7 @@
 
         // Add a default option if needed
         $roleSelect.append(
-          '<option value="" disabled selected>Select a role</option>'
+          '<option value="" disabled selected>Select a role</option>',
         );
 
         // Add each role as an option
@@ -4299,18 +4457,13 @@
           // if (role.value === 'super_admin') return;
 
           $roleSelect.append(
-            `<option value="${role.value}">${role.label}</option>`
+            `<option value="${role.value}">${role.label}</option>`,
           );
         });
       }
 
       // 🔹 Open Change Role Modal
-      // $(document).on("click", ".change-role-btn", function () {
-      //   const userId = $(this).data("id");
-      //   const userName = $(this).data("user");
-      //   $("#changeRoleUserId").val(userId);
-      //   $("#changeRoleUser").val(userName);
-      // });
+
       $(document).on("click", ".change-role-btn", function () {
         const userId = $(this).data("id");
         const userName = $(this).data("user");
@@ -4328,7 +4481,7 @@
             showNotification(
               "Error",
               xhr.responseText || "Failed to fetch available roles",
-              "error"
+              "error",
             );
 
             // Fallback to hardcoded roles if API fails
@@ -4360,13 +4513,13 @@
             showNotification(
               "Success",
               "User role updated successfully",
-              "success"
+              "success",
             );
           },
           error: function (xhr) {
             showNotification(
               xhr.responseJSON.message || "Failed to change role",
-              "error"
+              "error",
             );
           },
         });
@@ -4397,7 +4550,7 @@
               error: function (xhr) {
                 showNotification(
                   xhr.responseText || "Failed to update user status",
-                  "error"
+                  "error",
                 );
               },
             });
@@ -4412,7 +4565,7 @@
 
         // Convert to array and map over them to create new Tooltip instances
         const tooltipList = [...tooltipTriggerList].map(
-          (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
+          (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl),
         );
       }
 
@@ -4421,6 +4574,7 @@
         initializeTooltips();
         initializeUsersPage();
         initializeIdCardsPage();
+        initializeAuctioneerPage();
       });
 
       document.addEventListener("DOMContentLoaded", function () {
@@ -4428,7 +4582,7 @@
         const idcardsChartsBtn = document.getElementById("idcardsChartsBtn");
         const idcardsTableBtn = document.getElementById("idcardsTableBtn");
         const idcardsChartsView = document.getElementById(
-          "idcards-charts-view"
+          "idcards-charts-view",
         );
         const idcardsTableView = document.getElementById("idcards-table-view");
 
@@ -4457,6 +4611,30 @@
         });
       });
 
+      document.addEventListener("DOMContentLoaded", function () {
+        // Toggle functionality for Auctioneer page
+        const auctioneerChartsBtn = document.getElementById(
+          "auctioneerChartsBtn",
+        );
+        const auctioneerTableBtn =
+          document.getElementById("auctioneerTableBtn");
+
+        auctioneerChartsBtn.addEventListener("click", function () {
+          $("#auctioneer-charts-view").removeClass("d-none");
+          $("#auctioneer-table-view").addClass("d-none");
+          auctioneerChartsBtn.classList.add("active");
+          auctioneerTableBtn.classList.remove("active");
+          initializeAuctioneerPage(); // Refresh charts
+        });
+
+        auctioneerTableBtn.addEventListener("click", function () {
+          $("#auctioneer-charts-view").addClass("d-none");
+          $("#auctioneer-table-view").removeClass("d-none");
+          auctioneerChartsBtn.classList.remove("active");
+          auctioneerTableBtn.classList.add("active");
+          initializeAuctioneerPage(); // Refresh table
+        });
+      });
       async function loadPDFJ(url, container) {
         let pdfDoc = null;
         let canvas = null;
@@ -4576,48 +4754,48 @@
               .filter((doc) => response[doc.key]); // Check if document exists
 
             let modalContent = `
-              <div class="container-fluid">
-                  <div class="row mb-3">
-                      <div class="col-md-3 text-center">
-                          <img 
-                            src="${
-                              response.passportPhoto ||
-                              "/assets/images/avatar.jpeg"
-                            }" 
-                            alt="Passport Photo" 
-                            class="img-fluid rounded shadow-sm profile-photo"
-                            style="max-height: 150px;"
-                            crossOrigin="anonymous"
-                          >
-                      </div>
-                      <div class="col-md-9">
-                          <h5 class="fw-bold mb-2">${response.firstname} ${
-              response.lastname
-            }</h5>
-                          <p class="mb-1"><strong>Phone:</strong> ${
-                            response.phone
-                          }</p>
-                          <p class="mb-1"><strong>Email:</strong> ${
-                            response.email
-                          }</p>
-                          <p class="mb-1"><strong>Status:</strong> <span class="badge bg-info">${
-                            response.status
-                          }</span></p>
-                          <p><strong>State:</strong> ${
-                            response.userId?.stateOfOrigin
-                          }</p>
-                          <p><strong>LGA:</strong> 
-                          ${response.userId?.lgaOfOrigin}
-                          </p>
-                          <p><strong>isProfileCompleted:</strong> ${
-                            response.userId?.isProfileCompleted
-                          }</p>
-                      </div>
-                  </div>
+                    <div class="container-fluid">
+                        <div class="row mb-3">
+                            <div class="col-md-3 text-center">
+                                <img
+                                  src="${
+                                    response.passportPhoto ||
+                                    "/assets/images/avatar.jpeg"
+                                  }"
+                                  alt="Passport Photo"
+                                  class="img-fluid rounded shadow-sm profile-photo"
+                                  style="max-height: 150px;"
+                                  crossOrigin="anonymous"
+                                >
+                            </div>
+                            <div class="col-md-9">
+                                <h5 class="fw-bold mb-2">${response.firstname} ${
+                                  response.lastname
+                                }</h5>
+                                <p class="mb-1"><strong>Phone:</strong> ${
+                                  response.phone
+                                }</p>
+                                <p class="mb-1"><strong>Email:</strong> ${
+                                  response.email
+                                }</p>
+                                <p class="mb-1"><strong>Status:</strong> <span class="badge bg-info">${
+                                  response.status
+                                }</span></p>
+                                <p><strong>State:</strong> ${
+                                  response.userId?.stateOfOrigin
+                                }</p>
+                                <p><strong>LGA:</strong>
+                                ${response.userId?.lgaOfOrigin}
+                                </p>
+                                <p><strong>isProfileCompleted:</strong> ${
+                                  response.userId?.isProfileCompleted
+                                }</p>
+                            </div>
+                        </div>
 
-                  <hr class="my-3">
-                  <h6 class="text-primary">Uploaded Documents</h6>
-          `;
+                        <hr class="my-3">
+                        <h6 class="text-primary">Uploaded Documents</h6>
+                `;
 
             if (validDocuments.length === 0) {
               modalContent += `<p class="text-muted">No documents uploaded.</p>`;
@@ -4628,19 +4806,19 @@
               const fileUrl = `${BACKEND_URL}/idcard/${requestId}/document/${doc.key}`;
 
               modalContent += `
-                  <div class="card my-3 shadow-sm">
-                      <div class="card-header bg-light fw-semibold">
-                          ${doc.title}
-                      </div>
-                      <div class="card-body">
-                          <div id="pdf-viewer-container-${index}" style="width:100%; height:400px;" class="pdf-container"></div>
-                          <div class="text-end mt-2">
-                             <button class="btn btn-sm btn-outline-primary me-2" onclick="window.open('${fileUrl}', '_blank')">Open in New Tab</button>
-                             <button class="btn btn-sm btn-outline-secondary" data-doc-index="${index}" data-url="${fileUrl}" onclick="downloadPDF(this)">Download</button>
-                          </div>
-                      </div>
-                  </div>
-              `;
+                        <div class="card my-3 shadow-sm">
+                            <div class="card-header bg-light fw-semibold">
+                                ${doc.title}
+                            </div>
+                            <div class="card-body">
+                                <div id="pdf-viewer-container-${index}" style="width:100%; height:400px;" class="pdf-container"></div>
+                                <div class="text-end mt-2">
+                                   <button class="btn btn-sm btn-outline-primary me-2" onclick="window.open('${fileUrl}', '_blank')">Open in New Tab</button>
+                                   <button class="btn btn-sm btn-outline-secondary" data-doc-index="${index}" data-url="${fileUrl}" onclick="downloadPDF(this)">Download</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
             });
 
             modalContent += `</div>`;
@@ -4651,16 +4829,16 @@
             validDocuments.forEach((doc, index) => {
               const fileUrl = `${BACKEND_URL}/idcard/${requestId}/document/${doc.key}`;
               const container = document.getElementById(
-                `pdf-viewer-container-${index}`
+                `pdf-viewer-container-${index}`,
               );
               // Show loader while fetching
               $(`#pdf-viewer-container-${index}`).html(`
-                  <div class="d-flex justify-content-center align-items-center h-100">
-                      <div class="spinner-border text-primary" role="status">
-                          <span class="visually-hidden">Loading...</span>
-                      </div>
-                  </div>
-              `);
+                        <div class="d-flex justify-content-center align-items-center h-100">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    `);
 
               // Fetch document with authorization
               fetch(fileUrl, {
@@ -4688,20 +4866,20 @@
                   } else {
                     // Handle unknown or missing content type
                     throw new Error(
-                      `Unsupported file type: ${contentType || "Unknown"}`
+                      `Unsupported file type: ${contentType || "Unknown"}`,
                     );
                   }
                 })
                 .catch((err) => {
                   console.error(`Error loading PDF [${doc.key}]:`, err);
                   $(`#pdf-viewer-container-${index}`).html(`
-                      <div class="alert alert-danger">
-                          Failed to load document: ${err.message}
-                          <div class="mt-2">
-                              <a href="${fileUrl}" target="_blank" class="btn btn-sm btn-primary">Open in New Tab</a>
-                          </div>
-                      </div>
-                  `);
+                            <div class="alert alert-danger">
+                                Failed to load document: ${err.message}
+                                <div class="mt-2">
+                                    <a href="${fileUrl}" target="_blank" class="btn btn-sm btn-primary">Open in New Tab</a>
+                                </div>
+                            </div>
+                        `);
                 });
             });
           },
@@ -4751,8 +4929,8 @@
                   approvedBy: req.approvedBy
                     ? `${req.approvedBy?.firstname} ${req.approvedBy?.lastname}`
                     : req.status === "Rejected"
-                    ? "Rejected by Admin"
-                    : "Not yet approved",
+                      ? "Rejected by Admin"
+                      : "Not yet approved",
 
                   isProfileCompleted: req.userId?.isProfileCompleted ?? false,
 
@@ -4815,19 +4993,19 @@
                         // Show action buttons only for pending requests
                         if (row.status === "Pending") {
                           actionButtons = `
-        <button class="btn btn-sm btn-outline-success approve-request-btn" 
-                data-id="${row._id}" data-type="idcard" 
-                data-bs-toggle="modal" data-bs-target="#requestActionModal"
-                title="Approve Request">
-          <i class="bi bi-check-circle"></i>
-        </button>
-        <button class="btn btn-sm btn-outline-danger reject-request-btn" 
-                data-id="${row._id}" data-type="idcard" 
-                data-bs-toggle="modal" data-bs-target="#requestActionModal"
-                title="Reject Request">
-          <i class="bi bi-x-circle"></i>
-        </button>
-      `;
+              <button class="btn btn-sm btn-outline-success approve-request-btn"
+                      data-id="${row._id}" data-type="idcard"
+                      data-bs-toggle="modal" data-bs-target="#requestActionModal"
+                      title="Approve Request">
+                <i class="bi bi-check-circle"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-danger reject-request-btn"
+                      data-id="${row._id}" data-type="idcard"
+                      data-bs-toggle="modal" data-bs-target="#requestActionModal"
+                      title="Reject Request">
+                <i class="bi bi-x-circle"></i>
+              </button>
+            `;
                         }
 
                         // ✅ Show download button only if: Approved, Paid, and Profile Completed
@@ -4837,12 +5015,12 @@
                           row.isProfileCompleted === true
                         ) {
                           downloadButton = `
-        <button class="btn btn-sm btn-outline-danger btn-idcard-download" 
-                data-id="${row._id}"
-                title="Download ID Card ">
-          <i class="bi bi-download"></i>
-        </button>
-      `;
+              <button class="btn btn-sm btn-outline-danger btn-idcard-download"
+                      data-id="${row._id}"
+                      title="Download ID Card ">
+                <i class="bi bi-download"></i>
+              </button>
+            `;
                         }
 
                         // Optional: Show a disabled version if payment is pending
@@ -4853,26 +5031,26 @@
                         ) {
                           // Note: The 'disabled' button already had the title for the tooltip
                           downloadButton = `
-        <button class="btn btn-sm btn-outline-secondary" disabled 
-                title="Payment pending. Cannot download.">
-          <i class="bi bi-download"></i>
-        </button>
-      `;
+              <button class="btn btn-sm btn-outline-secondary" disabled
+                      title="Payment pending. Cannot download.">
+                <i class="bi bi-download"></i>
+              </button>
+            `;
                         }
 
                         return `
-        <div class="btn-group" >
-          <button class="btn btn-sm btn-outline-primary btn-card-view" 
-                  data-id="${row._id}"
-                  title="View Details"
-                  data-bs-toggle="tooltip"
-                  >
-            <i class="bi bi-eye"></i>
-          </button>
-          ${actionButtons}
-          ${downloadButton}
-        </div>
-      `;
+              <div class="btn-group" >
+                <button class="btn btn-sm btn-outline-primary btn-card-view"
+                        data-id="${row._id}"
+                        title="View Details"
+                        data-bs-toggle="tooltip"
+                        >
+                  <i class="bi bi-eye"></i>
+                </button>
+                ${actionButtons}
+                ${downloadButton}
+              </div>
+            `;
                       },
                     },
                   ],
@@ -4890,7 +5068,7 @@
               error: function (xhr) {
                 console.error(
                   "Failed to fetch ID card requests:",
-                  xhr.responseJSON.message
+                  xhr.responseJSON.message,
                 );
               },
             });
@@ -4927,7 +5105,7 @@
                       {
                         month: "short",
                         year: "numeric",
-                      }
+                      },
                     );
                     monthlyTrend[month] = (monthlyTrend[month] || 0) + 1;
                   }
@@ -4945,7 +5123,7 @@
               error: function (xhr) {
                 console.error(
                   "Failed to fetch ID card requests:",
-                  xhr.responseText
+                  xhr.responseText,
                 );
               },
             });
@@ -4953,6 +5131,370 @@
             console.error("Unexpected error:", err);
           }
         }
+      }
+
+      // ========================================================
+      // 1. GLOBAL STATE & UPDATE FUNCTION
+      // ========================================================
+
+      let pendingIdCardCount = 0;
+      let pendingCertCount = 0;
+      let pendingAuctioneerCount = 0;
+
+      // This function calculates the total and updates the main card
+      function updateTotalPendingRequests() {
+        const totalPending =
+          pendingIdCardCount + pendingCertCount + pendingAuctioneerCount;
+        $("#pendingRequests").text(totalPending);
+      }
+
+      async function initializeAuctioneerPage() {
+        // 1. FETCH DATA
+        // We use the Global Admin endpoint provided in your backend controller
+        const response = await $.ajax({
+          url: `${BACKEND_URL}/auctioneer`,
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const auctioneerData = Array.isArray(response) ? response : [];
+        console.log("auctioneerData", auctioneerData);
+
+        // 2. CALCULATE STATS
+        const total = auctioneerData.length;
+        const approved = auctioneerData.filter(
+          (r) => r.status === "Approved",
+        ).length;
+        const pending = auctioneerData.filter(
+          (r) => r.status === "Pending",
+        ).length;
+        const rejected = auctioneerData.filter(
+          (r) => r.status === "Rejected",
+        ).length;
+
+        // Update Sidebar Badge
+        $(".totalAuctioneerRequests").text(total);
+
+        // Update Summary Cards
+        $("#approvedAuctioneerRequests").text(approved);
+        $("#pendingAuctioneerRequests").text(pending);
+        $("#rejectedAuctioneerRequests").text(rejected);
+
+        // === UPDATE GLOBAL SUM ===
+        pendingAuctioneerCount = pending;
+        updateTotalPendingRequests();
+
+        // 3. INITIALIZE TABLE (If visible)
+        if (!$("#auctioneer-table-view").hasClass("d-none")) {
+          if ($.fn.DataTable.isDataTable("#auctioneerTable")) {
+            $("#auctioneerTable").DataTable().destroy();
+          }
+
+          $("#auctioneerTable").DataTable({
+            data: auctioneerData,
+            columns: [
+              {
+                title: "S/N",
+                data: null,
+                orderable: false,
+                render: (data, type, row, meta) =>
+                  meta.row + meta.settings._iDisplayStart + 1,
+              },
+              { data: "_id", visible: false },
+              {
+                data: null,
+                render: (data) =>
+                  data.fullname ||
+                  `${data.userId.firstname || ""} ${data.userId.lastname || ""}`,
+              },
+              { data: "phone", defaultContent: "N/A" },
+              { data: "email", defaultContent: "N/A" },
+              {
+                data: "status",
+                render: (data) => {
+                  let badge = "bg-warning";
+                  if (data === "Approved") badge = "bg-success";
+                  if (data === "Rejected") badge = "bg-danger";
+                  return `<span class="badge ${badge}">${data}</span>`;
+                },
+              },
+              {
+                data: "paymentStatus",
+                render: (data) => {
+                  let badge = "bg-warning";
+                  if (data === "paid") badge = "bg-success";
+                  return `<span class="badge ${badge}">${data || "Pending"}</span>`;
+                },
+              },
+              {
+                data: "created_at",
+                render: (data) => new Date(data).toLocaleDateString(),
+              },
+              {
+                data: null,
+                render: function (data, type, row) {
+                  if (row.approvedBy && row.approvedBy.userId) {
+                    return `${row.approvedBy.userId.firstname || ""} ${row.approvedBy.userId.lastname || ""}`;
+                  }
+                  return "N/A";
+                },
+              },
+              {
+                data: null,
+                render: function (data, type, row) {
+                  let buttons = `
+                          <button class="btn btn-sm btn-outline-primary btn-auctioneer-view" data-id="${row._id}" title="View Details">
+                            <i class="bi bi-eye"></i>
+                          </button>
+                        `;
+
+                  // Approve/Reject Buttons
+                  if (row.status === "Pending") {
+                    buttons += `
+                            <button class="btn btn-sm btn-outline-success approve-request-btn" data-id="${row._id}" data-type="auctioneer" title="Approve"
+                             data-bs-toggle="modal" data-bs-target="#requestActionModal">
+                              <i class="bi bi-check-circle"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger reject-request-btn" data-id="${row._id}" data-type="auctioneer" title="Reject"
+                             data-bs-toggle="modal" data-bs-target="#requestActionModal">
+                              <i class="bi bi-x-circle"></i>
+                            </button>
+                          `;
+                  }
+
+                  // Download Button
+                  if (
+                    row.status === "Approved" &&
+                    row.paymentStatus === "paid"
+                  ) {
+                    buttons += `
+                            <button class="btn btn-sm btn-outline-danger btn-auctioneer-download" data-id="${row._id}" title="Download">
+                              <i class="bi bi-download"></i>
+                            </button>
+                          `;
+                  }
+
+                  return `<div class="btn-group">${buttons}</div>`;
+                },
+              },
+            ],
+            responsive: true,
+          });
+
+          // View Button Handler
+          $("#auctioneerTable")
+            .off("click", ".btn-auctioneer-view")
+            .on("click", ".btn-auctioneer-view", function () {
+              handleAuctioneerView($(this).data("id"));
+            });
+        }
+
+        // 4. INITIALIZE CHARTS (If visible)
+        if (!$("#auctioneer-charts-view").hasClass("d-none")) {
+          // Destroy previous charts
+          if (auctioneerTrendChart) auctioneerTrendChart.destroy();
+          if (auctioneerStatusChart) auctioneerStatusChart.destroy();
+
+          // Process Trend Data
+          const trendData = {};
+          auctioneerData.forEach((r) => {
+            const month = new Date(r.created_at).toLocaleString("default", {
+              month: "short",
+              year: "numeric",
+            });
+            trendData[month] = (trendData[month] || 0) + 1;
+          });
+
+          // Trend Chart
+          const ctx1 = document
+            .getElementById("auctioneerTrendChart")
+            .getContext("2d");
+          auctioneerTrendChart = new Chart(ctx1, {
+            type: "line",
+            data: {
+              labels: Object.keys(trendData),
+              datasets: [
+                {
+                  label: "Requests",
+                  data: Object.values(trendData),
+                  borderColor: "#8b5cf6",
+                  backgroundColor: "rgba(139, 92, 246, 0.1)",
+                  tension: 0.4,
+                  fill: true,
+                },
+              ],
+            },
+            options: { responsive: true, maintainAspectRatio: false },
+          });
+
+          // Status Chart
+          const ctx2 = document
+            .getElementById("auctioneerStatusChart")
+            .getContext("2d");
+          auctioneerStatusChart = new Chart(ctx2, {
+            type: "doughnut",
+            data: {
+              labels: ["Approved", "Pending", "Rejected"],
+              datasets: [
+                {
+                  data: [approved, pending, rejected],
+                  backgroundColor: ["#10b981", "#f59e0b", "#ef4444"],
+                },
+              ],
+            },
+            options: { responsive: true, maintainAspectRatio: false },
+          });
+        }
+      }
+
+      function handleAuctioneerView(requestId) {
+        const apiHeaders = {
+          Authorization: `Bearer ${token}`,
+        };
+
+        $.ajax({
+          // Using the convention established in handleView for the endpoint
+          url: `${BACKEND_URL}/auctioneer/${requestId}/request`,
+          method: "GET",
+          headers: apiHeaders,
+          success: function (response) {
+            // Define documents specific to Auctioneer (Tax Clearance)
+            const docTypes = ["taxClearance"];
+            const documentTitles = ["Tax Clearance Document"];
+
+            // Filter documents that actually exist in response
+            const validDocuments = docTypes
+              .map((key, index) => ({ key, title: documentTitles[index] }))
+              .filter((doc) => response[doc.key]);
+
+            // Construct User Name safely
+            const userName =
+              response.name ||
+              `${response.firstname || ""} ${response.lastname || ""}`.trim() ||
+              "Unknown User";
+
+            let modalContent = `
+              <div class="container-fluid">
+                <div class="row mb-3">
+                  <div class="col-md-3 text-center">
+                    <img
+                      src="${response.userId?.passportPhoto || "/assets/images/avatar.jpeg"}"
+                      alt="Passport Photo"
+                      class="img-fluid rounded shadow-sm profile-photo"
+                      style="max-height: 150px;"
+                      crossOrigin="anonymous"
+                    >
+                  </div>
+                  <div class="col-md-9">
+                    <h5 class="fw-bold mb-2">${userName}</h5>
+                    <p class="mb-1"><strong>Phone:</strong> ${response.phone || "N/A"}</p>
+                    <p class="mb-1"><strong>Email:</strong> ${response.email || "N/A"}</p>
+                    <p class="mb-1"><strong>Address:</strong> ${response.address || "N/A"}</p>
+                    <p class="mb-1">
+                      <strong>Status:</strong>
+                      <span class="badge bg-${response.status === "Approved" ? "success" : "warning"}">
+                        ${response.status || "Pending"}
+                      </span>
+                    </p>
+                    <p><strong>Payment Status:</strong> ${response.paymentStatus || "Pending"}</p>
+                  </div>
+                </div>
+
+                <hr class="my-3">
+                <h6 class="text-primary">Uploaded Documents</h6>
+            `;
+
+            if (validDocuments.length === 0) {
+              modalContent += `<p class="text-muted">No documents uploaded.</p>`;
+            }
+
+            // Generate HTML for each existing document
+            validDocuments.forEach((doc, index) => {
+              const fileUrl = `${BACKEND_URL}/auctioneer/${requestId}/document/${doc.key}`;
+
+              modalContent += `
+                <div class="card my-3 shadow-sm">
+                  <div class="card-header bg-light fw-semibold">
+                    ${doc.title}
+                  </div>
+                  <div class="card-body p-0">
+                    <div id="viewer-container-${index}" style="width:100%; max-height:75vh; overflow:auto;" class="border bg-light p-2"></div>
+                    <div class="p-2 text-end">
+                       <button class="btn btn-sm btn-outline-primary me-2" onclick="window.open('${fileUrl}', '_blank')">Open in New Tab</button>
+                       <button class="btn btn-sm btn-outline-secondary" data-doc-index="${index}" data-url="${fileUrl}" onclick="downloadFile(this)">Download</button>
+                    </div>
+                  </div>
+                </div>
+              `;
+            });
+
+            modalContent += `</div>`;
+
+            // Update the generic view modal title and content
+            $("#viewModal .modal-title").text(
+              "Auctioneer Licence Request Details",
+            );
+            $("#viewModal .modal-body").html(modalContent);
+            $("#viewModal").modal("show");
+
+            // Load documents with authorization and type-checking
+            validDocuments.forEach((doc, index) => {
+              const fileUrl = `${BACKEND_URL}/auctioneer/${requestId}/document/${doc.key}`;
+              const container = document.getElementById(
+                `viewer-container-${index}`,
+              );
+
+              // Show loader
+              container.innerHTML = `
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              `;
+
+              // Fetch document with authorization
+              fetch(fileUrl, {
+                headers: {
+                  Authorization: apiHeaders.Authorization,
+                },
+              })
+                .then((res) => {
+                  if (!res.ok) throw new Error("Failed to fetch document");
+
+                  // Get content type to determine how to render
+                  const contentType = res.headers.get("Content-Type");
+                  return res.blob().then((blob) => ({ blob, contentType }));
+                })
+                .then(({ blob, contentType }) => {
+                  const blobUrl = URL.createObjectURL(blob);
+
+                  if (contentType === "application/pdf") {
+                    loadPDFJ(blobUrl, container);
+                  } else if (contentType && contentType.startsWith("image/")) {
+                    loadImage(blobUrl, container);
+                  } else {
+                    throw new Error(
+                      `Unsupported file type: ${contentType || "Unknown"}`,
+                    );
+                  }
+                })
+                .catch((err) => {
+                  console.error(`Error loading document [${doc.key}]:`, err);
+                  container.innerHTML = `
+                    <div class="alert alert-danger m-2">
+                      Failed to load document: ${err.message}
+                      <div class="mt-2">
+                        <a href="${fileUrl}" target="_blank" class="btn btn-sm btn-primary">Try Opening in New Tab</a>
+                      </div>
+                    </div>
+                  `;
+                });
+            });
+          },
+          error: function (error) {
+            console.error("Error fetching auctioneer request details:", error);
+            showNotification("Failed to fetch request details.", "error");
+          },
+        });
       }
 
       // Add this function to render ID card charts
@@ -5022,7 +5564,7 @@
           },
         });
       }
-      // 🔹 Approve / Reject ID Card Request
+      // 🔹 Approve / Reject Request
       $(document).on(
         "click",
         ".approve-request-btn, .reject-request-btn",
@@ -5036,7 +5578,7 @@
           $("#requestActionType").val(action);
           $("#requestActionModal").data("requestId", requestId);
           $("#requestActionModal").data("requestType", requestType);
-        }
+        },
       );
 
       function submitRequestAction() {
@@ -5051,11 +5593,15 @@
         }
 
         // Determine endpoint based on request type
+        // Determine endpoint based on request type
         let endpoint = "";
         if (requestType === "idcard") {
           endpoint = `${BACKEND_URL}/idcard/${requestId}/${action}`;
         } else if (requestType === "certificate") {
           endpoint = `${BACKEND_URL}/indigene/certificate/${requestId}/${action}`;
+        } else if (requestType === "auctioneer") {
+          // NEW: Add Auctioneer Endpoint
+          endpoint = `${BACKEND_URL}/auctioneer/${requestId}/${action}`;
         } else {
           showNotification("Unknown request type.", "error");
           return;
@@ -5089,7 +5635,7 @@
 
             initializeCertificatesPage();
 
-            initializeIdCardsPage();
+            initializeAuctioneerPage();
 
             // Show success message
             showNotification(`Request ${action}d successfully`, "success");
@@ -5097,7 +5643,7 @@
           error: function (xhr) {
             showNotification(
               xhr.responseJSON?.message || `Failed to ${action} request.`,
-              "error"
+              "error",
             );
           },
           complete: function () {
@@ -5181,16 +5727,16 @@
       document.addEventListener("DOMContentLoaded", function () {
         // Toggle functionality for Certificates page
         const certificatesChartsBtn = document.getElementById(
-          "certificatesChartsBtn"
+          "certificatesChartsBtn",
         );
         const certificatesTableBtn = document.getElementById(
-          "certificatesTableBtn"
+          "certificatesTableBtn",
         );
         const certificatesChartsView = document.getElementById(
-          "certificates-charts-view"
+          "certificates-charts-view",
         );
         const certificatesTableView = document.getElementById(
-          "certificates-table-view"
+          "certificates-table-view",
         );
 
         certificatesChartsBtn.addEventListener("click", function () {
@@ -5235,38 +5781,38 @@
               .filter((doc) => response[doc.key]);
 
             let modalContent = `
-        <div class="container-fluid">
-          <div class="row mb-3">
-            <div class="col-md-3 text-center">
-              <img 
-                src="${response.passportPhoto || "/assets/images/avatar.jpeg"}" 
-                alt="Passport Photo" 
-                class="img-fluid rounded shadow-sm profile-photo"
-                style="max-height: 150px;"
-                crossOrigin="anonymous"
-              >
-            </div>
-            <div class="col-md-9">
-              <h5 class="fw-bold mb-2">${response.firstname} ${
-              response.lastname
-            }</h5>
-              <p class="mb-1"><strong>Phone:</strong> ${response.phone}</p>
-              <p class="mb-1"><strong>Email:</strong> ${response.email}</p>
-              <p class="mb-1"><strong>Status:</strong> <span class="badge bg-info">${
-                response.status
-              }</span></p>
-              <p><strong>State:</strong> ${response.stateOfOrigin}</p>
-              <p><strong>LGA:</strong> ${response.lgaOfOrigin}</p>
-              <p><strong>Kindred:</strong> ${response.kindred}</p>
-              <p><strong>isProfileCompleted:</strong> ${
-                response.userId?.isProfileCompleted
-              }</p>
-            </div>
-          </div>
-  
-          <hr class="my-3">
-          <h6 class="text-primary">Uploaded Documents</h6>
-      `;
+              <div class="container-fluid">
+                <div class="row mb-3">
+                  <div class="col-md-3 text-center">
+                    <img
+                      src="${response.passportPhoto || "/assets/images/avatar.jpeg"}"
+                      alt="Passport Photo"
+                      class="img-fluid rounded shadow-sm profile-photo"
+                      style="max-height: 150px;"
+                      crossOrigin="anonymous"
+                    >
+                  </div>
+                  <div class="col-md-9">
+                    <h5 class="fw-bold mb-2">${response.firstname} ${
+                      response.lastname
+                    }</h5>
+                    <p class="mb-1"><strong>Phone:</strong> ${response.phone}</p>
+                    <p class="mb-1"><strong>Email:</strong> ${response.email}</p>
+                    <p class="mb-1"><strong>Status:</strong> <span class="badge bg-info">${
+                      response.status
+                    }</span></p>
+                    <p><strong>State:</strong> ${response.stateOfOrigin}</p>
+                    <p><strong>LGA:</strong> ${response.lgaOfOrigin}</p>
+                    <p><strong>Kindred:</strong> ${response.kindred}</p>
+                    <p><strong>isProfileCompleted:</strong> ${
+                      response.userId?.isProfileCompleted
+                    }</p>
+                  </div>
+                </div>
+
+                <hr class="my-3">
+                <h6 class="text-primary">Uploaded Documents</h6>
+            `;
 
             if (validDocuments.length === 0) {
               modalContent += `<p class="text-muted">No documents uploaded.</p>`;
@@ -5277,21 +5823,21 @@
               const fileUrl = `${BACKEND_URL}/indigene/certificate/${requestId}/document/${doc.key}`;
 
               modalContent += `
-          <div class="card my-3 shadow-sm">
-            <div class="card-header bg-light fw-semibold">
-              ${doc.title}
-            </div>
-            <div class="card-body p-0"> <!-- Use p-0 for full-width viewer -->
-              <!-- Renamed ID for clarity, added responsive container -->
-              <div id="viewer-container-${index}" style="width:100%; max-height:75vh; overflow:auto;" class="border bg-light p-2"></div>
-              <div class="p-2 text-end">
-                 <button class="btn btn-sm btn-outline-primary me-2" onclick="window.open('${fileUrl}', '_blank')">Open in New Tab</button>
-                 <!-- Updated onclick to call the generic downloadFile function -->
-                 <button class="btn btn-sm btn-outline-secondary" data-doc-index="${index}" data-url="${fileUrl}" onclick="downloadFile(this)">Download</button>
-              </div>
-            </div>
-          </div>
-        `;
+                <div class="card my-3 shadow-sm">
+                  <div class="card-header bg-light fw-semibold">
+                    ${doc.title}
+                  </div>
+                  <div class="card-body p-0"> <!-- Use p-0 for full-width viewer -->
+                    <!-- Renamed ID for clarity, added responsive container -->
+                    <div id="viewer-container-${index}" style="width:100%; max-height:75vh; overflow:auto;" class="border bg-light p-2"></div>
+                    <div class="p-2 text-end">
+                       <button class="btn btn-sm btn-outline-primary me-2" onclick="window.open('${fileUrl}', '_blank')">Open in New Tab</button>
+                       <!-- Updated onclick to call the generic downloadFile function -->
+                       <button class="btn btn-sm btn-outline-secondary" data-doc-index="${index}" data-url="${fileUrl}" onclick="downloadFile(this)">Download</button>
+                    </div>
+                  </div>
+                </div>
+              `;
             });
 
             modalContent += `</div>`;
@@ -5302,15 +5848,15 @@
             validDocuments.forEach((doc, index) => {
               const fileUrl = `${BACKEND_URL}/indigene/certificate/${requestId}/document/${doc.key}`;
               const container = document.getElementById(
-                `viewer-container-${index}`
+                `viewer-container-${index}`,
               );
 
               // Show loader while fetching
               container.innerHTML = `
-          <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-        `;
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              `;
 
               // Fetch document with authorization
               fetch(fileUrl, {
@@ -5338,20 +5884,20 @@
                   } else {
                     // Handle unknown or missing content type
                     throw new Error(
-                      `Unsupported file type: ${contentType || "Unknown"}`
+                      `Unsupported file type: ${contentType || "Unknown"}`,
                     );
                   }
                 })
                 .catch((err) => {
                   console.error(`Error loading document [${doc.key}]:`, err);
                   container.innerHTML = `
-              <div class="alert alert-danger m-2">
-                Failed to load document: ${err.message}
-                <div class="mt-2">
-                  <a href="${fileUrl}" target="_blank" class="btn btn-sm btn-primary">Try Opening in New Tab</a>
-                </div>
-              </div>
-            `;
+                    <div class="alert alert-danger m-2">
+                      Failed to load document: ${err.message}
+                      <div class="mt-2">
+                        <a href="${fileUrl}" target="_blank" class="btn btn-sm btn-primary">Try Opening in New Tab</a>
+                      </div>
+                    </div>
+                  `;
                 });
             });
           },
@@ -5361,6 +5907,7 @@
           },
         });
       }
+
       // Modify your initializeCertificatesPage function to work with the toggle
       async function initializeCertificatesPage() {
         // Only initialize DataTable if we're on the table view
@@ -5388,13 +5935,14 @@
               user: item.firstname
                 ? `${item.firstname} ${item.lastname}`
                 : "Unknown",
-              state: item.stateOfOrigin || "N/A",
+              // state: item.stateOfOrigin || "N/A",
               lga: item.lgaOfOrigin || "N/A",
-              status: item?.status || "Pending",
+              village: item.village || "N/A",
+              kindred: item.kindred || "N/A",
               requestTime: item.created_at
                 ? new Date(item.created_at).toLocaleString()
                 : "N/A",
-
+              status: item?.status || "Pending",
               isProfileCompleted: item.userId?.isProfileCompleted ?? false,
 
               isProfileCompletedBadge: item.userId?.isProfileCompleted
@@ -5404,8 +5952,8 @@
               approvedBy: item.approvedBy
                 ? `${item.approvedBy?.firstname} ${item.approvedBy?.lastname}`
                 : item.status === "Rejected"
-                ? "Rejected by Admin"
-                : "Not yet approved",
+                  ? "Rejected by Admin"
+                  : "Not yet approved",
 
               paymentStatus: item?.paymentStatus || "Pending",
             }));
@@ -5432,8 +5980,11 @@
                   searchable: false,
                 },
                 { data: "user" },
-                { data: "state" },
+                // { data: "state" },
                 { data: "lga" },
+                { data: "village" },
+                { data: "kindred" },
+                { data: "requestTime" },
                 {
                   data: "status",
                   render: function (data) {
@@ -5447,7 +5998,6 @@
                     return `<span class="badge ${badgeClass}">${data}</span>`;
                   },
                 },
-                { data: "requestTime" },
                 { data: "isProfileCompletedBadge" },
                 { data: "approvedBy" },
 
@@ -5464,23 +6014,23 @@
                     // Approve/Reject buttons (for pending status)
                     if (row.status === "Pending") {
                       actionButtons = `
-        <button class="btn btn-sm btn-outline-success approve-request-btn" 
-                data-id="${row._id}" 
-                data-type="certificate" 
-                data-bs-toggle="modal" 
-                data-bs-target="#requestActionModal"
-                title="Approve Request">
-          <i class="bi bi-check-circle"></i>
-        </button>
-        <button class="btn btn-sm btn-outline-danger reject-request-btn" 
-                data-id="${row._id}" 
-                data-type="certificate" 
-                data-bs-toggle="modal" 
-                data-bs-target="#requestActionModal"
-                title="Reject Request">
-          <i class="bi bi-x-circle"></i>
-        </button>
-      `;
+              <button class="btn btn-sm btn-outline-success approve-request-btn"
+                      data-id="${row._id}"
+                      data-type="certificate"
+                      data-bs-toggle="modal"
+                      data-bs-target="#requestActionModal"
+                      title="Approve Request">
+                <i class="bi bi-check-circle"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-danger reject-request-btn"
+                      data-id="${row._id}"
+                      data-type="certificate"
+                      data-bs-toggle="modal"
+                      data-bs-target="#requestActionModal"
+                      title="Reject Request">
+                <i class="bi bi-x-circle"></i>
+              </button>
+            `;
                     }
 
                     // ✅ Show download button only if: Approved, Paid, and Profile Completed
@@ -5490,12 +6040,12 @@
                       row.isProfileCompleted === true
                     ) {
                       downloadButton = `
-        <button class="btn btn-sm btn-outline-danger btn-certificate-download" 
-                data-id="${row._id}"
-                title="Download Certificate">
-          <i class="bi bi-download"></i>
-        </button>
-      `;
+              <button class="btn btn-sm btn-outline-danger btn-certificate-download"
+                      data-id="${row._id}"
+                      title="Download Certificate">
+                <i class="bi bi-download"></i>
+              </button>
+            `;
                     }
 
                     // Optional: Show a disabled version if payment is pending
@@ -5505,26 +6055,26 @@
                       row.isProfileCompleted === true
                     ) {
                       downloadButton = `
-        <button class="btn btn-sm btn-outline-secondary" disabled 
-                title="Payment pending. Cannot download.">
-          <i class="bi bi-download"></i>
-        </button>
-      `;
+              <button class="btn btn-sm btn-outline-secondary" disabled
+                      title="Payment pending. Cannot download.">
+                <i class="bi bi-download"></i>
+              </button>
+            `;
                     }
 
                     return `
-        <div class="btn-group" >
-          <button class="btn btn-sm btn-outline-primary btn-cert-view" 
-                  data-id="${row._id}"
-                  title="View Details"
-                  data-bs-toggle="tooltip"
-                  >
-            <i class="bi bi-eye"></i>
-          </button>
-          ${actionButtons}
-          ${downloadButton}
-        </div>
-      `;
+              <div class="btn-group" >
+                <button class="btn btn-sm btn-outline-primary btn-cert-view"
+                        data-id="${row._id}"
+                        title="View Details"
+                        data-bs-toggle="tooltip"
+                        >
+                  <i class="bi bi-eye"></i>
+                </button>
+                ${actionButtons}
+                ${downloadButton}
+              </div>
+            `;
                   },
                 },
               ],
@@ -5650,7 +6200,7 @@
 
           if (
             !confirm(
-              "Are you sure you want to approve this certificate request?"
+              "Are you sure you want to approve this certificate request?",
             )
           )
             return;
@@ -5666,7 +6216,7 @@
             success: function (response) {
               showNotification(
                 "✅ Certificate request approved successfully!",
-                "success"
+                "success",
               );
               // Refresh the table to reflect the change
               initializeCertificatesPage();
@@ -5674,7 +6224,7 @@
             error: function (xhr) {
               console.error(
                 "Failed to approve request:",
-                xhr.responseJSON.message
+                xhr.responseJSON.message,
               );
               showNotification("Failed to approve request.", "error");
             },
@@ -5687,7 +6237,7 @@
 
           if (
             !confirm(
-              "Are you sure you want to reject this certificate request?"
+              "Are you sure you want to reject this certificate request?",
             )
           )
             return;
@@ -5702,7 +6252,7 @@
             success: function (response) {
               showNotification(
                 "Certificate request rejected successfully!",
-                "success"
+                "success",
               );
               // Refresh the table to reflect the change
               initializeCertificatesPage();
@@ -5719,11 +6269,11 @@
           // Show modal immediately with loading state
           $("#viewCertRequestModal").modal("show");
           $("#viewCertRequestContent").html(`
-                <div class="text-center">
-                    <div class="spinner-border text-primary" role="status"></div>
-                    <p class="mt-2">Loading request details...</p>
-                </div>
-            `);
+                      <div class="text-center">
+                          <div class="spinner-border text-primary" role="status"></div>
+                          <p class="mt-2">Loading request details...</p>
+                      </div>
+                  `);
 
           // Fetch details from backend
           $.ajax({
@@ -5737,7 +6287,7 @@
               console.log("Certificate Request details:", data);
               if (!data) {
                 $("#viewCertRequestContent").html(
-                  "<p class='text-danger'>No details found for this request.</p>"
+                  "<p class='text-danger'>No details found for this request.</p>",
                 );
                 return;
               }
@@ -5752,55 +6302,55 @@
 
               // Build the HTML for the modal content
               const detailsHtml = `
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h6><strong>User:</strong> ${
-                                  user.firstname || ""
-                                } ${user.lastname || ""}</h6>
-                                <p><strong>Email:</strong> ${
-                                  user.email || "N/A"
-                                }</p>
-                                <p><strong>Phone:</strong> ${
-                                  user.phone || "N/A"
-                                }</p>
-                                <p><strong>State of Origin:</strong> ${
-                                  user.stateOfOrigin || "N/A"
-                                }</p>
-                                <p><strong>LGA:</strong> ${
-                                  user.lgaOfOrigin || "N/A"
-                                }</p>
-                            </div>
-                            <div class="col-md-6">
-                                <p><strong>Status:</strong>
-                                    <span class="badge ${
-                                      data.status === "Approved"
-                                        ? "bg-success"
-                                        : data.status === "Rejected"
-                                        ? "bg-danger"
-                                        : "bg-warning"
-                                    }">
-                                        ${data.status}
-                                    </span>
-                                </p>
-                                <p><strong>Approved By:</strong> ${approvedBy}</p>
-                                <p><strong>Request Date:</strong> ${createdAt}</p>
-                                <p><strong>Profile Completed:</strong> ${
-                                  user.isProfileCompleted
-                                    ? '<span class="badge bg-success">Yes</span>'
-                                    : '<span class="badge bg-danger">No</span>'
-                                }</p>
-                            </div>
-                        </div>
-                    `;
+                              <div class="row">
+                                  <div class="col-md-6">
+                                      <h6><strong>User:</strong> ${
+                                        user.firstname || ""
+                                      } ${user.lastname || ""}</h6>
+                                      <p><strong>Email:</strong> ${
+                                        user.email || "N/A"
+                                      }</p>
+                                      <p><strong>Phone:</strong> ${
+                                        user.phone || "N/A"
+                                      }</p>
+                                      <p><strong>State of Origin:</strong> ${
+                                        user.stateOfOrigin || "N/A"
+                                      }</p>
+                                      <p><strong>LGA:</strong> ${
+                                        user.lgaOfOrigin || "N/A"
+                                      }</p>
+                                  </div>
+                                  <div class="col-md-6">
+                                      <p><strong>Status:</strong>
+                                          <span class="badge ${
+                                            data.status === "Approved"
+                                              ? "bg-success"
+                                              : data.status === "Rejected"
+                                                ? "bg-danger"
+                                                : "bg-warning"
+                                          }">
+                                              ${data.status}
+                                          </span>
+                                      </p>
+                                      <p><strong>Approved By:</strong> ${approvedBy}</p>
+                                      <p><strong>Request Date:</strong> ${createdAt}</p>
+                                      <p><strong>Profile Completed:</strong> ${
+                                        user.isProfileCompleted
+                                          ? '<span class="badge bg-success">Yes</span>'
+                                          : '<span class="badge bg-danger">No</span>'
+                                      }</p>
+                                  </div>
+                              </div>
+                          `;
               $("#viewCertRequestContent").html(detailsHtml);
             },
             error: function (xhr) {
               console.error(
                 "Failed to fetch request details:",
-                xhr.responseJSON.message
+                xhr.responseJSON.message,
               );
               $("#viewCertRequestContent").html(
-                "<p class='text-danger'>Failed to load request details.</p>"
+                "<p class='text-danger'>Failed to load request details.</p>",
               );
             },
           });
@@ -5810,16 +6360,16 @@
       document.addEventListener("DOMContentLoaded", function () {
         // Toggle functionality for Transactions page
         const transactionsChartsBtn = document.getElementById(
-          "transactionsChartsBtn"
+          "transactionsChartsBtn",
         );
         const transactionsTableBtn = document.getElementById(
-          "transactionsTableBtn"
+          "transactionsTableBtn",
         );
         const transactionsChartsView = document.getElementById(
-          "transactions-charts-view"
+          "transactions-charts-view",
         );
         const transactionsTableView = document.getElementById(
-          "transactions-table-view"
+          "transactions-table-view",
         );
 
         transactionsChartsBtn.addEventListener("click", function () {
@@ -5861,6 +6411,7 @@
             method: "GET",
             headers,
             success: function (transactions) {
+              console.log("transactions", transactions);
               if (!Array.isArray(transactions)) {
                 console.error("Invalid transactions data:", transactions);
                 return;
@@ -5877,7 +6428,7 @@
                     ? `${t.userId.firstname} ${t.userId.lastname}`
                     : "N/A",
                   type: t.paymentType || "N/A",
-                  amount: (t.amount || 0) / 100,
+                  amount: t.amount || 0,
                   status: t.status || "Pending",
                   datetime: new Date(t.createdAt).toLocaleString(),
                 })),
@@ -5922,15 +6473,15 @@
                     data: null,
                     render: function (data, type, row) {
                       return `
-                              <div class="btn-group">
-                                  <button class="btn btn-sm btn-outline-primary view-transaction-btn" data-id="${row.id}">
-                                      <i class="bi bi-eye"></i>
-                                  </button>
-                                  <button class="btn btn-sm btn-outline-success refund-transaction-btn" data-id="${row.id}">
-                                      <i class="bi bi-arrow-counterclockwise"></i>
-                                  </button>
-                              </div>
-                          `;
+                                    <div class="btn-group">
+                                        <button class="btn btn-sm btn-outline-primary view-transaction-btn" data-id="${row.id}">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-success refund-transaction-btn" data-id="${row.id}">
+                                            <i class="bi bi-arrow-counterclockwise"></i>
+                                        </button>
+                                    </div>
+                                `;
                     },
                   },
                 ],
@@ -5951,6 +6502,7 @@
             method: "GET",
             headers,
             success: function (stats) {
+              console.log("stats", stats);
               // Destroy existing charts before creating new ones
               destroyChart(transactionTrendChart, "transactionTrendChart");
               destroyChart(revenueStateChart, "revenueStateChart");
@@ -6059,7 +6611,7 @@
             const userLabels = Object.keys(stats.monthlyUserGrowth || {});
             const userGrowth = Object.values(stats.monthlyUserGrowth || {});
             const requestVolume = Object.values(
-              stats.monthlyRequestVolume || {}
+              stats.monthlyRequestVolume || {},
             );
 
             if (!growthComparisonChart) {
@@ -6101,10 +6653,10 @@
 
             // ✅ AVERAGE PROCESSING TIME CHART
             const processLabels = Object.keys(
-              stats.averageProcessingTime || {}
+              stats.averageProcessingTime || {},
             );
             const processValues = Object.values(
-              stats.averageProcessingTime || {}
+              stats.averageProcessingTime || {},
             );
 
             if (!processingTimeChart) {
@@ -6134,10 +6686,10 @@
 
             // ✅ REQUEST TYPE DISTRIBUTION CHART
             const requestLabels = Object.keys(
-              stats.requestTypeDistribution || {}
+              stats.requestTypeDistribution || {},
             );
             const requestValues = Object.values(
-              stats.requestTypeDistribution || {}
+              stats.requestTypeDistribution || {},
             );
 
             if (!requestTypeChart) {
@@ -6204,7 +6756,7 @@
               })
                 .addTo(map)
                 .bindPopup(
-                  `<strong>${name}</strong><br>Total Requests: ${totalRequests}`
+                  `<strong>${name}</strong><br>Total Requests: ${totalRequests}`,
                 );
             });
           },
@@ -6317,14 +6869,14 @@
                   data: null,
                   render: function (data, type, row) {
                     return `
-                              <button class="btn btn-sm btn-outline-primary change-role-btn"
-                                  data-id="${row.id}"
-                                  data-user="${row.name}"
-                                  data-bs-toggle="modal"
-                                  data-bs-target="#changeRoleModal">
-                                  <i class="bi bi-person-badge"></i> Change Role
-                              </button>
-                          `;
+                                    <button class="btn btn-sm btn-outline-primary change-role-btn"
+                                        data-id="${row.id}"
+                                        data-user="${row.name}"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#changeRoleModal">
+                                        <i class="bi bi-person-badge"></i> Change Role
+                                    </button>
+                                `;
                   },
                 },
               ],
@@ -6371,12 +6923,12 @@
               const roleName = roleLabels[roleKey];
               const permissions = rolePermissions[roleName] || "N/A";
               tableHTML += `
-          <tr>
-            <td><strong>${roleName}</strong></td>
-            <td><span class="badge bg-primary">${count}</span></td>
-            <td>${permissions}</td>
-          </tr>
-        `;
+                <tr>
+                  <td><strong>${roleName}</strong></td>
+                  <td><span class="badge bg-primary">${count}</span></td>
+                  <td>${permissions}</td>
+                </tr>
+              `;
             }
             roleStatsBody.innerHTML = tableHTML;
 
@@ -6424,7 +6976,7 @@
         } catch (error) {
           showNotification(
             "Failed to load roles. Please check your network or API.",
-            "error"
+            "error",
           );
         }
       }
@@ -6514,20 +7066,20 @@
                 permissions: "N/A",
               };
               tbody.append(`
-                    <tr>
-                    <td><span class="badge ${role.badge}">${
-                role.label
-              }</span></td>
-                    <td>${roleData.count.toLocaleString()}</td>
-                    <td>${roleData.permissions}</td>
-                    </tr>
-                `);
+                          <tr>
+                          <td><span class="badge ${role.badge}">${
+                            role.label
+                          }</span></td>
+                          <td>${roleData.count.toLocaleString()}</td>
+                          <td>${roleData.permissions}</td>
+                          </tr>
+                      `);
             });
           },
           error: function (xhr) {
             $("#roleStatsTableBody").html(`
-                <tr><td colspan="3" class="text-danger">Failed to load data</td></tr>
-                `);
+                      <tr><td colspan="3" class="text-danger">Failed to load data</td></tr>
+                      `);
             console.error("Error fetching role stats:", xhr.responseText);
           },
         });
@@ -6543,17 +7095,17 @@
           type === "success"
             ? "alert-success"
             : type === "error"
-            ? "alert-danger"
-            : type === "warning"
-            ? "alert-warning"
-            : "alert-info";
+              ? "alert-danger"
+              : type === "warning"
+                ? "alert-warning"
+                : "alert-info";
 
         const notification = $(`
-                <div class="alert ${alertClass} alert-dismissible fade show position-fixed" style="top: 80px; right: 20px; z-index: 9999; min-width: 300px;">
-                    ${message}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            `);
+                      <div class="alert ${alertClass} alert-dismissible fade show position-fixed" style="top: 80px; right: 20px; z-index: 9999; min-width: 300px;">
+                          ${message}
+                          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                      </div>
+                  `);
 
         $("body").append(notification);
 
@@ -6565,7 +7117,7 @@
       function exportTable(format) {
         showNotification(
           `Exporting table as ${format.toUpperCase()}...`,
-          "info"
+          "info",
         );
 
         // In a real implementation, this would call the appropriate export function
@@ -6581,7 +7133,7 @@
 
         showNotification(
           `Exporting table as ${format.toUpperCase()}...`,
-          "info"
+          "info",
         );
 
         if (format === "csv") {
@@ -6598,7 +7150,7 @@
         const csvContent = rows
           .map((row) => {
             const cols = Array.from(row.querySelectorAll("th, td")).map(
-              (col) => `"${col.textContent.trim().replace(/"/g, '""')}"`
+              (col) => `"${col.textContent.trim().replace(/"/g, '""')}"`,
             );
             return cols.join(",");
           })
@@ -6623,15 +7175,15 @@
         const doc = new jsPDF("l", "pt", "a4"); // landscape mode
         const head = [
           Array.from(rows[0].querySelectorAll("th")).map((th) =>
-            th.textContent.trim()
+            th.textContent.trim(),
           ),
         ];
         const body = rows
           .slice(1)
           .map((row) =>
             Array.from(row.querySelectorAll("td")).map((td) =>
-              td.textContent.trim()
-            )
+              td.textContent.trim(),
+            ),
           );
 
         doc.text("All Users", 40, 40);
@@ -6648,7 +7200,7 @@
         setTimeout(() => {
           showNotification(
             `Table exported successfully as ${format.toUpperCase()}`,
-            "success"
+            "success",
           );
         }, 1500);
       }
@@ -6658,7 +7210,7 @@
       $(document).ready(function () {
         // Populate states dropdown
         const states = Object.keys(nigerData).map((state) =>
-          state.replace("_", " ").toUpperCase()
+          state.replace("_", " ").toUpperCase(),
         );
         states.forEach((state) => {
           $("#userState").append(new Option(state, state));
@@ -6681,7 +7233,7 @@
         if (/^\d{11}$/.test(nin)) {
           try {
             $("#ninStatus").html(
-              '<span class="text-info">Verifying NIN...</span>'
+              '<span class="text-info">Verifying NIN...</span>',
             );
 
             const response = await $.ajax({
@@ -6741,18 +7293,18 @@
               }
 
               $("#ninStatus").html(
-                '<span class="text-success">NIN Verified ✅</span>'
+                '<span class="text-success">NIN Verified ✅</span>',
               );
             } else {
               $("#ninStatus").html(
-                '<span class="text-danger">NIN not found.</span>'
+                '<span class="text-danger">NIN not found.</span>',
               );
             }
           } catch (error) {
             $("#ninStatus").html(
               `<span class="text-danger">${
                 error.responseJSON?.message || "Verification failed."
-              }</span>`
+              }</span>`,
             );
           }
         }
@@ -6785,7 +7337,7 @@
 
           roles.forEach((role) => {
             roleSelect.append(
-              `<option value="${role.value}">${role.label}</option>`
+              `<option value="${role.value}">${role.label}</option>`,
             );
           });
         } catch (error) {
@@ -6810,14 +7362,6 @@
           DOB: $("#DOB").val().trim(),
         };
 
-        // Validate
-        // for (let key in data) {
-        //   if (!data[key]) {
-        //     alert("Please complete all fields.");
-        //     return;
-        //   }
-        // }
-
         try {
           $("#addUserBtn").prop("disabled", true).text("Processing...");
 
@@ -6839,7 +7383,7 @@
 
           showNotification(
             "User created successfully. Password sent to email",
-            "success"
+            "success",
           );
           $("#addUserModal").modal("hide");
           $("#addUserForm")[0].reset();
@@ -6870,25 +7414,29 @@
               // 🔹 Calculate counts
               const total = data.length;
               const approved = data.filter(
-                (req) => req.status === "Approved"
+                (req) => req.status === "Approved",
               ).length;
               const pending = data.filter(
-                (req) => req.status === "Pending"
+                (req) => req.status === "Pending",
               ).length;
               const rejected = data.filter(
-                (req) => req.status === "Rejected"
+                (req) => req.status === "Rejected",
               ).length;
 
               // 🔹 Update the card UI
               $(".totalRequests").text(total);
               $("#approvedRequests").text(approved);
-              $("#pendingRequests").text(pending);
+              $("#pendingIdCardRequests").text(pending);
               $("#rejectedRequests").text(rejected);
+
+              // === UPDATE GLOBAL SUM ===
+              pendingIdCardCount = pending;
+              updateTotalPendingRequests();
             },
             error: function (xhr) {
               console.error(
                 "Failed to fetch ID card requests:",
-                xhr.responseText
+                xhr.responseText,
               );
             },
           });
@@ -6915,13 +7463,13 @@
               // 🔹 Calculate counts
               const total = data.length;
               const approved = data.filter(
-                (req) => req.status === "Approved"
+                (req) => req.status === "Approved",
               ).length;
               const pending = data.filter(
-                (req) => req.status === "Pending"
+                (req) => req.status === "Pending",
               ).length;
               const rejected = data.filter(
-                (req) => req.status === "Rejected"
+                (req) => req.status === "Rejected",
               ).length;
 
               // 🔹 Update the card UI
@@ -6929,11 +7477,15 @@
               $("#approvedCertRequests").text(approved);
               $("#pendingCertRequests").text(pending);
               $("#rejectedCertRequests").text(rejected);
+
+              // === UPDATE GLOBAL SUM ===
+              pendingCertCount = pending;
+              updateTotalPendingRequests();
             },
             error: function (xhr) {
               console.error(
                 "Failed to fetch ID card requests:",
-                xhr.responseText
+                xhr.responseText,
               );
             },
           });
@@ -6942,7 +7494,7 @@
         }
       }
 
-      // Fetch and display ID certificate request stats
+      // // Fetch and display ID certificate request stats
       function initializeTransactionStats() {
         $.ajax({
           url: `${BACKEND_URL}/transaction/stats`,
@@ -6950,28 +7502,33 @@
           headers: { Authorization: `Bearer ${token}` },
           success: function (stats) {
             const {
-              totalTransactions,
-              totalRevenue,
-              avgTransaction,
-              successRate,
+              totalTransactions = 0,
+              totalRevenue = 0,
+              avgTransaction = 0,
+              successRate = 0,
             } = stats;
 
-            // Format numbers with commas and ₦ sign
-            const formatCurrency = (amount) =>
-              "₦" +
-              amount.toLocaleString("en-NG", { maximumFractionDigits: 2 });
+            const nairaFormatter = new Intl.NumberFormat("en-NG", {
+              style: "currency",
+              currency: "NGN",
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            });
 
-            // Update UI
-            $(".total-transactions").text(totalTransactions.toLocaleString());
-            $(".total-revenue").text(formatCurrency(totalRevenue));
-            $(".average-amount").text(formatCurrency(avgTransaction));
-            $(".success-rate").text(successRate.toFixed(1) + "%");
-            $(".kpi-value").text(formatCurrency(totalRevenue));
+            $(".total-transactions").text(
+              Number(totalTransactions).toLocaleString("en-NG"),
+            );
+
+            $(".total-revenue").text(nairaFormatter.format(totalRevenue));
+
+            $(".average-amount").text(nairaFormatter.format(avgTransaction));
+
+            $(".success-rate").text(Number(successRate).toFixed(1) + "%");
           },
           error: function (xhr) {
             console.error(
               "Failed to fetch transaction stats:",
-              xhr.responseText
+              xhr.responseText,
             );
           },
         });
@@ -7009,7 +7566,7 @@
       document.addEventListener("DOMContentLoaded", function () {
         // Get the export button for ID cards
         const exportIdcardBtn = document.getElementById(
-          "exportTdcardRequestBtn"
+          "exportTdcardRequestBtn",
         );
 
         if (exportIdcardBtn) {
@@ -7020,7 +7577,7 @@
 
         // Get the export button for Certificates
         const exportCertificateBtn = document.querySelector(
-          "#certificates-page .btn-primary"
+          "#certificates-page .btn-primary",
         );
 
         if (exportCertificateBtn) {
@@ -7071,8 +7628,8 @@
               req.approvedBy
                 ? `${req.approvedBy?.firstname} ${req.approvedBy?.lastname}`
                 : req.status === "Rejected"
-                ? "Rejected by Admin"
-                : "Not yet approved",
+                  ? "Rejected by Admin"
+                  : "Not yet approved",
               req?.paymentStatus || "Pending",
             ]);
 
@@ -7088,7 +7645,7 @@
           error: function (xhr) {
             console.error(
               "Failed to fetch ID card requests:",
-              xhr.responseText
+              xhr.responseText,
             );
             hideLoadingIndicator();
             alert("Error exporting data. Please try again.");
@@ -7132,8 +7689,8 @@
               req.approvedBy
                 ? `${req.approvedBy?.firstname} ${req.approvedBy?.lastname}`
                 : req.status === "Rejected"
-                ? "Rejected by Admin"
-                : "Not yet approved",
+                  ? "Rejected by Admin"
+                  : "Not yet approved",
               req?.paymentStatus || "Pending",
             ]);
 
@@ -7145,7 +7702,7 @@
             generatePDF(
               tableData,
               filename,
-              "Certificate of Origin Requests Report"
+              "Certificate of Origin Requests Report",
             );
 
             hideLoadingIndicator();
@@ -7153,7 +7710,7 @@
           error: function (xhr) {
             console.error(
               "Failed to fetch certificate requests:",
-              xhr.responseText
+              xhr.responseText,
             );
             hideLoadingIndicator();
             alert("Error exporting data. Please try again.");
@@ -7183,7 +7740,7 @@
           `Generated on: ${new Date().toLocaleString()}`,
           doc.internal.pageSize.getWidth() / 2,
           55,
-          { align: "center" }
+          { align: "center" },
         );
 
         // Define the table columns
@@ -7331,12 +7888,12 @@
               // Populate notification settings
               $("#emailNotifications").prop(
                 "checked",
-                response.emailNotifications
+                response.emailNotifications,
               );
               $("#smsNotifications").prop("checked", response.smsNotifications);
               $("#pushNotifications").prop(
                 "checked",
-                response.pushNotifications
+                response.pushNotifications,
               );
               $("#newUserAlerts").prop("checked", response.newUserAlerts);
               $("#requestAlerts").prop("checked", response.requestAlerts);
@@ -7347,11 +7904,11 @@
               $("#twoFactorAuth").prop("checked", response.twoFactorAuth);
               $("#passwordComplexity").prop(
                 "checked",
-                response.passwordComplexity
+                response.passwordComplexity,
               );
               $("#limitLoginAttempts").prop(
                 "checked",
-                response.limitLoginAttempts
+                response.limitLoginAttempts,
               );
               $("#maxLoginAttempts").val(response.maxLoginAttempts);
               $("#lockoutDuration").val(response.lockoutDuration);
@@ -7365,7 +7922,7 @@
             error: function (error) {
               showToast(
                 "Failed to load settings: " + error.responseJSON.message,
-                "error"
+                "error",
               );
             },
           });
@@ -7378,13 +7935,13 @@
               // Populate the new input fields with the values from the backend
               $("#familyVerificationLimit").val(limits.familyVerificationLimit);
               $("#neighborVerificationLimit").val(
-                limits.neighborVerificationLimit
+                limits.neighborVerificationLimit,
               );
             },
             error: function (xhr) {
               console.error(
                 "Failed to load verification limits:",
-                xhr.responseText
+                xhr.responseText,
               );
               // Set default values if the call fails
               $("#familyVerificationLimit").val(3);
@@ -7408,7 +7965,7 @@
           ) {
             showNotification(
               "Verification limits must be positive numbers.",
-              "warning"
+              "warning",
             );
             return;
           }
@@ -7427,7 +7984,7 @@
             success: function (response) {
               showNotification(
                 "Verification limits updated successfully!",
-                "success"
+                "success",
               );
             },
             error: function (xhr) {
@@ -7477,7 +8034,7 @@
             error: function (error) {
               showToast(
                 "Failed to save settings: " + error.responseJSON.message,
-                "error"
+                "error",
               );
             },
           });
@@ -7503,14 +8060,14 @@
               } else {
                 showToast(
                   "API connection failed: " + response.message,
-                  "error"
+                  "error",
                 );
               }
             },
             error: function (error) {
               showToast(
                 "API connection test failed: " + error.responseJSON.message,
-                "error"
+                "error",
               );
             },
           });
@@ -7526,7 +8083,7 @@
           $("#apiKey").val(newApiKey);
           showToast(
             "API key regenerated. Remember to save your changes.",
-            "info"
+            "info",
           );
         }
 
@@ -7540,7 +8097,7 @@
 
           // Update toast class based on type
           toast.removeClass(
-            "bg-success bg-danger bg-info bg-warning text-white"
+            "bg-success bg-danger bg-info bg-warning text-white",
           );
 
           if (type === "success") {
@@ -7649,7 +8206,7 @@
           } catch (error) {
             showNotification(
               "Failed to mark all notifications as read:",
-              "error"
+              "error",
             );
           }
         });
@@ -7717,41 +8274,54 @@
 
       $(document).on(
         "click",
-        ".btn-certificate-download, .btn-idcard-download",
+        ".btn-certificate-download, .btn-idcard-download, .btn-auctioneer-download",
         function () {
           if (
             !confirm(
-              "Warning! Sure you want to download? Click ok to continue or else click cancel."
+              "Warning! Sure you want to download? Click ok to continue or else click cancel.",
             )
           ) {
             return;
           }
+
           const $button = $(this);
           const requestId = $button.data("id");
-          const isCertificate = $button.hasClass("btn-certificate-download");
 
           // Store original button content
           const originalContent = $button.html();
 
+          // 1. Determine download details based on button class
+          let downloadUrl = "";
+          let documentType = "";
+          let fileName = "";
+
+          if ($button.hasClass("btn-certificate-download")) {
+            documentType = "Certificate of Origin";
+            downloadUrl = `${BACKEND_URL}/indigene/certificate/download/${requestId}`;
+            fileName = `Certificate_${requestId}.pdf`;
+          } else if ($button.hasClass("btn-auctioneer-download")) {
+            documentType = "Auctioneer Licence";
+            downloadUrl = `${BACKEND_URL}/auctioneer/download/${requestId}`;
+            fileName = `Auctioneer_Licence_${requestId}.pdf`;
+          } else {
+            // Default to ID Card
+            documentType = "Identity Card";
+            downloadUrl = `${BACKEND_URL}/idcard/download/${requestId}`;
+            fileName = `ID_Card_${requestId}.pdf`;
+          }
+
           // Show spinner on button
           $button.prop("disabled", true).html(`
-        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-        Downloading...
-    `);
+            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            Downloading...
+          `);
 
           // Show the overlay
           $(downloadOverlay).addClass("show");
-
-          // Update overlay message based on document type
-          const documentType = isCertificate
-            ? "Certificate of Origin"
-            : "Identity Card";
           $(downloadOverlay).find("h5").text(`Preparing Your ${documentType}`);
-
-          // Determine download URL
-          const downloadUrl = isCertificate
-            ? `${BACKEND_URL}/indigene/certificate/download/${requestId}`
-            : `${BACKEND_URL}/idcard/download/${requestId}`;
+          $(downloadOverlay)
+            .find("p")
+            .text("Please wait while we prepare your document for download.");
 
           // Create a temporary link element
           const link = document.createElement("a");
@@ -7767,28 +8337,35 @@
           })
             .then((response) => {
               if (!response.ok) {
-                throw new Error("Network response was not ok");
+                // Try to parse error message from response
+                return response
+                  .json()
+                  .then((err) => {
+                    throw new Error(
+                      err.message || "Network response was not ok",
+                    );
+                  })
+                  .catch(() => {
+                    throw new Error("Network response was not ok");
+                  });
               }
-
+              return response.blob();
+            })
+            .then((blob) => {
               // Update overlay message
               $(downloadOverlay).find("h5").text("Processing Your Document");
               $(downloadOverlay)
                 .find("p")
                 .text(
-                  "Your document is being processed. This may take a moment."
+                  "Your document is being processed. This may take a moment.",
                 );
 
-              return response.blob();
-            })
-            .then((blob) => {
               // Create URL for the blob
               const url = window.URL.createObjectURL(blob);
 
-              // Set link properties
+              // Set link properties using the determined fileName
               link.href = url;
-              link.download = isCertificate
-                ? `Certificate_${requestId}.pdf`
-                : `ID_Card_${requestId}.pdf`;
+              link.download = fileName;
 
               // Trigger the download
               link.click();
@@ -7802,9 +8379,9 @@
 
               // Show success state on button
               $button.prop("disabled", false).html(`
-            <i class="bi bi-check-circle me-2"></i>
-            Downloaded
-        `);
+                <i class="bi bi-check-circle me-2"></i>
+                Downloaded
+              `);
 
               // Reset button after a delay
               setTimeout(() => {
@@ -7812,9 +8389,9 @@
               }, 3000);
             })
             .catch((error) => {
-              const errorMessage = error.responseJSON
-                ? error.responseJSON.message
-                : "Download window has expired. Please make a new request.";
+              const errorMessage =
+                error.message ||
+                "Download window has expired. Please make a new request.";
               showNotification(errorMessage, "error");
 
               // Hide the overlay
@@ -7822,18 +8399,17 @@
 
               // Show error state on button
               $button.prop("disabled", false).html(`
-            <i class="bi bi-exclamation-triangle me-2"></i>
-            Error
-        `);
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                Error
+              `);
 
               // Reset button after a delay
               setTimeout(() => {
                 $button.html(originalContent);
               }, 3000);
             });
-        }
+        },
       );
-
       const nigerData = {
         adamawa: [
           "Demsa",
@@ -8668,10 +9244,10 @@
       $(document).ready(function () {
         // Initialize modals
         const changePasswordModal = new bootstrap.Modal(
-          document.getElementById("changePasswordModal")
+          document.getElementById("changePasswordModal"),
         );
         const enable2FAModal = new bootstrap.Modal(
-          document.getElementById("enable2FAModal")
+          document.getElementById("enable2FAModal"),
         );
 
         // Change Password Button Click
@@ -8803,7 +9379,7 @@
           if (!verificationCode || verificationCode.length !== 6) {
             showNotification(
               "Please enter a valid 6-digit verification code",
-              "error"
+              "error",
             );
             return;
           }
@@ -8851,7 +9427,7 @@
           if (!$("#backupCodesSaved").is(":checked")) {
             showNotification(
               "Please confirm you have saved your backup codes",
-              "warning"
+              "warning",
             );
             return;
           }
@@ -8870,11 +9446,11 @@
             success: function (response) {
               showNotification(
                 "Two-factor authentication enabled successfully",
-                "success"
+                "success",
               );
               enable2FAModal.hide();
               $("#enable2FABtn").html(
-                '<i class="bi bi-shield-check me-2"></i>Disable Two-Factor Authentication'
+                '<i class="bi bi-shield-check me-2"></i>Disable Two-Factor Authentication',
               );
               $("#enable2FABtn")
                 .removeClass("btn-outline-primary")
@@ -8935,7 +9511,7 @@
                   if (!statusResponse.hasSecret) {
                     showNotification(
                       "Failed to setup 2FA. Please try again.",
-                      "error"
+                      "error",
                     );
                     $("#2faSetupStep1").html(`
                                 <div class="alert alert-danger">
@@ -8956,8 +9532,8 @@
                   $(".qr-code img").attr(
                     "src",
                     `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(
-                      response.qrCodeUrl
-                    )}`
+                      response.qrCodeUrl,
+                    )}`,
                   );
 
                   // Update the manual entry code
@@ -8967,7 +9543,7 @@
                   console.error("Error checking 2FA status:", xhr);
                   showNotification(
                     "Failed to verify 2FA setup. Please try again.",
-                    "error"
+                    "error",
                   );
                 },
               });
@@ -9004,7 +9580,7 @@
           // Reset QR code to placeholder
           $(".qr-code img").attr(
             "src",
-            "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=otpauth://totp/Example:demo@example.com?secret=JBSWY3DPEHPK3PXP&issuer=Example"
+            "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=otpauth://totp/Example:demo@example.com?secret=JBSWY3DPEHPK3PXP&issuer=Example",
           );
           $(".qr-code p strong").text("JBSWY3DPEHPK3PXP");
         }
@@ -9012,7 +9588,7 @@
         function disable2FA() {
           if (
             confirm(
-              "Are you sure you want to disable two-factor authentication? This will make your account less secure."
+              "Are you sure you want to disable two-factor authentication? This will make your account less secure.",
             )
           ) {
             // API call to disable 2FA
@@ -9026,10 +9602,10 @@
               success: function (response) {
                 showNotification(
                   "Two-factor authentication disabled",
-                  "success"
+                  "success",
                 );
                 $("#enable2FABtn").html(
-                  '<i class="bi bi-shield-check me-2"></i>Enable Two-Factor Authentication'
+                  '<i class="bi bi-shield-check me-2"></i>Enable Two-Factor Authentication',
                 );
                 $("#enable2FABtn")
                   .removeClass("btn-outline-danger")
@@ -9065,7 +9641,7 @@
               // Update the button based on 2FA status
               if (response.isEnabled) {
                 $("#enable2FABtn").html(
-                  '<i class="bi bi-shield-check me-2"></i>Disable Two-Factor Authentication'
+                  '<i class="bi bi-shield-check me-2"></i>Disable Two-Factor Authentication',
                 );
                 $("#enable2FABtn")
                   .removeClass("btn-outline-primary")
@@ -9077,7 +9653,7 @@
                   });
               } else {
                 $("#enable2FABtn").html(
-                  '<i class="bi bi-shield-check me-2"></i>Enable Two-Factor Authentication'
+                  '<i class="bi bi-shield-check me-2"></i>Enable Two-Factor Authentication',
                 );
                 $("#enable2FABtn")
                   .removeClass("btn-outline-danger")
@@ -9127,7 +9703,7 @@
         headers = {},
         data = null,
         onSuccess,
-        onError
+        onError,
       ) => {
         $.ajax({
           url,
@@ -9170,7 +9746,7 @@
 
               return acc;
             },
-            { activeCount: 0, inactiveCount: 0, newThisMonthCount: 0 }
+            { activeCount: 0, inactiveCount: 0, newThisMonthCount: 0 },
           );
 
           $("#usercount").text(data.length);
@@ -9180,7 +9756,6 @@
           $("#new-this-month").text(newThisMonthCount);
         });
       };
-      // })
     </script>
   </body>
 </html>
