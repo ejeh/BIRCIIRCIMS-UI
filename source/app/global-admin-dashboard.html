@@ -5158,7 +5158,6 @@
         });
 
         const auctioneerData = Array.isArray(response) ? response : [];
-        console.log("auctioneerData", auctioneerData);
 
         // 2. CALCULATE STATS
         const total = auctioneerData.length;
@@ -6397,21 +6396,19 @@
         });
       });
 
-      // Modify your initializeTransactionsPage function to work with the toggle
       function initializeTransactionsPage() {
         const headers = {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         };
 
-        // 1️⃣ Fetch Transactions for Table (only if table view is visible)
+        // 1️⃣ Fetch Transactions for Table
         if (!$("#transactions-table-view").hasClass("d-none")) {
           $.ajax({
             url: `${BACKEND_URL}/transaction/all`,
             method: "GET",
             headers,
             success: function (transactions) {
-              console.log("transactions", transactions);
               if (!Array.isArray(transactions)) {
                 console.error("Invalid transactions data:", transactions);
                 return;
@@ -6428,7 +6425,8 @@
                     ? `${t.userId.firstname} ${t.userId.lastname}`
                     : "N/A",
                   type: t.paymentType || "N/A",
-                  amount: t.amount || 0,
+                  // FIX: Divide by 100 to convert Kobo to Naira
+                  amount: (t.documentAmount || 0) / 100,
                   status: t.status || "Pending",
                   datetime: new Date(t.createdAt).toLocaleString(),
                 })),
@@ -6438,18 +6436,12 @@
                     data: null,
                     orderable: false,
                     searchable: false,
-                    render: function (data, type, row, meta) {
-                      return meta.row + meta.settings._iDisplayStart + 1;
-                    },
+                    render: (data, type, row, meta) =>
+                      meta.row + meta.settings._iDisplayStart + 1,
                   },
-                  {
-                    data: "id",
-                    visible: false,
-                    searchable: false,
-                  },
+                  { data: "id", visible: false, searchable: false },
                   { data: "user" },
                   { data: "type" },
-
                   {
                     data: "amount",
                     render: (data) =>
@@ -6471,31 +6463,26 @@
                   { data: "datetime" },
                   {
                     data: null,
-                    render: function (data, type, row) {
-                      return `
-                                    <div class="btn-group">
-                                        <button class="btn btn-sm btn-outline-primary view-transaction-btn" data-id="${row.id}">
-                                            <i class="bi bi-eye"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-success refund-transaction-btn" data-id="${row.id}">
-                                            <i class="bi bi-arrow-counterclockwise"></i>
-                                        </button>
-                                    </div>
-                                `;
-                    },
+                    render: (data, type, row) => `
+                <div class="btn-group">
+                  <button class="btn btn-sm btn-outline-primary view-transaction-btn" data-id="${row.id}">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-success refund-transaction-btn" data-id="${row.id}">
+                    <i class="bi bi-arrow-counterclockwise"></i>
+                  </button>
+                </div>`,
                   },
                 ],
                 responsive: true,
                 pageLength: 10,
               });
             },
-            error: function (err) {
-              console.error("Error loading transactions:", err);
-            },
+            error: (err) => console.error("Error loading transactions:", err),
           });
         }
 
-        // 2️⃣ Fetch Transaction Stats (for charts, only if charts view is visible)
+        // 2️⃣ Fetch Transaction Stats (for charts)
         if (!$("#transactions-charts-view").hasClass("d-none")) {
           $.ajax({
             url: `${BACKEND_URL}/transaction/stats`,
@@ -6503,9 +6490,15 @@
             headers,
             success: function (stats) {
               console.log("stats", stats);
-              // Destroy existing charts before creating new ones
+
               destroyChart(transactionTrendChart, "transactionTrendChart");
               destroyChart(revenueStateChart, "revenueStateChart");
+
+              // FIX: Map monthlyTrend values and divide by 100
+              const trendLabels = Object.keys(stats.monthlyTrend || {});
+              const trendData = Object.values(stats.monthlyTrend || {}).map(
+                (v) => v / 100,
+              );
 
               // Transaction Trend Chart
               const ctx1 = document
@@ -6514,11 +6507,11 @@
               transactionTrendChart = new Chart(ctx1, {
                 type: "line",
                 data: {
-                  labels: Object.keys(stats.monthlyTrend || {}),
+                  labels: trendLabels,
                   datasets: [
                     {
                       label: "Revenue (₦)",
-                      data: Object.values(stats.monthlyTrend || {}),
+                      data: trendData,
                       borderColor: "#10b981",
                       backgroundColor: "rgba(16, 185, 129, 0.1)",
                       tension: 0.4,
@@ -6541,6 +6534,12 @@
                 },
               });
 
+              // FIX: Map revenueByLGA values and divide by 100
+              const lgaLabels = Object.keys(stats.revenueByLGA || {});
+              const lgaData = Object.values(stats.revenueByLGA || {}).map(
+                (v) => v / 100,
+              );
+
               // Revenue by State Chart
               const ctx2 = document
                 .getElementById("revenueStateChart")
@@ -6548,10 +6547,10 @@
               revenueStateChart = new Chart(ctx2, {
                 type: "pie",
                 data: {
-                  labels: Object.keys(stats.revenueByLGA || {}),
+                  labels: lgaLabels,
                   datasets: [
                     {
-                      data: Object.values(stats.revenueByLGA || {}),
+                      data: lgaData,
                       backgroundColor: [
                         "#6366f1",
                         "#8b5cf6",
@@ -6566,13 +6565,18 @@
                 options: {
                   responsive: true,
                   maintainAspectRatio: false,
-                  plugins: { legend: { position: "bottom" } },
+                  plugins: {
+                    legend: { position: "bottom" },
+                    tooltip: {
+                      callbacks: {
+                        label: (item) => ` ₦${item.raw.toLocaleString()}`,
+                      },
+                    },
+                  },
                 },
               });
             },
-            error: function (err) {
-              console.error("Error loading stats:", err);
-            },
+            error: (err) => console.error("Error loading stats:", err),
           });
         }
       }
@@ -7508,20 +7512,24 @@
               successRate = 0,
             } = stats;
 
+            // Convert from Kobo to Naira
+            const revenueInNaira = totalRevenue / 100;
+            const avgInNaira = avgTransaction / 100;
+
             const nairaFormatter = new Intl.NumberFormat("en-NG", {
-              style: "currency",
+              style: "decimal",
               currency: "NGN",
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
             });
 
             $(".total-transactions").text(
               Number(totalTransactions).toLocaleString("en-NG"),
             );
 
-            $(".total-revenue").text(nairaFormatter.format(totalRevenue));
+            $(".total-revenue").text(nairaFormatter.format(revenueInNaira));
 
-            $(".average-amount").text(nairaFormatter.format(avgTransaction));
+            $(".average-amount").text(nairaFormatter.format(avgInNaira));
 
             $(".success-rate").text(Number(successRate).toFixed(1) + "%");
           },
