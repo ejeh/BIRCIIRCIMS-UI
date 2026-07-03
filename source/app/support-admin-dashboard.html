@@ -807,7 +807,7 @@
           <div class="col-md-8">
             <h3>
               <i class="bi bi-geo-alt me-2"></i
-              ><span id="currentLGA">Otukpo</span> Local Government Area
+              ><span id="assignedLGA">Otukpo</span> Local Government Area
             </h3>
             <p>
               <i class="bi bi-people me-2"></i>Total Population:
@@ -2446,9 +2446,6 @@
         timeTrendChart;
       let transactionsChart, lgaTrendChart;
 
-      // Current LGA
-      // let currentLGA = "Otukpo";
-
       // Flag to track unsaved changes on profile page
       let profileHasUnsavedChanges = false;
 
@@ -2979,6 +2976,8 @@
 
           const user = response; // expected user object from backend
 
+          $("#assignedLGA").text(user?.lga?.name);
+
           // Update user display
           $("#currentUser").text(user.firstname + " " + user.lastname);
           // ✅ Update user profile picture dynamically
@@ -3144,7 +3143,7 @@
             },
           });
 
-          const currentLGA = userRes?.lgaOfOrigin || "Unknown LGA";
+          const currentLGA = userRes?.lga?.name || "Unknown LGA";
           localStorage.setItem("userLGA", currentLGA); // cache it for later use
 
           // 1️⃣ Fetch analytics data from backend
@@ -3202,7 +3201,7 @@
                     tension: 0.4,
                     fill: true,
                   },
-                   {
+                  {
                     label: "Auctioneer Requests",
                     data: trendRes.monthly.auctioneerRequests || [],
                     borderColor: "#10b981",
@@ -3354,7 +3353,8 @@
             },
           });
 
-          const currentLGA = userRes?.lgaOfOrigin || "Unknown LGA";
+          const currentLGA = userRes?.lga?.name || "Unknown LGA";
+
           localStorage.setItem("userLGA", currentLGA); // cache it for later use
 
           // Step 2️⃣: Fetch related data in parallel
@@ -3451,7 +3451,7 @@
             },
           });
 
-          const currentLGA = currentUserResponse.lgaOfOrigin || "Unknown LGA";
+          const currentLGA = currentUserResponse?.lga?.name || "Unknown LGA";
 
           // Step 2: Fetch all users for this LGA
           const usersResponse = await $.ajax({
@@ -3636,7 +3636,7 @@
           },
         });
 
-        const currentLGA = currentUserResponse.lgaOfOrigin || "Unknown LGA";
+        const currentLGA = currentUserResponse?.lga?.name || "Unknown LGA";
 
         try {
           // Fetch ID Card Requests for current LGA
@@ -3835,6 +3835,10 @@
             ],
             pageLength: 10,
           });
+          $("#certificatesTable").on("click", ".btn-cert-view", function () {
+            const requestId = $(this).data("id");
+            handleView(requestId);
+          });
         } catch (error) {
           console.error("Error loading requests:", error);
           showNotification(
@@ -3842,6 +3846,152 @@
             "error",
           );
         }
+      }
+
+      function handleView(requestId) {
+        const apiHeaders = {
+          Authorization: `Bearer ${token}`,
+        };
+        $.ajax({
+          url: `${BACKEND_URL}/indigene/certificate/${requestId}/request`,
+          method: "GET",
+          headers: apiHeaders,
+          success: function (response) {
+            console.log("response", response);
+            const docTypes = ["idCard", "birthCertificate"];
+            const documentTitles = ["Identity Card", "Birth Certificate"];
+
+            // Filter documents that actually exist in response
+            const validDocuments = docTypes
+              .map((key, index) => ({ key, title: documentTitles[index] }))
+              .filter((doc) => response[doc.key]);
+
+            let modalContent = `
+              <div class="container-fluid">
+                <div class="row mb-3">
+                  <div class="col-md-3 text-center">
+                    <img
+                      src="${response.passportPhoto || "/assets/images/avatar.jpeg"}"
+                      alt="Passport Photo"
+                      class="img-fluid rounded shadow-sm profile-photo"
+                      style="max-height: 150px;"
+                      crossOrigin="anonymous"
+                    >
+                  </div>
+                  <div class="col-md-9">
+                    <h5 class="fw-bold mb-2">${response.firstname} ${
+                      response.lastname
+                    }</h5>
+                    <p class="mb-1"><strong>Phone:</strong> ${response.phone}</p>
+                    <p class="mb-1"><strong>Status:</strong> <span class="badge bg-info">${
+                      response.status
+                    }</span></p>
+                    <p><strong>Ward:</strong> ${response.ward}</p>                    
+                    <p><strong>Village:</strong> ${response.village}</p>
+                    <p><strong>Kindred:</strong> ${response.kindred}</p>
+                    <p><strong>LGA:</strong> ${response.lgaOfOrigin}</p>
+                    <p><strong>isProfileCompleted:</strong> ${
+                      response.userId?.isProfileCompleted
+                    }</p>
+                  </div>
+                </div>
+
+                <hr class="my-3">
+                <h6 class="text-primary">Uploaded Documents</h6>
+            `;
+
+            if (validDocuments.length === 0) {
+              modalContent += `<p class="text-muted">No documents uploaded.</p>`;
+            }
+
+            // Generate HTML for each existing document
+            validDocuments.forEach((doc, index) => {
+              const fileUrl = `${BACKEND_URL}/indigene/certificate/${requestId}/document/${doc.key}`;
+
+              modalContent += `
+                <div class="card my-3 shadow-sm">
+                  <div class="card-header bg-light fw-semibold">
+                    ${doc.title}
+                  </div>
+                  <div class="card-body p-0"> <!-- Use p-0 for full-width viewer -->
+                    <!-- Renamed ID for clarity, added responsive container -->
+                    <div id="viewer-container-${index}" style="width:100%; max-height:75vh; overflow:auto;" class="border bg-light p-2"></div>
+                    <div class="p-2 text-end">
+                       <button class="btn btn-sm btn-outline-primary me-2" onclick="window.open('${fileUrl}', '_blank')">Open in New Tab</button>
+                       <!-- Updated onclick to call the generic downloadFile function -->
+                       <button class="btn btn-sm btn-outline-secondary" data-doc-index="${index}" data-url="${fileUrl}" onclick="downloadFile(this)">Download</button>
+                    </div>
+                  </div>
+                </div>
+              `;
+            });
+
+            modalContent += `</div>`;
+            $("#viewModal .modal-body").html(modalContent);
+            $("#viewModal").modal("show");
+
+            // Load documents with authorization and type-checking
+            validDocuments.forEach((doc, index) => {
+              const fileUrl = `${BACKEND_URL}/indigene/certificate/${requestId}/document/${doc.key}`;
+              const container = document.getElementById(
+                `viewer-container-${index}`,
+              );
+
+              // Show loader while fetching
+              container.innerHTML = `
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              `;
+
+              // Fetch document with authorization
+              fetch(fileUrl, {
+                headers: {
+                  Authorization: apiHeaders.Authorization,
+                },
+              })
+                .then((res) => {
+                  if (!res.ok) throw new Error("Failed to fetch document");
+
+                  // --- KEY LOGIC: Get the content type from the response header ---
+                  const contentType = res.headers.get("Content-Type");
+
+                  // Return both the blob and the content type for the next .then()
+                  return res.blob().then((blob) => ({ blob, contentType }));
+                })
+                .then(({ blob, contentType }) => {
+                  const blobUrl = URL.createObjectURL(blob);
+
+                  // --- Check the content type and call the correct renderer ---
+                  if (contentType === "application/pdf") {
+                    loadPDFJ(blobUrl, container);
+                  } else if (contentType && contentType.startsWith("image/")) {
+                    loadImage(blobUrl, container);
+                  } else {
+                    // Handle unknown or missing content type
+                    throw new Error(
+                      `Unsupported file type: ${contentType || "Unknown"}`,
+                    );
+                  }
+                })
+                .catch((err) => {
+                  console.error(`Error loading document [${doc.key}]:`, err);
+                  container.innerHTML = `
+                    <div class="alert alert-danger m-2">
+                      Failed to load document: ${err.message}
+                      <div class="mt-2">
+                        <a href="${fileUrl}" target="_blank" class="btn btn-sm btn-primary">Try Opening in New Tab</a>
+                      </div>
+                    </div>
+                  `;
+                });
+            });
+          },
+          error: function (error) {
+            console.error("Error fetching request details:", error);
+            alert("Failed to fetch request details.");
+          },
+        });
       }
 
       async function initializeAnalyticsPage() {
@@ -3857,7 +4007,7 @@
             },
           });
 
-          const currentLGA = userRes?.lgaOfOrigin || "Unknown LGA";
+          const currentLGA = userRes?.lga?.name || "Unknown LGA";
           localStorage.setItem("userLGA", currentLGA);
 
           // --- START: ADD DATE FILTERS TO API CALLS ---
@@ -3874,9 +4024,6 @@
           const [demographics, trends, transactions, lgaTrendData] =
             await Promise.all([
               $.ajax({
-                // url: `${BACKEND_URL}/users/demographics?lga=${encodeURIComponent(
-                //   currentLGA
-                // )}`,
                 url: `${BACKEND_URL}/users/demographics?lga=${encodeURIComponent(
                   currentLGA,
                 )}&${filterString}`,
@@ -3886,7 +4033,7 @@
                   "Content-Type": "application/json",
                 },
               }),
-              $.ajax({               
+              $.ajax({
                 url: `${BACKEND_URL}/users/trends?lga=${encodeURIComponent(
                   currentLGA,
                 )}&${filterString}`,
@@ -3897,7 +4044,7 @@
                 },
               }),
 
-              $.ajax({              
+              $.ajax({
                 url: `${BACKEND_URL}/transaction/by-lga?lga=${encodeURIComponent(
                   currentLGA,
                 )}&${filterString}`,
@@ -3908,7 +4055,7 @@
                 },
               }),
 
-              $.ajax({          
+              $.ajax({
                 url: `${BACKEND_URL}/users/lga-trends?${filterString}`,
                 method: "GET",
                 headers: {
@@ -4075,7 +4222,7 @@
                     fill: true,
                     pointRadius: 3,
                   },
-                    {
+                  {
                     label: "Auctioneer Requests",
                     // ✅ Correctly access the pre-aligned data array
                     data: trends?.hourly?.auctioneerRequests || [],
@@ -4757,7 +4904,7 @@
             method: "GET",
             headers: { Authorization: `Bearer ${token}` },
           });
-          const currentLGA = userRes?.lgaOfOrigin || "Unknown LGA";
+          const currentLGA = userRes?.lga?.name || "Unknown LGA";
 
           // Construct the query string from analytics filters
           const queryParams = new URLSearchParams();
@@ -5087,13 +5234,13 @@
       }
 
       // Event delegation for dynamically created elements
-      $(document).on("click", ".change-role-btn", function () {
-        const userId = $(this).data("id");
-        const userName = $(this).data("user");
+      // $(document).on("click", ".change-role-btn", function () {
+      //   const userId = $(this).data("id");
+      //   const userName = $(this).data("user");
 
-        $("#changeRoleUser").val(userName);
-        $("#changeRoleModal").data("userId", userId);
-      });
+      //   $("#changeRoleUser").val(userName);
+      //   $("#changeRoleModal").data("userId", userId);
+      // });
 
       $(document).on("click", ".download-report-btn", function () {
         const reportId = $(this).data("id");
@@ -5112,22 +5259,22 @@
         }
       });
 
-      $(document).on("click", ".delete-report-btn", function () {
-        const reportId = $(this).data("id");
-        const reportIndex = mockAPI.reports.findIndex((r) => r.id === reportId);
+      // $(document).on("click", ".delete-report-btn", function () {
+      //   const reportId = $(this).data("id");
+      //   const reportIndex = mockAPI.reports.findIndex((r) => r.id === reportId);
 
-        if (reportIndex !== -1) {
-          // Remove from mock data
-          mockAPI.reports.splice(reportIndex, 1);
+      //   if (reportIndex !== -1) {
+      //     // Remove from mock data
+      //     mockAPI.reports.splice(reportIndex, 1);
 
-          // Refresh table
-          reportsTable.clear();
-          reportsTable.rows.add(mockAPI.reports);
-          reportsTable.draw();
+      //     // Refresh table
+      //     reportsTable.clear();
+      //     reportsTable.rows.add(mockAPI.reports);
+      //     reportsTable.draw();
 
-          showNotification("Report deleted successfully", "success");
-        }
-      });
+      //     showNotification("Report deleted successfully", "success");
+      //   }
+      // });
 
       $(document).on("click", ".edit-user-btn", function () {
         const userId = $(this).data("id");

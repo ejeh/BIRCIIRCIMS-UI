@@ -642,16 +642,15 @@
             success: function (data) {
               const { role } = data.user;
               console.log(role);
-              if (role === "global_admin") {
+              if (role === "global_admin" || role === "admin") {
                 window.location.href = "../../app/global-admin-dashboard.html";
               }
-              if (role === "super_admin" || role === "support_admin") {
+              if (role === "support_admin") {
                 // window.location.href = "../../app/index.html";
                 window.location.href = "../../app/support-admin-dashboard.html";
               }
 
               if (role === "user") {
-                // window.location.href = "../../app/user-dasboard.html";
                 window.location.href = "../../app/user-dashboard.html";
               }
 

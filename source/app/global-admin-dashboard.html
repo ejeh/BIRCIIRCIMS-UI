@@ -632,6 +632,13 @@
           </li>
 
           <li class="nav-item">
+            <a class="nav-link" href="#" data-page="lgas">
+              <i class="bi bi-map"></i>
+              LGA Management
+            </a>
+          </li>
+
+          <li class="nav-item">
             <a
               class="nav-link"
               href="#"
@@ -1827,6 +1834,7 @@
                     <th>User</th>
                     <th>Email</th>
                     <th>Current Role</th>
+                    <th>Assigned LGA</th>
                     <th>Assigned By</th>
                     <th>Assigned Date</th>
                     <th>Actions</th>
@@ -1981,6 +1989,116 @@
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LGAs Page -->
+      <div id="lgas-page" class="page-content d-none">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2 class="mb-0">LGA Management</h2>
+          <div class="d-flex gap-2">
+            <button
+              class="btn btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#addLgaModal"
+            >
+              <i class="bi bi-plus-circle me-2"></i>Add New LGA
+            </button>
+            <!-- Toggle buttons -->
+            <div class="btn-group" role="group">
+              <button
+                type="button"
+                class="btn btn-outline-primary active"
+                id="lgasChartsBtn"
+              >
+                <i class="bi bi-bar-chart me-1"></i>Charts & Summary
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-primary"
+                id="lgasTableBtn"
+              >
+                <i class="bi bi-table me-1"></i>Table View
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts and Summary View -->
+        <div id="lgas-charts-view">
+          <div class="row mb-4">
+            <div class="col-md-4 mb-3">
+              <div class="card">
+                <div class="card-body text-center">
+                  <h3 class="text-primary lga-count">0</h3>
+                  <p class="mb-0">Total LGAs</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <div class="card">
+                <div class="card-body text-center">
+                  <h3 class="text-success" id="lgaCreatedThisMonth">0</h3>
+                  <p class="mb-0">Added This Month</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <div class="card">
+                <div class="card-body text-center">
+                  <h3 class="text-info" id="lgaHeadquartersCount">0</h3>
+                  <p class="mb-0">Headquarters</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-4">
+            <div class="col-lg-8 mb-3">
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="mb-0">LGA Creation Trend</h5>
+                </div>
+                <div class="card-body">
+                  <div class="chart-container">
+                    <canvas id="lgaTrendChart"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Table View -->
+        <div id="lgas-table-view" class="d-none">
+          <div class="card">
+            <div
+              class="card-header d-flex justify-content-between align-items-center"
+            >
+              <h5 class="mb-0">All LGAs</h5>
+            </div>
+            <div class="card-body">
+              <table
+                id="lgasTable"
+                class="table table-striped table-hover dt-responsive w-100"
+              >
+                <thead>
+                  <tr>
+                    <th>S/N</th>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Headquarters</th>
+                    <th>Created By</th>
+                    <th>Created At</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Table data will be populated by JavaScript -->
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -2877,10 +2995,18 @@
               <div class="mb-3">
                 <label for="changeRoleNew" class="form-label">New Role</label>
                 <select class="form-select" id="changeRoleNew" required>
-                  <!-- <option value="super_admin">Super Admin</option> -->
-                  <!-- <option value="support_admin">Support Admin</option>
-                  <option value="kindred_head">Kindred Head</option>                  
-                  <option value="user">User</option> -->
+                  <option value="" disabled selected>Select a role</option>
+                  <!-- Options will be populated by JS -->
+                </select>
+              </div>
+              <div class="mb-3" id="lgaContainer" style="display: none">
+                <label for="changeRoleLga" class="form-label"
+                  >Local Government</label
+                >
+                <!-- Added LGA Dropdown here -->
+                <select id="changeRoleLga" class="form-select" required>
+                  <option value="">Select LGA Name</option>
+                  <!-- Options will be populated by JS -->
                 </select>
               </div>
               <div class="mb-3">
@@ -2893,7 +3019,6 @@
                   rows="3"
                 ></textarea>
               </div>
-
               <div class="modal-footer">
                 <button
                   type="button"
@@ -2902,7 +3027,11 @@
                 >
                   Cancel
                 </button>
-                <button type="submit" class="btn btn-primary">
+                <button
+                  type="submit"
+                  class="btn btn-primary"
+                  id="updateRoleBtn"
+                >
                   Update Role
                 </button>
               </div>
@@ -3174,6 +3303,109 @@
             </button>
             <button type="button" class="btn btn-danger" id="confirmActionBtn">
               Confirm
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add LGA Modal -->
+    <div class="modal fade" id="addLgaModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Add New LGA</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="addLgaForm">
+              <div class="mb-3">
+                <label for="lgaName" class="form-label">LGA Name</label>
+                <!-- Changed to Select -->
+                <select id="lgaName" class="form-select" required>
+                  <option value="">Select LGA Name</option>
+                  <!-- Options will be populated by JS -->
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="lgaHeadquarters" class="form-label"
+                  >Headquarters</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="lgaHeadquarters"
+                  placeholder="Enter main town"
+                  required
+                />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button type="button" class="btn btn-primary" id="addLgaBtn">
+              Save LGA
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit LGA Modal -->
+    <div class="modal fade" id="editLgaModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit LGA</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="editLgaForm">
+              <input type="hidden" id="editLgaId" />
+              <div class="mb-3">
+                <label for="editLgaName" class="form-label">LGA Name</label>
+                <!-- Changed to Select -->
+                <select id="editLgaName" class="form-select" required>
+                  <option value="">Select LGA Name</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="editLgaHeadquarters" class="form-label"
+                  >Headquarters</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="editLgaHeadquarters"
+                  required
+                />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button type="button" class="btn btn-primary" id="updateLgaBtn">
+              Update LGA
             </button>
           </div>
         </div>
@@ -4441,6 +4673,18 @@
         });
       }
 
+      // Function to fetch available roles from the backend
+      function fetchAvailableLga() {
+        return $.ajax({
+          url: `${BACKEND_URL}/lgas`,
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+      }
+
       // Function to populate the role dropdown
       function populateRoleDropdown(roles) {
         const $roleSelect = $("#changeRoleNew");
@@ -4453,8 +4697,8 @@
 
         // Add each role as an option
         roles.forEach((role) => {
-          // Skip super_admin if needed (uncomment the condition if you want to exclude it)
-          // if (role.value === 'super_admin') return;
+          // Skip global_admin if needed (uncomment the condition if you want to exclude it)
+          if (role.value === "global_admin") return;
 
           $roleSelect.append(
             `<option value="${role.value}">${role.label}</option>`,
@@ -4462,9 +4706,41 @@
         });
       }
 
-      // 🔹 Open Change Role Modal
+      // Function to populate the role dropdown
+      function populateDropdownLga(lga) {
+        const $lgaSelect = $("#changeRoleLga");
+        $lgaSelect.empty(); // Clear existing options
 
+        // Add a default option if needed
+        $lgaSelect.append(
+          '<option value="" disabled selected>Select a Local  Government</option>',
+        );
+
+        // Add each role as an option
+        lga.forEach((lgaItem) => {
+          $lgaSelect.append(
+            `<option value="${lgaItem._id}">${lgaItem.name}</option>`,
+          );
+        });
+      }
+
+      // 🔹 Open Change Role Modal
+      // Toggle LGA visibility based on role selection
+      $("#changeRoleNew").on("change", function () {
+        const selectedRole = $(this).val();
+        if (selectedRole === "support_admin") {
+          $("#lgaContainer").show();
+          $("#changeRoleLga").attr("required", true); // Make required only when visible
+        } else {
+          $("#lgaContainer").hide();
+          $("#changeRoleLga").attr("required", false).val(""); // Clear value and requirement
+        }
+      });
       $(document).on("click", ".change-role-btn", function () {
+        // Reset visibility when the modal is opened
+        $("#lgaContainer").hide();
+        $("#changeRoleLga").val("");
+
         const userId = $(this).data("id");
         const userName = $(this).data("user");
         $("#changeRoleUserId").val(userId);
@@ -4473,6 +4749,7 @@
         // Fetch available roles and populate the dropdown
         fetchAvailableRoles()
           .done(function (response) {
+            console.log("response", response);
             // The response structure will be { status: 'success', data: [...] }
             const roles = response.data;
             populateRoleDropdown(roles);
@@ -4487,18 +4764,97 @@
             // Fallback to hardcoded roles if API fails
             const fallbackRoles = [
               { value: "support_admin", label: "Support Admin" },
-              { value: "kindred_head", label: "Kindred Head" },
               { value: "user", label: "User" },
+              { value: "admin", label: "Admin" },
             ];
             populateRoleDropdown(fallbackRoles);
           });
+
+        // Fetch available lga and populate the dropdown
+        fetchAvailableLga()
+          .done(function (response) {
+            // The response structure will be { status: 'success', data: [...] }
+            const lga = response.data;
+            populateDropdownLga(lga);
+          })
+          .fail(function (xhr) {
+            showNotification(
+              "Error",
+              xhr.responseText || "Failed to fetch available lga",
+              "error",
+            );
+
+            // Fallback to hardcoded lga if API fails
+            const fallbackLga = [
+              { name: "Agatu", headquaters: "Agatu" },
+              { name: "Apa", headquaters: "Apa" },
+              { name: "Ado", headquaters: "Ado" },
+              { name: "Buruku", headquaters: "Buruku" },
+              { name: "Gboko", headquaters: "Gboko" },
+              { name: "Guma", headquaters: "Guma" },
+              { name: "Gwer East", headquaters: "Gwer East" },
+              { name: "Gwer West", headquaters: "Gwer West" },
+              { name: "Katsina-Ala", headquaters: "Katsina-Ala" },
+              { name: "Konshisha", headquaters: "Konshisha" },
+              { name: "Kwande", headquaters: "Kwande" },
+              { name: "Logo", headquaters: "Logo" },
+              { name: "Makurdi", headquaters: "Makurdi" },
+              { name: "Obi", headquaters: "Obi" },
+              { name: "Ogbadibo", headquaters: "Ogbadibo" },
+              { name: "Ohimini", headquaters: "Ohimini" },
+              { name: "Oju", headquaters: "Oju" },
+              { name: "Okpokwu", headquaters: "Okpokwu" },
+              { name: "Orhionmwon", headquaters: "Orhionmwon" },
+              { name: "Otukpo", headquaters: "Otukpo" },
+              { name: "Tarka", headquaters: "Tarka" },
+              { name: "Ukum", headquaters: "Ukum" },
+              { name: "Ushongo", headquaters: "Ushongo" },
+              { name: "Vandeikya", headquaters: "Vandeikya" },
+            ];
+            populateDropdownLga(fallbackLga);
+          });
       });
 
-      // 🔹 Handle Role Change Submission
-      $("#changeRoleForm").on("submit", function (e) {
+      // 🔹 Handle Change Role Submission
+      $("#changeRoleForm").on("submit", async function (e) {
         e.preventDefault();
         const userId = $("#changeRoleUserId").val();
         const newRole = $("#changeRoleNew").val();
+        const lga = $("#changeRoleLga").val(); // Capture the selected LGA name
+
+        // Basic validation
+        if (!newRole) {
+          showNotification("Please select a valid role.", "error");
+          return;
+        }
+
+        // Ensure LGA is selected ONLY if the role is support_admin
+        if (newRole === "support_admin" && !lga) {
+          showNotification(
+            "Please select a Local Government for the Support Admin.",
+            "error",
+          );
+          return;
+        }
+
+        // --- UPDATE: NEW LOGIC ---
+        if (!userId) {
+          showNotification("User ID is missing.", "error");
+          return;
+        }
+
+        // Construct the payload
+        const payload = {
+          role: newRole,
+          approvedBy: user.id,
+          reason: $("#changeRoleReason").val() || "Role updated by admin",
+        };
+
+        // Only include LGA in payload if it's the support_admin role
+        if (newRole === "support_admin") {
+          payload.lga = lga;
+        }
+
         $.ajax({
           url: `${BACKEND_URL}/users/${userId}/role`,
           method: "PATCH",
@@ -4506,19 +4862,27 @@
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-          data: JSON.stringify({ role: newRole }),
+
+          data: JSON.stringify(payload),
           success: function () {
             $("#changeRoleModal").modal("hide");
-            initializeUsersPage();
+            // Refresh Roles Page to update charts/table
+            if (typeof initializeRolesPage === "function") {
+              initializeRolesPage();
+            }
+
+            if (typeof initializeUsersPage === "function") {
+              initializeUsersPage();
+            }
             showNotification(
               "Success",
-              "User role updated successfully",
+              "User role updated successfully!",
               "success",
             );
           },
           error: function (xhr) {
             showNotification(
-              xhr.responseJSON.message || "Failed to change role",
+              xhr.responseJSON.message || "Error updating role.",
               "error",
             );
           },
@@ -5464,6 +5828,13 @@
                   return res.blob().then((blob) => ({ blob, contentType }));
                 })
                 .then(({ blob, contentType }) => {
+                  console.log(
+                    "Fetched receipt blob:",
+                    blob,
+                    "Content-Type:",
+                    contentType,
+                  );
+
                   const blobUrl = URL.createObjectURL(blob);
 
                   if (contentType === "application/pdf") {
@@ -5762,6 +6133,7 @@
           }
         });
       });
+
       function handleView(requestId) {
         const apiHeaders = {
           Authorization: `Bearer ${token}`,
@@ -5796,13 +6168,13 @@
                       response.lastname
                     }</h5>
                     <p class="mb-1"><strong>Phone:</strong> ${response.phone}</p>
-                    <p class="mb-1"><strong>Email:</strong> ${response.email}</p>
                     <p class="mb-1"><strong>Status:</strong> <span class="badge bg-info">${
                       response.status
                     }</span></p>
-                    <p><strong>State:</strong> ${response.stateOfOrigin}</p>
-                    <p><strong>LGA:</strong> ${response.lgaOfOrigin}</p>
+                    <p><strong>Ward:</strong> ${response.ward}</p>                    
+                    <p><strong>Village:</strong> ${response.village}</p>
                     <p><strong>Kindred:</strong> ${response.kindred}</p>
+                    <p><strong>LGA:</strong> ${response.lgaOfOrigin}</p>
                     <p><strong>isProfileCompleted:</strong> ${
                       response.userId?.isProfileCompleted
                     }</p>
@@ -6396,13 +6768,218 @@
         });
       });
 
+      // function initializeTransactionsPage() {
+      //   const headers = {
+      //     Authorization: `Bearer ${token}`,
+      //     "Content-Type": "application/json",
+      //   };
+
+      //   // 1️⃣ Fetch Transactions for Table
+      //   if (!$("#transactions-table-view").hasClass("d-none")) {
+      //     $.ajax({
+      //       url: `${BACKEND_URL}/transaction/all`,
+      //       method: "GET",
+      //       headers,
+      //       success: function (transactions) {
+      //         if (!Array.isArray(transactions)) {
+      //           console.error("Invalid transactions data:", transactions);
+      //           return;
+      //         }
+
+      //         if ($.fn.DataTable.isDataTable("#transactionsTable")) {
+      //           $("#transactionsTable").DataTable().destroy();
+      //         }
+
+      //         transactionsTable = $("#transactionsTable").DataTable({
+      //           data: transactions.map((t) => ({
+      //             id: t._id,
+      //             user: t.userId?.firstname
+      //               ? `${t.userId.firstname} ${t.userId.lastname}`
+      //               : "N/A",
+      //             type: t.paymentType || "N/A",
+      //             // FIX: Divide by 100 to convert Kobo to Naira
+      //             amount: (t.documentAmount || 0) / 100,
+      //             status: t.status || "Pending",
+      //             datetime: new Date(t.createdAt).toLocaleString(),
+      //           })),
+      //           columns: [
+      //             {
+      //               title: "S/N",
+      //               data: null,
+      //               orderable: false,
+      //               searchable: false,
+      //               render: (data, type, row, meta) =>
+      //                 meta.row + meta.settings._iDisplayStart + 1,
+      //             },
+      //             { data: "id", visible: false, searchable: false },
+      //             { data: "user" },
+      //             { data: "type" },
+      //             {
+      //               data: "amount",
+      //               render: (data) =>
+      //                 `₦${Number(data).toLocaleString(undefined, {
+      //                   minimumFractionDigits: 2,
+      //                   maximumFractionDigits: 2,
+      //                 })}`,
+      //             },
+      //             {
+      //               data: "status",
+      //               render: function (data) {
+      //                 let badgeClass = "bg-primary";
+      //                 if (data === "Completed") badgeClass = "bg-success";
+      //                 else if (data === "Pending") badgeClass = "bg-warning";
+      //                 else if (data === "Failed") badgeClass = "bg-danger";
+      //                 return `<span class="badge ${badgeClass}">${data}</span>`;
+      //               },
+      //             },
+      //             { data: "datetime" },
+      //             {
+      //               data: null,
+      //               render: (data, type, row) => `
+      //           <div class="btn-group">
+      //             <button class="btn btn-sm btn-outline-primary view-transaction-btn" data-id="${row.id}">
+      //               <i class="bi bi-eye"></i>
+      //             </button>
+      //             <button class="btn btn-sm btn-outline-success refund-transaction-btn" data-id="${row.id}">
+      //               <i class="bi bi-arrow-counterclockwise"></i>
+      //             </button>
+      //           </div>`,
+      //             },
+      //           ],
+      //           responsive: true,
+      //           pageLength: 10,
+      //         });
+      //       },
+      //       error: (err) => console.error("Error loading transactions:", err),
+      //     });
+      //   }
+
+      //   // 2️⃣ Fetch Transaction Stats (for charts)
+      //   if (!$("#transactions-charts-view").hasClass("d-none")) {
+      //     $.ajax({
+      //       url: `${BACKEND_URL}/transaction/stats`,
+      //       method: "GET",
+      //       headers,
+      //       success: function (stats) {
+      //         destroyChart(transactionTrendChart, "transactionTrendChart");
+      //         destroyChart(revenueStateChart, "revenueStateChart");
+
+      //         // FIX: Map monthlyTrend values and divide by 100
+      //         const trendLabels = Object.keys(stats.monthlyTrend || {});
+      //         const trendData = Object.values(stats.monthlyTrend || {}).map(
+      //           (v) => v / 100,
+      //         );
+
+      //         // Transaction Trend Chart
+      //         const ctx1 = document
+      //           .getElementById("transactionTrendChart")
+      //           .getContext("2d");
+      //         transactionTrendChart = new Chart(ctx1, {
+      //           type: "line",
+      //           data: {
+      //             labels: trendLabels,
+      //             datasets: [
+      //               {
+      //                 label: "Revenue (₦)",
+      //                 data: trendData,
+      //                 borderColor: "#10b981",
+      //                 backgroundColor: "rgba(16, 185, 129, 0.1)",
+      //                 tension: 0.4,
+      //                 fill: true,
+      //               },
+      //             ],
+      //           },
+      //           options: {
+      //             responsive: true,
+      //             maintainAspectRatio: false,
+      //             plugins: { legend: { display: false } },
+      //             scales: {
+      //               y: {
+      //                 beginAtZero: true,
+      //                 ticks: {
+      //                   callback: (value) => "₦" + value.toLocaleString(),
+      //                 },
+      //               },
+      //             },
+      //           },
+      //         });
+
+      //         // FIX: Map revenueByLGA values and divide by 100
+      //         const lgaLabels = Object.keys(stats.revenueByLGA || {});
+      //         const lgaData = Object.values(stats.revenueByLGA || {}).map(
+      //           (v) => v / 100,
+      //         );
+
+      //         // Revenue by State Chart
+      //         const ctx2 = document
+      //           .getElementById("revenueStateChart")
+      //           .getContext("2d");
+      //         revenueStateChart = new Chart(ctx2, {
+      //           type: "pie",
+      //           data: {
+      //             labels: lgaLabels,
+      //             datasets: [
+      //               {
+      //                 data: lgaData,
+      //                 backgroundColor: [
+      //                   "#6366f1",
+      //                   "#8b5cf6",
+      //                   "#ec4899",
+      //                   "#f59e0b",
+      //                   "#10b981",
+      //                   "#64748b",
+      //                 ],
+      //               },
+      //             ],
+      //           },
+      //           options: {
+      //             responsive: true,
+      //             maintainAspectRatio: false,
+      //             plugins: {
+      //               legend: { position: "bottom" },
+      //               tooltip: {
+      //                 callbacks: {
+      //                   label: (item) => ` ₦${item.raw.toLocaleString()}`,
+      //                 },
+      //               },
+      //             },
+      //           },
+      //         });
+      //       },
+      //       error: (err) => console.error("Error loading stats:", err),
+      //     });
+      //   }
+      // }
+
+      // ✅ SAFETY WRAPPER — Ensures Chart.js fully releases canvas
+
       function initializeTransactionsPage() {
         const headers = {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         };
 
-        // 1️⃣ Fetch Transactions for Table
+        // 1️⃣ Inject View Modal
+        if ($("#transactionViewModal").length === 0) {
+          const modalHtml = `
+            <div class="modal fade" id="transactionViewModal" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header bg-light">
+                    <h5 class="modal-title"><i class="bi bi-receipt-cutoff me-2"></i>Transaction Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body" id="transactionModalBody">
+                    <!-- Populated dynamically -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+          $("body").append(modalHtml);
+        }
+
+        // 2️⃣ Fetch Transactions for Table
         if (!$("#transactions-table-view").hasClass("d-none")) {
           $.ajax({
             url: `${BACKEND_URL}/transaction/all`,
@@ -6425,10 +7002,10 @@
                     ? `${t.userId.firstname} ${t.userId.lastname}`
                     : "N/A",
                   type: t.paymentType || "N/A",
-                  // FIX: Divide by 100 to convert Kobo to Naira
                   amount: (t.documentAmount || 0) / 100,
-                  status: t.status || "Pending",
+                  status: t.status || "pending",
                   datetime: new Date(t.createdAt).toLocaleString(),
+                  receiptUrl: t.receiptUrl || null,
                 })),
                 columns: [
                   {
@@ -6453,25 +7030,65 @@
                   {
                     data: "status",
                     render: function (data) {
-                      let badgeClass = "bg-primary";
-                      if (data === "Completed") badgeClass = "bg-success";
-                      else if (data === "Pending") badgeClass = "bg-warning";
-                      else if (data === "Failed") badgeClass = "bg-danger";
-                      return `<span class="badge ${badgeClass}">${data}</span>`;
+                      let badgeClass = "bg-secondary";
+                      let icon = "";
+                      if (data === "success" || data === "Completed") {
+                        badgeClass = "bg-success";
+                        icon = '<i class="bi bi-check-circle me-1"></i>';
+                      } else if (data === "pending" || data === "Pending") {
+                        badgeClass = "bg-warning text-dark";
+                      } else if (data === "service_paid") {
+                        badgeClass = "bg-info";
+                        icon = '<i class="bi bi-hourglass-split me-1"></i>';
+                      } else if (data === "receipt_uploaded") {
+                        badgeClass = "bg-primary";
+                        icon = '<i class="bi bi-file-earmark-image me-1"></i>';
+                      } else if (data === "failed" || data === "Failed") {
+                        badgeClass = "bg-danger";
+                      }
+
+                      const formattedStatus = data
+                        .replace(/_/g, " ")
+                        .replace(/\b\w/g, (l) => l.toUpperCase());
+                      return `<span class="badge ${badgeClass}">${icon}${formattedStatus}</span>`;
                     },
                   },
                   { data: "datetime" },
                   {
                     data: null,
-                    render: (data, type, row) => `
-                <div class="btn-group">
-                  <button class="btn btn-sm btn-outline-primary view-transaction-btn" data-id="${row.id}">
-                    <i class="bi bi-eye"></i>
-                  </button>
-                  <button class="btn btn-sm btn-outline-success refund-transaction-btn" data-id="${row.id}">
-                    <i class="bi bi-arrow-counterclockwise"></i>
-                  </button>
-                </div>`,
+                    orderable: false,
+                    render: (data, type, row) => {
+                      if (row.status === "receipt_uploaded") {
+                        return `
+                          <div class="btn-group">
+                            <button class="btn btn-sm btn-outline-primary view-transaction-btn" 
+                                    data-id="${row.id}" data-user="${row.user}" data-type="${row.type}" 
+                                    data-amount="${row.amount}" data-status="${row.status}" data-date="${row.datetime}" data-receipt="${row.receiptUrl}"
+                                    title="View Details & Receipt">
+                              <i class="bi bi-eye"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-success approve-receipt-btn" data-id="${row.id}" title="Approve Receipt">
+                              <i class="bi bi-check-lg"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger reject-receipt-btn" data-id="${row.id}" title="Reject Receipt">
+                              <i class="bi bi-x-lg"></i>
+                            </button>
+                          </div>`;
+                      } else {
+                        return `
+                          <div class="btn-group">
+                            <button class="btn btn-sm btn-outline-primary view-transaction-btn" 
+                                    data-id="${row.id}" data-user="${row.user}" data-type="${row.type}" 
+                                    data-amount="${row.amount}" data-status="${row.status}" data-date="${row.datetime}" data-receipt="${row.receiptUrl}"
+                                    title="View Details">
+                              <i class="bi bi-eye"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary refund-transaction-btn" data-id="${row.id}" title="Refund">
+                              <i class="bi bi-arrow-counterclockwise"></i>
+                            </button>
+                          </div>`;
+                      }
+                    },
                   },
                 ],
                 responsive: true,
@@ -6482,25 +7099,21 @@
           });
         }
 
-        // 2️⃣ Fetch Transaction Stats (for charts)
+        // 3️⃣ Fetch Transaction Stats (Unchanged)
         if (!$("#transactions-charts-view").hasClass("d-none")) {
           $.ajax({
             url: `${BACKEND_URL}/transaction/stats`,
             method: "GET",
             headers,
             success: function (stats) {
-              console.log("stats", stats);
-
               destroyChart(transactionTrendChart, "transactionTrendChart");
               destroyChart(revenueStateChart, "revenueStateChart");
 
-              // FIX: Map monthlyTrend values and divide by 100
               const trendLabels = Object.keys(stats.monthlyTrend || {});
               const trendData = Object.values(stats.monthlyTrend || {}).map(
                 (v) => v / 100,
               );
 
-              // Transaction Trend Chart
               const ctx1 = document
                 .getElementById("transactionTrendChart")
                 .getContext("2d");
@@ -6534,13 +7147,11 @@
                 },
               });
 
-              // FIX: Map revenueByLGA values and divide by 100
               const lgaLabels = Object.keys(stats.revenueByLGA || {});
               const lgaData = Object.values(stats.revenueByLGA || {}).map(
                 (v) => v / 100,
               );
 
-              // Revenue by State Chart
               const ctx2 = document
                 .getElementById("revenueStateChart")
                 .getContext("2d");
@@ -6579,9 +7190,234 @@
             error: (err) => console.error("Error loading stats:", err),
           });
         }
+
+        // ====================================================================
+        // 4️⃣ EVENT LISTENERS
+        // ====================================================================
+
+        // VIEW DETAILS & RECEIPT (Using Blob fetch exactly like handleAuctioneerView)
+        $(document).on("click", ".view-transaction-btn", function () {
+          const btn = $(this);
+          const { id, user, type, amount, status, date, receipt } = btn.data();
+          const formattedAmount = Number(amount).toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+          });
+          const formattedStatus = status
+            .replace(/_/g, " ")
+            .replace(/\b\w/g, (l) => l.toUpperCase());
+
+          // Build Receipt Viewer HTML (Empty container initially)
+          let receiptViewerHtml = `<p class="text-muted mt-3 mb-0 fst-italic">No receipt uploaded for this transaction.</p>`;
+          if (receipt) {
+            receiptViewerHtml = `
+              <h6 class="mt-4 border-bottom pb-2"><i class="bi bi-file-earmark-image me-2 text-primary"></i>Uploaded Receipt</h6>
+              <div class="card my-3 shadow-sm">
+                <div class="card-body p-0">
+                  <div id="receipt-viewer-container" style="width:100%; max-height:75vh; overflow:auto;" class="border bg-light p-2"></div>
+                  <div class="p-2 text-end">
+                     <button class="btn btn-sm btn-outline-primary me-2" onclick="window.open('${receipt}', '_blank')">Open in New Tab</button>
+                     <button class="btn btn-sm btn-outline-secondary" data-url="${receipt}" onclick="downloadFile(this)">Download</button>
+                  </div>
+                </div>
+              </div>
+            `;
+          }
+
+          // Populate Modal Body
+          $("#transactionModalBody").html(`
+            <div class="container-fluid">
+              <div class="row mb-3">
+                <div class="col-md-6 mb-2">
+                  <label class="text-muted small">User</label>
+                  <p class="fw-bold mb-0">${user}</p>
+                </div>
+                <div class="col-md-6 mb-2">
+                  <label class="text-muted small">Payment Type</label>
+                  <p class="fw-bold mb-0 text-uppercase">${type}</p>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-md-6 mb-2">
+                  <label class="text-muted small">Amount</label>
+                  <p class="fw-bold mb-0 text-success">₦${formattedAmount}</p>
+                </div>
+                <div class="col-md-6 mb-2">
+                  <label class="text-muted small">Status</label>
+                  <p class="fw-bold mb-0">${formattedStatus}</p>
+                </div>
+              </div>
+              <div class="row mb-0">
+                <div class="col-12">
+                  <label class="text-muted small">Date Initiated</label>
+                  <p class="fw-bold mb-0">${date}</p>
+                </div>
+              </div>
+              <hr class="my-3">
+              ${receiptViewerHtml}
+            </div>
+          `);
+
+          // Show Modal FIRST so the container exists in the DOM
+          const modal = new bootstrap.Modal(
+            document.getElementById("transactionViewModal"),
+          );
+          modal.show();
+
+          // FETCH AND RENDER RECEIPT USING BLOB (Exactly matching auctioneer logic)
+          if (receipt) {
+            const container = document.getElementById(
+              "receipt-viewer-container",
+            );
+
+            // Show loader
+            container.innerHTML = `
+              <div class="d-flex justify-content-center p-5">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading Receipt...</span>
+                </div>
+              </div>
+            `;
+
+            // Fetch document with authorization
+            fetch(receipt, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            })
+              .then((res) => {
+                if (!res.ok) throw new Error("Failed to fetch receipt");
+
+                // Get content type to determine how to render
+                const contentType = res.headers.get("Content-Type");
+                return res.blob().then((blob) => ({ blob, contentType }));
+              })
+
+              .then(({ blob, contentType }) => {
+                let actualType = contentType;
+
+                // FIX: Cloudinary 'raw' URLs almost always return 'application/octet-stream'
+                // instead of 'application/pdf'. We detect this via the URL path.
+                if (
+                  (!actualType || actualType === "application/octet-stream") &&
+                  receipt.includes("/raw/upload/")
+                ) {
+                  actualType = "application/pdf";
+                }
+                // Fallback for images if they ever get mislabeled by Cloudinary
+                else if (
+                  !actualType ||
+                  actualType === "application/octet-stream"
+                ) {
+                  actualType = "image/jpeg";
+                }
+
+                // Create a NEW blob with the corrected Content-Type.
+                // This forces the browser to recognize it as a valid PDF/Image.
+                const correctedBlob = new Blob([blob], { type: actualType });
+                const blobUrl = URL.createObjectURL(correctedBlob);
+
+                if (actualType === "application/pdf") {
+                  loadPDFJ(blobUrl, container);
+                } else if (actualType.startsWith("image/")) {
+                  loadImage(blobUrl, container);
+                } else {
+                  throw new Error(`Unsupported file type: ${actualType}`);
+                }
+              })
+              .catch((err) => {
+                console.error("Error loading receipt:", err);
+                container.innerHTML = `
+                  <div class="alert alert-danger m-2">
+                    Failed to load receipt: ${err.message}
+                    <div class="mt-2">
+                      <a href="${receipt}" target="_blank" class="btn btn-sm btn-primary">Try Opening in New Tab</a>
+                    </div>
+                  </div>
+                `;
+              });
+          }
+        });
+
+        // APPROVE RECEIPT
+        $(document).on("click", ".approve-receipt-btn", async function () {
+          const id = $(this).data("id");
+
+          const result = await Swal.fire({
+            title: "Approve Receipt?",
+            text: "This will mark the document fee as paid and finalize the request.",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#28a745",
+            confirmButtonText: "Yes, Approve",
+            cancelButtonText: "Cancel",
+          });
+
+          if (result.isConfirmed) {
+            try {
+              const res = await $.ajax({
+                url: `${BACKEND_URL}/transaction/admin/approve-receipt/${id}`,
+                method: "PATCH",
+                headers: { Authorization: `Bearer ${token}` },
+              });
+
+              Swal.fire("Approved!", res.message, "success").then(() => {
+                initializeTransactionsPage();
+              });
+            } catch (err) {
+              Swal.fire(
+                "Error",
+                err.responseJSON?.message || "Failed to approve receipt.",
+                "error",
+              );
+            }
+          }
+        });
+
+        // REJECT RECEIPT
+        $(document).on("click", ".reject-receipt-btn", async function () {
+          const id = $(this).data("id");
+
+          const { value: reason } = await Swal.fire({
+            title: "Reject Receipt",
+            input: "textarea",
+            inputLabel: "Reason for rejection",
+            inputPlaceholder:
+              "E.g. Receipt is blurry, wrong amount, invalid document, etc.",
+            inputAttributes: { required: "true" },
+            showCancelButton: true,
+            confirmButtonColor: "#dc3545",
+            confirmButtonText: "Reject Receipt",
+            inputValidator: (value) => {
+              if (!value) return "You need to provide a reason for the user!";
+            },
+          });
+
+          if (reason) {
+            try {
+              const res = await $.ajax({
+                url: `${BACKEND_URL}/transaction/admin/reject-receipt/${id}`,
+                method: "PATCH",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  "Content-Type": "application/json",
+                },
+                data: JSON.stringify({ reason }),
+              });
+
+              Swal.fire("Rejected", res.message, "info").then(() => {
+                initializeTransactionsPage();
+              });
+            } catch (err) {
+              Swal.fire(
+                "Error",
+                err.responseJSON?.message || "Failed to reject receipt.",
+                "error",
+              );
+            }
+          }
+        });
       }
 
-      // ✅ SAFETY WRAPPER — Ensures Chart.js fully releases canvas
       function destroyChart(chartInstance, canvasId) {
         if (chartInstance) {
           chartInstance.destroy();
@@ -6830,6 +7666,8 @@
                   `${u.firstname || ""} ${u.lastname || ""}`.trim() || "N/A",
                 email: u.email || "N/A",
                 role: u.role || "user",
+                lga: u.lga ? `${u.lga?.name}` : "N/A",
+
                 assignedBy: u.assignedBy
                   ? `${u.assignedBy?.firstname} ${u.assignedBy?.lastname}`
                   : "N/A",
@@ -6867,6 +7705,7 @@
                       .toUpperCase()}</span>`;
                   },
                 },
+                { data: "lga" },
                 { data: "assignedBy" },
                 { data: "registeredAt" },
                 {
@@ -9764,6 +10603,382 @@
           $("#new-this-month").text(newThisMonthCount);
         });
       };
+    </script>
+    <script>
+      // Global Chart Variable for LGAs
+      let lgaTrendChart;
+
+      // 1. Initialize Toggle Buttons for LGA Page
+      document.addEventListener("DOMContentLoaded", function () {
+        const lgasChartsBtn = document.getElementById("lgasChartsBtn");
+        const lgasTableBtn = document.getElementById("lgasTableBtn");
+        const lgasChartsView = document.getElementById("lgas-charts-view");
+        const lgasTableView = document.getElementById("lgas-table-view");
+
+        if (lgasChartsBtn && lgasTableBtn) {
+          lgasChartsBtn.addEventListener("click", function () {
+            lgasChartsView.classList.remove("d-none");
+            lgasTableView.classList.add("d-none");
+            lgasChartsBtn.classList.add("active");
+            lgasTableBtn.classList.remove("active");
+            initializeLgasPage(); // Refresh charts
+          });
+
+          lgasTableBtn.addEventListener("click", function () {
+            lgasChartsView.classList.add("d-none");
+            lgasTableView.classList.remove("d-none");
+            lgasChartsBtn.classList.remove("active");
+            lgasTableBtn.classList.add("active");
+            initializeLgasPage(); // Refresh table
+          });
+        }
+      });
+
+      // 2. Main Initialization Function
+      async function initializeLgasPage() {
+        // Only initialize DataTable if we're on the table view
+        if (!$("#lgas-table-view").hasClass("d-none")) {
+          if ($.fn.DataTable.isDataTable("#lgasTable")) {
+            $("#lgasTable").DataTable().destroy();
+          }
+
+          try {
+            const response = await $.ajax({
+              url: `${BACKEND_URL}/lgas`,
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+            });
+
+            const lgaList = response.data || [];
+
+            $("#lgasTable").DataTable({
+              data: lgaList,
+              columns: [
+                {
+                  title: "S/N",
+                  data: null,
+                  orderable: false,
+                  render: (data, type, row, meta) =>
+                    meta.row + meta.settings._iDisplayStart + 1,
+                },
+                { data: "_id", visible: false },
+                { data: "name" },
+                { data: "headquaters" },
+                {
+                  data: "createdBy",
+                  render: (data) => (data ? "Admin" : "System"), // Assuming createdBy is just ID or simple object
+                },
+                {
+                  data: "createdAt",
+                  render: (data) => new Date(data).toLocaleDateString(),
+                },
+                {
+                  data: null,
+                  render: (data, type, row) => `
+                    <div class="btn-group">
+                      <button 
+                      class="btn btn-sm btn-outline-primary edit-lga-btn",                       
+                      data-id="${row._id}"
+                      >
+                        <i class="bi bi-pencil"></i>
+                      </button>
+                      <button class="btn btn-sm btn-outline-danger delete-lga-btn" data-id="${row._id}" data-name="${row.name}">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </div>
+                  `,
+                },
+              ],
+              responsive: true,
+              pageLength: 10,
+            });
+          } catch (error) {
+            console.error("Error fetching LGAs:", error);
+          }
+        }
+
+        // Only initialize charts if we're on the charts view
+        if (!$("#lgas-charts-view").hasClass("d-none")) {
+          try {
+            const response = await $.ajax({
+              url: `${BACKEND_URL}/lgas`,
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+            });
+
+            const lgaList = response.data || [];
+            $(".lga-count").text(lgaList.length);
+            $("#lgaHeadquartersCount").text(lgaList.length);
+
+            // Calculate Created This Month
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const createdThisMonth = lgaList.filter((lga) => {
+              const createdDate = new Date(lga.createdAt);
+              return createdDate.getMonth() === currentMonth;
+            }).length;
+            $("#lgaCreatedThisMonth").text(createdThisMonth);
+
+            // Simple Monthly Trend (Mock data if history not available, or group by date)
+            // Since backend returns paginated list without specific "history" endpoint,
+            // we just visualize the current list or mock it if needed.
+            // Here we just render a placeholder or use the data we have.
+
+            destroyChart(lgaTrendChart, "lgaTrendChart");
+            const ctx = document.getElementById("lgaTrendChart");
+            if (ctx) {
+              lgaTrendChart = new Chart(ctx.getContext("2d"), {
+                type: "bar",
+                data: {
+                  labels: lgaList.slice(0, 10).map((l) => l.name), // Show top 10 names
+                  datasets: [
+                    {
+                      label: "LGAs",
+                      data: lgaList.slice(0, 10).map(() => 1), // Just a placeholder visualization
+                      backgroundColor: "#6366f1",
+                    },
+                  ],
+                },
+                options: { responsive: true, maintainAspectRatio: false },
+              });
+            }
+          } catch (error) {
+            console.error("Error loading LGA stats:", error);
+          }
+        }
+      }
+
+      // 3. Navigation Integration
+      // Find the existing showPage function and add this case, or redefine it if necessary
+      // Since I can't edit the existing long script easily, I'll hook into the click event:
+      $(document).on("click", '.nav-link[data-page="lgas"]', function (e) {
+        e.preventDefault();
+        $(".page-content").addClass("d-none");
+        $("#lgas-page").removeClass("d-none");
+
+        $(".sidebar-menu .nav-link").removeClass("active");
+        $(this).addClass("active");
+
+        initializeLgasPage();
+      });
+
+      // 4. Create LGA
+      $("#addLgaBtn").on("click", async function () {
+        const name = $("#lgaName").val().trim();
+        const headquaters = $("#lgaHeadquarters").val().trim();
+
+        if (!name || !headquaters) {
+          showNotification("Please fill in all fields", "error");
+          return;
+        }
+
+        try {
+          await $.ajax({
+            url: `${BACKEND_URL}/lgas`,
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            data: JSON.stringify({ name, headquaters }),
+            success: function () {
+              showNotification("LGA created successfully", "success");
+              $("#addLgaModal").modal("hide");
+              $("#addLgaForm")[0].reset();
+              initializeLgasPage();
+            },
+            error: function (xhr) {
+              showNotification(
+                xhr.responseJSON?.message || "Error creating LGA",
+                "error",
+              );
+            },
+          });
+        } catch (error) {
+          console.error(error);
+        }
+      });
+
+      // // 5. Edit LGA (Open Modal)
+      $(document).on("click", ".edit-lga-btn", function () {
+        const id = $(this).data("id");
+
+        // Find the LGA data from the current DataTable or fetch it
+        // For simplicity, we fetch it
+        $.ajax({
+          url: `${BACKEND_URL}/lgas/${id}`,
+          method: "PATCH", // Note: Ensure your backend has a GET /:id or find it in table
+          headers: { Authorization: `Bearer ${token}` },
+          success: function (lga) {
+            // Fallback if backend doesn't support GET /:id, use table data
+            if (!lga) {
+              const table = $("#lgasTable").DataTable();
+              const data = table.row($(this).parents("tr")).data();
+              lga = data;
+            }
+
+            $("#editLgaId").val(lga._id);
+            $("#editLgaName").val(lga.name);
+            $("#editLgaHeadquarters").val(lga.headquaters);
+            $("#editLgaModal").modal("show");
+          },
+          error: function () {
+            // If GET ID fails, try to find from DOM
+            const table = $("#lgasTable").DataTable();
+            const row = $(this).closest("tr");
+            const data = table.row(row).data();
+            if (data) {
+              $("#editLgaId").val(data._id);
+              $("#editLgaName").val(data.name);
+              $("#editLgaHeadquarters").val(data.headquaters);
+              $("#editLgaModal").modal("show");
+            }
+          },
+        });
+      });
+
+      // 6. Update LGA
+      $("#updateLgaBtn").on("click", async function () {
+        const id = $("#editLgaId").val();
+        const name = $("#editLgaName").val().trim();
+        const headquaters = $("#editLgaHeadquarters").val().trim();
+
+        if (!name || !headquaters) {
+          showNotification("Please fill in all fields", "error");
+          return;
+        }
+
+        try {
+          await $.ajax({
+            url: `${BACKEND_URL}/lgas/${id}`,
+            method: "PATCH",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            data: JSON.stringify({ name, headquaters }),
+            success: function () {
+              showNotification("LGA updated successfully", "success");
+              $("#editLgaModal").modal("hide");
+              initializeLgasPage();
+            },
+            error: function (xhr) {
+              showNotification(
+                xhr.responseJSON?.message || "Error updating LGA",
+                "error",
+              );
+            },
+          });
+        } catch (error) {
+          console.error(error);
+        }
+      });
+
+      // 7. Delete LGA
+      $(document).on("click", ".delete-lga-btn", function () {
+        const id = $(this).data("id");
+        const name = $(this).data("name");
+
+        Swal.fire({
+          title: "Are you sure?",
+          text: `You won't be able to revert this! LGA: ${name}`,
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Yes, delete it!",
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            try {
+              await $.ajax({
+                url: `${BACKEND_URL}/lgas/${id}`,
+                method: "DELETE",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  "Content-Type": "application/json",
+                },
+                success: function (response) {
+                  showNotification(
+                    response.message || "LGA deleted successfully",
+                    "success",
+                  );
+                  initializeLgasPage();
+                },
+                error: function (xhr) {
+                  // Handle Conflict Exception (409)
+                  if (xhr.status === 409) {
+                    Swal.fire(
+                      "Cannot Delete",
+                      xhr.responseJSON.message,
+                      "error",
+                    );
+                  } else {
+                    showNotification(
+                      xhr.responseJSON?.message || "Error deleting LGA",
+                      "error",
+                    );
+                  }
+                },
+              });
+            } catch (error) {
+              console.error(error);
+            }
+          }
+        });
+      });
+    </script>
+
+    <script>
+      // Define the list of Benue LGAs
+      const benueLGAs = [
+        "Agatu",
+        "Apa",
+        "Ado",
+        "Buruku",
+        "Gboko",
+        "Guma",
+        "Gwer East",
+        "Gwer West",
+        "Katsina-Ala",
+        "Konshisha",
+        "Kwande",
+        "Logo",
+        "Makurdi",
+        "Obi",
+        "Ogbadibo",
+        "Ohimini",
+        "Oju",
+        "Okpokwu",
+        "Oturkpo",
+        "Tarka",
+        "Ukum",
+        "Ushongo",
+        "Vandeikya",
+      ];
+
+      // Function to populate LGA dropdown
+      function populateLgaDropdown() {
+        const addSelect = $("#lgaName");
+        const editSelect = $("#editLgaName");
+
+        // Clear existing options (only works if it is a <select>)
+        addSelect.find("option:not(:first)").remove();
+        editSelect.find("option:not(:first)").remove();
+
+        benueLGAs.forEach((lga) => {
+          // const option = new Option(lga, lga);
+          addSelect.append(new Option(lga, lga));
+          editSelect.append(new Option(lga, lga));
+        });
+      }
+      // Initialize the dropdown when the page loads
+      $(document).ready(function () {
+        populateLgaDropdown();
+      });
     </script>
   </body>
 </html>

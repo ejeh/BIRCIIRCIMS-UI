@@ -1551,13 +1551,158 @@
         });
 
         // NIN Validation and Verification/Existence Check
-        $("#NIN").on("input blur", function () {
+        // $("#NIN").on("input blur", function () {
+        //   if (validateNIN("NIN")) {
+        //     debouncedCheckNIN($(this).val().trim());
+        //   } else {
+        //     $("#ninExistenceStatus").html("");
+        //     existenceStatus.nin = null;
+        //     updateNextButtonState();
+        //   }
+        // });
+
+        // NIN Validation and Verification/Existence Check
+        $("#NIN").on("input", function () {
           if (validateNIN("NIN")) {
             debouncedCheckNIN($(this).val().trim());
           } else {
             $("#ninExistenceStatus").html("");
             existenceStatus.nin = null;
             updateNextButtonState();
+          }
+        });
+
+        // NIN Verification Logic - triggered on blur
+        $("#NIN").on("blur", async function () {
+          const nin = $(this).val().trim();
+          const firstname = $("#firstname").val().trim();
+          const lastname = $("#lastname").val().trim();
+
+          // Validate NIN format first
+          if (!validateNIN("NIN")) {
+            $("#ninStatus").html("");
+            $("#ninExistenceStatus").html("");
+            existenceStatus.nin = null;
+            updateNextButtonState();
+            return;
+          }
+
+          // Check if firstname and lastname are provided (required for verification)
+          if (!firstname) {
+            $("#ninStatus").html(
+              '<div class="existence-error"><i class="fas fa-exclamation-circle"></i>Please enter your first name before verifying NIN</div>',
+            );
+            return;
+          }
+
+          if (!lastname) {
+            $("#ninStatus").html(
+              '<div class="existence-error"><i class="fas fa-exclamation-circle"></i>Please enter your last name before verifying NIN</div>',
+            );
+            return;
+          }
+
+          // Validate firstname and lastname format
+          if (
+            !validateFirstName("firstname") ||
+            !validateLastName("lastname")
+          ) {
+            $("#ninStatus").html(
+              '<div class="existence-error"><i class="fas fa-exclamation-circle"></i>Please enter valid names before verifying NIN</div>',
+            );
+            return;
+          }
+
+          // Run the NIN verification with firstname and lastname
+          try {
+            $("#ninStatus").html(
+              '<div class="checking-status"><i class="fas fa-spinner fa-spin"></i>Verifying NIN...</div>',
+            );
+
+            const response = await $.ajax({
+              url: `${BACKEND_URL}/auth/verify`,
+              type: "POST",
+              contentType: "application/json",
+              data: JSON.stringify({
+                nin,
+                firstName: firstname,
+                lastName: lastname,
+              }),
+            });
+
+            if (response.success && response.data) {
+              const { middlename, dob, phone, stateOfOrigin, lga } =
+                response.data;
+
+              // Populate auto-filled fields (not firstname/lastname as user enters those)
+              if (middlename) {
+                $("#middlename").val(middlename).prop("readonly", true);
+              }
+
+              if (dob) {
+                $("#DOB").val(dob).prop("readonly", true);
+              }
+
+              if (phone) {
+                $("#phone").val(phone).prop("readonly", true);
+                // Trigger blur to check phone existence after a short delay
+                setTimeout(() => {
+                  $("#phone").trigger("blur");
+                }, 300);
+              }
+
+              // Populate state of origin
+              if (stateOfOrigin) {
+                let formattedState = stateOfOrigin
+                  .toLowerCase()
+                  .replace(/\s+/g, "_");
+
+                $("#stateOfOrigin").val(formattedState).prop("disabled", true);
+
+                if ($("#stateOfOrigin").hasClass("selectpicker")) {
+                  $("#stateOfOrigin").selectpicker("refresh");
+                }
+
+                // Populate LGA after a small delay to ensure state change is processed
+                setTimeout(() => {
+                  if (lga) {
+                    $("#lgaOfOrigin").val(lga).prop("disabled", true);
+                    if ($("#lgaOfOrigin").hasClass("selectpicker")) {
+                      $("#lgaOfOrigin").selectpicker("refresh");
+                    }
+                  }
+                }, 200);
+              }
+
+              $("#ninStatus").html(
+                '<div class="existence-success"><i class="fas fa-check-circle"></i>NIN Verified Successfully</div>',
+              );
+            } else {
+              $("#ninStatus").html(
+                '<div class="existence-error"><i class="fas fa-exclamation-circle"></i>NIN verification failed - details do not match</div>',
+              );
+            }
+          } catch (error) {
+            const errorMessage =
+              error.responseJSON?.message ||
+              "Verification failed. Please check your details and try again.";
+            $("#ninStatus").html(
+              `<div class="existence-error"><i class="fas fa-exclamation-circle"></i>${errorMessage}</div>`,
+            );
+          }
+
+          // Also run the generic existence check for NIN
+          checkExistence("nin", nin, "#ninExistenceStatus");
+        });
+
+        // Add validation trigger for firstname/lastname to clear NIN status when names change
+        $("#firstname, #lastname").on("input", function () {
+          // Clear NIN verification status when names change (as verification depends on them)
+          const ninVal = $("#NIN").val().trim();
+          if (ninVal) {
+            $("#ninStatus").html(
+              '<div class="text-warning"><i class="fas fa-exclamation-triangle"></i>Name changed - please re-verify NIN</div>',
+            );
           }
         });
 
@@ -1589,8 +1734,8 @@
                   lga,
                 } = response.data;
 
-                $("#firstname").val(firstname).prop("readonly", true);
-                $("#lastname").val(lastname).prop("readonly", true);
+                // $("#firstname").val(firstname).prop("readonly", true);
+                // $("#lastname").val(lastname).prop("readonly", true);
                 $("#middlename").val(middlename).prop("readonly", true);
                 $("#DOB").val(dob).prop("readonly", true);
                 $("#phone").val(phone).prop("readonly", true).trigger("blur"); // Trigger blur on phone to check existence if populated
@@ -1646,6 +1791,54 @@
           }
         });
 
+        // // Next button click handler
+        // $("#nextButton").click(function () {
+        //   // Check for existence errors before proceeding to the next step
+        //   if (hasExistenceErrors()) {
+        //     Swal.fire(
+        //       "Validation Error",
+        //       "Please resolve the existing NIN, Email, or Phone errors before proceeding.",
+        //       "warning",
+        //     );
+        //     return;
+        //   }
+
+        //   // Check if any field hasn't been checked yet
+        //   if (hasUncheckedFields()) {
+        //     Swal.fire(
+        //       "Validation Error",
+        //       "Please wait for all existence checks to complete before proceeding.",
+        //       "warning",
+        //     );
+        //     return;
+        //   }
+
+        //   const isFirstNameValid = validateFirstName("firstname");
+        //   const isLastNameValid = validateLastName("lastname");
+        //   const isEmailValid = validateEmail("email");
+        //   const isPhoneValid = validatePhone("phone");
+        //   const isNINValid = validateNIN("NIN");
+
+        //   if (
+        //     isFirstNameValid &&
+        //     isLastNameValid &&
+        //     isEmailValid &&
+        //     isPhoneValid &&
+        //     isNINValid
+        //   ) {
+        //     formData.firstname = $("#firstname").val().trim();
+        //     formData.middlename = $("#middlename").val().trim();
+        //     formData.lastname = $("#lastname").val().trim();
+        //     formData.DOB = $("#DOB").val().trim();
+        //     formData.email = $("#email").val().trim();
+        //     formData.phone = $("#phone").val().trim();
+        //     formData.NIN = $("#NIN").val().trim();
+
+        //     currentStep = 2;
+        //     updateStepUI();
+        //   }
+        // });
+
         // Next button click handler
         $("#nextButton").click(function () {
           // Check for existence errors before proceeding to the next step
@@ -1663,6 +1856,17 @@
             Swal.fire(
               "Validation Error",
               "Please wait for all existence checks to complete before proceeding.",
+              "warning",
+            );
+            return;
+          }
+
+          // Check if NIN was successfully verified
+          const ninStatusHtml = $("#ninStatus").html();
+          if (!ninStatusHtml.includes("existence-success")) {
+            Swal.fire(
+              "Validation Error",
+              "Please verify your NIN by entering your first name, last name, and clicking outside the NIN field.",
               "warning",
             );
             return;

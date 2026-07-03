@@ -919,116 +919,6 @@ $(document).ready(function () {
     $("#request").text(count);
   }
 
-  // function renderTable(data) {
-  //   tableBody.empty();
-  //   data.forEach((item, index) => {
-  //     const statusBadge = {
-  //       Approved: `<span class="badge rounded-pill bg-success">Approved</span>`,
-  //       Pending: `<span class="badge rounded-pill bg-warning text-dark">Pending</span>`,
-  //       Rejected: `<span class="badge rounded-pill bg-danger">Rejected</span>`,
-  //     };
-
-  //     tableBody.append(`
-  //       <tr data-id="${item._id}">
-  //        <td>${(currentPage - 1) * pageSize + index + 1}</td>
-  //         <td>${item.firstname} ${item.lastname}</td>
-  //         <td>${item.phone}</td>
-  //         <td>${item.isVerified}</td>
-  //         <td>${statusBadge[item.status] || item.status}</td>
-  //         <td>
-  //           <button class="btn btn-sm btn-success btn-cert-approve" data-id="${
-  //             item._id
-  //           }" title="Approve">
-  //             <i class="fas fa-check"></i>
-  //           </button>
-  //           <button class="btn btn-sm btn-warning btn-cert-view" data-id="${
-  //             item._id
-  //           }" title="View">
-  //             <i class="fas fa-eye"></i>
-  //           </button>
-  //           <button class="btn btn-sm btn-danger btn-cert-reject" data-id="${
-  //             item._id
-  //           }" title="Reject" ${item.status === "Rejected" ? "disabled" : ""}>
-  //             <i class="fas fa-times"></i>
-  //           </button>
-  //         </td>
-  //       </tr>
-  //     `);
-  //   });
-  // }
-
-  // function fetchData(page) {
-  //   $.ajax({
-  //     url: `${BACKEND_URL}/indigene/certificate/request?page=${page}&limit=${pageSize}&statuses=Pending,Rejected`,
-  //     method: "GET",
-  //     headers: apiHeaders,
-  //     success: function (response) {
-  //       const { data, hasNextPage } = response;
-  //       // console.log("data", data);
-  //       $("#cert-request").text(data.length);
-
-  //       renderTable(data);
-  //       updatePaginationButtons(hasNextPage);
-  //       updateRequestCount(data.length);
-
-  //       let pendingCount = 0;
-  //       let rejectedCount = 0;
-
-  //       data.forEach((element) => {
-  //         if (element.status === "Pending") {
-  //           pendingCount++;
-  //         }
-  //         if (element.status === "Rejected") {
-  //           rejectedCount++;
-  //         }
-  //       });
-
-  //       $("#pending").text(pendingCount);
-  //       $("#rejected").text(rejectedCount);
-  //     },
-  //     error: function (error) {
-  //       console.error("Error fetching data:", error);
-  //     },
-  //   });
-  // }
-
-  // function handleApproval(requestId) {
-  //   $.ajax({
-  //     url: `${BACKEND_URL}/indigene/certificate/${requestId}/approve`,
-  //     method: "PATCH",
-  //     headers: apiHeaders,
-  //     success: function () {
-  //       fetchData(currentPage);
-  //     },
-  //     error: function (error) {
-  //       console.error("Error approving request:", error);
-  //     },
-  //   });
-  // }
-
-  // function handleRejection(rejectionReason) {
-  //   if (!rejectionReason) {
-  //     alert("Please provide a rejection reason.");
-  //     return;
-  //   }
-
-  //   $.ajax({
-  //     url: `${BACKEND_URL}/indigene/certificate/${rejectionId}/reject`,
-  //     method: "PATCH",
-  //     contentType: "application/json",
-  //     data: JSON.stringify({ rejectionReason }),
-  //     headers: apiHeaders,
-  //     success: function () {
-  //       $("#rejectionModal").modal("hide");
-  //       $("#rejectionReason").val("");
-  //       fetchData(currentPage);
-  //     },
-  //     error: function (error) {
-  //       console.error("Error rejecting request:", error);
-  //     },
-  //   });
-  // }
-
   function handleVerification(requestId) {
     $.ajax({
       url: `${BACKEND_URL}/indigene/certificate/${requestId}/verify`,
@@ -1357,6 +1247,7 @@ $(document).ready(function () {
   });
 
   $("#certificatesTable").on("click", ".btn-cert-view", function () {
+    console.log("View button clicked for request ID:", $(this).data("id"));
     const requestId = $(this).data("id");
     handleView(requestId);
   });
