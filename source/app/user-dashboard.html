@@ -5639,16 +5639,7 @@
           $("#email").val(user.email);
           $("#phone").val(user.phone);
           $("#NIN").val(user.NIN);
-          // $("#DOB").val(user.DOB);
-          if (user.DOB) {
-            const [day, month, year] = user.DOB.split("-");
-            const formattedDOB = `${year}-${month}-${day}`;
-
-            console.log("Original:", user.DOB);
-            console.log("Formatted:", formattedDOB);
-
-            $("#DOB").val(formattedDOB);
-          }
+          $("#DOB").val(user.DOB);
           $("#gender").val(user.gender).trigger("change");
           $("#maritalStatus").val(user.maritalStatus).trigger("change");
           $("#nationality").val(user.nationality);
