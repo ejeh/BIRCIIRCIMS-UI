@@ -5644,6 +5644,9 @@
             const [day, month, year] = user.DOB.split("-");
             const formattedDOB = `${year}-${month}-${day}`;
 
+            console.log("Original:", user.DOB);
+            console.log("Formatted:", formattedDOB);
+
             $("#DOB").val(formattedDOB);
           }
           $("#gender").val(user.gender).trigger("change");
