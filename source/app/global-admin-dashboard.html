@@ -7080,7 +7080,7 @@
                             <button class="btn btn-sm btn-outline-primary view-transaction-btn" 
                                     data-id="${row.id}" data-user="${row.user}" data-type="${row.type}" 
                                     data-amount="${row.amount}" data-status="${row.status}" data-date="${row.datetime}" data-receipt="${row.receiptUrl}"
-                                    title="View Details">
+                                    title="View Details & Receipt">
                               <i class="bi bi-eye"></i>
                             </button>
                             <button class="btn btn-sm btn-outline-secondary refund-transaction-btn" data-id="${row.id}" title="Refund">
@@ -7190,233 +7190,468 @@
             error: (err) => console.error("Error loading stats:", err),
           });
         }
+      }
 
-        // ====================================================================
-        // 4️⃣ EVENT LISTENERS
-        // ====================================================================
+      // ====================================================================
+      // 4️⃣ EVENT LISTENERS
+      // ====================================================================
 
-        // VIEW DETAILS & RECEIPT (Using Blob fetch exactly like handleAuctioneerView)
-        $(document).on("click", ".view-transaction-btn", function () {
-          const btn = $(this);
-          const { id, user, type, amount, status, date, receipt } = btn.data();
-          const formattedAmount = Number(amount).toLocaleString(undefined, {
-            minimumFractionDigits: 2,
-          });
-          const formattedStatus = status
-            .replace(/_/g, " ")
-            .replace(/\b\w/g, (l) => l.toUpperCase());
+      // // VIEW DETAILS & RECEIPT (Using Blob fetch exactly like handleAuctioneerView)
+      $(document).on("click", ".view-transaction-btn", function () {
+        const btn = $(this);
+        const { id, user, type, amount, status, date, receipt } = btn.data();
+        const formattedAmount = Number(amount).toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+        });
+        const formattedStatus = status
+          .replace(/_/g, " ")
+          .replace(/\b\w/g, (l) => l.toUpperCase());
 
-          // Build Receipt Viewer HTML (Empty container initially)
-          let receiptViewerHtml = `<p class="text-muted mt-3 mb-0 fst-italic">No receipt uploaded for this transaction.</p>`;
-          if (receipt) {
-            receiptViewerHtml = `
-              <h6 class="mt-4 border-bottom pb-2"><i class="bi bi-file-earmark-image me-2 text-primary"></i>Uploaded Receipt</h6>
-              <div class="card my-3 shadow-sm">
-                <div class="card-body p-0">
-                  <div id="receipt-viewer-container" style="width:100%; max-height:75vh; overflow:auto;" class="border bg-light p-2"></div>
-                  <div class="p-2 text-end">
-                     <button class="btn btn-sm btn-outline-primary me-2" onclick="window.open('${receipt}', '_blank')">Open in New Tab</button>
-                     <button class="btn btn-sm btn-outline-secondary" data-url="${receipt}" onclick="downloadFile(this)">Download</button>
+        // Build Receipt Viewer HTML (Empty container initially)
+        let receiptViewerHtml = `<p class="text-muted mt-3 mb-0 fst-italic">No receipt uploaded for this transaction.</p>`;
+        if (receipt) {
+          receiptViewerHtml = `
+            <h6 class="mt-4 border-bottom pb-2"><i class="bi bi-file-earmark-image me-2 text-primary"></i>Uploaded Receipt</h6>
+            <div class="card my-3 shadow-sm">
+              <div class="card-body p-0">
+                <div id="receipt-viewer-container" style="width:100%; max-height:75vh; overflow:auto;" class="border bg-light p-2"></div>
+                <div class="p-2 text-end">
+                   <button class="btn btn-sm btn-outline-primary me-2" onclick="window.open('${receipt}', '_blank')">Open in New Tab</button>
+                   <button class="btn btn-sm btn-outline-secondary" data-url="${receipt}" onclick="downloadFile(this)">Download</button>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        // Populate Modal Body
+        $("#transactionModalBody").html(`
+          <div class="container-fluid">
+            <div class="row mb-3">
+              <div class="col-md-6 mb-2">
+                <label class="text-muted small">User</label>
+                <p class="fw-bold mb-0">${user}</p>
+              </div>
+              <div class="col-md-6 mb-2">
+                <label class="text-muted small">Payment Type</label>
+                <p class="fw-bold mb-0 text-uppercase">${type}</p>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-md-6 mb-2">
+                <label class="text-muted small">Amount</label>
+                <p class="fw-bold mb-0 text-success">₦${formattedAmount}</p>
+              </div>
+              <div class="col-md-6 mb-2">
+                <label class="text-muted small">Status</label>
+                <p class="fw-bold mb-0">${formattedStatus}</p>
+              </div>
+            </div>
+            <div class="row mb-0">
+              <div class="col-12">
+                <label class="text-muted small">Date Initiated</label>
+                <p class="fw-bold mb-0">${date}</p>
+              </div>
+            </div>
+            <hr class="my-3">
+            ${receiptViewerHtml}
+          </div>
+        `);
+
+        // Show Modal FIRST so the container exists in the DOM
+        const modal = new bootstrap.Modal(
+          document.getElementById("transactionViewModal"),
+        );
+        modal.show();
+
+        // FETCH AND RENDER RECEIPT USING BLOB (Exactly matching auctioneer logic)
+        if (receipt) {
+          const container = document.getElementById("receipt-viewer-container");
+
+          // Show loader
+          container.innerHTML = `
+            <div class="d-flex justify-content-center p-5">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading Receipt...</span>
+              </div>
+            </div>
+          `;
+
+          // Fetch document with authorization
+          fetch(receipt, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+            .then((res) => {
+              if (!res.ok) throw new Error("Failed to fetch receipt");
+
+              // Get content type to determine how to render
+              const contentType = res.headers.get("Content-Type");
+              return res.blob().then((blob) => ({ blob, contentType }));
+            })
+
+            .then(({ blob, contentType }) => {
+              let actualType = contentType;
+
+              // FIX: Cloudinary 'raw' URLs almost always return 'application/octet-stream'
+              // instead of 'application/pdf'. We detect this via the URL path.
+              if (
+                (!actualType || actualType === "application/octet-stream") &&
+                receipt.includes("/raw/upload/")
+              ) {
+                actualType = "application/pdf";
+              }
+              // Fallback for images if they ever get mislabeled by Cloudinary
+              else if (
+                !actualType ||
+                actualType === "application/octet-stream"
+              ) {
+                actualType = "image/jpeg";
+              }
+
+              // Create a NEW blob with the corrected Content-Type.
+              // This forces the browser to recognize it as a valid PDF/Image.
+              const correctedBlob = new Blob([blob], { type: actualType });
+              const blobUrl = URL.createObjectURL(correctedBlob);
+
+              if (actualType === "application/pdf") {
+                loadPDFJ(blobUrl, container);
+              } else if (actualType.startsWith("image/")) {
+                loadImage(blobUrl, container);
+              } else {
+                throw new Error(`Unsupported file type: ${actualType}`);
+              }
+            })
+            .catch((err) => {
+              console.error("Error loading receipt:", err);
+              container.innerHTML = `
+                <div class="alert alert-danger m-2">
+                  Failed to load receipt: ${err.message}
+                  <div class="mt-2">
+                    <a href="${receipt}" target="_blank" class="btn btn-sm btn-primary">Try Opening in New Tab</a>
                   </div>
                 </div>
-              </div>
-            `;
-          }
+              `;
+            });
+        }
+      });
 
-          // Populate Modal Body
-          $("#transactionModalBody").html(`
-            <div class="container-fluid">
-              <div class="row mb-3">
-                <div class="col-md-6 mb-2">
-                  <label class="text-muted small">User</label>
-                  <p class="fw-bold mb-0">${user}</p>
-                </div>
-                <div class="col-md-6 mb-2">
-                  <label class="text-muted small">Payment Type</label>
-                  <p class="fw-bold mb-0 text-uppercase">${type}</p>
-                </div>
-              </div>
-              <div class="row mb-3">
-                <div class="col-md-6 mb-2">
-                  <label class="text-muted small">Amount</label>
-                  <p class="fw-bold mb-0 text-success">₦${formattedAmount}</p>
-                </div>
-                <div class="col-md-6 mb-2">
-                  <label class="text-muted small">Status</label>
-                  <p class="fw-bold mb-0">${formattedStatus}</p>
-                </div>
-              </div>
-              <div class="row mb-0">
-                <div class="col-12">
-                  <label class="text-muted small">Date Initiated</label>
-                  <p class="fw-bold mb-0">${date}</p>
-                </div>
-              </div>
-              <hr class="my-3">
-              ${receiptViewerHtml}
-            </div>
-          `);
+      // // VIEW DETAILS & RECEIPT (Using Blob fetch exactly like handleAuctioneerView)
+      // $(document).on("click", ".view-transaction-btn", function () {
+      //   const btn = $(this);
+      //   // Added 'rrr' to data destructuring
+      //   const { id, user, type, amount, status, date, receipt, rrr } =
+      //     btn.data();
+      //   const formattedAmount = Number(amount).toLocaleString(undefined, {
+      //     minimumFractionDigits: 2,
+      //   });
+      //   const formattedStatus = status
+      //     .replace(/_/g, " ")
+      //     .replace(/\b\w/g, (l) => l.toUpperCase());
 
-          // Show Modal FIRST so the container exists in the DOM
-          const modal = new bootstrap.Modal(
-            document.getElementById("transactionViewModal"),
-          );
-          modal.show();
+      //   // Build Receipt Viewer HTML (Empty container initially)
+      //   let receiptViewerHtml = `<p class="text-muted mt-3 mb-0 fst-italic">No receipt uploaded for this transaction.</p>`;
+      //   if (receipt) {
+      //     receiptViewerHtml = `
+      //       <h6 class="mt-4 border-bottom pb-2"><i class="bi bi-file-earmark-image me-2 text-primary"></i>Uploaded Receipt</h6>
+      //       <div class="card my-3 shadow-sm">
+      //         <div class="card-body p-0">
+      //           <div id="receipt-viewer-container" style="width:100%; max-height:75vh; overflow:auto;" class="border bg-light p-2"></div>
+      //           <div class="p-2 text-end">
+      //              <button class="btn btn-sm btn-outline-primary me-2" onclick="window.open('${receipt}', '_blank')">Open in New Tab</button>
+      //              <button class="btn btn-sm btn-outline-secondary" data-url="${receipt}" onclick="downloadFile(this)">Download</button>
+      //           </div>
+      //         </div>
+      //       </div>
+      //     `;
+      //   }
 
-          // FETCH AND RENDER RECEIPT USING BLOB (Exactly matching auctioneer logic)
-          if (receipt) {
-            const container = document.getElementById(
-              "receipt-viewer-container",
+      //   // NEW: RRR Verification HTML Block
+      //   const rrrVerificationHtml = `
+      //     <h6 class="mt-4 border-bottom pb-2"><i class="bi bi-shield-check me-2 text-warning"></i>Verify Remita Payment</h6>
+      //     <div class="row mt-3 align-items-end">
+      //       <div class="col-md-8">
+      //         <label class="form-label small text-muted">Remita RRR</label>
+      //         <input type="text" id="verify-rrr-input" class="form-control" placeholder="Enter or paste RRR" value="${rrr || ""}">
+      //       </div>
+      //       <div class="col-md-4">
+      //         <button class="btn btn-warning w-100 text-white" id="verify-rrr-btn">
+      //           <span class="spinner-border spinner-border-sm d-none me-1" id="rrr-spinner"></span>
+      //           Verify RRR
+      //         </button>
+      //       </div>
+      //     </div>
+      //     <div id="rrr-verification-result" class="mt-2"></div>
+      //   `;
+
+      //   // Populate Modal Body
+      //   $("#transactionModalBody").html(`
+      //     <div class="container-fluid">
+      //       <div class="row mb-3">
+      //         <div class="col-md-6 mb-2">
+      //           <label class="text-muted small">User</label>
+      //           <p class="fw-bold mb-0">${user}</p>
+      //         </div>
+      //         <div class="col-md-6 mb-2">
+      //           <label class="text-muted small">Payment Type</label>
+      //           <p class="fw-bold mb-0 text-uppercase">${type}</p>
+      //         </div>
+      //       </div>
+      //       <div class="row mb-3">
+      //         <div class="col-md-6 mb-2">
+      //           <label class="text-muted small">Amount</label>
+      //           <p class="fw-bold mb-0 text-success">₦${formattedAmount}</p>
+      //         </div>
+      //         <div class="col-md-6 mb-2">
+      //           <label class="text-muted small">Status</label>
+      //           <p class="fw-bold mb-0">${formattedStatus}</p>
+      //         </div>
+      //       </div>
+      //       <div class="row mb-0">
+      //         <div class="col-12">
+      //           <label class="text-muted small">Date Initiated</label>
+      //           <p class="fw-bold mb-0">${date}</p>
+      //         </div>
+      //       </div>
+      //       <hr class="my-3">
+      //       ${receiptViewerHtml}
+      //       ${rrrVerificationHtml}
+      //     `);
+
+      //   // Show Modal FIRST so the container exists in the DOM
+      //   const modal = new bootstrap.Modal(
+      //     document.getElementById("transactionViewModal"),
+      //   );
+      //   modal.show();
+
+      //   // FETCH AND RENDER RECEIPT USING BLOB (Exactly matching auctioneer logic)
+      //   if (receipt) {
+      //     const container = document.getElementById("receipt-viewer-container");
+
+      //     // Show loader
+      //     container.innerHTML = `
+      //       <div class="d-flex justify-content-center p-5">
+      //         <div class="spinner-border text-primary" role="status">
+      //           <span class="visually-hidden">Loading Receipt...</span>
+      //         </div>
+      //       </div>
+      //     `;
+
+      //     // Fetch document with authorization
+      //     fetch(receipt, {
+      //       headers: {
+      //         Authorization: `Bearer ${token}`,
+      //       },
+      //     })
+      //       .then((res) => {
+      //         if (!res.ok) throw new Error("Failed to fetch receipt");
+
+      //         // Get content type to determine how to render
+      //         const contentType = res.headers.get("Content-Type");
+      //         return res.blob().then((blob) => ({ blob, contentType }));
+      //       })
+
+      //       .then(({ blob, contentType }) => {
+      //         let actualType = contentType;
+
+      //         // FIX: Cloudinary 'raw' URLs almost always return 'application/octet-stream'
+      //         // instead of 'application/pdf'. We detect this via the URL path.
+      //         if (
+      //           (!actualType || actualType === "application/octet-stream") &&
+      //           receipt.includes("/raw/upload/")
+      //         ) {
+      //           actualType = "application/pdf";
+      //         }
+      //         // Fallback for images if they ever get mislabeled by Cloudinary
+      //         else if (
+      //           !actualType ||
+      //           actualType === "application/octet-stream"
+      //         ) {
+      //           actualType = "image/jpeg";
+      //         }
+
+      //         // Create a NEW blob with the corrected Content-Type.
+      //         // This forces the browser to recognize it as a valid PDF/Image.
+      //         const correctedBlob = new Blob([blob], { type: actualType });
+      //         const blobUrl = URL.createObjectURL(correctedBlob);
+
+      //         if (actualType === "application/pdf") {
+      //           loadPDFJ(blobUrl, container);
+      //         } else if (actualType.startsWith("image/")) {
+      //           loadImage(blobUrl, container);
+      //         } else {
+      //           throw new Error(`Unsupported file type: ${actualType}`);
+      //         }
+      //       })
+      //       .catch((err) => {
+      //         console.error("Error loading receipt:", err);
+      //         container.innerHTML = `
+      //           <div class="alert alert-danger m-2">
+      //             Failed to load receipt: ${err.message}
+      //             <div class="mt-2">
+      //               <a href="${receipt}" target="_blank" class="btn btn-sm btn-primary">Try Opening in New Tab</a>
+      //             </div>
+      //           </div>
+      //         `;
+      //       });
+      //   }
+
+      //   // NEW: RRR VERIFICATION CLICK HANDLER
+      //   $("#verify-rrr-btn").on("click", function () {
+      //     const rrrValue = $("#verify-rrr-input").val().trim();
+      //     const resultContainer = $("#rrr-verification-result");
+      //     const rrrSpinner = $("#rrr-spinner");
+      //     const rrrBtn = $(this); // Reference to the button itself
+
+      //     if (!rrrValue) {
+      //       resultContainer.html(
+      //         '<div class="alert alert-warning py-2 small">Please enter an RRR number.</div>',
+      //       );
+      //       return;
+      //     }
+
+      //     // UI Loading State
+      //     rrrBtn.prop("disabled", true);
+      //     rrrSpinner.removeClass("d-none");
+      //     resultContainer.html(
+      //       '<div class="text-muted small"><i class="bi bi-hourglass-split me-1"></i> Querying Remita...</div>',
+      //     );
+
+      //     // AJAX Call to Backend
+      //     $.ajax({
+      //       url: `${BACKEND_URL}/transaction/verify/${rrrValue}`,
+      //       type: "POST",
+      //       headers: {
+      //         Authorization: `Bearer ${token}`,
+      //       },
+      //       success: function (response) {
+      //         const data = response.data;
+
+      //         if (data.success) {
+      //           resultContainer.html(`
+      //             <div class="alert alert-success py-2 mb-0 d-flex align-items-center">
+      //               <i class="bi bi-check-circle-fill me-2 fs-5"></i>
+      //               <div>
+      //                 <strong>Remita Payment Confirmed</strong><br>
+      //                 <span class="small">Status: ${data.transactionStatus || "Successful"}</span>
+      //               </div>
+      //             </div>
+      //           `);
+      //         } else {
+      //           resultContainer.html(`
+      //             <div class="alert alert-danger py-2 mb-0 d-flex align-items-center">
+      //               <i class="bi bi-x-circle-fill me-2 fs-5"></i>
+      //               <div>
+      //                 <strong>Payment Not Found / Failed</strong><br>
+      //                 <span class="small">Reason: ${data.transactionStatus || "Payment not successful on Remita"}</span>
+      //               </div>
+      //             </div>
+      //           `);
+      //         }
+      //       },
+      //       error: function (xhr) {
+      //         const errorMsg =
+      //           xhr.responseJSON?.message ||
+      //           "Network error or server timeout while verifying.";
+      //         resultContainer.html(`
+      //           <div class="alert alert-danger py-2 mb-0 d-flex align-items-center">
+      //             <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+      //             <div>
+      //               <strong>Verification Error</strong><br>
+      //               <span class="small">${errorMsg}</span>
+      //             </div>
+      //           </div>
+      //         `);
+      //       },
+      //       complete: function () {
+      //         // Reset Button UI
+      //         rrrBtn.prop("disabled", false);
+      //         rrrSpinner.addClass("d-none");
+      //       },
+      //     });
+      //   });
+      // });
+
+      // APPROVE RECEIPT
+
+      $(document).on("click", ".approve-receipt-btn", async function () {
+        const id = $(this).data("id");
+
+        const result = await Swal.fire({
+          title: "Approve Receipt?",
+          text: "This will mark the document fee as paid and finalize the request.",
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonColor: "#28a745",
+          confirmButtonText: "Yes, Approve",
+          cancelButtonText: "Cancel",
+        });
+
+        if (result.isConfirmed) {
+          try {
+            const res = await $.ajax({
+              url: `${BACKEND_URL}/transaction/admin/approve-receipt/${id}`,
+              method: "PATCH",
+              headers: { Authorization: `Bearer ${token}` },
+            });
+
+            Swal.fire("Approved!", res.message, "success").then(() => {
+              initializeTransactionsPage();
+            });
+          } catch (err) {
+            Swal.fire(
+              "Error",
+              err.responseJSON?.message || "Failed to approve receipt.",
+              "error",
             );
+          }
+        }
+      });
 
-            // Show loader
-            container.innerHTML = `
-              <div class="d-flex justify-content-center p-5">
-                <div class="spinner-border text-primary" role="status">
-                  <span class="visually-hidden">Loading Receipt...</span>
-                </div>
-              </div>
-            `;
+      // REJECT RECEIPT
+      $(document).on("click", ".reject-receipt-btn", async function () {
+        const id = $(this).data("id");
 
-            // Fetch document with authorization
-            fetch(receipt, {
+        const { value: reason } = await Swal.fire({
+          title: "Reject Receipt",
+          input: "textarea",
+          inputLabel: "Reason for rejection",
+          inputPlaceholder:
+            "E.g. Receipt is blurry, wrong amount, invalid document, etc.",
+          inputAttributes: { required: "true" },
+          showCancelButton: true,
+          confirmButtonColor: "#dc3545",
+          confirmButtonText: "Reject Receipt",
+          inputValidator: (value) => {
+            if (!value) return "You need to provide a reason for the user!";
+          },
+        });
+
+        if (reason) {
+          try {
+            const res = await $.ajax({
+              url: `${BACKEND_URL}/transaction/admin/reject-receipt/${id}`,
+              method: "PATCH",
               headers: {
                 Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
               },
-            })
-              .then((res) => {
-                if (!res.ok) throw new Error("Failed to fetch receipt");
+              data: JSON.stringify({ reason }),
+            });
 
-                // Get content type to determine how to render
-                const contentType = res.headers.get("Content-Type");
-                return res.blob().then((blob) => ({ blob, contentType }));
-              })
-
-              .then(({ blob, contentType }) => {
-                let actualType = contentType;
-
-                // FIX: Cloudinary 'raw' URLs almost always return 'application/octet-stream'
-                // instead of 'application/pdf'. We detect this via the URL path.
-                if (
-                  (!actualType || actualType === "application/octet-stream") &&
-                  receipt.includes("/raw/upload/")
-                ) {
-                  actualType = "application/pdf";
-                }
-                // Fallback for images if they ever get mislabeled by Cloudinary
-                else if (
-                  !actualType ||
-                  actualType === "application/octet-stream"
-                ) {
-                  actualType = "image/jpeg";
-                }
-
-                // Create a NEW blob with the corrected Content-Type.
-                // This forces the browser to recognize it as a valid PDF/Image.
-                const correctedBlob = new Blob([blob], { type: actualType });
-                const blobUrl = URL.createObjectURL(correctedBlob);
-
-                if (actualType === "application/pdf") {
-                  loadPDFJ(blobUrl, container);
-                } else if (actualType.startsWith("image/")) {
-                  loadImage(blobUrl, container);
-                } else {
-                  throw new Error(`Unsupported file type: ${actualType}`);
-                }
-              })
-              .catch((err) => {
-                console.error("Error loading receipt:", err);
-                container.innerHTML = `
-                  <div class="alert alert-danger m-2">
-                    Failed to load receipt: ${err.message}
-                    <div class="mt-2">
-                      <a href="${receipt}" target="_blank" class="btn btn-sm btn-primary">Try Opening in New Tab</a>
-                    </div>
-                  </div>
-                `;
-              });
+            Swal.fire("Rejected", res.message, "info").then(() => {
+              initializeTransactionsPage();
+            });
+          } catch (err) {
+            Swal.fire(
+              "Error",
+              err.responseJSON?.message || "Failed to reject receipt.",
+              "error",
+            );
           }
-        });
-
-        // APPROVE RECEIPT
-        $(document).on("click", ".approve-receipt-btn", async function () {
-          const id = $(this).data("id");
-
-          const result = await Swal.fire({
-            title: "Approve Receipt?",
-            text: "This will mark the document fee as paid and finalize the request.",
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonColor: "#28a745",
-            confirmButtonText: "Yes, Approve",
-            cancelButtonText: "Cancel",
-          });
-
-          if (result.isConfirmed) {
-            try {
-              const res = await $.ajax({
-                url: `${BACKEND_URL}/transaction/admin/approve-receipt/${id}`,
-                method: "PATCH",
-                headers: { Authorization: `Bearer ${token}` },
-              });
-
-              Swal.fire("Approved!", res.message, "success").then(() => {
-                initializeTransactionsPage();
-              });
-            } catch (err) {
-              Swal.fire(
-                "Error",
-                err.responseJSON?.message || "Failed to approve receipt.",
-                "error",
-              );
-            }
-          }
-        });
-
-        // REJECT RECEIPT
-        $(document).on("click", ".reject-receipt-btn", async function () {
-          const id = $(this).data("id");
-
-          const { value: reason } = await Swal.fire({
-            title: "Reject Receipt",
-            input: "textarea",
-            inputLabel: "Reason for rejection",
-            inputPlaceholder:
-              "E.g. Receipt is blurry, wrong amount, invalid document, etc.",
-            inputAttributes: { required: "true" },
-            showCancelButton: true,
-            confirmButtonColor: "#dc3545",
-            confirmButtonText: "Reject Receipt",
-            inputValidator: (value) => {
-              if (!value) return "You need to provide a reason for the user!";
-            },
-          });
-
-          if (reason) {
-            try {
-              const res = await $.ajax({
-                url: `${BACKEND_URL}/transaction/admin/reject-receipt/${id}`,
-                method: "PATCH",
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                  "Content-Type": "application/json",
-                },
-                data: JSON.stringify({ reason }),
-              });
-
-              Swal.fire("Rejected", res.message, "info").then(() => {
-                initializeTransactionsPage();
-              });
-            } catch (err) {
-              Swal.fire(
-                "Error",
-                err.responseJSON?.message || "Failed to reject receipt.",
-                "error",
-              );
-            }
-          }
-        });
-      }
+        }
+      });
 
       function destroyChart(chartInstance, canvasId) {
         if (chartInstance) {
