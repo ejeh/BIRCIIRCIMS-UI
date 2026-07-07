@@ -12,6 +12,9 @@ const FRONTEND_URL = isDevelopment
 
 const basePath = isDevelopment ? "/source" : "";
 
+document.getElementById("homeLink").href =
+  `${FRONTEND_URL}${basePath}/index.html`;
+
 // Get user info from localStorage
 const userData = JSON.parse(localStorage.getItem("token") || "{}");
 const { token, user } = userData;
