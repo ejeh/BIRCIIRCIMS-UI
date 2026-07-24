@@ -1,6 +1,6 @@
-const isDevelopment =
-  window.location.hostname === "localhost" ||
-  window.location.hostname === "127.0.0.1";
+const isDevelopment = ["localhost", "127.0.0.1"].includes(
+  window.location.hostname,
+);
 
 const BACKEND_URL = isDevelopment
   ? "http://localhost:5000/api"
@@ -12,12 +12,20 @@ const FRONTEND_URL = isDevelopment
 
 const basePath = isDevelopment ? "/source" : "";
 
-document.getElementById("homeLink").href =
-  `${FRONTEND_URL}${basePath}/index.html`;
+document.addEventListener("DOMContentLoaded", () => {
+  const homeLink = document.getElementById("homeLink");
 
-// Get user info from localStorage
+  if (homeLink) {
+    homeLink.href = `${FRONTEND_URL}${basePath}/index.html`;
+  }
+});
 const userData = JSON.parse(localStorage.getItem("token") || "{}");
-const { token, user } = userData;
+const token = userData.token;
+const user = userData.user;
+
+document.addEventListener("DOMContentLoaded", () => {
+  // console.log(token, user);
+});
 
 /**
  * Renders a PDF page responsively into a specified container.
@@ -156,19 +164,6 @@ function downloadFile(buttonElement) {
       alert("Failed to download the document.");
     });
 }
-
-/**
- * Renders an image into a specified container.
-function loadImage(url, container) {
- */
-const img = document.createElement("img");
-img.src = url;
-img.className = "img-fluid"; // Makes the image responsive
-img.style.maxHeight = "400px"; // Consistent max height with PDF viewer
-img.style.display = "block"; // Removes bottom space under image
-img.style.margin = "auto"; // Centers the image
-container.innerHTML = ""; // Clear the loading spinner
-container.appendChild(img);
 
 /**
  * Triggers the download of a file (PDF or image) from a URL.

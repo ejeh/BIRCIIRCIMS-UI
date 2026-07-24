@@ -25,7 +25,11 @@ html {
 }
 
 body {
-  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  font-family:
+    "Segoe UI",
+    system-ui,
+    -apple-system,
+    sans-serif;
   color: #333;
   font-size: var(--text-base);
   line-height: 1.5;
@@ -215,7 +219,7 @@ input[readonly] {
 
 /* The rest of your existing styles... */
 .green-sidebar {
-  background-color: var(--primary);
+  /* background-color: var(--primary); */
   min-height: 100vh;
   color: white;
   opacity: 1;

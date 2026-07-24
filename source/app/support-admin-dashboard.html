@@ -692,6 +692,13 @@
             </a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" href="../app/family-dashboard.html">
+              <i class="bi bi-house-heart"></i>
+              Families
+              <span class="badge bg-success">New</span>
+            </a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="#" data-page="profile">
               <i class="bi bi-person-circle"></i>
               Profile
@@ -1597,7 +1604,7 @@
                 Use your authenticator app (like Google Authenticator, Authy, or
                 Microsoft Authenticator) to scan the QR code below:
               </p>
-              <div class="qr-code">
+              <div class="qr-code text-center">
                 <img
                   src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=otpauth://totp/Example:demo@example.com?secret=JBSWY3DPEHPK3PXP&issuer=Example"
                   alt="QR Code"
@@ -1639,7 +1646,23 @@
                 <code>90123456</code>
                 <code>01234567</code>
               </div>
-              <div class="form-check mt-3">
+              <div class="d-flex gap-2 mt-3 mb-3">
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary btn-sm"
+                  id="copyBackupCodesBtn"
+                >
+                  <i class="bi bi-clipboard me-1"></i>Copy All
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary btn-sm"
+                  id="downloadBackupCodesBtn"
+                >
+                  <i class="bi bi-download me-1"></i>Download
+                </button>
+              </div>
+              <div class="form-check mt-2">
                 <input
                   class="form-check-input"
                   type="checkbox"
@@ -2460,6 +2483,15 @@
         endDate: null,
       };
 
+      // Fix Family Management navigation
+      document
+        .querySelector('a[href="family-dashboard.html"]')
+        .addEventListener("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          window.location.href = "family-dashboard.html";
+        });
+
       function checkAuthentication() {
         if (!token) {
           showNotification(
@@ -2960,7 +2992,7 @@
         localStorage.removeItem("profileFormData");
 
         // Redirect to login page
-        window.location.href = "./auth/login.html";
+        window.location.href = "../index.html";
       }
 
       async function updateCurrentUserDisplay() {
@@ -5628,19 +5660,38 @@
               "Content-Type": "application/json",
             },
             data: JSON.stringify({ code: verificationCode }),
-            success: function (response) {
-              $("#2faSetupStep2").hide();
-              $("#2faSetupStep3").show();
-              $("#2faVerifyBtn").hide();
-              $("#2faFinishBtn").show();
+            success: function () {
+              // Code verified — now enable 2FA to get backup codes
+              $.ajax({
+                url: `${BACKEND_URL}/auth/2fa/enable`,
+                method: "POST",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  "Content-Type": "application/json",
+                },
+                success: function (enableResponse) {
+                  $("#2faSetupStep2").hide();
+                  $("#2faSetupStep3").show();
+                  $("#2faVerifyBtn").hide();
+                  $("#2faFinishBtn").show();
 
-              // Store backup codes if provided
-              if (response.backupCodes && response.backupCodes.length > 0) {
-                const backupCodesHtml = response.backupCodes
-                  .map((code) => `<code>${code}</code>`)
-                  .join("");
-                $(".backup-codes").html(backupCodesHtml);
-              }
+                  if (
+                    enableResponse.backupCodes &&
+                    enableResponse.backupCodes.length > 0
+                  ) {
+                    const backupCodesHtml = enableResponse.backupCodes
+                      .map((code) => `<code>${code}</code>`)
+                      .join("");
+                    $(".backup-codes").html(backupCodesHtml);
+                  }
+                },
+                error: function (xhr) {
+                  const errorMessage = xhr.responseJSON
+                    ? xhr.responseJSON.message
+                    : "Failed to enable two-factor authentication";
+                  showNotification(errorMessage, "error");
+                },
+              });
             },
             error: function (xhr) {
               const errorMessage = xhr.responseJSON
@@ -5664,46 +5715,71 @@
             return;
           }
 
-          // Disable button to prevent multiple submissions
-          $(this).prop("disabled", true).text("Enabling...");
+          showNotification(
+            "Two-factor authentication enabled successfully",
+            "success",
+          );
+          enable2FAModal.hide();
+          $("#enable2FABtn").html(
+            '<i class="bi bi-shield-check me-2"></i>Disable Two-Factor Authentication',
+          );
+          $("#enable2FABtn")
+            .removeClass("btn-outline-primary")
+            .addClass("btn-outline-danger");
+          $("#enable2FABtn")
+            .off("click")
+            .click(function () {
+              disable2FA();
+            });
+        });
 
-          // API call to enable 2FA
-          $.ajax({
-            url: `${BACKEND_URL}/auth/2fa/enable`,
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-            success: function (response) {
-              showNotification(
-                "Two-factor authentication enabled successfully",
-                "success",
-              );
-              enable2FAModal.hide();
-              $("#enable2FABtn").html(
-                '<i class="bi bi-shield-check me-2"></i>Disable Two-Factor Authentication',
-              );
-              $("#enable2FABtn")
-                .removeClass("btn-outline-primary")
-                .addClass("btn-outline-danger");
-              $("#enable2FABtn")
-                .off("click")
-                .click(function () {
-                  disable2FA();
-                });
-            },
-            error: function (xhr) {
-              const errorMessage = xhr.responseJSON
-                ? xhr.responseJSON.message
-                : "Failed to enable two-factor authentication";
-              showNotification(errorMessage, "error");
-            },
-            complete: function () {
-              // Re-enable the button
-              $("#2faFinishBtn").prop("disabled", false).text("Finish Setup");
-            },
+        // Copy backup codes to clipboard
+        $("#copyBackupCodesBtn").on("click", function () {
+          const codes = [];
+          $(".backup-codes code").each(function () {
+            codes.push($(this).text().trim());
           });
+          if (codes.length === 0) {
+            showNotification("No backup codes to copy", "warning");
+            return;
+          }
+          navigator.clipboard
+            .writeText(codes.join("\n"))
+            .then(function () {
+              showNotification("Backup codes copied to clipboard", "success");
+            })
+            .catch(function () {
+              showNotification("Failed to copy codes", "error");
+            });
+        });
+
+        // Download backup codes as text file
+        $("#downloadBackupCodesBtn").on("click", function () {
+          const codes = [];
+          $(".backup-codes code").each(function () {
+            codes.push($(this).text().trim());
+          });
+          if (codes.length === 0) {
+            showNotification("No backup codes to download", "warning");
+            return;
+          }
+          const content =
+            "BENUE STATE CITIZENSHIP - 2FA BACKUP CODES\n" +
+            "==========================================\n\n" +
+            "Keep these codes safe. Each code can only be used once.\n\n" +
+            codes.join("\n") +
+            "\n\nGenerated: " +
+            new Date().toLocaleString();
+          const blob = new Blob([content], { type: "text/plain" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "benue-2fa-backup-codes.txt";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+          showNotification("Backup codes downloaded", "success");
         });
 
         // Function to setup 2FA
@@ -5905,13 +5981,8 @@
           });
         }
 
-        // Check 2FA status when the profile page is loaded
-        if (
-          window.location.hash === "#profile" ||
-          document.getElementById("profile-page").classList.contains("active")
-        ) {
-          check2FAStatus();
-        }
+        // Check 2FA status on page load
+        check2FAStatus();
       });
 
       $(document).on("click", '[data-page="profile"]', function (e) {

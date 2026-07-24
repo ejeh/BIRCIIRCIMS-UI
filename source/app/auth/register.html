@@ -67,11 +67,11 @@
       }
 
       .green-sidebar {
-        background: linear-gradient(
+        /* background: linear-gradient(
           135deg,
           var(--primary-color) 0%,
           var(--primary-dark) 100%
-        );
+        ); */
         position: relative;
         overflow: hidden;
         display: flex;
@@ -87,10 +87,10 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: url("/assets/images/istockphoto-922266274-612x612.jpg");
+        background: url("/assets/images/newwwimg.png");
         background-size: cover;
         background-position: center;
-        opacity: 0.15;
+        /* opacity: 0.15; */
         z-index: 0;
       }
 
@@ -650,13 +650,13 @@
         display: block;
       }
 
-      /* Ensure the image behaves well and stays responsive */
       .map-outline-img {
         width: 100%;
         height: auto;
-        display: block;
-        /* Soften the map so it doesn't compete with the text */
-        opacity: 0.6;
+        max-width: 700px;
+
+        /* display: block;
+        opacity: 0.6; */
       }
 
       /* The magic for centering text over the image */
@@ -678,6 +678,12 @@
         pointer-events: none; /* User can click through text to items behind it */
       }
 
+      .map-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
       /* Optional: Mobile adjustments to keep text inside the map boundaries */
       @media (max-width: 768px) {
         .overlay-text .fs-3 {
@@ -690,16 +696,17 @@
   <body>
     <div class="container-fluid p-0">
       <div class="row g-0">
+        <!-- Green sidebar -->
         <div
           class="col-12 col-md-5 green-sidebar p-4 text-white d-flex flex-column"
         >
           <div class="d-flex align-items-center mb-4">
-            <a href="../../index.html">
+            <!-- <a href="../../index.html">
               <div class="benue-logo me-3"></div>
-            </a>
+            </a> -->
           </div>
 
-          <div class="map-identity-container">
+          <!-- <div class="map-identity-container">
             <img
               src="/assets/images/benue.svg"
               alt="Benue State Map Outline"
@@ -713,6 +720,18 @@
               </h2>
               <h2 class="fs-3 fw-bold mb-1">Registration Management System</h2>
             </div>
+          </div> -->
+
+          <div class="map-wrapper">
+            <!-- <h2 class="map-heading">Benue Identify</h2> -->
+
+            <div class="map-identity-container">
+              <img
+                src="/assets/images/benue-fingerprint.png"
+                alt="Benue State Map Outline"
+                class="map-outline-img"
+              />
+            </div>
           </div>
 
           <div class="mobile-buttons gap-3 mb-4 w-100">
@@ -721,18 +740,18 @@
               class="btn btn-light text-success flex-grow-1"
               >Register</a
             >
-            <a href="login.html" class="btn btn-outline-light flex-grow-1"
+            <a href="#" id="homeLink" class="btn btn-outline-light flex-grow-1"
               >Log in</a
             >
           </div>
 
-          <div class="d-flex justify-content-center">
+          <!-- <div class="d-flex justify-content-center">
             <img
               src="/assets/images/finger-print.svg"
               alt="finger print"
               class="svg-position"
             />
-          </div>
+          </div> -->
         </div>
 
         <div class="col-12 col-md-7 registration-section p-4 p-md-5">
@@ -745,7 +764,8 @@
             </div>
 
             <a
-              href="login.html"
+              href="#"
+              id="homeLink"
               class="btn btn-outline-secondary desktop-login-button header-login-btn"
             >
               <i class="fas fa-sign-in-alt me-2"></i>Log in
@@ -1056,7 +1076,7 @@
 
           <div class="text-center mt-4">
             Already have an account?
-            <a href="login.html" class="login-link">Login</a>
+            <a href="#" id="homeLink" class="login-link">Login</a>
           </div>
 
           <div class="powered-by">
@@ -1086,6 +1106,11 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
       $(document).ready(function () {
+        // 1. Define basePath locally to handle /source in dev vs root in prod
+        const isDevelopment = ["localhost", "127.0.0.1"].includes(
+          window.location.hostname,
+        );
+        const basePath = isDevelopment ? "/source" : "";
         // Form data object that matches the API structure
         const formData = {
           firstname: "",
@@ -1706,90 +1731,90 @@
           }
         });
 
-        // Existing NIN Verification Logic
-        $("#NIN").on("blur", async function () {
-          const nin = $(this).val().trim();
-          if (validateNIN("NIN")) {
-            // First, run the internal NIN verification (as it populates fields)
-            try {
-              $("#ninStatus").html(
-                '<div class="checking-status"><i class="fas fa-spinner fa-spin"></i>Verifying NIN...</div>',
-              );
+        // // Existing NIN Verification Logic
+        // $("#NIN").on("blur", async function () {
+        //   const nin = $(this).val().trim();
+        //   if (validateNIN("NIN")) {
+        //     // First, run the internal NIN verification (as it populates fields)
+        //     try {
+        //       $("#ninStatus").html(
+        //         '<div class="checking-status"><i class="fas fa-spinner fa-spin"></i>Verifying NIN...</div>',
+        //       );
 
-              const response = await $.ajax({
-                url: `${BACKEND_URL}/auth/verify`,
-                type: "POST",
-                contentType: "application/json",
-                data: JSON.stringify({ nin }),
-              });
+        //       const response = await $.ajax({
+        //         url: `${BACKEND_URL}/auth/verify`,
+        //         type: "POST",
+        //         contentType: "application/json",
+        //         data: JSON.stringify({ nin }),
+        //       });
 
-              if (response.success && response.data) {
-                const {
-                  firstname,
-                  lastname,
-                  middlename,
-                  dob,
-                  phone,
-                  stateOfOrigin,
-                  lga,
-                } = response.data;
+        //       if (response.success && response.data) {
+        //         const {
+        //           firstname,
+        //           lastname,
+        //           middlename,
+        //           dob,
+        //           phone,
+        //           stateOfOrigin,
+        //           lga,
+        //         } = response.data;
 
-                // $("#firstname").val(firstname).prop("readonly", true);
-                // $("#lastname").val(lastname).prop("readonly", true);
-                $("#middlename").val(middlename).prop("readonly", true);
-                $("#DOB").val(dob).prop("readonly", true);
-                $("#phone").val(phone).prop("readonly", true).trigger("blur"); // Trigger blur on phone to check existence if populated
+        //         // $("#firstname").val(firstname).prop("readonly", true);
+        //         // $("#lastname").val(lastname).prop("readonly", true);
+        //         $("#middlename").val(middlename).prop("readonly", true);
+        //         $("#DOB").val(dob).prop("readonly", true);
+        //         $("#phone").val(phone).prop("readonly", true).trigger("blur"); // Trigger blur on phone to check existence if populated
 
-                // Populate state of origin
-                if (stateOfOrigin) {
-                  // Convert stateOfOrigin to match your select options
-                  let formattedState = stateOfOrigin
-                    .toLowerCase()
-                    .replace(/\s+/g, "_");
+        //         // Populate state of origin
+        //         if (stateOfOrigin) {
+        //           // Convert stateOfOrigin to match your select options
+        //           let formattedState = stateOfOrigin
+        //             .toLowerCase()
+        //             .replace(/\s+/g, "_");
 
-                  // Set the value and trigger change to update LGA dropdown
-                  $("#stateOfOrigin")
-                    .val(formattedState)
-                    // .trigger("change")
-                    .prop("disabled", true);
+        //           // Set the value and trigger change to update LGA dropdown
+        //           $("#stateOfOrigin")
+        //             .val(formattedState)
+        //             // .trigger("change")
+        //             .prop("disabled", true);
 
-                  // If you're using Bootstrap selectpicker
-                  if ($("#stateOfOrigin").hasClass("selectpicker")) {
-                    $("#stateOfOrigin").selectpicker("refresh");
-                  }
-                  // Populate LGA after a small delay to ensure state change is processed
-                  setTimeout(() => {
-                    if (lga) {
-                      $("#lgaOfOrigin").val(lga).prop("disabled", true);
-                    }
-                  }, 200);
-                }
+        //           // If you're using Bootstrap selectpicker
+        //           if ($("#stateOfOrigin").hasClass("selectpicker")) {
+        //             $("#stateOfOrigin").selectpicker("refresh");
+        //           }
+        //           // Populate LGA after a small delay to ensure state change is processed
+        //           setTimeout(() => {
+        //             if (lga) {
+        //               $("#lgaOfOrigin").val(lga).prop("disabled", true);
+        //             }
+        //           }, 200);
+        //         }
 
-                $("#ninStatus").html(
-                  '<div class="existence-success"><i class="fas fa-check-circle"></i>NIN Verified</div>',
-                );
-              } else {
-                $("#ninStatus").html(
-                  '<div class="existence-error"><i class="fas fa-exclamation-circle"></i>NIN not found/invalid</div>',
-                );
-              }
-            } catch (error) {
-              $("#ninStatus").html(
-                `<div class="existence-error"><i class="fas fa-exclamation-circle"></i>${
-                  error.responseJSON?.message || "Verification failed"
-                }</div>`,
-              );
-            }
+        //         $("#ninStatus").html(
+        //           '<div class="existence-success"><i class="fas fa-check-circle"></i>NIN Verified</div>',
+        //         );
+        //       } else {
+        //         $("#ninStatus").html(
+        //           '<div class="existence-error"><i class="fas fa-exclamation-circle"></i>NIN not found/invalid</div>',
+        //         );
+        //       }
+        //     } catch (error) {
+        //       $("#ninStatus").html(
+        //         `<div class="existence-error"><i class="fas fa-exclamation-circle"></i>${
+        //           error.responseJSON?.message || "Verification failed"
+        //         }</div>`,
+        //       );
+        //     }
 
-            // Second, run the generic existence check for NIN
-            checkExistence("nin", nin, "#ninExistenceStatus");
-          } else {
-            $("#ninStatus").html("");
-            $("#ninExistenceStatus").html("");
-            existenceStatus.nin = null;
-            updateNextButtonState();
-          }
-        });
+        //     // Second, run the generic existence check for NIN
+        //     checkExistence("nin", nin, "#ninExistenceStatus");
+        //   } else {
+        //     $("#ninStatus").html("");
+        //     $("#ninExistenceStatus").html("");
+        //     existenceStatus.nin = null;
+        //     updateNextButtonState();
+        //   }
+        // });
 
         // // Next button click handler
         // $("#nextButton").click(function () {
@@ -1951,7 +1976,7 @@
               "Please check your email inbox or spam to activate your account. Click OK to continue.",
               "success",
             ).then(() => {
-              window.location.href = "../auth/login.html";
+              window.location.href = `${basePath}/index.html`;
             });
           } catch (error) {
             Swal.fire(

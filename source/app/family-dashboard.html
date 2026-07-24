@@ -1,0 +1,4503 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Family Dashboard - BSCRMIS</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="/assets/images/benue-state-logo.png"
+      sizes="16x16"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <style>
+      :root {
+        --sidebar-width: 260px;
+        --sidebar-bg: #1a1d29;
+        --sidebar-text: #a0a9c9;
+        --sidebar-active: #4c5fd5;
+        --header-height: 60px;
+        --header-bg: #ffffff;
+        --main-bg: #f5f6fa;
+        --card-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+        --primary-color: #4c5fd5;
+        --success-color: #10b981;
+        --warning-color: #f59e0b;
+        --danger-color: #ef4444;
+        --info-color: #3b82f6;
+        --card-bg: #ffffff;
+        --text-color: #212529;
+        --border-color: #e9ecef;
+      }
+      [data-theme="dark"] {
+        --sidebar-bg: #0f0f14;
+        --sidebar-text: #8892b0;
+        --sidebar-active: #6366f1;
+        --header-bg: #1a1d29;
+        --main-bg: #111318;
+        --card-bg: #1a1d29;
+        --text-color: #e6e6e6;
+        --border-color: #2a2d3a;
+      }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--main-bg);
+        color: var(--text-color);
+        transition: all 0.3s ease;
+      }
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: var(--sidebar-width);
+        background-color: var(--sidebar-bg);
+        z-index: 1000;
+        transition: all 0.3s ease;
+        overflow-y: auto;
+      }
+      .sidebar-header {
+        padding: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .sidebar-menu {
+        padding: 20px 0;
+      }
+      .sidebar-menu .nav-link {
+        color: var(--sidebar-text);
+        padding: 12px 20px;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s ease;
+        border-radius: 0;
+      }
+      .sidebar-menu .nav-link:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+        color: #fff;
+      }
+      .sidebar-menu .nav-link.active {
+        background-color: var(--sidebar-active);
+        color: #fff;
+      }
+      .sidebar-menu .nav-link i {
+        margin-right: 10px;
+        font-size: 18px;
+      }
+      .sidebar-menu .nav-link .badge {
+        margin-left: auto;
+      }
+      .sidebar-menu .nav-item-divider {
+        color: var(--sidebar-text);
+        padding: 8px 20px;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        opacity: 0.6;
+      }
+      .header {
+        position: fixed;
+        top: 0;
+        left: var(--sidebar-width);
+        right: 0;
+        height: var(--header-height);
+        background-color: var(--header-bg);
+        z-index: 999;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        display: flex;
+        align-items: center;
+        padding: 0 20px;
+        gap: 15px;
+        transition: all 0.3s ease;
+      }
+      .header .search-bar {
+        flex: 1;
+        max-width: 400px;
+      }
+      .header .header-actions {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+      .main-content {
+        margin-left: var(--sidebar-width);
+        margin-top: var(--header-height);
+        padding: 20px;
+        min-height: calc(100vh - var(--header-height));
+        transition: all 0.3s ease;
+      }
+      .card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: var(--card-shadow);
+        margin-bottom: 20px;
+        background-color: var(--card-bg);
+        transition: all 0.3s ease;
+      }
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      }
+      .card-header {
+        background-color: transparent;
+        border-bottom: 1px solid var(--border-color);
+        padding: 15px 20px;
+        font-weight: 600;
+      }
+      .card-body {
+        padding: 20px;
+      }
+      .stat-card {
+        text-align: center;
+        padding: 20px;
+      }
+      .stat-card .stat-icon {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+      }
+      .stat-card .stat-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+      }
+      .stat-card .stat-label {
+        font-size: 0.85rem;
+        color: var(--sidebar-text);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .quick-action-card {
+        text-align: center;
+        padding: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      .quick-action-card:hover {
+        background-color: var(--sidebar-active);
+        color: #fff;
+        transform: translateY(-3px);
+      }
+      .quick-action-card i {
+        font-size: 2rem;
+        margin-bottom: 8px;
+      }
+      .quick-action-card span {
+        font-size: 0.85rem;
+        font-weight: 500;
+      }
+      .profile-photo {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid var(--primary-color);
+      }
+      .profile-avatar {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 50%;
+      }
+      .activity-timeline {
+        position: relative;
+        padding-left: 30px;
+      }
+      .activity-timeline::before {
+        content: "";
+        position: absolute;
+        left: 10px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background-color: var(--border-color);
+      }
+      .activity-item {
+        position: relative;
+        margin-bottom: 20px;
+      }
+      .activity-item::before {
+        content: "";
+        position: absolute;
+        left: -24px;
+        top: 5px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: var(--sidebar-active);
+      }
+      .activity-item .activity-time {
+        font-size: 12px;
+        color: var(--sidebar-text);
+        margin-bottom: 5px;
+      }
+      .activity-item .activity-content {
+        font-size: 14px;
+      }
+      .family-header {
+        background: linear-gradient(135deg, var(--sidebar-active), #3b4cdb);
+        color: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+      }
+      .family-header h2 {
+        margin-bottom: 5px;
+      }
+      .family-header .family-meta {
+        opacity: 0.9;
+        font-size: 0.9rem;
+      }
+      @media (max-width: 768px) {
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .sidebar.show {
+          transform: translateX(0);
+        }
+        .header {
+          left: 0;
+        }
+        .main-content {
+          margin-left: 0;
+        }
+      }
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+      .dataTables_wrapper .dataTables_filter input {
+        border: 1px solid var(--border-color);
+        border-radius: 5px;
+        padding: 5px 10px;
+      }
+      .dataTables_wrapper .dataTables_length select {
+        border: 1px solid var(--border-color);
+        border-radius: 5px;
+        padding: 5px;
+      }
+      .member-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      /* NIN verification status styles */
+      .nin-status {
+        font-size: 0.8rem;
+        margin-top: 0.25rem;
+      }
+      .nin-existence-status {
+        font-size: 0.8rem;
+        margin-top: 0.25rem;
+      }
+      .existence-error {
+        color: #dc3545;
+        font-weight: 600;
+        font-size: 0.8rem;
+        margin-top: 0.25rem;
+        display: flex;
+        align-items: center;
+      }
+      .existence-error i {
+        margin-right: 0.25rem;
+      }
+      .existence-success {
+        color: #198754;
+        font-weight: 600;
+        font-size: 0.8rem;
+        margin-top: 0.25rem;
+        display: flex;
+        align-items: center;
+      }
+      .existence-success i {
+        margin-right: 0.25rem;
+      }
+      .checking-status {
+        color: #6c757d;
+        font-size: 0.8rem;
+        margin-top: 0.25rem;
+        display: flex;
+        align-items: center;
+      }
+      .checking-status i {
+        margin-right: 0.25rem;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      .form-control.is-invalid-nin {
+        border-color: #dc3545;
+      }
+      .form-control.is-valid-nin {
+        border-color: #198754;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="d-flex align-items-center">
+          <img
+            src="/assets/images/benue-state-logo.png"
+            alt="Benue State Logo"
+            class="me-3"
+            width="40"
+          />
+          <div>
+            <h4 class="mb-0 fw-bold text-white">BSCRMIS</h4>
+            <small class="text-white" style="font-size: 0.8rem"
+              >Family Portal</small
+            >
+          </div>
+        </div>
+      </div>
+      <nav class="sidebar-menu">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link active" href="#" data-page="dashboard"
+              ><i class="bi bi-speedometer2"></i> Dashboard</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-page="members"
+              ><i class="bi bi-people"></i> Members
+              <span class="badge bg-primary" id="membersBadge">0</span></a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-page="dependents"
+              ><i class="bi bi-person-hearts"></i> Dependents
+              <span class="badge bg-info" id="dependentsBadge">0</span></a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-page="invitations"
+              ><i class="bi bi-envelope"></i> Invitations
+              <span class="badge bg-warning" id="invitationsBadge">0</span></a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-page="applications"
+              ><i class="bi bi-file-earmark-text"></i> Applications
+              <span class="badge bg-primary" id="familyAppsBadge">0</span></a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-page="documents"
+              ><i class="bi bi-folder"></i> Documents</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-page="payments"
+              ><i class="bi bi-credit-card"></i> Payments</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-page="settings"
+              ><i class="bi bi-gear"></i> Settings</a
+            >
+          </li>
+          <li class="nav-item-divider mt-3">Actions</li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" id="createFamilyBtn"
+              ><i class="bi bi-plus-circle"></i> Create Family</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" id="backToUserDash"
+              ><i class="bi bi-arrow-left-circle"></i> User Dashboard</a
+            >
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Header -->
+    <header class="header">
+      <button class="btn btn-light d-md-none me-3" id="sidebarToggle">
+        <i class="bi bi-list"></i>
+      </button>
+      <div
+        class="d-none d-md-flex align-items-center gap-2"
+        id="familyHeaderInfo"
+      >
+        <i class="bi bi-house-heart fs-5 text-primary"></i>
+        <span id="headerFamilyName" class="fw-semibold">No Family</span>
+        <span class="badge bg-secondary" id="headerFamilyStatus">-</span>
+      </div>
+      <div class="header-actions">
+        <div class="dropdown">
+          <button
+            class="btn btn-light position-relative"
+            type="button"
+            data-bs-toggle="dropdown"
+            id="notificationDropdown"
+          >
+            <i class="bi bi-bell"></i>
+            <span
+              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+              id="notificationBadge"
+            >
+              <span id="notificationCount">0</span>
+            </span>
+          </button>
+          <ul
+            class="dropdown-menu dropdown-menu-end p-0 shadow-sm"
+            style="min-width: 300px; max-height: 400px; overflow-y: auto"
+            id="notificationList"
+          >
+            <li>
+              <h6 class="dropdown-header bg-light border-bottom">
+                Notifications
+              </h6>
+            </li>
+            <li id="notificationsContainer">
+              <div
+                class="text-center py-3 text-muted small"
+                id="noNotifications"
+              >
+                No new notifications
+              </div>
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <a
+                class="dropdown-item text-center fw-bold text-primary"
+                href="#"
+                id="viewAllNotifications"
+                >View all notifications</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div class="dropdown">
+          <button
+            class="btn btn-light d-flex align-items-center"
+            type="button"
+            data-bs-toggle="dropdown"
+          >
+            <img
+              id="userProfilePic"
+              src="https://picsum.photos/seed/user/40/40.jpg"
+              class="rounded-circle me-2 profile-avatar"
+              alt="User"
+            />
+            <span id="currentUser"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" href="#" data-page="settings"
+                ><i class="bi bi-gear me-2"></i>Settings</a
+              >
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <a class="dropdown-item" href="#" id="logoutBtn"
+                ><i class="bi bi-box-arrow-right me-2"></i>Logout</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- ==================== DASHBOARD PAGE ==================== -->
+      <div id="dashboard-page" class="page-content">
+        <div
+          id="noFamilyBanner"
+          class="alert alert-info d-flex align-items-center gap-3"
+        >
+          <i class="bi bi-info-circle fs-4"></i>
+          <div>
+            <strong>No Family Yet?</strong> You can create a family to manage
+            applications for your household.
+          </div>
+          <button class="btn btn-primary ms-auto" id="createFamilyFromBanner">
+            <i class="bi bi-plus-circle me-1"></i>Create Family
+          </button>
+        </div>
+
+        <div id="familyHeaderSection" class="family-header d-none">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <h2 id="dashFamilyName">-</h2>
+              <div class="family-meta">
+                <span id="dashFamilyNumber">-</span> &bull;
+                <span id="dashFamilyAddress">-</span> &bull;
+                <span id="dashFamilyHead">Head: -</span>
+              </div>
+            </div>
+            <div class="text-end">
+              <span class="badge bg-light text-dark fs-6" id="dashFamilyStatus"
+                >-</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-4" id="statsRow">
+          <div class="col-xl-2 col-md-4 col-6 mb-3">
+            <div class="card stat-card">
+              <div class="stat-icon text-primary">
+                <i class="bi bi-people"></i>
+              </div>
+              <div class="stat-value" id="statTotalMembers">0</div>
+              <div class="stat-label">Total Members</div>
+            </div>
+          </div>
+          <div class="col-xl-2 col-md-4 col-6 mb-3">
+            <div class="card stat-card">
+              <div class="stat-icon text-success">
+                <i class="bi bi-person-check"></i>
+              </div>
+              <div class="stat-value" id="statAdults">0</div>
+              <div class="stat-label">Adults</div>
+            </div>
+          </div>
+          <div class="col-xl-2 col-md-4 col-6 mb-3">
+            <div class="card stat-card">
+              <div class="stat-icon text-info">
+                <i class="bi bi-person-heart"></i>
+              </div>
+              <div class="stat-value" id="statDependents">0</div>
+              <div class="stat-label">Dependents</div>
+            </div>
+          </div>
+          <div class="col-xl-2 col-md-4 col-6 mb-3">
+            <div class="card stat-card">
+              <div class="stat-icon text-warning">
+                <i class="bi bi-clock"></i>
+              </div>
+              <div class="stat-value" id="statPendingApps">0</div>
+              <div class="stat-label">Pending Apps</div>
+            </div>
+          </div>
+          <div class="col-xl-2 col-md-4 col-6 mb-3">
+            <div class="card stat-card">
+              <div class="stat-icon text-success">
+                <i class="bi bi-check-circle"></i>
+              </div>
+              <div class="stat-value" id="statApprovedApps">0</div>
+              <div class="stat-label">Approved</div>
+            </div>
+          </div>
+          <div class="col-xl-2 col-md-4 col-6 mb-3">
+            <div class="card stat-card">
+              <div class="stat-icon text-danger">
+                <i class="bi bi-x-circle"></i>
+              </div>
+              <div class="stat-value" id="statRejectedApps">0</div>
+              <div class="stat-label">Rejected</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-4">
+          <div class="col-md-6 mb-3">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0">Payment Overview</h5>
+              </div>
+              <div class="card-body">
+                <div class="row text-center">
+                  <div class="col-6">
+                    <h3 class="text-warning" id="statPendingPayments">0</h3>
+                    <small class="text-muted">Pending</small>
+                  </div>
+                  <div class="col-6">
+                    <h3 class="text-success" id="statCompletedPayments">0</h3>
+                    <small class="text-muted">Completed</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0">Expiring ID Cards</h5>
+              </div>
+              <div class="card-body text-center">
+                <h3 class="text-danger" id="statExpiringCards">0</h3>
+                <small class="text-muted">Cards expiring within 30 days</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-4">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header"><h5 class="mb-0">Quick Actions</h5></div>
+              <div class="card-body">
+                <div class="row g-2">
+                  <div class="col-md-3 col-6">
+                    <div class="card quick-action-card" id="qaInviteMember">
+                      <i class="bi bi-person-plus"></i><span>Invite Adult</span>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-6">
+                    <div class="card quick-action-card" id="qaAddDependent">
+                      <i class="bi bi-person-heart"></i
+                      ><span>Add Dependent</span>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-6">
+                    <div class="card quick-action-card" id="qaUploadDoc">
+                      <i class="bi bi-upload"></i><span>Upload Document</span>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-6">
+                    <div class="card quick-action-card" id="qaSubmitApp">
+                      <i class="bi bi-file-earmark-plus"></i
+                      ><span>Submit Application</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0">Recent Activity</h5>
+              </div>
+              <div class="card-body">
+                <div class="activity-timeline" id="activityTimeline">
+                  <p class="text-muted text-center">No recent activities</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== MEMBERS PAGE ==================== -->
+      <div id="members-page" class="page-content d-none">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2 class="mb-0">Family Members</h2>
+          <div>
+            <button class="btn btn-primary" id="inviteMemberBtn">
+              <i class="bi bi-person-plus me-1"></i>Invite Member
+            </button>
+            <button class="btn btn-outline-primary" id="refreshMembersBtn">
+              <i class="bi bi-arrow-clockwise"></i>
+            </button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+              <table
+                id="membersTable"
+                class="table table-striped table-hover dt-responsive w-100"
+              >
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Member</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Relationship</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Joined</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== DEPENDENTS PAGE ==================== -->
+      <div id="dependents-page" class="page-content d-none">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2 class="mb-0">Dependents</h2>
+          <button class="btn btn-primary" id="addDependentBtn">
+            <i class="bi bi-person-plus me-1"></i>Add Dependent
+          </button>
+        </div>
+        <div class="card">
+          <div class="card-body">
+              <table
+                id="dependentsTable"
+                class="table table-striped table-hover dt-responsive w-100"
+              >
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Full Name</th>
+                    <th>DOB</th>
+                    <th>Gender</th>
+                    <th>Relationship</th>
+                    <th>NIN</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== INVITATIONS PAGE ==================== -->
+      <div id="invitations-page" class="page-content d-none">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2 class="mb-0">Family Invitations</h2>
+        </div>
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5 class="mb-0">My Pending Invitations</h5>
+          </div>
+          <div class="card-body">
+              <table
+                id="myInvitationsTable"
+                class="table table-striped table-hover dt-responsive w-100"
+              >
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Family</th>
+                    <th>Sent By</th>
+                    <th>Date</th>
+                    <th>Expires</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h5 class="mb-0">Sent Invitations</h5></div>
+          <div class="card-body">
+              <table
+                id="sentInvitationsTable"
+                class="table table-striped table-hover dt-responsive w-100"
+              >
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Receiver</th>
+                    <th>Email</th>
+                    <th>Sent</th>
+                    <th>Expires</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== APPLICATIONS PAGE ==================== -->
+      <div id="applications-page" class="page-content d-none">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2 class="mb-0">Family Applications</h2>
+          <button class="btn btn-primary" id="submitAppBtn">
+            <i class="bi bi-file-earmark-plus me-1"></i>New Application
+          </button>
+        </div>
+        <div class="card">
+          <div class="card-body">
+              <table
+                id="familyApplicationsTable"
+                class="table table-striped table-hover dt-responsive w-100"
+              >
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Applicant</th>
+                    <th>Type</th>
+                    <th>Reference</th>
+                    <th>Status</th>
+                    <th>Submitted</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== DOCUMENTS PAGE ==================== -->
+      <div id="documents-page" class="page-content d-none">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2 class="mb-0">Family Documents</h2>
+          <button class="btn btn-primary" id="uploadDocBtn">
+            <i class="bi bi-upload me-1"></i>Upload Document
+          </button>
+        </div>
+        <div class="card mb-3">
+          <div class="card-body py-2">
+            <div class="row align-items-center">
+              <div class="col-md-3">
+                <select class="form-select form-select-sm" id="docTypeFilter">
+                  <option value="">All Document Types</option>
+                  <option value="birth_certificate">Birth Certificate</option>
+                  <option value="family_photograph">Family Photograph</option>
+                  <option value="marriage_certificate">
+                    Marriage Certificate
+                  </option>
+                  <option value="proof_of_address">Proof of Address</option>
+                  <option value="utility_bill">Utility Bill</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <select class="form-select form-select-sm" id="docVerifyFilter">
+                  <option value="">All Status</option>
+                  <option value="verified">Verified</option>
+                  <option value="pending">Pending</option>
+                  <option value="rejected">Rejected</option>
+                </select>
+              </div>
+              <div class="col-md-6 text-end">
+                <span class="text-muted small" id="docCountLabel"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+              <table
+                id="familyDocumentsTable"
+                class="table table-striped table-hover dt-responsive w-100"
+              >
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Document Type</th>
+                    <th>Description</th>
+                    <th>Uploaded By</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            <div
+              class="d-flex justify-content-between align-items-center mt-3 d-none"
+              id="docPagination"
+            >
+              <button class="btn btn-sm btn-outline-secondary" id="docPrevPage">
+                <i class="bi bi-chevron-left"></i> Previous
+              </button>
+              <div id="docPageNumbers"></div>
+              <button class="btn btn-sm btn-outline-secondary" id="docNextPage">
+                Next <i class="bi bi-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== PAYMENTS PAGE ==================== -->
+      <div id="payments-page" class="page-content d-none">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2 class="mb-0">Family Payments</h2>
+        </div>
+        <div class="card">
+          <div class="card-body">
+              <table
+                id="familyPaymentsTable"
+                class="table table-striped table-hover dt-responsive w-100"
+              >
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Reference</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== SETTINGS PAGE ==================== -->
+      <div id="settings-page" class="page-content d-none">
+        <h2 class="mb-4">Family Settings</h2>
+        <div class="row">
+          <div class="col-lg-6 mb-4">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0">Family Information</h5>
+              </div>
+              <div class="card-body" id="familyInfoSettings">
+                <p class="text-muted">Loading family information...</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 mb-4">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0">Family Actions</h5>
+              </div>
+              <div class="card-body">
+                <div class="d-grid gap-2">
+                  <button class="btn btn-outline-primary" id="editFamilyBtn">
+                    <i class="bi bi-pencil me-1"></i>Edit Family Details
+                  </button>
+                  <button
+                    class="btn btn-outline-danger"
+                    id="transferHeadshipBtn"
+                  >
+                    <i class="bi bi-arrow-left-right me-1"></i>Transfer Headship
+                  </button>
+                  <button
+                    class="btn btn-outline-secondary"
+                    id="viewActivityLogBtn"
+                  >
+                    <i class="bi bi-journal-text me-1"></i>View Activity Log
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ==================== MODALS ==================== -->
+
+    <!-- Create Family Modal -->
+    <div class="modal fade" id="createFamilyModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Create a Family</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="createFamilyForm">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label"
+                    >Family Name <span class="text-danger">*</span></label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="cfFamilyName"
+                    required
+                  />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label"
+                    >Household Address <span class="text-danger">*</span></label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="cfAddress"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4 mb-3">
+                  <label class="form-label"
+                    >State <span class="text-danger">*</span></label
+                  >
+                  <select class="form-select" id="cfState">
+                    <option value="">Select State</option>
+                  </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label class="form-label"
+                    >LGA <span class="text-danger">*</span></label
+                  >
+                  <select class="form-select" id="cfLga">
+                    <option value="">Select LGA</option>
+                  </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label class="form-label">Ward</label>
+                  <input type="text" class="form-control" id="cfWard" />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4 mb-3">
+                  <label class="form-label">District</label>
+                  <input type="text" class="form-control" id="cfDistrict" />
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label class="form-label">Clan/Kindred</label>
+                  <input type="text" class="form-control" id="cfClan" />
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label class="form-label">Village</label>
+                  <input type="text" class="form-control" id="cfVillage" />
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+              Cancel
+            </button>
+            <button class="btn btn-primary" id="saveFamilyBtn">
+              <i class="bi bi-check-circle me-1"></i>Create Family
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Invite Member Modal -->
+    <div class="modal fade" id="inviteMemberModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Invite Family Member</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="inviteMemberForm">
+              <div class="mb-3">
+                <label class="form-label"
+                  >Email Address <span class="text-danger">*</span></label
+                >
+                <input
+                  type="email"
+                  class="form-control"
+                  id="inviteEmail"
+                  required
+                  placeholder="Enter member's email"
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label"
+                  >Relationship <span class="text-danger">*</span></label
+                >
+                <select class="form-select" id="inviteRelationship">
+                  <option value="">Select Relationship</option>
+                  <option value="husband">Husband</option>
+                  <option value="wife">Wife</option>
+                  <option value="father">Father</option>
+                  <option value="mother">Mother</option>
+                  <option value="brother">Brother</option>
+                  <option value="sister">Sister</option>
+                  <option value="son">Son</option>
+                  <option value="daughter">Daughter</option>
+                  <option value="fuardian">Guardian</option>
+                  <option value="uncle">Uncle</option>
+                  <option value="aunt">Aunt</option>
+                  <option value="cousin">Cousin</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Message (Optional)</label>
+                <textarea
+                  class="form-control"
+                  id="inviteMessage"
+                  rows="2"
+                  placeholder="Add a personal message"
+                ></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+              Cancel
+            </button>
+            <button class="btn btn-primary" id="sendInviteBtn">
+              <i class="bi bi-send me-1"></i>Send Invitation
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Dependent Modal -->
+    <div class="modal fade" id="addDependentModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Add Dependent</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="addDependentForm">
+              <div class="row">
+                <div class="col-md-4 mb-3">
+                  <label class="form-label"
+                    >First Name <span class="text-danger">*</span></label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="depFirstname"
+                    required
+                  />
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label class="form-label"
+                    >Last Name <span class="text-danger">*</span></label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="depLastname"
+                    required
+                  />
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label class="form-label">Other Name</label>
+                  <input type="text" class="form-control" id="depMiddlename" />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4 mb-3">
+                  <label class="form-label"
+                    >Date of Birth <span class="text-danger">*</span></label
+                  >
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="depDob"
+                    required
+                  />
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label class="form-label"
+                    >Gender <span class="text-danger">*</span></label
+                  >
+                  <select class="form-select" id="depGender">
+                    <option value="">Select</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                  </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label class="form-label"
+                    >Relationship <span class="text-danger">*</span></label
+                  >
+                  <select class="form-select" id="depRelationship">
+                    <option value="">Select</option>
+                    <option value="son">Son</option>
+                    <option value="daughter">Daughter</option>
+                    <option value="father">Father</option>
+                    <option value="mother">Mother</option>
+                    <option value="grandfather">Grandfather</option>
+                    <option value="grandmother">Grandmother</option>
+                    <option value="ward">Ward</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">NIN (Optional)</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="depNin"
+                    placeholder="Enter 11-digit NIN"
+                    inputmode="numeric"
+                    maxlength="11"
+                  />
+                  <small class="text-muted">Leave blank if NIN is not available</small>
+                  <div id="depNinStatus" class="nin-status"></div>
+                  <div id="depNinExistenceStatus" class="nin-existence-status"></div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Birth Certificate Number</label>
+                  <input type="text" class="form-control" id="depBirthCert" />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">State of Origin</label>
+                  <select class="form-select" id="depStateOfOrigin">
+                    <option value="">Select State</option>
+                  </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">LGA of Origin</label>
+                  <select class="form-select" id="depLgaOfOrigin">
+                    <option value="">Select LGA</option>
+                  </select>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+              Cancel
+            </button>
+            <button class="btn btn-primary" id="saveDependentBtn">
+              <i class="bi bi-check-circle me-1"></i>Add Dependent
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Family Modal -->
+    <div class="modal fade" id="editFamilyModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit Family Details</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="editFamilyForm">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label"
+                    >Family Name <span class="text-danger">*</span></label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="efFamilyName"
+                    required
+                  />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Household Address</label>
+                  <input type="text" class="form-control" id="efAddress" />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4 mb-3">
+                  <label class="form-label">State</label>
+                  <select class="form-select" id="efState">
+                    <option value="">Select State</option>
+                  </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label class="form-label">LGA</label>
+                  <select class="form-select" id="efLga">
+                    <option value="">Select LGA</option>
+                  </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label class="form-label">Ward</label>
+                  <input type="text" class="form-control" id="efWard" />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4 mb-3">
+                  <label class="form-label">District</label>
+                  <input type="text" class="form-control" id="efDistrict" />
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label class="form-label">Clan/Kindred</label>
+                  <input type="text" class="form-control" id="efClan" />
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label class="form-label">Village</label>
+                  <input type="text" class="form-control" id="efVillage" />
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+              Cancel
+            </button>
+            <button class="btn btn-primary" id="updateFamilyBtn">
+              <i class="bi bi-save me-1"></i>Update Family
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Transfer Headship Modal -->
+    <div class="modal fade" id="transferHeadshipModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Transfer Family Headship</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p class="text-warning">
+              <i class="bi bi-exclamation-triangle me-1"></i> This action cannot
+              be undone. Headship will be transferred immediately.
+            </p>
+            <div class="mb-3">
+              <label class="form-label"
+                >Select New Family Head
+                <span class="text-danger">*</span></label
+              >
+              <select class="form-select" id="thNewHead">
+                <option value="">Select a family member</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+              Cancel
+            </button>
+            <button class="btn btn-danger" id="confirmTransferBtn">
+              <i class="bi bi-arrow-left-right me-1"></i>Transfer Headship
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upload Document Modal -->
+    <div class="modal fade" id="uploadDocModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Upload Family Document</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="uploadDocForm">
+              <div class="mb-3">
+                <label class="form-label"
+                  >Document Type <span class="text-danger">*</span></label
+                >
+                <select class="form-select" id="docType">
+                  <option value="">Select Type</option>
+                  <option value="birth_certificate">Birth Certificate</option>
+                  <option value="family_photograph">Family Photograph</option>
+                  <option value="marriage_certificate">
+                    Marriage Certificate
+                  </option>
+                  <option value="proof_of_address">Proof of Address</option>
+                  <option value="utility_bill">Utility Bill</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label"
+                  >File <span class="text-danger">*</span></label
+                >
+                <input
+                  type="file"
+                  class="form-control"
+                  id="docFile"
+                  required
+                  accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,image/*,application/pdf"
+                />
+                <div class="form-text">
+                  Max file size: 10MB. Allowed: PDF, JPG, PNG, GIF, WEBP
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Description</label>
+                <textarea
+                  class="form-control"
+                  id="docDescription"
+                  rows="2"
+                ></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+              Cancel
+            </button>
+            <button class="btn btn-primary" id="saveDocBtn">
+              <i class="bi bi-upload me-1"></i>Upload
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Update Member Modal -->
+    <div class="modal fade" id="updateMemberModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Update Member</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="updateMemberForm">
+              <div class="mb-3">
+                <label class="form-label">Relationship</label>
+                <select class="form-select" id="umRelationship">
+                  <option value="">Select Relationship</option>
+                  <option value="husband">Husband</option>
+                  <option value="wife">Wife</option>
+                  <option value="father">Father</option>
+                  <option value="mother">Mother</option>
+                  <option value="brother">Brother</option>
+                  <option value="sister">Sister</option>
+                  <option value="son">Son</option>
+                  <option value="daughter">Daughter</option>
+                  <option value="guardian">Guardian</option>
+                  <option value="uncle">Uncle</option>
+                  <option value="aunt">Aunt</option>
+                  <option value="cousin">Cousin</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Status</label>
+                <select class="form-select" id="umStatus">
+                  <option value="Active">Active</option>
+                  <option value="Suspended">Suspended</option>
+                </select>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+              Cancel
+            </button>
+            <button class="btn btn-primary" id="saveMemberUpdateBtn">
+              <i class="bi bi-save me-1"></i>Update
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Update Dependent Modal -->
+    <div class="modal fade" id="updateDependentModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Update Dependent</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="updateDependentForm">
+              <div class="row">
+                <div class="col-md-4 mb-3">
+                  <label class="form-label">First Name</label>
+                  <input type="text" class="form-control" id="udFirstname" />
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label class="form-label">Last Name</label>
+                  <input type="text" class="form-control" id="udLastname" />
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label class="form-label">Other Name</label>
+                  <input type="text" class="form-control" id="udMiddlename" />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4 mb-3">
+                  <label class="form-label">Date of Birth</label>
+                  <input type="date" class="form-control" id="udDob" />
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label class="form-label">Gender</label>
+                  <select class="form-select" id="udGender">
+                    <option value="">Select</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                  </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label class="form-label">Relationship</label>
+                  <select class="form-select" id="udRelationship">
+                    <option value="">Select</option>
+                    <option value="son">Son</option>
+                    <option value="daughter">Daughter</option>
+                    <option value="father">Father</option>
+                    <option value="mother">Mother</option>
+                    <option value="grandfather">Grandfather</option>
+                    <option value="grandmother">Grandmother</option>
+                    <option value="ward">Ward</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">NIN (Optional)</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="udNin"
+                    placeholder="Enter 11-digit NIN"
+                    inputmode="numeric"
+                    maxlength="11"
+                  />
+                  <small class="text-muted">Leave blank if NIN is not available</small>
+                  <div id="udNinStatus" class="nin-status"></div>
+                  <div id="udNinExistenceStatus" class="nin-existence-status"></div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Birth Certificate Number</label>
+                  <input type="text" class="form-control" id="udBirthCert" />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">State of Origin</label>
+                  <select class="form-select" id="udStateOfOrigin">
+                    <option value="">Select State</option>
+                  </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">LGA of Origin</label>
+                  <select class="form-select" id="udLgaOfOrigin">
+                    <option value="">Select LGA</option>
+                  </select>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+              Cancel
+            </button>
+            <button class="btn btn-primary" id="saveDependentUpdateBtn">
+              <i class="bi bi-save me-1"></i>Update
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Activity Log Modal -->
+    <div class="modal fade" id="activityLogModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Family Activity Log</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+              <table
+                id="activityLogTable"
+                class="table table-striped table-hover w-100"
+              >
+                <thead>
+                  <tr>
+                    <th>Date/Time</th>
+                    <th>Action</th>
+                    <th>Performed By</th>
+                    <th>Details</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal fade" id="confirmModal" tabindex="-1">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="confirmModalTitle">Confirm</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body" id="confirmModalBody">Are you sure?</div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+              Cancel
+            </button>
+            <button class="btn btn-danger" id="confirmModalBtn">Confirm</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- View Document Modal -->
+    <div id="viewModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Document Viewer</h5>
+            <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <!-- Document will be loaded here -->
+          </div>
+          <div class="modal-footer">
+            <a href="#" id="viewModalOpenTab" target="_blank" class="btn btn-sm btn-outline-primary">Open in New Tab</a>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast notification container -->
+    <div
+      class="position-fixed bottom-0 end-0 p-3"
+      style="z-index: 9999"
+      id="toastContainer"
+    ></div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+      pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+    </script>
+    <script type="text/javascript" src="../js/index.js"></script>
+
+    <script>
+      // ============================================================
+      // STATE
+      // ============================================================
+      let currentFamilyId = null;
+      let familyData = null;
+      let membersTable,
+        dependentsTable,
+        myInvTable,
+        sentInvTable,
+        appsTable,
+        docsTable,
+        paymentsTable,
+        activityLogTable;
+
+      // ============================================================
+      // UTILITY FUNCTIONS
+      // ============================================================
+      function showNotification(message, type) {
+        const icon =
+          {
+            success: "bi-check-circle-fill",
+            error: "bi-x-circle-fill",
+            warning: "bi-exclamation-triangle-fill",
+            info: "bi-info-circle-fill",
+          }[type] || "bi-info-circle-fill";
+        const bg =
+          {
+            success: "bg-success",
+            error: "bg-danger",
+            warning: "bg-warning",
+            info: "bg-info",
+          }[type] || "bg-info";
+        const toast = $(`
+              <div class="toast align-items-center text-white ${bg} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                  <div class="toast-body"><i class="bi ${icon} me-2"></i>${message}</div>
+                  <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+              </div>
+            `);
+        $("#toastContainer").append(toast);
+        const bsToast = new bootstrap.Toast(toast[0], {
+          autohide: true,
+          delay: 5000,
+        });
+        bsToast.show();
+        toast.on("hidden.bs.toast", () => toast.remove());
+      }
+
+      function formatDate(d) {
+        if (!d) return "-";
+        return new Date(d).toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        });
+      }
+
+      function formatDateTime(d) {
+        if (!d) return "-";
+        return new Date(d).toLocaleString("en-GB", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+      }
+
+      function getToken() {
+        try {
+          const d = JSON.parse(localStorage.getItem("token") || "{}");
+          return d.token || "";
+        } catch (e) {
+          return "";
+        }
+      }
+
+      function getCurrentUser() {
+        try {
+          return JSON.parse(localStorage.getItem("token") || "{}").user || null;
+        } catch (e) {
+          return null;
+        }
+      }
+
+      function apiHeaders() {
+        return {
+          Authorization: "Bearer " + getToken(),
+          "Content-Type": "application/json",
+        };
+      }
+
+      // ============================================================
+      // NOTIFICATIONS (Socket.io)
+      // ============================================================
+      function initNotifications() {
+        const token = getToken();
+        if (!token) return;
+        const socket = io(BACKEND_URL, { auth: { token } });
+        socket.on("connect", () =>
+          console.log("Family: Connected to notification server"),
+        );
+        socket.on("notification:new", (notif) => {
+          showNotification(notif.title + ": " + (notif.message || ""), "info");
+          loadNotificationCount();
+        });
+        socket.on("disconnect", () =>
+          console.log("Family: Disconnected from notification server"),
+        );
+        loadNotificationCount();
+      }
+
+      function loadNotificationCount() {
+        $.ajax({
+          url: BACKEND_URL + "/notifications?limit=5",
+          method: "GET",
+          headers: apiHeaders(),
+          success: function (resp) {
+            const data = resp.data || resp.notifications || resp || [];
+            const unread = data.filter
+              ? data.filter((n) => !n.isRead).length
+              : 0;
+            $("#notificationCount").text(unread);
+            const container = $("#notificationsContainer");
+            container
+              .find(".dynamic-notification, .mark-all-container")
+              .remove();
+            if (data.length === 0) {
+              $("#noNotifications").show();
+            } else {
+              $("#noNotifications").hide();
+              data.forEach(function (n) {
+                container.append(
+                  '<li class="dynamic-notification"><a class="dropdown-item" href="#" data-id="' +
+                    (n._id || n.id) +
+                    '"><strong>' +
+                    (n.title || "Notification") +
+                    '</strong><br><small class="text-muted">' +
+                    (n.message || "") +
+                    "</small></a></li>",
+                );
+              });
+              container.append(
+                '<li class="mark-all-container"><hr class="dropdown-divider"></li>',
+              );
+              container.append(
+                '<li class="mark-all-container"><a class="dropdown-item text-center text-primary small mark-all-read" href="#">Mark all as read</a></li>',
+              );
+            }
+          },
+        });
+      }
+
+      $(document).on("click", ".mark-all-read", function (e) {
+        e.preventDefault();
+        $.ajax({
+          url: BACKEND_URL + "/notifications/mark-all-read",
+          method: "PATCH",
+          headers: apiHeaders(),
+          success: function () {
+            $("#notificationCount").text("0");
+            showNotification("All notifications marked as read", "success");
+          },
+        });
+      });
+
+      // ============================================================
+      // FAMILY CRUD
+      // ============================================================
+      function loadFamily() {
+        $.ajax({
+          url: BACKEND_URL + "/families/my",
+          method: "GET",
+          headers: apiHeaders(),
+          success: function (resp) {
+            const fam = resp.family || resp.data || resp;
+            const memberCount = resp.members || resp.data || resp;
+            // console.log("memberCount", memberCount.length);
+            if (fam && fam._id) {
+              currentFamilyId = fam._id;
+              familyData = fam;
+              renderFamily(fam);
+              loadDashboardStats(fam._id);
+              loadMembers(fam._id);
+              loadDependents(fam._id);
+              loadApplications(fam._id);
+              loadDocuments(fam._id);
+              loadPayments(fam._id);
+              loadSentInvitations(fam._id);
+              $("#noFamilyBanner").addClass("d-none");
+              $("#familyHeaderSection").removeClass("d-none");
+              $("#familyHeaderInfo").removeClass("d-none");
+              $("#membersBadge").text(memberCount || fam.members?.length || 0);
+            } else {
+              $("#noFamilyBanner").removeClass("d-none");
+              $("#familyHeaderSection").addClass("d-none");
+              $("#familyHeaderInfo").addClass("d-none");
+              currentFamilyId = null;
+              familyData = null;
+            }
+          },
+          error: function () {
+            $("#noFamilyBanner").removeClass("d-none");
+            $("#familyHeaderSection").addClass("d-none");
+            $("#familyHeaderInfo").addClass("d-none");
+          },
+        });
+      }
+
+      function renderFamily(fam) {
+        $("#dashFamilyName").text(fam.familyName || "Family");
+        $("#dashFamilyNumber").text("#" + (fam.familyNumber || "-"));
+        $("#dashFamilyAddress").text(fam.address || "-");
+        const headName = fam.headId
+          ? fam.headId.firstname + " " + (fam.headId.lastname || "")
+          : fam.headName || "-";
+        $("#dashFamilyHead").text("Head: " + headName);
+        $("#dashFamilyStatus").text(fam.status || "Active");
+        $("#headerFamilyName").text(fam.familyName || "Family");
+        $("#headerFamilyStatus").text(fam.status || "-");
+        // Settings page
+        const infoHtml = `
+              <p><strong>Family Name:</strong> ${fam.familyName || "-"}</p>
+              <p><strong>Family Number:</strong> ${fam.familyNumber || "-"}</p>
+              <p><strong>Address:</strong> ${fam.address || "-"}</p>
+              <p><strong>State:</strong> ${fam.state || "-"}</p>
+              <p><strong>LGA:</strong> ${fam.lga || "-"}</p>
+              <p><strong>Ward:</strong> ${fam.ward || "-"}</p>
+              <p><strong>Clan:</strong> ${fam.clan || "-"}</p>
+              <p><strong>Village:</strong> ${fam.village || "-"}</p>
+              <p><strong>Status:</strong> <span class="badge bg-${fam.status === "Active" ? "success" : "secondary"}">${fam.status || "-"}</span></p>
+              <p><strong>Created:</strong> ${formatDate(fam.createdAt)}</p>
+              <p><strong>Head:</strong> ${headName}</p>
+            `;
+        $("#familyInfoSettings").html(infoHtml);
+      }
+
+      function loadDashboardStats(familyId) {
+        $.ajax({
+          url: BACKEND_URL + "/families/" + familyId + "/dashboard",
+          method: "GET",
+          headers: apiHeaders(),
+          success: function (resp) {
+            console.log("Dashboard stats:", resp);
+            const d = resp.summary || resp || {};
+            const recentActivities = resp.recentActivities || resp || {};
+            $("#statTotalMembers").text(d.totalMembers || d.memberCount || 0);
+            $("#statAdults").text(d.adults || 0);
+            $("#statDependents").text(d.dependents || 0);
+            $("#statPendingApps").text(d.pendingApplications || 0);
+            $("#statApprovedApps").text(d.approvedApplications || 0);
+            $("#statRejectedApps").text(d.rejectedApplications || 0);
+            $("#statPendingPayments").text(d.pendingPayments || 0);
+            $("#statCompletedPayments").text(d.completedPayments || 0);
+            $("#statExpiringCards").text(d.expiringIdCards || 0);
+            $("#familyAppsBadge").text(
+              (d.pendingApplications || 0) + (d.approvedApplications || 0),
+            );
+            renderActivityLog(recentActivities || []);
+          },
+          error: function () {
+            showNotification("Failed to load dashboard stats", "error");
+          },
+        });
+      }
+
+      function renderActivityLog(activities) {
+        const timeline = $("#activityTimeline");
+        timeline.empty();
+        if (!activities || activities.length === 0) {
+          timeline.html(
+            '<p class="text-muted text-center">No recent activities</p>',
+          );
+          return;
+        }
+        activities.forEach(function (a) {
+          timeline.append(
+            '<div class="activity-item">' +
+              '<div class="activity-time">' +
+              formatDateTime(a.createdAt || a.date) +
+              "</div>" +
+              '<div class="activity-content">' +
+              (a.action || a.description || "Activity") +
+              "</div>" +
+              "</div>",
+          );
+        });
+      }
+
+      // ============================================================
+      // CREATE FAMILY
+      // ============================================================
+      function loadStates(selectId) {
+        const sel = $(selectId);
+        sel.find("option:not(:first)").remove();
+        // Default Nigerian states
+        const states = [
+          "Benue",
+          "Abia",
+          "Adamawa",
+          "Akwa Ibom",
+          "Anambra",
+          "Bauchi",
+          "Bayelsa",
+          "Borno",
+          "Cross River",
+          "Delta",
+          "Ebonyi",
+          "Edo",
+          "Ekiti",
+          "Enugu",
+          "FCT",
+          "Gombe",
+          "Imo",
+          "Jigawa",
+          "Kaduna",
+          "Kano",
+          "Katsina",
+          "Kebbi",
+          "Kogi",
+          "Kwara",
+          "Lagos",
+          "Nasarawa",
+          "Niger",
+          "Ogun",
+          "Ondo",
+          "Osun",
+          "Oyo",
+          "Plateau",
+          "Rivers",
+          "Sokoto",
+          "Taraba",
+          "Yobe",
+          "Zamfara",
+        ];
+        states.forEach(function (s) {
+          sel.append('<option value="' + s + '">' + s + "</option>");
+        });
+      }
+
+      function loadLgas(state, selectId) {
+        const sel = $(selectId);
+        sel.find("option:not(:first)").remove();
+        if (!state || state.toLowerCase() !== "benue") {
+          sel.append('<option value="">Select LGA</option>');
+          return;
+        }
+        // Benue LGAs
+        const lgas = [
+          "Ado",
+          "Agatu",
+          "Apa",
+          "Buruku",
+          "Gboko",
+          "Guma",
+          "Gwer East",
+          "Gwer West",
+          "Katsina-Ala",
+          "Konshisha",
+          "Kwande",
+          "Logo",
+          "Makurdi",
+          "Obi",
+          "Ogbadibo",
+          "Ohimini",
+          "Oju",
+          "Okpokwu",
+          "Otukpo",
+          "Tarka",
+          "Ukum",
+          "Ushongo",
+          "Vandeikya",
+        ];
+        lgas.forEach(function (l) {
+          sel.append('<option value="' + l + '">' + l + "</option>");
+        });
+      }
+
+      $(document).on("change", "#cfState", function () {
+        loadLgas($(this).val(), "#cfLga");
+      });
+      $(document).on("change", "#efState", function () {
+        loadLgas($(this).val(), "#efLga");
+      });
+      $(document).on("change", "#depStateOfOrigin", function () {
+        loadLgas($(this).val(), "#depLgaOfOrigin");
+      });
+      $(document).on("change", "#udStateOfOrigin", function () {
+        loadLgas($(this).val(), "#udLgaOfOrigin");
+      });
+
+      $(document).on(
+        "click",
+        "#createFamilyBtn, #createFamilyFromBanner",
+        function () {
+          loadStates("#cfState");
+          $("#createFamilyModal").modal("show");
+        },
+      );
+
+      $(document).on("click", "#saveFamilyBtn", function () {
+        const data = {
+          familyName: $("#cfFamilyName").val().trim(),
+          address: $("#cfAddress").val().trim(),
+          state: $("#cfState").val(),
+          lga: $("#cfLga").val(),
+          ward: $("#cfWard").val().trim(),
+          district: $("#cfDistrict").val().trim(),
+          clan: $("#cfClan").val().trim(),
+          village: $("#cfVillage").val().trim(),
+        };
+        if (!data.familyName || !data.address) {
+          Swal.fire(
+            "Validation Error",
+            "Family Name and Address are required",
+            "warning",
+          );
+          return;
+        }
+        $("#saveFamilyBtn")
+          .prop("disabled", true)
+          .html('<i class="bi bi-spinner-border"></i> Creating...');
+        $.ajax({
+          url: BACKEND_URL + "/families",
+          method: "POST",
+          headers: apiHeaders(),
+          data: JSON.stringify(data),
+          success: function (resp) {
+            $("#createFamilyModal").modal("hide");
+            Swal.fire("Success", "Family created successfully!", "success");
+            loadFamily();
+          },
+          error: function (err) {
+            Swal.fire(
+              "Error",
+              err.responseJSON?.message || "Failed to create family",
+              "error",
+            );
+          },
+          complete: function () {
+            $("#saveFamilyBtn")
+              .prop("disabled", false)
+              .html('<i class="bi bi-check-circle me-1"></i>Create Family');
+          },
+        });
+      });
+
+      // ============================================================
+      // INVITE MEMBER
+      // ============================================================
+      $(document).on("click", "#inviteMemberBtn, #qaInviteMember", function () {
+        if (!currentFamilyId) {
+          Swal.fire("No Family", "Please create a family first", "warning");
+          return;
+        }
+        $("#inviteMemberModal").modal("show");
+      });
+
+      $(document).on("click", "#sendInviteBtn", function () {
+        const data = {
+          receiverEmail: $("#inviteEmail").val().trim(),
+          relationship: $("#inviteRelationship").val(),
+          message: $("#inviteMessage").val().trim(),
+        };
+        if (!data.receiverEmail || !data.relationship) {
+          Swal.fire(
+            "Validation Error",
+            "Email and Relationship are required",
+            "warning",
+          );
+          return;
+        }
+        $("#sendInviteBtn")
+          .prop("disabled", true)
+          .html('<i class="bi bi-spinner-border"></i> Sending...');
+        $.ajax({
+          url: BACKEND_URL + "/families/" + currentFamilyId + "/invite",
+          method: "POST",
+          headers: apiHeaders(),
+          data: JSON.stringify(data),
+          success: function () {
+            $("#inviteMemberModal").modal("hide");
+            Swal.fire(
+              "Invitation Sent",
+              "An invitation has been sent to the member",
+              "success",
+            );
+            $("#inviteEmail").val("");
+            $("#inviteMessage").val("");
+          },
+          error: function (err) {
+            Swal.fire(
+              "Error",
+              err.responseJSON?.message || "Failed to send invitation",
+              "error",
+            );
+          },
+          complete: function () {
+            $("#sendInviteBtn")
+              .prop("disabled", false)
+              .html('<i class="bi bi-send me-1"></i>Send Invitation');
+          },
+        });
+      });
+
+      // ============================================================
+      // MY INVITATIONS
+      // ============================================================
+      function loadMyInvitations() {
+        $.ajax({
+          url: BACKEND_URL + "/families/my-invitations",
+          method: "GET",
+          headers: apiHeaders(),
+          success: function (resp) {
+            const data = resp.data || resp.invitations || resp || [];
+            $("#invitationsBadge").text(Array.isArray(data) ? data.length : 0);
+            ensureMyInvitationsTable();
+            myInvTable.clear().rows.add(data).draw();
+          },
+        });
+      }
+
+      // Accept invitation
+      $(document).on("click", ".accept-invite-btn", function () {
+        const token = $(this).data("token");
+        Swal.fire({
+          title: "Accept Invitation?",
+          text: "You will become a member of this family",
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonText: "Accept",
+          cancelButtonText: "Decline",
+        }).then(function (result) {
+          if (result.isConfirmed) {
+            $.ajax({
+              url: BACKEND_URL + "/families/invite/accept/" + token,
+              method: "GET",
+              headers: apiHeaders(),
+              success: function () {
+                Swal.fire(
+                  "Accepted",
+                  "You are now a family member!",
+                  "success",
+                );
+                loadMyInvitations();
+                loadFamily();
+              },
+              error: function (err) {
+                Swal.fire(
+                  "Error",
+                  err.responseJSON?.message || "Failed to accept invitation",
+                  "error",
+                );
+              },
+            });
+          }
+        });
+      });
+
+      // Reject invitation
+      $(document).on("click", ".reject-invite-btn", function () {
+        const token = $(this).data("token");
+        Swal.fire({
+          title: "Reject Invitation?",
+          text: "You will decline this family invitation",
+          icon: "warning",
+          input: "textarea",
+          inputPlaceholder: "Reason (optional)",
+          showCancelButton: true,
+          confirmButtonText: "Reject",
+          confirmButtonColor: "#dc3545",
+        }).then(function (result) {
+          if (result.isConfirmed) {
+            $.ajax({
+              url: BACKEND_URL + "/families/invite/reject/" + token,
+              method: "GET",
+              headers: apiHeaders(),
+              data: { reason: result.value || "" },
+              success: function () {
+                Swal.fire("Rejected", "Invitation has been rejected", "info");
+                loadMyInvitations();
+              },
+              error: function (err) {
+                Swal.fire(
+                  "Error",
+                  err.responseJSON?.message || "Failed to reject invitation",
+                  "error",
+                );
+              },
+            });
+          }
+        });
+      });
+
+      // ============================================================
+      // MEMBERS
+      // ============================================================
+      function loadMembers(familyId) {
+        $.ajax({
+          url: BACKEND_URL + "/families/" + familyId + "/dashboard",
+          method: "GET",
+          headers: apiHeaders(),
+          success: function (resp) {
+            const d = resp.data || resp;
+            const members = d.members || d.familyMembers || [];
+            const memberCount = d.summary?.totalMembers || members.length || 0;
+            $("#membersBadge").text(memberCount);
+            ensureMembersTable();
+            membersTable.clear().rows.add(members).draw();
+          },
+        });
+      }
+
+      // Remove member
+      $(document).on("click", ".remove-member-btn", function () {
+        const memberId = $(this).data("id");
+        const name = $(this).data("name");
+        Swal.fire({
+          title: "Remove " + name + "?",
+          text: "This member will be removed from the family",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#dc3545",
+          confirmButtonText: "Remove",
+        }).then(function (result) {
+          if (result.isConfirmed) {
+            $.ajax({
+              url:
+                BACKEND_URL +
+                "/families/" +
+                currentFamilyId +
+                "/members/" +
+                memberId,
+              method: "DELETE",
+              headers: apiHeaders(),
+              success: function () {
+                Swal.fire("Removed", "Member removed successfully", "success");
+                loadMembers(currentFamilyId);
+              },
+              error: function (err) {
+                Swal.fire(
+                  "Error",
+                  err.responseJSON?.message || "Failed to remove member",
+                  "error",
+                );
+              },
+            });
+          }
+        });
+      });
+
+      // Update member
+      $(document).on("click", ".edit-member-btn", function () {
+        const memberId = $(this).data("id");
+        const relationship = $(this).data("relationship") || "";
+        const status = $(this).data("status") || "Active";
+        $("#umRelationship").val(relationship);
+        $("#umStatus").val(status);
+        $("#saveMemberUpdateBtn").data("id", memberId);
+        $("#updateMemberModal").modal("show");
+      });
+
+      $(document).on("click", "#saveMemberUpdateBtn", function () {
+        const memberId = $(this).data("id");
+        $.ajax({
+          url:
+            BACKEND_URL +
+            "/families/" +
+            currentFamilyId +
+            "/members/" +
+            memberId,
+          method: "PATCH",
+          headers: apiHeaders(),
+          data: JSON.stringify({
+            relationship: $("#umRelationship").val(),
+            status: $("#umStatus").val(),
+          }),
+          success: function () {
+            $("#updateMemberModal").modal("hide");
+            Swal.fire("Updated", "Member updated successfully", "success");
+            loadMembers(currentFamilyId);
+          },
+          error: function (err) {
+            Swal.fire(
+              "Error",
+              err.responseJSON?.message || "Failed to update member",
+              "error",
+            );
+          },
+        });
+      });
+
+      // ============================================================
+      // DEPENDENTS
+      // ============================================================
+      function loadDependents(familyId) {
+        $.ajax({
+          url: BACKEND_URL + "/families/" + familyId + "/dashboard",
+          method: "GET",
+          headers: apiHeaders(),
+          success: function (resp) {
+            const d = resp.data || resp;
+            const allMembers = d.members || [];
+            const dependents = (d.dependents && d.dependents.length)
+              ? d.dependents
+              : allMembers.filter(function (m) {
+                  return m.dependentId || m.memberType === "dependent";
+                });
+            $("#dependentsBadge").text(dependents.length);
+            ensureDependentsTable();
+            dependentsTable.clear().rows.add(dependents).draw();
+          },
+        });
+      }
+
+      $(document).on("click", "#addDependentBtn, #qaAddDependent", function () {
+        if (!currentFamilyId) {
+          Swal.fire("No Family", "Please create a family first", "warning");
+          return;
+        }
+        loadStates("#depStateOfOrigin");
+        $("#depStateOfOrigin").val("");
+        $("#depLgaOfOrigin").val("").find("option:not(:first)").remove();
+        $("#addDependentModal").modal("show");
+      });
+
+      $(document).on("click", "#saveDependentBtn", function () {
+        const ninValue = $("#depNin").val().trim();
+
+        // Validate NIN format if provided
+        if (ninValue && !/^\d{11}$/.test(ninValue)) {
+          Swal.fire(
+            "Validation Error",
+            "NIN must be exactly 11 digits.",
+            "warning",
+          );
+          return;
+        }
+
+        // Require NIN verification if NIN is provided and not already verified
+        if (ninValue && !depNinVerified) {
+          Swal.fire(
+            "NIN Verification Required",
+            "Please verify the dependent's NIN by entering their first name, last name, and clicking outside the NIN field.",
+            "warning",
+          );
+          return;
+        }
+
+        const data = {
+          firstName: $("#depFirstname").val().trim(),
+          lastName: $("#depLastname").val().trim(),
+          middleName: $("#depMiddlename").val().trim(),
+          dob: $("#depDob").val(),
+          gender: $("#depGender").val(),
+          relationship: $("#depRelationship").val(),
+          nin: ninValue,
+          birthCertificateNumber: $("#depBirthCert").val().trim(),
+          stateOfOrigin: $("#depStateOfOrigin").val(),
+          lgaOfOrigin: $("#depLgaOfOrigin").val(),
+        };
+        if (
+          !data.firstName ||
+          !data.lastName ||
+          !data.dob ||
+          !data.gender ||
+          !data.relationship
+        ) {
+          Swal.fire(
+            "Validation Error",
+            "Please fill all required fields",
+            "warning",
+          );
+          return;
+        }
+        $("#saveDependentBtn")
+          .prop("disabled", true)
+          .html('<i class="bi bi-spinner-border"></i> Saving...');
+        $.ajax({
+          url: BACKEND_URL + "/families/" + currentFamilyId + "/dependents",
+          method: "POST",
+          headers: apiHeaders(),
+          data: JSON.stringify(data),
+          success: function () {
+            $("#addDependentModal").modal("hide");
+            Swal.fire("Success", "Dependent added successfully", "success");
+            loadDependents(currentFamilyId);
+            loadDashboardStats(currentFamilyId);
+            $(
+              "#depFirstname, #depLastname, #depMiddlename, #depNin, #depBirthCert",
+            ).val("");
+            $("#depDob, #depGender, #depRelationship").val("");
+            depNinVerified = false;
+            depNinVerifiedData = null;
+            depClearNINStatus("depNin", "depNinStatus", "depNinExistenceStatus");
+          },
+          error: function (err) {
+            Swal.fire(
+              "Error",
+              err.responseJSON?.message || "Failed to add dependent",
+              "error",
+            );
+          },
+          complete: function () {
+            $("#saveDependentBtn")
+              .prop("disabled", false)
+              .html('<i class="bi bi-check-circle me-1"></i>Add Dependent');
+          },
+        });
+      });
+
+      // Edit dependent
+      $(document).on("click", ".edit-dependent-btn", function () {
+        const d = $(this).data();
+        $("#udFirstname").val(d.firstname || "");
+        $("#udLastname").val(d.lastname || "");
+        $("#udMiddlename").val(d.middlename || "");
+        $("#udDob").val(d.dob || "");
+        $("#udGender").val(d.gender || "");
+        $("#udRelationship").val(d.relationship || "");
+        $("#udNin").val(d.nin || "");
+        $("#udBirthCert").val(d.birthcert || "");
+        $("#saveDependentUpdateBtn").data("id", d.id);
+
+        // If existing dependent has a NIN, mark it as already verified
+        if (d.nin && /^\d{11}$/.test(d.nin)) {
+          udNinVerified = true;
+          depShowNINSuccess("udNin", "Existing NIN", "udNinStatus");
+        } else {
+          udNinVerified = false;
+          depClearNINStatus("udNin", "udNinStatus", "udNinExistenceStatus");
+        }
+
+        // Load states and populate state/LGA
+        loadStates("#udStateOfOrigin");
+        const stateVal = d.state || "";
+        const lgaVal = d.lga || "";
+        if (stateVal) {
+          $("#udStateOfOrigin").val(stateVal);
+          loadLgas(stateVal, "#udLgaOfOrigin");
+          setTimeout(function () {
+            if (lgaVal) {
+              $("#udLgaOfOrigin").val(lgaVal);
+            }
+          }, 100);
+        } else {
+          $("#udStateOfOrigin").val("");
+          $("#udLgaOfOrigin").val("").find("option:not(:first)").remove();
+        }
+
+        $("#updateDependentModal").modal("show");
+      });
+
+      $(document).on("click", "#saveDependentUpdateBtn", function () {
+        const depId = $(this).data("id");
+        const ninValue = $("#udNin").val().trim();
+
+        // Validate NIN format if provided
+        if (ninValue && !/^\d{11}$/.test(ninValue)) {
+          Swal.fire(
+            "Validation Error",
+            "NIN must be exactly 11 digits.",
+            "warning",
+          );
+          return;
+        }
+
+        // Require NIN verification if NIN is provided and not already verified
+        if (ninValue && !udNinVerified) {
+          Swal.fire(
+            "NIN Verification Required",
+            "Please verify the dependent's NIN by entering their first name, last name, and clicking outside the NIN field.",
+            "warning",
+          );
+          return;
+        }
+
+        $.ajax({
+          url:
+            BACKEND_URL +
+            "/families/" +
+            currentFamilyId +
+            "/dependents/" +
+            depId,
+          method: "PATCH",
+          headers: apiHeaders(),
+          data: JSON.stringify({
+            firstName: $("#udFirstname").val().trim(),
+            lastName: $("#udLastname").val().trim(),
+            middleName: $("#udMiddlename").val().trim(),
+            dob: $("#udDob").val(),
+            gender: $("#udGender").val(),
+            relationship: $("#udRelationship").val(),
+            nin: ninValue,
+            birthCertificateNumber: $("#udBirthCert").val().trim(),
+            stateOfOrigin: $("#udStateOfOrigin").val(),
+            lgaOfOrigin: $("#udLgaOfOrigin").val(),
+          }),
+          success: function () {
+            $("#updateDependentModal").modal("hide");
+            Swal.fire("Updated", "Dependent updated successfully", "success");
+            loadDependents(currentFamilyId);
+            udNinVerified = false;
+            udNinVerifiedData = null;
+            depClearNINStatus("udNin", "udNinStatus", "udNinExistenceStatus");
+          },
+          error: function (err) {
+            Swal.fire(
+              "Error",
+              err.responseJSON?.message || "Failed to update dependent",
+              "error",
+            );
+          },
+        });
+      });
+
+      // ============================================================
+      // DEPENDENT NIN VERIFICATION
+      // ============================================================
+      let depNinVerified = false;
+      let depNinVerifiedData = null;
+      let udNinVerified = false;
+      let udNinVerifiedData = null;
+
+      function depShowNINError(inputId, message, statusId) {
+        $("#" + statusId).html(
+          '<div class="existence-error"><i class="fas fa-exclamation-circle"></i>' + message + "</div>"
+        );
+        $("#" + inputId).addClass("is-invalid-nin").removeClass("is-valid-nin");
+      }
+
+      function depShowNINSuccess(inputId, message, statusId) {
+        $("#" + statusId).html(
+          '<div class="existence-success"><i class="fas fa-check-circle"></i>' + message + "</div>"
+        );
+        $("#" + inputId).addClass("is-valid-nin").removeClass("is-invalid-nin");
+      }
+
+      function depShowNINChecking(statusId) {
+        $("#" + statusId).html(
+          '<div class="checking-status"><i class="fas fa-spinner fa-spin"></i>Checking...</div>'
+        );
+      }
+
+      function depClearNINStatus(inputId, statusId, existenceId) {
+        $("#" + statusId).html("");
+        $("#" + existenceId).html("");
+        $("#" + inputId).removeClass("is-invalid-nin is-valid-nin");
+      }
+
+      async function depCheckNINExistence(nin, inputId, existenceId) {
+        depShowNINChecking(existenceId);
+        try {
+          const response = await $.ajax({
+            url: BACKEND_URL + "/auth/check-existence",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({ nin: nin }),
+          });
+          if (response.nin === true) {
+            depShowNINError(inputId, "This NIN already exists.", inputId + "Status");
+            return true;
+          } else {
+            depShowNINSuccess(inputId, "NIN available", existenceId);
+            return false;
+          }
+        } catch (error) {
+          const msg = error.responseJSON?.message || "Check failed";
+          depShowNINError(inputId, msg, existenceId);
+          return false;
+        }
+      }
+
+      async function depVerifyNIN(nin, firstName, lastName, prefix, statusId, existenceId) {
+        depShowNINChecking(statusId);
+        try {
+          const response = await $.ajax({
+            url: BACKEND_URL + "/auth/verify",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({ nin, firstName, lastName }),
+          });
+
+          if (response.success && response.data) {
+            const { dob } = response.data;
+            if (prefix === "dep" && dob) {
+              $("#depDob").val(dob);
+            }
+            depShowNINSuccess(statusId.replace("Status", ""), "NIN Verified Successfully", statusId);
+            return true;
+          } else {
+            depShowNINError(statusId.replace("Status", ""), "NIN verification failed - details do not match", statusId);
+            return false;
+          }
+        } catch (error) {
+          const msg = error.responseJSON?.message || "Verification failed. Please check your details and try again.";
+          depShowNINError(statusId.replace("Status", ""), msg, statusId);
+          return false;
+        }
+      }
+
+      const depDebouncedCheckNIN = (function () {
+        let timeout;
+        return function (nin, inputId, statusId, existenceId) {
+          clearTimeout(timeout);
+          timeout = setTimeout(function () {
+            depCheckNINExistence(nin, inputId, existenceId);
+          }, 500);
+        };
+      })();
+
+      // Add Dependent NIN input handler
+      $(document).on("input", "#depNin", function () {
+        this.value = this.value.replace(/\D/g, "").substring(0, 11);
+        const value = $(this).val().trim();
+        depNinVerified = false;
+        depNinVerifiedData = null;
+
+        if (value.length === 0) {
+          depClearNINStatus("depNin", "depNinStatus", "depNinExistenceStatus");
+          return;
+        }
+        if (value.length === 11 && /^\d{11}$/.test(value)) {
+          depDebouncedCheckNIN(value, "depNin", "depNinStatus", "depNinExistenceStatus");
+        } else if (value.length > 11) {
+          depShowNINError("depNin", "NIN should be exactly 11 digits.", "depNinStatus");
+        }
+      });
+
+      // Add Dependent NIN blur handler
+      $(document).on("blur", "#depNin", async function () {
+        const nin = $(this).val().trim();
+        if (!nin) {
+          depClearNINStatus("depNin", "depNinStatus", "depNinExistenceStatus");
+          return;
+        }
+        if (!/^\d{11}$/.test(nin)) {
+          depShowNINError("depNin", "NIN should contain only numbers and be exactly 11 digits.", "depNinStatus");
+          return;
+        }
+
+        const firstName = $("#depFirstname").val().trim();
+        const lastName = $("#depLastname").val().trim();
+        if (!firstName || !lastName) {
+          depShowNINError("depNin", "Please enter first name and last name before verifying NIN.", "depNinStatus");
+          return;
+        }
+
+        depNinVerified = await depVerifyNIN(nin, firstName, lastName, "dep", "depNinStatus", "depNinExistenceStatus");
+        depCheckNINExistence(nin, "depNin", "depNinExistenceStatus");
+      });
+
+      // Update Dependent NIN input handler
+      $(document).on("input", "#udNin", function () {
+        this.value = this.value.replace(/\D/g, "").substring(0, 11);
+        const value = $(this).val().trim();
+        udNinVerified = false;
+        udNinVerifiedData = null;
+
+        if (value.length === 0) {
+          depClearNINStatus("udNin", "udNinStatus", "udNinExistenceStatus");
+          return;
+        }
+        if (value.length === 11 && /^\d{11}$/.test(value)) {
+          depDebouncedCheckNIN(value, "udNin", "udNinStatus", "udNinExistenceStatus");
+        } else if (value.length > 11) {
+          depShowNINError("udNin", "NIN should be exactly 11 digits.", "udNinStatus");
+        }
+      });
+
+      // Update Dependent NIN blur handler
+      $(document).on("blur", "#udNin", async function () {
+        const nin = $(this).val().trim();
+        if (!nin) {
+          depClearNINStatus("udNin", "udNinStatus", "udNinExistenceStatus");
+          return;
+        }
+        if (!/^\d{11}$/.test(nin)) {
+          depShowNINError("udNin", "NIN should contain only numbers and be exactly 11 digits.", "udNinStatus");
+          return;
+        }
+
+        const firstName = $("#udFirstname").val().trim();
+        const lastName = $("#udLastname").val().trim();
+        if (!firstName || !lastName) {
+          depShowNINError("udNin", "Please enter first name and last name before verifying NIN.", "udNinStatus");
+          return;
+        }
+
+        udNinVerified = await depVerifyNIN(nin, firstName, lastName, "ud", "udNinStatus", "udNinExistenceStatus");
+        depCheckNINExistence(nin, "udNin", "udNinExistenceStatus");
+      });
+
+      // Name change handlers - clear NIN verification status
+      $(document).on("input", "#depFirstname, #depLastname", function () {
+        const ninVal = $("#depNin").val().trim();
+        if (ninVal) {
+          depNinVerified = false;
+          depNinVerifiedData = null;
+          $("#depNinStatus").html('<div class="text-warning" style="font-size:0.8rem;"><i class="fas fa-exclamation-triangle"></i> Name changed - please re-verify NIN</div>');
+        }
+      });
+
+      $(document).on("input", "#udFirstname, #udLastname", function () {
+        const ninVal = $("#udNin").val().trim();
+        if (ninVal) {
+          udNinVerified = false;
+          udNinVerifiedData = null;
+          $("#udNinStatus").html('<div class="text-warning" style="font-size:0.8rem;"><i class="fas fa-exclamation-triangle"></i> Name changed - please re-verify NIN</div>');
+        }
+      });
+
+      // Clear states when modals are hidden
+      $(document).on("hidden.bs.modal", "#addDependentModal", function () {
+        depNinVerified = false;
+        depNinVerifiedData = null;
+        depClearNINStatus("depNin", "depNinStatus", "depNinExistenceStatus");
+        $("#depStateOfOrigin").val("");
+        $("#depLgaOfOrigin").val("").find("option:not(:first)").remove();
+      });
+
+      $(document).on("hidden.bs.modal", "#updateDependentModal", function () {
+        udNinVerified = false;
+        udNinVerifiedData = null;
+        depClearNINStatus("udNin", "udNinStatus", "udNinExistenceStatus");
+        $("#udStateOfOrigin").val("");
+        $("#udLgaOfOrigin").val("").find("option:not(:first)").remove();
+      });
+
+      // Remove dependent
+      $(document).on("click", ".remove-dependent-btn", function () {
+        const depId = $(this).data("id");
+        const name = $(this).data("name");
+        Swal.fire({
+          title: "Remove " + name + "?",
+          text: "This dependent will be removed from the family",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#dc3545",
+          confirmButtonText: "Remove",
+        }).then(function (result) {
+          if (result.isConfirmed) {
+            $.ajax({
+              url:
+                BACKEND_URL +
+                "/families/" +
+                currentFamilyId +
+                "/dependents/" +
+                depId,
+              method: "DELETE",
+              headers: apiHeaders(),
+              success: function () {
+                Swal.fire(
+                  "Removed",
+                  "Dependent removed successfully",
+                  "success",
+                );
+                loadDependents(currentFamilyId);
+                loadDashboardStats(currentFamilyId);
+              },
+              error: function (err) {
+                Swal.fire(
+                  "Error",
+                  err.responseJSON?.message || "Failed to remove dependent",
+                  "error",
+                );
+              },
+            });
+          }
+        });
+      });
+
+      // ============================================================
+      // SENT INVITATIONS
+      // ============================================================
+      function loadSentInvitations(familyId) {
+        // This endpoint might not exist directly; we can show from dashboard data
+        $.ajax({
+          url: BACKEND_URL + "/families/" + familyId + "/dashboard",
+          method: "GET",
+          headers: apiHeaders(),
+          success: function (resp) {
+            const d = resp.data || resp;
+            const invites = d.sentInvitations || d.pendingInvitations || [];
+            ensureSentInvitationsTable();
+            sentInvTable.clear().rows.add(invites).draw();
+          },
+        });
+      }
+
+      // Cancel invitation
+      $(document).on("click", ".cancel-invite-btn", function () {
+        const inviteId = $(this).data("id");
+        Swal.fire({
+          title: "Cancel Invitation?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#dc3545",
+          confirmButtonText: "Yes, cancel",
+        }).then(function (result) {
+          if (result.isConfirmed) {
+            showNotification("Invitation cancelled", "info");
+            loadSentInvitations(currentFamilyId);
+          }
+        });
+      });
+
+      // ============================================================
+      // APPLICATIONS
+      // ============================================================
+      function loadApplications(familyId) {
+        $.ajax({
+          url: BACKEND_URL + "/families/" + familyId + "/applications",
+          method: "GET",
+          headers: apiHeaders(),
+          success: function (resp) {
+            const data = resp.data || resp.applications || resp || [];
+            $("#familyAppsBadge").text(data.length);
+            ensureApplicationsTable();
+            appsTable.clear().rows.add(data).draw();
+          },
+          error: function () {
+            // silently fail
+          },
+        });
+      }
+
+      $(document).on("click", "#submitAppBtn, #qaSubmitApp", function () {
+        if (!currentFamilyId) {
+          Swal.fire("No Family", "Please create a family first", "warning");
+          return;
+        }
+        $.ajax({
+          url: BACKEND_URL + "/families/" + currentFamilyId + "/dashboard",
+          method: "GET",
+          headers: apiHeaders(),
+          success: function (resp) {
+            const d = resp.data || resp;
+            const dependents = d.dependents || [];
+
+            var dependentOptions = '<option value="">Select Dependent</option>';
+            dependents.forEach(function (dep) {
+              const depData = dep.dependentId || dep;
+              const depName =
+                (depData.firstName || depData.firstname || "") +
+                " " +
+                (depData.middleName || depData.middlename || "") +
+                " " +
+                (depData.lastName || depData.lastname || "");
+              const depId = dep._id || dep.id || depData._id || depData.id;
+              dependentOptions +=
+                '<option value="' + depId + '">' + depName.trim() + "</option>";
+            });
+
+            Swal.fire({
+              title: "New Application",
+              html:
+                '<select class="form-select mb-2" id="appTypeSelect"><option value="">Select Type</option><option value="certificate">Certificate of Indigeneship</option><option value="idcard">Identity Card</option></select>' +
+                '<select class="form-select mb-2" id="appForSelect"><option value="self">Self</option><option value="dependent">Dependent</option></select>' +
+                '<select class="form-select d-none" id="appDependentSelect">' +
+                dependentOptions +
+                "</select>",
+              showCancelButton: true,
+              confirmButtonText: "Proceed",
+              didOpen: function () {
+                $("#appForSelect").on("change", function () {
+                  if ($(this).val() === "dependent") {
+                    $("#appDependentSelect").removeClass("d-none");
+                  } else {
+                    $("#appDependentSelect").addClass("d-none");
+                  }
+                });
+              },
+              preConfirm: function () {
+                const type = $("#appTypeSelect").val();
+                const applicant = $("#appForSelect").val();
+                const depId = $("#appDependentSelect").val();
+                if (!type) {
+                  Swal.showValidationMessage("Please select application type");
+                  return false;
+                }
+                if (applicant === "dependent" && !depId) {
+                  Swal.showValidationMessage("Please select a dependent");
+                  return false;
+                }
+                return { type: type, applicant: applicant, dependentId: depId };
+              },
+            }).then(function (result) {
+              if (result.isConfirmed) {
+                const appData = result.value;
+                var pendingData = {
+                  type: appData.type,
+                  applicant: appData.applicant,
+                  familyId: currentFamilyId,
+                  dependentData: null,
+                };
+                if (appData.applicant === "dependent" && appData.dependentId) {
+                  var matched = dependents.find(function (dep) {
+                    var dId =
+                      dep._id ||
+                      dep.id ||
+                      (dep.dependentId &&
+                        (dep.dependentId._id || dep.dependentId.id));
+                    return dId === appData.dependentId;
+                  });
+                  if (matched) {
+                    pendingData.dependentData = matched.dependentId || matched;
+                  }
+                }
+                sessionStorage.setItem(
+                  "pendingApplication",
+                  JSON.stringify(pendingData),
+                );
+                window.location.href =
+                  "user-dashboard.html?page=requests&newRequest=true&requestType=" +
+                  encodeURIComponent(appData.type) +
+                  "&applicant=" +
+                  encodeURIComponent(appData.applicant);
+              }
+            });
+          },
+          error: function () {
+            Swal.fire("Error", "Failed to load dependents", "error");
+          },
+        });
+      });
+
+      // ============================================================
+      // DOCUMENTS
+      // ============================================================
+      var docPagination = { page: 1, limit: 20, total: 0, totalPages: 0 };
+
+      function loadDocuments(familyId, page) {
+        page = page || 1;
+        var params = "?page=" + page + "&limit=" + docPagination.limit;
+        var typeFilter = ($("#docTypeFilter").val() || "").trim();
+        var verifyFilter = ($("#docVerifyFilter").val() || "").trim();
+
+        console.log("verifyFilter", verifyFilter);
+
+        $.ajax({
+          url: BACKEND_URL + "/families/" + familyId + "/documents" + params,
+          method: "GET",
+          headers: apiHeaders(),
+          success: function (resp) {
+            console.log("resp", resp);
+            var data = resp.data || resp.documents || resp || [];
+            if (!Array.isArray(data)) data = [];
+
+            docPagination.page = resp.page || page;
+            docPagination.total = resp.total || data.length;
+            docPagination.totalPages =
+              resp.totalPages ||
+              Math.ceil(docPagination.total / docPagination.limit);
+
+            if (typeFilter) {
+              data = data.filter(function (doc) {
+                return doc.documentType === typeFilter;
+              });
+            }
+            if (verifyFilter === "verified") {
+              data = data.filter(function (doc) {
+                return doc.isVerified === true || doc.isVerified === "true";
+              });
+            } else if (verifyFilter === "rejected") {
+              data = data.filter(function (doc) {
+                return (
+                  (doc.isVerified === false || doc.isVerified === "false") &&
+                  doc.verifiedBy
+                );
+              });
+            } else if (verifyFilter === "pending") {
+              data = data.filter(function (doc) {
+                var v = doc.isVerified;
+                return (
+                  v === null ||
+                  v === undefined ||
+                  v === "null" ||
+                  ((v === false || v === "false") && !doc.verifiedBy)
+                );
+              });
+            }
+
+            $("#docCountLabel").text(
+              "Showing " +
+                data.length +
+                " of " +
+                docPagination.total +
+                " documents",
+            );
+            renderDocPagination();
+
+            ensureDocumentsTable();
+            docsTable.clear().rows.add(data).draw();
+          },
+        });
+      }
+
+      function renderDocPagination() {
+        var $cont = $("#docPagination");
+        var $nums = $("#docPageNumbers");
+        $nums.empty();
+
+        if (docPagination.totalPages <= 1) {
+          $cont.addClass("d-none");
+          return;
+        }
+        $cont.removeClass("d-none");
+
+        $("#docPrevPage").prop("disabled", docPagination.page <= 1);
+        $("#docNextPage").prop(
+          "disabled",
+          docPagination.page >= docPagination.totalPages,
+        );
+
+        var start = Math.max(1, docPagination.page - 2);
+        var end = Math.min(docPagination.totalPages, docPagination.page + 2);
+
+        if (start > 1) {
+          $nums.append(
+            '<button class="btn btn-sm btn-outline-secondary mx-1 doc-goto-page" data-page="1">1</button>',
+          );
+          if (start > 2) $nums.append('<span class="mx-1">...</span>');
+        }
+        for (var i = start; i <= end; i++) {
+          var active =
+            i === docPagination.page ? "btn-primary" : "btn-outline-secondary";
+          $nums.append(
+            '<button class="btn btn-sm ' +
+              active +
+              ' mx-1 doc-goto-page" data-page="' +
+              i +
+              '">' +
+              i +
+              "</button>",
+          );
+        }
+        if (end < docPagination.totalPages) {
+          if (end < docPagination.totalPages - 1)
+            $nums.append('<span class="mx-1">...</span>');
+          $nums.append(
+            '<button class="btn btn-sm btn-outline-secondary mx-1 doc-goto-page" data-page="' +
+              docPagination.totalPages +
+              '">' +
+              docPagination.totalPages +
+              "</button>",
+          );
+        }
+      }
+
+      $(document).on("click", ".doc-goto-page", function () {
+        if (currentFamilyId)
+          loadDocuments(currentFamilyId, parseInt($(this).data("page")));
+      });
+      $(document).on("click", "#docPrevPage", function () {
+        if (currentFamilyId && docPagination.page > 1)
+          loadDocuments(currentFamilyId, docPagination.page - 1);
+      });
+      $(document).on("click", "#docNextPage", function () {
+        if (currentFamilyId && docPagination.page < docPagination.totalPages)
+          loadDocuments(currentFamilyId, docPagination.page + 1);
+      });
+      $(document).on("change", "#docTypeFilter, #docVerifyFilter", function () {
+        if (currentFamilyId) loadDocuments(currentFamilyId, 1);
+      });
+
+      $(document).on("click", "#uploadDocBtn, #qaUploadDoc", function () {
+        if (!currentFamilyId) {
+          Swal.fire("No Family", "Please create a family first", "warning");
+          return;
+        }
+        $("#uploadDocModal").modal("show");
+      });
+
+      $(document).on("click", "#saveDocBtn", function () {
+        var file = $("#docFile")[0] ? $("#docFile")[0].files[0] : null;
+        var docType = $("#docType").val();
+        var description = $("#docDescription").val().trim();
+        if (!file || !docType) {
+          Swal.fire(
+            "Validation Error",
+            "Document type and file are required",
+            "warning",
+          );
+          return;
+        }
+        var maxSize = 10 * 1024 * 1024;
+        if (file.size > maxSize) {
+          Swal.fire(
+            "Validation Error",
+            "File size must be 10MB or less. Your file is " +
+              (file.size / 1024 / 1024).toFixed(1) +
+              "MB.",
+            "warning",
+          );
+          return;
+        }
+        var allowedTypes = [
+          "application/pdf",
+          "image/jpeg",
+          "image/jpg",
+          "image/png",
+          "image/gif",
+          "image/webp",
+        ];
+        if (allowedTypes.indexOf(file.type) === -1) {
+          Swal.fire(
+            "Validation Error",
+            "Only PDF, JPG, PNG, GIF, and WEBP files are allowed.",
+            "warning",
+          );
+          return;
+        }
+        var formData = new FormData();
+        formData.append("file", file);
+        formData.append("documentType", docType);
+        if (description) formData.append("description", description);
+        $("#saveDocBtn")
+          .prop("disabled", true)
+          .html('<i class="bi bi-spinner-border"></i> Uploading...');
+        $.ajax({
+          url: BACKEND_URL + "/families/" + currentFamilyId + "/documents",
+          method: "POST",
+          headers: { Authorization: "Bearer " + getToken() },
+          data: formData,
+          processData: false,
+          contentType: false,
+          success: function () {
+            $("#uploadDocModal").modal("hide");
+            Swal.fire("Uploaded", "Document uploaded successfully", "success");
+            loadDocuments(currentFamilyId, 1);
+            $("#docFile").val("");
+            $("#docDescription").val("");
+            $("#docType").val("");
+          },
+          error: function (err) {
+            Swal.fire(
+              "Error",
+              err.responseJSON?.message || "Failed to upload document",
+              "error",
+            );
+          },
+          complete: function () {
+            $("#saveDocBtn")
+              .prop("disabled", false)
+              .html('<i class="bi bi-upload me-1"></i>Upload');
+          },
+        });
+      });
+
+      // Delete document
+      $(document).on("click", ".delete-doc-btn", function () {
+        const docId = $(this).data("id");
+        Swal.fire({
+          title: "Delete Document?",
+          text: "This action cannot be undone.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#dc3545",
+          confirmButtonText: "Delete",
+        }).then(function (result) {
+          if (result.isConfirmed) {
+            $.ajax({
+              url:
+                BACKEND_URL +
+                "/families/" +
+                currentFamilyId +
+                "/documents/" +
+                docId,
+              method: "DELETE",
+              headers: apiHeaders(),
+              success: function () {
+                Swal.fire("Deleted", "Document deleted", "success");
+                loadDocuments(currentFamilyId, docPagination.page);
+              },
+              error: function (err) {
+                Swal.fire(
+                  "Error",
+                  err.responseJSON?.message || "Failed to delete document",
+                  "error",
+                );
+              },
+            });
+          }
+        });
+      });
+
+      // Verify / Reject document
+      $(document).on("click", ".verify-doc-btn, .reject-doc-btn", function () {
+        var docId = $(this).data("id");
+        var isVerified = $(this).data("action") === "true";
+        var label = isVerified ? "Verify" : "Reject";
+        var confirmColor = isVerified ? "#198754" : "#dc3545";
+
+        Swal.fire({
+          title: label + " Document?",
+          icon: isVerified ? "question" : "warning",
+          showCancelButton: true,
+          confirmButtonColor: confirmColor,
+          confirmButtonText: label,
+        }).then(function (result) {
+          if (result.isConfirmed) {
+            $.ajax({
+              url:
+                BACKEND_URL +
+                "/families/" +
+                currentFamilyId +
+                "/documents/" +
+                docId +
+                "/verify",
+              method: "PATCH",
+              headers: apiHeaders(),
+              data: JSON.stringify({ isVerified: isVerified }),
+              success: function () {
+                Swal.fire(
+                  "Done",
+                  "Document " + label.toLowerCase() + "d successfully",
+                  "success",
+                );
+                loadDocuments(currentFamilyId, docPagination.page);
+              },
+              error: function (err) {
+                Swal.fire(
+                  "Error",
+                  err.responseJSON?.message ||
+                    "Failed to " + label.toLowerCase() + " document",
+                  "error",
+                );
+              },
+            });
+          }
+        });
+      });
+
+      // ============================================================
+      // PAYMENTS
+      // ============================================================
+      function loadPayments(familyId) {
+        $.ajax({
+          url: BACKEND_URL + "/families/" + familyId + "/payments",
+          method: "GET",
+          headers: apiHeaders(),
+          success: function (resp) {
+            const data = resp.data || resp.payments || resp || [];
+            ensurePaymentsTable();
+            paymentsTable.clear().rows.add(data).draw();
+          },
+        });
+      }
+
+      // ============================================================
+      // TRANSFER HEADSHIP
+      // ============================================================
+      $(document).on("click", "#transferHeadshipBtn", function () {
+        if (!currentFamilyId) {
+          Swal.fire("No Family", "No family found", "warning");
+          return;
+        }
+        // Load family members for selection
+        $.ajax({
+          url: BACKEND_URL + "/families/" + currentFamilyId + "/dashboard",
+          method: "GET",
+          headers: apiHeaders(),
+          success: function (resp) {
+            const d = resp.data || resp;
+            const members = d.members || d.familyMembers || [];
+            const sel = $("#thNewHead");
+            sel.find("option:not(:first)").remove();
+            members.forEach(function (m) {
+              const name =
+                (m.userId?.firstname || m.firstname || "") +
+                " " +
+                (m.userId?.lastname || m.lastname || "");
+              sel.append(
+                '<option value="' +
+                  (m.userId?._id || m._id) +
+                  '">' +
+                  name +
+                  "</option>",
+              );
+            });
+            $("#transferHeadshipModal").modal("show");
+          },
+        });
+      });
+
+      $(document).on("click", "#confirmTransferBtn", function () {
+        const newHeadId = $("#thNewHead").val();
+        if (!newHeadId) {
+          Swal.fire("Validation", "Please select a new family head", "warning");
+          return;
+        }
+        Swal.fire({
+          title: "Confirm Headship Transfer?",
+          text: "This action cannot be undone",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#dc3545",
+          confirmButtonText: "Transfer",
+        }).then(function (result) {
+          if (result.isConfirmed) {
+            $.ajax({
+              url:
+                BACKEND_URL +
+                "/families/" +
+                currentFamilyId +
+                "/transfer-headship",
+              method: "PATCH",
+              headers: apiHeaders(),
+              data: JSON.stringify({ newHeadId: newHeadId }),
+              success: function () {
+                $("#transferHeadshipModal").modal("hide");
+                Swal.fire(
+                  "Transferred",
+                  "Family headship has been transferred",
+                  "success",
+                );
+                loadFamily();
+              },
+              error: function (err) {
+                Swal.fire(
+                  "Error",
+                  err.responseJSON?.message || "Failed to transfer headship",
+                  "error",
+                );
+              },
+            });
+          }
+        });
+      });
+
+      // ============================================================
+      // EDIT FAMILY
+      // ============================================================
+      $(document).on("click", "#editFamilyBtn", function () {
+        if (!familyData) {
+          Swal.fire("No Family", "No family data", "warning");
+          return;
+        }
+        const f = familyData;
+        loadStates("#efState");
+        $("#efFamilyName").val(f.familyName || "");
+        $("#efAddress").val(f.address || "");
+        $("#efState").val(f.state || "");
+        loadLgas(f.state || "", "#efLga");
+        setTimeout(function () {
+          $("#efLga").val(f.lga || "");
+        }, 100);
+        $("#efWard").val(f.ward || "");
+        $("#efDistrict").val(f.district || "");
+        $("#efClan").val(f.clan || "");
+        $("#efVillage").val(f.village || "");
+        $("#editFamilyModal").modal("show");
+      });
+
+      $(document).on("click", "#updateFamilyBtn", function () {
+        const data = {
+          familyName: $("#efFamilyName").val().trim(),
+          address: $("#efAddress").val().trim(),
+          state: $("#efState").val(),
+          lga: $("#efLga").val(),
+          ward: $("#efWard").val().trim(),
+          district: $("#efDistrict").val().trim(),
+          clan: $("#efClan").val().trim(),
+          village: $("#efVillage").val().trim(),
+        };
+        if (!data.familyName) {
+          Swal.fire("Validation", "Family name is required", "warning");
+          return;
+        }
+        $("#updateFamilyBtn")
+          .prop("disabled", true)
+          .html('<i class="bi bi-spinner-border"></i> Updating...');
+        $.ajax({
+          url: BACKEND_URL + "/families/" + currentFamilyId,
+          method: "PATCH",
+          headers: apiHeaders(),
+          data: JSON.stringify(data),
+          success: function () {
+            $("#editFamilyModal").modal("hide");
+            Swal.fire("Updated", "Family details updated", "success");
+            loadFamily();
+          },
+          error: function (err) {
+            Swal.fire(
+              "Error",
+              err.responseJSON?.message || "Failed to update family",
+              "error",
+            );
+          },
+          complete: function () {
+            $("#updateFamilyBtn")
+              .prop("disabled", false)
+              .html('<i class="bi bi-save me-1"></i>Update Family');
+          },
+        });
+      });
+
+      // ============================================================
+      // ACTIVITY LOG
+      // ============================================================
+      $(document).on("click", "#viewActivityLogBtn", function () {
+        if (!currentFamilyId) {
+          Swal.fire("No Family", "No family found", "warning");
+          return;
+        }
+        $.ajax({
+          url: BACKEND_URL + "/families/" + currentFamilyId + "/activity-log",
+          method: "GET",
+          headers: apiHeaders(),
+          success: function (resp) {
+            const data =
+              resp.data || resp.activities || resp.logs || resp || [];
+            if (activityLogTable) {
+              activityLogTable.clear().rows.add(data).draw();
+            } else {
+              initActivityLogTable(data);
+            }
+            $("#activityLogModal").modal("show");
+          },
+          error: function (err) {
+            Swal.fire(
+              "Error",
+              err.responseJSON?.message || "Failed to load activity log",
+              "error",
+            );
+          },
+        });
+      });
+
+      function initActivityLogTable(data) {
+        if ($.fn.DataTable.isDataTable("#activityLogTable")) {
+          $("#activityLogTable").DataTable().destroy();
+        }
+        activityLogTable = $("#activityLogTable").DataTable({
+          data: data,
+          columns: [
+            {
+              data: "created_at",
+              defaultContent: "",
+              render: function (d) {
+                return formatDateTime(d);
+              },
+            },
+            { data: "action" },
+            {
+              data: "performed_by",
+              defaultContent: "-",
+              render: function (d) {
+                return d || "-";
+              },
+            },
+            {
+              data: "description",
+              defaultContent: "-",
+              render: function (d) {
+                return d || "-";
+              },
+            },
+          ],
+          responsive: true,
+          pageLength: 10,
+        });
+      }
+
+      // ============================================================
+      // LAZY DATA TABLE INITIALIZATION
+      // Tables are initialized on first load when their page container
+      // is visible, so DataTables Responsive measures correct widths.
+      // ============================================================
+      function ensureMembersTable() {
+        if ($.fn.DataTable.isDataTable("#membersTable")) return;
+
+        membersTable = $("#membersTable").DataTable({
+          columns: [
+            {
+              data: null,
+              render: function (d, t, r, meta) {
+                return meta.row + 1;
+              },
+            },
+            {
+              data: null,
+              render: function (d) {
+                let name = "";
+                let photo = "";
+
+                if (d.userId) {
+                  name =
+                    (d.userId.firstname || "") +
+                    " " +
+                    (d.userId.lastname || "");
+                  photo = d.userId.passportPhoto || "";
+                } else if (d.dependentId) {
+                  name =
+                    (d.dependentId.firstName || d.dependentId.firstname || "") +
+                    " " +
+                    (d.dependentId.lastName || d.dependentId.lastname || "");
+                  photo =
+                    d.dependentId.photo || d.dependentId.passportPhoto || "";
+                }
+
+                name = name.trim();
+                const defaultPhoto =
+                  "https://picsum.photos/seed/user/40/40.jpg";
+
+                return (
+                  '<img src="' +
+                  (photo || defaultPhoto) +
+                  '" class="member-avatar me-2" onerror="this.src=\'' +
+                  defaultPhoto +
+                  "'\">" +
+                  (name || "Unknown Member")
+                );
+              },
+            },
+            {
+              data: null,
+              render: function (d) {
+                return d.userId?.email || d.email || "-";
+              },
+            },
+            {
+              data: null,
+              render: function (d) {
+                return d.userId?.phone || d.phone || "-";
+              },
+            },
+            { data: "relationship", defaultContent: "-" },
+
+            {
+              data: "memberType",
+              defaultContent: "-",
+              render: function (d) {
+                if (!d) return "-";
+
+                switch (d.toLowerCase()) {
+                  case "head":
+                    return '<span class="badge bg-dark">Head</span>';
+                  case "adult":
+                    return '<span class="badge bg-info text-dark">Adult</span>';
+                  case "dependent":
+                    return '<span class="badge bg-warning text-dark">Dependent</span>';
+                  default:
+                    return `<span class="badge bg-secondary">${d}</span>`;
+                }
+              },
+            },
+            {
+              data: "status",
+              defaultContent: "Active",
+              render: function (d) {
+                return (
+                  '<span class="badge bg-' +
+                  (d === "Active" ? "success" : "secondary") +
+                  '">' +
+                  d +
+                  "</span>"
+                );
+              },
+            },
+            {
+              data: "joinedAt",
+              render: function (d) {
+                return formatDate(d);
+              },
+              defaultContent: "-",
+            },
+            {
+              data: null,
+              render: function (d) {
+                const isHead = d.memberType === "head";
+                return (
+                  '<div class="btn-group btn-group-sm">' +
+                  (!isHead
+                    ? '<button class="btn btn-outline-primary edit-member-btn" data-id="' +
+                      (d._id || d.id) +
+                      '" data-relationship="' +
+                      (d.relationship || "") +
+                      '" data-status="' +
+                      (d.status || "Active") +
+                      '"><i class="bi bi-pencil"></i></button>'
+                    : "") +
+                  (!isHead
+                    ? '<button class="btn btn-outline-danger remove-member-btn" data-id="' +
+                      (d._id || d.id) +
+                      '" data-name="' +
+                      ((d.userId?.firstname || d.firstname || "") +
+                        " " +
+                        (d.userId?.lastname || d.lastname || "")) +
+                      '"><i class="bi bi-x"></i></button>'
+                    : '<span class="badge bg-primary">Head</span>') +
+                  "</div>"
+                );
+              },
+            },
+          ],
+          responsive: true,
+          pageLength: 10,
+          order: [[0, "asc"]],
+        });
+      }
+
+      function ensureDependentsTable() {
+        if ($.fn.DataTable.isDataTable("#dependentsTable")) return;
+
+        dependentsTable = $("#dependentsTable").DataTable({
+          columns: [
+            {
+              data: null,
+              render: function (d, t, r, meta) {
+                return meta.row + 1;
+              },
+            },
+            {
+              data: null,
+              render: function (d) {
+                return (
+                  (d.dependentId.firstName || d.dependentId.firstname || "") +
+                  " " +
+                  (d.dependentId.lastName || d.dependentId.lastname || "")
+                );
+              },
+            },
+            {
+              data: null,
+              render: function (d) {
+                return formatDate(d.dependentId?.dob || d.dob);
+              },
+              defaultContent: "-",
+            },
+            {
+              data: null,
+              render: function (d) {
+                return d.dependentId?.gender || d.gender || "-";
+              },
+            },
+
+            {
+              data: null,
+              render: function (d) {
+                return d.relationship || d.dependentId?.relationship || "-";
+              },
+            },
+
+            {
+              data: null,
+              render: function (d) {
+                return d.nin || d.dependentId?.nin || "-";
+              },
+            },
+            {
+              data: "status",
+              defaultContent: "Active",
+              render: function (d) {
+                return (
+                  '<span class="badge bg-' +
+                  (d === "Active" ? "success" : "secondary") +
+                  '">' +
+                  d +
+                  "</span>"
+                );
+              },
+            },
+            {
+              data: null,
+              render: function (d) {
+                const id = d._id || d.id;
+                const name =
+                  (d.dependentId?.firstName || d.dependentId?.firstname || "") +
+                  " " +
+                  (d.dependentId?.lastName || d.dependentId?.lastname || "");
+                return (
+                  '<div class="btn-group btn-group-sm">' +
+                  '<button class="btn btn-outline-primary edit-dependent-btn" data-id="' +
+                  id +
+                  '" data-firstname="' +
+                  (d.dependentId?.firstName || d.dependentId?.firstname || "") +
+                  '" data-lastname="' +
+                  (d.dependentId?.lastName || d.dependentId?.lastname || "") +
+                  '" data-middlename="' +
+                  (d.dependentId?.middleName ||
+                    d.dependentId?.middlename ||
+                    "") +
+                  '" data-dob="' +
+                  (d.dependentId?.dob || d.dob || "") +
+                  '" data-gender="' +
+                  (d.dependentId?.gender || d.gender || "") +
+                  '" data-relationship="' +
+                  (d.dependentId?.relationship || d.relationship || "") +
+                  '" data-nin="' +
+                  (d.dependentId?.nin || d.nin || "") +
+                  '" data-birthcert="' +
+                  (d.birthCertificateNumber || d.birthCert || "") +
+                  '" data-state="' +
+                  (d.dependentId?.stateOfOrigin || d.stateOfOrigin || "") +
+                  '" data-lga="' +
+                  (d.dependentId?.lgaOfOrigin || d.lgaOfOrigin || "") +
+                  '"><i class="bi bi-pencil"></i></button>' +
+                  '<button class="btn btn-outline-danger remove-dependent-btn" data-id="' +
+                  id +
+                  '" data-name="' +
+                  name +
+                  '"><i class="bi bi-x"></i></button>' +
+                  "</div>"
+                );
+              },
+            },
+          ],
+          responsive: true,
+          pageLength: 10,
+          order: [[0, "asc"]],
+        });
+      }
+
+      function ensureMyInvitationsTable() {
+        if ($.fn.DataTable.isDataTable("#myInvitationsTable")) return;
+
+        myInvTable = $("#myInvitationsTable").DataTable({
+          columns: [
+            {
+              data: null,
+              render: function (d, t, r, meta) {
+                return meta.row + 1;
+              },
+            },
+            {
+              data: null,
+              render: function (d) {
+                return d.family?.familyName || d.familyName || "-";
+              },
+            },
+            {
+              data: null,
+              render: function (d) {
+                return (
+                  (d.sender?.firstname || "") + " " + (d.sender?.lastname || "")
+                );
+              },
+              defaultContent: "-",
+            },
+            {
+              data: "created_at",
+              defaultContent: "",
+              render: function (d) {
+                return formatDate(d);
+              },
+            },
+            {
+              data: "expiresAt",
+              render: function (d) {
+                return formatDate(d);
+              },
+            },
+            {
+              data: null,
+              render: function (d) {
+                return (
+                  '<button class="btn btn-sm btn-success accept-invite-btn me-1" data-token="' +
+                  (d.token || d._id) +
+                  '"><i class="bi bi-check"></i> Accept</button>' +
+                  '<button class="btn btn-sm btn-danger reject-invite-btn" data-token="' +
+                  (d.token || d._id) +
+                  '"><i class="bi bi-x"></i> Reject</button>'
+                );
+              },
+            },
+          ],
+          responsive: true,
+          pageLength: 10,
+          order: [[0, "asc"]],
+        });
+      }
+
+      function ensureSentInvitationsTable() {
+        if ($.fn.DataTable.isDataTable("#sentInvitationsTable")) return;
+
+        sentInvTable = $("#sentInvitationsTable").DataTable({
+          columns: [
+            {
+              data: null,
+              render: function (d, t, r, meta) {
+                return meta.row + 1;
+              },
+            },
+            {
+              data: null,
+              render: function (d) {
+                return (
+                  (d.receiver?.firstname || d.email || "") +
+                  " " +
+                  (d.receiver?.lastname || "")
+                );
+              },
+              defaultContent: "-",
+            },
+            { data: "email", defaultContent: "-" },
+            {
+              data: "created_at",
+              defaultContent: "",
+              render: function (d) {
+                return formatDate(d);
+              },
+            },
+            {
+              data: "expiresAt",
+              render: function (d) {
+                return formatDate(d);
+              },
+            },
+            {
+              data: "status",
+              defaultContent: "Pending",
+              render: function (d) {
+                return (
+                  '<span class="badge bg-' +
+                  (d === "Accepted"
+                    ? "success"
+                    : d === "Rejected"
+                      ? "danger"
+                      : "warning") +
+                  '">' +
+                  d +
+                  "</span>"
+                );
+              },
+            },
+            {
+              data: null,
+              render: function (d) {
+                return d.status === "Pending"
+                  ? '<button class="btn btn-sm btn-outline-danger cancel-invite-btn" data-id="' +
+                      (d._id || d.id) +
+                      '">Cancel</button>'
+                  : "-";
+              },
+            },
+          ],
+          responsive: true,
+          pageLength: 10,
+          order: [[0, "asc"]],
+        });
+      }
+
+      function ensureApplicationsTable() {
+        if ($.fn.DataTable.isDataTable("#familyApplicationsTable")) return;
+
+        appsTable = $("#familyApplicationsTable").DataTable({
+          columns: [
+            {
+              data: null,
+              render: function (d, t, r, meta) {
+                return meta.row + 1;
+              },
+            },
+            {
+              data: null,
+              render: function (d) {
+                return (
+                  (d.firstname || d.applicantName || "") +
+                  " " +
+                  (d.lastname || "")
+                );
+              },
+              defaultContent: "-",
+            },
+            {
+              data: "type",
+              defaultContent: "-",
+              render: function (d) {
+                return d === "certificate"
+                  ? "Certificate"
+                  : d === "idcard"
+                    ? "ID Card"
+                    : d || "-";
+              },
+            },
+            { data: "reference", defaultContent: "-" },
+            {
+              data: "status",
+              defaultContent: "Pending",
+              render: function (d) {
+                return (
+                  '<span class="badge bg-' +
+                  (d === "Approved"
+                    ? "success"
+                    : d === "Rejected"
+                      ? "danger"
+                      : "warning") +
+                  '">' +
+                  d +
+                  "</span>"
+                );
+              },
+            },
+            {
+              data: "created_at",
+              defaultContent: "",
+              render: function (d) {
+                return formatDate(d);
+              },
+            },
+            {
+              data: null,
+              render: function (d) {
+                return (
+                  '<button class="btn btn-sm btn-outline-primary view-app-btn" data-id="' +
+                  (d._id || d.id) +
+                  '"><i class="bi bi-eye"></i></button>'
+                );
+              },
+            },
+          ],
+          responsive: true,
+          pageLength: 10,
+          order: [[0, "asc"]],
+        });
+      }
+
+      function ensureDocumentsTable() {
+        if ($.fn.DataTable.isDataTable("#familyDocumentsTable")) return;
+
+        var _docUser = getCurrentUser();
+        var _isAdmin =
+          _docUser &&
+          (_docUser.role === "global_admin" || _docUser.role === "admin");
+
+        docsTable = $("#familyDocumentsTable").DataTable({
+          columns: [
+            {
+              data: null,
+              render: function (d, t, r, meta) {
+                return meta.row + 1;
+              },
+            },
+            {
+              data: "documentType",
+              defaultContent: "-",
+              render: function (d) {
+                if (!d) return "-";
+                return d.replace(/_/g, " ").replace(/\b\w/g, function (c) {
+                  return c.toUpperCase();
+                });
+              },
+            },
+            {
+              data: "description",
+              defaultContent: "-",
+              render: function (d) {
+                return d || "-";
+              },
+            },
+            {
+              data: null,
+              render: function (d) {
+                return (
+                  (d.uploadedBy?.firstname || "") +
+                  " " +
+                  (d.uploadedBy?.lastname || "")
+                );
+              },
+              defaultContent: "-",
+            },
+            {
+              data: null,
+              defaultContent: "",
+              render: function (d) {
+                var v = d.isVerified;
+                var badge, icon, label;
+                if (v === true || v === "true" || v === 1) {
+                  badge = "success";
+                  icon = "bi-check-circle-fill";
+                  label = "Verified";
+                } else if (
+                  (v === false || v === "false" || v === 0) &&
+                  d.verifiedBy
+                ) {
+                  badge = "danger";
+                  icon = "bi-x-circle-fill";
+                  label = "Rejected";
+                } else {
+                  badge = "warning";
+                  icon = "bi-clock-fill";
+                  label = "Pending";
+                }
+                var info = "";
+                if (d.verifiedBy && (v === true || v === "true")) {
+                  var verifier =
+                    (d.verifiedBy.firstname || "") +
+                    " " +
+                    (d.verifiedBy.lastname || "");
+                  info = '<div class="small text-muted">' + verifier.trim();
+                  if (d.verifiedAt) info += " · " + formatDate(d.verifiedAt);
+                  info += "</div>";
+                }
+                return (
+                  '<span class="badge bg-' +
+                  badge +
+                  '"><i class="bi ' +
+                  icon +
+                  ' me-1"></i>' +
+                  label +
+                  "</span>" +
+                  info
+                );
+              },
+            },
+            {
+              data: "created_at",
+              defaultContent: "",
+              render: function (d) {
+                return formatDate(d);
+              },
+            },
+            {
+              data: null,
+              render: function (d) {
+                var docId = d._id || d.id;
+                var btns = "";
+                if (_isAdmin) {
+                  var v = d.isVerified;
+                  var isVerified = v === true || v === "true" || v === 1;
+                  var isRejected =
+                    (v === false || v === "false" || v === 0) && d.verifiedBy;
+                  if (!isVerified && !isRejected) {
+                    btns +=
+                      '<button class="btn btn-sm btn-outline-success verify-doc-btn" data-id="' +
+                      docId +
+                      '" data-action="true" title="Verify"><i class="bi bi-check-lg"></i></button> ';
+                    btns +=
+                      '<button class="btn btn-sm btn-outline-danger reject-doc-btn" data-id="' +
+                      docId +
+                      '" data-action="false" title="Reject"><i class="bi bi-x-lg"></i></button> ';
+                  } else if (isRejected) {
+                    btns +=
+                      '<button class="btn btn-sm btn-outline-success verify-doc-btn" data-id="' +
+                      docId +
+                      '" data-action="true" title="Verify"><i class="bi bi-check-lg"></i></button> ';
+                  }
+                }
+                if (d.fileUrl) {
+                  btns +=
+                    '<button class="btn btn-sm btn-outline-primary view-doc-btn" data-url="' +
+                    d.fileUrl + '" data-filename="' + (d.fileName || "Document") +
+                    '" data-mime="' + (d.mimeType || "") +
+                    '" title="View Document"><i class="bi bi-eye"></i></button> ';
+                }
+                btns +=
+                  '<button class="btn btn-sm btn-outline-danger delete-doc-btn" data-id="' +
+                  docId +
+                  '" title="Delete"><i class="bi bi-trash"></i></button>';
+                return btns;
+              },
+            },
+          ],
+          responsive: true,
+          pageLength: 10,
+          order: [[0, "asc"]],
+          dom: "t",
+          language: { emptyTable: "No documents found" },
+        });
+      }
+
+      function ensurePaymentsTable() {
+        if ($.fn.DataTable.isDataTable("#familyPaymentsTable")) return;
+
+        paymentsTable = $("#familyPaymentsTable").DataTable({
+          columns: [
+            {
+              data: null,
+              render: function (d, t, r, meta) {
+                return meta.row + 1;
+              },
+            },
+            { data: "reference", defaultContent: "-" },
+            {
+              data: "description",
+              defaultContent: "-",
+              render: function (d) {
+                return d || "-";
+              },
+            },
+            {
+              data: "amount",
+              render: function (d) {
+                return d ? "₦" + parseFloat(d).toLocaleString() : "-";
+              },
+            },
+            {
+              data: "status",
+              defaultContent: "Pending",
+              render: function (d) {
+                return (
+                  '<span class="badge bg-' +
+                  (d === "success" || d === "completed" || d === "Completed"
+                    ? "success"
+                    : "warning") +
+                  '">' +
+                  d +
+                  "</span>"
+                );
+              },
+            },
+            {
+              data: "created_at",
+              defaultContent: "",
+              render: function (d) {
+                return formatDate(d);
+              },
+            },
+            {
+              data: null,
+              render: function (d) {
+                return (
+                  '<button class="btn btn-sm btn-outline-info view-payment-btn" data-id="' +
+                  (d._id || d.id) +
+                  '"><i class="bi bi-receipt"></i></button>'
+                );
+              },
+            },
+          ],
+          responsive: true,
+          pageLength: 10,
+          order: [[0, "asc"]],
+        });
+      }
+
+      // ============================================================
+      // PAGE NAVIGATION
+      // ============================================================
+      function showPage(pageName) {
+        $(".page-content").addClass("d-none");
+        $("#" + pageName + "-page").removeClass("d-none");
+        $(".sidebar-menu .nav-link").removeClass("active");
+        $('.sidebar-menu .nav-link[data-page="' + pageName + '"]').addClass(
+          "active",
+        );
+        // Load data when switching to certain pages
+        switch (pageName) {
+          case "dashboard":
+            if (currentFamilyId) {
+              loadFamily();
+            }
+            break;
+          case "members":
+            if (currentFamilyId) {
+              loadMembers(currentFamilyId);
+            }
+            break;
+          case "dependents":
+            if (currentFamilyId) {
+              loadDependents(currentFamilyId);
+            }
+            break;
+          case "invitations":
+            if (currentFamilyId) {
+              loadSentInvitations(currentFamilyId);
+            }
+            loadMyInvitations();
+            break;
+          case "applications":
+            if (currentFamilyId) {
+              loadApplications(currentFamilyId);
+            }
+            break;
+          case "documents":
+            if (currentFamilyId) {
+              loadDocuments(currentFamilyId);
+            }
+            break;
+          case "payments":
+            if (currentFamilyId) {
+              loadPayments(currentFamilyId);
+            }
+            break;
+        }
+      }
+
+      // ============================================================
+      // DOCUMENT READY
+      // ============================================================
+      $(document).ready(function () {
+        // Header - current user
+        const user = getCurrentUser();
+        if (user) {
+          $("#currentUser").text(user.firstname || "User");
+          if (user.passportPhoto)
+            $("#userProfilePic").attr("src", user.passportPhoto);
+          $("#sidebar-user-label").text(
+            user.firstname + " " + (user.lastname || ""),
+          );
+        }
+
+        // DataTables are lazily initialized by ensure*Table() in each load*() function
+
+        // Load family data
+        loadFamily();
+        loadMyInvitations();
+
+        // Initialize notifications
+        initNotifications();
+
+        // SPA Navigation
+        $(".sidebar-menu .nav-link[data-page]").on("click", function (e) {
+          e.preventDefault();
+          showPage($(this).data("page"));
+        });
+
+        // Sidebar toggle
+        $("#sidebarToggle").on("click", function (e) {
+          e.stopPropagation();
+          $("#sidebar").toggleClass("show");
+        });
+        $(".sidebar").on("click", function (e) {
+          e.stopPropagation();
+        });
+        $(document).on("click", function () {
+          $("#sidebar").removeClass("show");
+        });
+
+        // Logout
+        $("#logoutBtn").on("click", function (e) {
+          e.preventDefault();
+          Swal.fire({
+            title: "Logout?",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: "Logout",
+          }).then(function (result) {
+            if (result.isConfirmed) {
+              localStorage.removeItem("token");
+              window.location.href = "../index.html";
+            }
+          });
+        });
+
+        // Back to user dashboard
+        $("#backToUserDash").on("click", function (e) {
+          e.preventDefault();
+          window.location.href = "user-dashboard.html";
+        });
+
+        // Refresh members
+        $("#refreshMembersBtn").on("click", function () {
+          if (currentFamilyId) loadMembers(currentFamilyId);
+        });
+
+        // View document button click handler
+        $(document).on("click", ".view-doc-btn", function () {
+          var fileUrl = $(this).data("url");
+          var fileName = $(this).data("filename") || "Document";
+          var declaredMime = $(this).data("mime") || "";
+          if (!fileUrl) return;
+
+          $("#viewModal .modal-title").text(fileName);
+          $("#viewModalOpenTab").attr("href", fileUrl);
+          var container = document.querySelector("#viewModal .modal-body");
+          container.innerHTML =
+            '<div class="d-flex justify-content-center align-items-center" style="height:400px;">' +
+            '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+          $("#viewModal").modal("show");
+
+          fetch(fileUrl)
+            .then(function (res) {
+              if (!res.ok) throw new Error("Failed to fetch document");
+              var contentType = res.headers.get("Content-Type");
+              return res.blob().then(function (blob) {
+                return { blob: blob, contentType: contentType };
+              });
+            })
+            .then(function (result) {
+              var blobUrl = URL.createObjectURL(result.blob);
+              var effectiveType = result.contentType;
+              if (!effectiveType || effectiveType === "application/octet-stream") {
+                effectiveType = declaredMime;
+              }
+              if (effectiveType === "application/pdf") {
+                loadPDFJ(blobUrl, container);
+              } else if (effectiveType && effectiveType.startsWith("image/")) {
+                loadImage(blobUrl, container);
+              } else {
+                throw new Error("Unsupported file type: " + (effectiveType || "Unknown"));
+              }
+            })
+            .catch(function (err) {
+              console.error("Error loading document:", err);
+              container.innerHTML =
+                '<div class="alert alert-danger">Failed to load document: ' + err.message +
+                '<div class="mt-2"><a href="' + fileUrl + '" target="_blank" class="btn btn-sm btn-primary">Open in New Tab</a></div></div>';
+            });
+        });
+      });
+
+      async function loadPDFJ(url, container) {
+        var pdfDoc = null;
+        var canvas = null;
+        var ctx = null;
+
+        var renderPage = async function () {
+          if (!pdfDoc || !canvas) return;
+          try {
+            var page = await pdfDoc.getPage(1);
+            var containerWidth = container.clientWidth;
+            var viewport = page.getViewport({ scale: 1 });
+            var scale = containerWidth / viewport.width;
+            var responsiveViewport = page.getViewport({ scale: scale });
+            var outputScale = window.devicePixelRatio || 1;
+            canvas.width = Math.floor(viewport.width * scale * outputScale);
+            canvas.height = Math.floor(viewport.height * scale * outputScale);
+            canvas.style.width = Math.floor(viewport.width * scale) + "px";
+            canvas.style.height = Math.floor(viewport.height * scale) + "px";
+            ctx.scale(outputScale, outputScale);
+            await page.render({ canvasContext: ctx, viewport: responsiveViewport }).promise;
+          } catch (error) {
+            console.error("Error rendering PDF page:", error);
+          }
+        };
+
+        var handleResize = function () {
+          renderPage();
+        };
+
+        try {
+          container.innerHTML = '<p class="text-center">Loading PDF...</p>';
+          var loadingTask = pdfjsLib.getDocument(url);
+          pdfDoc = await loadingTask.promise;
+          canvas = document.createElement("canvas");
+          ctx = canvas.getContext("2d");
+          container.innerHTML = "";
+          container.appendChild(canvas);
+          renderPage();
+          window.addEventListener("resize", handleResize);
+
+          var viewModal = document.getElementById("viewModal");
+          var cleanup = function () {
+            window.removeEventListener("resize", handleResize);
+            viewModal.removeEventListener("hide.bs.modal", cleanup);
+          };
+          viewModal.addEventListener("hide.bs.modal", cleanup);
+        } catch (error) {
+          console.error("Error loading PDF:", error);
+          container.innerHTML = '<div class="alert alert-danger">Failed to load PDF. <a href="' + url + '" target="_blank" class="btn btn-sm btn-primary mt-2">Open in New Tab</a></div>';
+        }
+      }
+
+      function loadImage(url, container) {
+        var img = document.createElement("img");
+        img.src = url;
+        img.className = "img-fluid";
+        img.style.maxHeight = "400px";
+        img.style.display = "block";
+        img.style.margin = "auto";
+        container.innerHTML = "";
+        container.appendChild(img);
+      }
+    </script>
+  </body>
+</html>

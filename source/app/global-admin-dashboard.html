@@ -1,4 +1,4 @@
-<!doctype html>
+<!-- <!doctype html> -->
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -428,6 +428,80 @@
       .bg-custom-purple {
         background-color: #8b5cf6 !important;
       }
+      .bg-purple-subtle {
+        background-color: rgba(139, 92, 246, 0.15) !important;
+      }
+      .text-purple {
+        color: #8b5cf6 !important;
+      }
+      #rolesTabNav .nav-link {
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
+      .perm-group-title {
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #6c757d;
+        margin-bottom: 0.5rem;
+        padding-bottom: 0.25rem;
+        border-bottom: 1px solid #dee2e6;
+      }
+      .perm-group-title i {
+        margin-right: 0.25rem;
+      }
+      .perm-checkbox {
+        padding: 0.25rem 0;
+      }
+      .timeline {
+        position: relative;
+        padding-left: 2rem;
+      }
+      .timeline::before {
+        content: "";
+        position: absolute;
+        left: 0.5rem;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: #dee2e6;
+      }
+      .timeline-item {
+        position: relative;
+        margin-bottom: 1.5rem;
+        padding-left: 1rem;
+      }
+      .timeline-item::before {
+        content: "";
+        position: absolute;
+        left: -1.5rem;
+        top: 0.35rem;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #0d6efd;
+        border: 2px solid #fff;
+        box-shadow: 0 0 0 2px #0d6efd;
+      }
+      .timeline-item.old::before {
+        background: #6c757d;
+        box-shadow: 0 0 0 2px #6c757d;
+      }
+      .timeline-date {
+        font-size: 0.8rem;
+        color: #6c757d;
+        margin-bottom: 0.25rem;
+      }
+      .timeline-body {
+        background: #f8f9fa;
+        border-radius: 0.375rem;
+        padding: 0.75rem 1rem;
+        border: 1px solid #e9ecef;
+      }
+      .timeline-body .role-badge {
+        font-size: 0.8rem;
+      }
 
       .password-validation .valid {
         color: #198754;
@@ -639,6 +713,14 @@
           </li>
 
           <li class="nav-item">
+            <a class="nav-link" href="#" data-page="families">
+              <i class="bi bi-house-heart"></i>
+              Family Management
+              <span class="badge bg-success" id="familiesCountBadge">0</span>
+            </a>
+          </li>
+
+          <li class="nav-item">
             <a
               class="nav-link"
               href="#"
@@ -753,7 +835,7 @@
             </li>
             <li><hr class="dropdown-divider" /></li>
             <li>
-              <a class="dropdown-item" href="./auth/login.html"
+              <a class="dropdown-item" href="../index.html"
                 ><i class="bi bi-box-arrow-right me-2"></i>
                 <span onclick="logout(this)">Logout</span>
               </a>
@@ -919,6 +1001,7 @@
           <div class="d-flex gap-2">
             <button
               class="btn btn-primary"
+              data-permission="user:create"
               data-bs-toggle="modal"
               data-bs-target="#addUserModal"
             >
@@ -1739,111 +1822,348 @@
           <div class="d-flex gap-2">
             <button
               class="btn btn-primary"
+              data-permission="role:update"
               data-bs-toggle="modal"
               data-bs-target="#addRoleModal"
             >
               <i class="bi bi-plus-circle me-2"></i>Add New Role
             </button>
-            <!-- Toggle buttons -->
-            <div class="btn-group" role="group">
-              <button
-                type="button"
-                class="btn btn-outline-primary active"
-                id="rolesChartsBtn"
-              >
-                <i class="bi bi-bar-chart me-1"></i>Charts & Summary
-              </button>
-              <button
-                type="button"
-                class="btn btn-outline-primary"
-                id="rolesTableBtn"
-              >
-                <i class="bi bi-table me-1"></i>Table View
-              </button>
-            </div>
           </div>
         </div>
 
-        <!-- Charts and Summary View -->
-        <div id="roles-charts-view">
-          <!-- Role Distribution -->
-          <div class="row mb-4">
-            <div class="col-lg-6 mb-3">
-              <div class="card">
-                <div class="card-header">
-                  <h5 class="mb-0">Role Distribution</h5>
+        <!-- Roles Tabs -->
+        <ul class="nav nav-tabs mb-4" id="rolesTabNav" role="tablist">
+          <li class="nav-item">
+            <button
+              class="nav-link active"
+              data-bs-toggle="tab"
+              data-bs-target="#rolesOverviewTab"
+              type="button"
+            >
+              <i class="bi bi-bar-chart me-1"></i>Overview
+            </button>
+          </li>
+          <li class="nav-item">
+            <button
+              class="nav-link"
+              data-bs-toggle="tab"
+              data-bs-target="#rolesPermissionsTab"
+              type="button"
+              data-permission="role:read"
+            >
+              <i class="bi bi-shield-lock me-1"></i>Permissions
+            </button>
+          </li>
+          <li class="nav-item">
+            <button
+              class="nav-link"
+              data-bs-toggle="tab"
+              data-bs-target="#rolesAssignmentsTab"
+              type="button"
+              data-permission="role:read"
+            >
+              <i class="bi bi-clock-history me-1"></i>Assignment History
+            </button>
+          </li>
+          <li class="nav-item">
+            <button
+              class="nav-link"
+              data-bs-toggle="tab"
+              data-bs-target="#rolesUserHistoryTab"
+              type="button"
+              data-permission="role:read"
+            >
+              <i class="bi bi-person-check me-1"></i>User Role History
+            </button>
+          </li>
+        </ul>
+
+        <div class="tab-content">
+          <!-- ========== OVERVIEW TAB ========== -->
+          <div
+            class="tab-pane fade show active"
+            id="rolesOverviewTab"
+            role="tabpanel"
+          >
+            <!-- KPI Cards -->
+            <div class="row mb-4" id="roleStatsCards">
+              <div class="col-xl-3 col-md-6 mb-3">
+                <div class="card border-0 shadow-sm">
+                  <div class="card-body d-flex align-items-center">
+                    <div class="rounded-circle bg-purple-subtle p-3 me-3">
+                      <i class="bi bi-shield-fill text-purple fs-4"></i>
+                    </div>
+                    <div>
+                      <div class="fs-3 fw-bold" id="statGlobalAdmin">0</div>
+                      <div class="text-muted small">Global Admins</div>
+                    </div>
+                  </div>
                 </div>
-                <div class="card-body">
-                  <div class="chart-container">
-                    <canvas id="roleDistributionChart"></canvas>
+              </div>
+              <div class="col-xl-3 col-md-6 mb-3">
+                <div class="card border-0 shadow-sm">
+                  <div class="card-body d-flex align-items-center">
+                    <div class="rounded-circle bg-warning-subtle p-3 me-3">
+                      <i class="bi bi-headset text-warning fs-4"></i>
+                    </div>
+                    <div>
+                      <div class="fs-3 fw-bold" id="statSupportAdmin">0</div>
+                      <div class="text-muted small">Support Admins</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-3 col-md-6 mb-3">
+                <div class="card border-0 shadow-sm">
+                  <div class="card-body d-flex align-items-center">
+                    <div class="rounded-circle bg-info-subtle p-3 me-3">
+                      <i class="bi bi-people text-info fs-4"></i>
+                    </div>
+                    <div>
+                      <div class="fs-3 fw-bold" id="statKindredHead">0</div>
+                      <div class="text-muted small">Admins</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-3 col-md-6 mb-3">
+                <div class="card border-0 shadow-sm">
+                  <div class="card-body d-flex align-items-center">
+                    <div class="rounded-circle bg-success-subtle p-3 me-3">
+                      <i class="bi bi-person text-success fs-4"></i>
+                    </div>
+                    <div>
+                      <div class="fs-3 fw-bold" id="statUsers">0</div>
+                      <div class="text-muted small">Regular Users</div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div class="col-lg-6 mb-3">
-              <div class="card shadow-sm">
-                <div
-                  class="card-header d-flex justify-content-between align-items-center"
-                >
-                  <h5 class="mb-0">Role Permissions</h5>
-                  <button
-                    id="refreshRoleStats"
-                    class="btn btn-sm btn-outline-primary"
+            <div class="row">
+              <div class="col-lg-6 mb-3">
+                <div class="card">
+                  <div
+                    class="card-header d-flex justify-content-between align-items-center"
                   >
-                    <i class="fas fa-sync-alt"></i> Refresh
-                  </button>
+                    <h5 class="mb-0">Role Distribution</h5>
+                    <button
+                      class="btn btn-sm btn-outline-primary"
+                      id="refreshRoleCharts"
+                    >
+                      <i class="bi bi-arrow-clockwise"></i> Refresh
+                    </button>
+                  </div>
+                  <div class="card-body">
+                    <div class="chart-container" style="height: 300px">
+                      <canvas id="roleDistributionChart"></canvas>
+                    </div>
+                  </div>
                 </div>
-                <div class="card-body">
-                  <table class="table table-hover align-middle text-center">
-                    <thead class="table-light">
-                      <tr>
-                        <th>Role</th>
-                        <th>Users</th>
-                        <th>Permissions</th>
-                      </tr>
-                    </thead>
-                    <tbody id="roleStatsTableBody">
-                      <tr>
-                        <td colspan="3" class="text-muted">Loading...</td>
-                      </tr>
-                    </tbody>
-                  </table>
+              </div>
+              <div class="col-lg-6 mb-3">
+                <div class="card">
+                  <div class="card-header">
+                    <h5 class="mb-0">Role Summary</h5>
+                  </div>
+                  <div class="card-body">
+                    <table class="table table-hover align-middle">
+                      <thead class="table-light">
+                        <tr>
+                          <th>Role</th>
+                          <th>Count</th>
+                          <th>Description</th>
+                        </tr>
+                      </thead>
+                      <tbody id="roleStatsTableBody">
+                        <tr>
+                          <td colspan="3" class="text-muted">Loading...</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Users Table View -->
+            <div class="card mt-3">
+              <div
+                class="card-header d-flex justify-content-between align-items-center"
+              >
+                <h5 class="mb-0">Users & Role Assignment</h5>
+                <button
+                  class="btn btn-sm btn-outline-primary"
+                  id="refreshRolesTable"
+                >
+                  <i class="bi bi-arrow-clockwise"></i> Refresh
+                </button>
+              </div>
+              <div class="card-body">
+                <table
+                  id="rolesTable"
+                  class="table table-striped table-hover dt-responsive w-100"
+                >
+                  <thead>
+                    <tr>
+                      <th>S/N</th>
+                      <th>ID</th>
+                      <th>User</th>
+                      <th>Email</th>
+                      <th>Current Role</th>
+                      <th>Assigned LGA</th>
+                      <th>Assigned By</th>
+                      <th>Assigned Date</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- ========== PERMISSIONS TAB ========== -->
+          <div class="tab-pane fade" id="rolesPermissionsTab" role="tabpanel">
+            <div class="card">
+              <div
+                class="card-header d-flex justify-content-between align-items-center"
+              >
+                <h5 class="mb-0">Role Permissions Manager</h5>
+                <button
+                  class="btn btn-sm btn-outline-primary"
+                  id="refreshPermissionsBtn"
+                >
+                  <i class="bi bi-arrow-clockwise"></i> Refresh
+                </button>
+              </div>
+              <div class="card-body">
+                <p class="text-muted mb-3">
+                  Select a role to view and edit its permissions. Changes take
+                  effect immediately.
+                </p>
+                <div class="row">
+                  <div class="col-md-4 mb-3">
+                    <label class="form-label fw-semibold">Select Role</label>
+                    <select class="form-select" id="permRoleSelect">
+                      <option value="" disabled selected>
+                        Choose a role...
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div id="permissionsEditor" class="d-none">
+                  <hr />
+                  <div id="permissionsCheckboxes" class="row"></div>
+                  <div class="mt-4 d-flex gap-2">
+                    <button
+                      class="btn btn-primary"
+                      id="savePermissionsBtn"
+                      data-permission="role:update"
+                    >
+                      <i class="bi bi-check-circle me-1"></i>Save Permissions
+                    </button>
+                    <button
+                      class="btn btn-outline-secondary"
+                      id="selectAllPermsBtn"
+                    >
+                      Select All
+                    </button>
+                    <button
+                      class="btn btn-outline-secondary"
+                      id="deselectAllPermsBtn"
+                    >
+                      Deselect All
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- Table View -->
-        <div id="roles-table-view" class="d-none">
-          <!-- Role Assignment -->
-          <div class="card">
-            <div class="card-header">
-              <h5 class="mb-0">Role Assignment</h5>
-            </div>
-            <div class="card-body">
-              <table
-                id="rolesTable"
-                class="table table-striped table-hover dt-responsive w-100"
+          <!-- ========== ASSIGNMENT HISTORY TAB ========== -->
+          <div class="tab-pane fade" id="rolesAssignmentsTab" role="tabpanel">
+            <div class="card">
+              <div
+                class="card-header d-flex justify-content-between align-items-center"
               >
-                <thead>
-                  <tr>
-                    <th>S/N</th>
-                    <th>ID</th>
-                    <th>User</th>
-                    <th>Email</th>
-                    <th>Current Role</th>
-                    <th>Assigned LGA</th>
-                    <th>Assigned By</th>
-                    <th>Assigned Date</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <!-- Table data will be populated by JavaScript -->
-                </tbody>
-              </table>
+                <h5 class="mb-0">Role Assignment History</h5>
+                <button
+                  class="btn btn-sm btn-outline-primary"
+                  id="refreshAssignmentsBtn"
+                >
+                  <i class="bi bi-arrow-clockwise"></i> Refresh
+                </button>
+              </div>
+              <div class="card-body">
+                <table
+                  id="roleAssignmentHistoryTable"
+                  class="table table-striped table-hover dt-responsive w-100"
+                >
+                  <thead>
+                    <tr>
+                      <th>S/N</th>
+                      <th>User</th>
+                      <th>Previous Role</th>
+                      <th>New Role</th>
+                      <th>Changed By</th>
+                      <th>Reason</th>
+                      <th>Date</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- ========== USER ROLE HISTORY TAB ========== -->
+          <div class="tab-pane fade" id="rolesUserHistoryTab" role="tabpanel">
+            <div class="card mb-4">
+              <div class="card-header">
+                <h5 class="mb-0">Look Up User Role History</h5>
+              </div>
+              <div class="card-body">
+                <div class="row align-items-end">
+                  <div class="col-md-6 mb-2">
+                    <label class="form-label fw-semibold">Search User</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="roleHistorySearchInput"
+                      placeholder="Enter name or email to search..."
+                    />
+                  </div>
+                  <div class="col-md-3 mb-2">
+                    <label class="form-label fw-semibold">Or Select User</label>
+                    <select class="form-select" id="roleHistoryUserSelect">
+                      <option value="" disabled selected>
+                        Choose a user...
+                      </option>
+                    </select>
+                  </div>
+                  <div class="col-md-3 mb-2">
+                    <button
+                      class="btn btn-primary w-100"
+                      id="loadRoleHistoryBtn"
+                    >
+                      <i class="bi bi-search me-1"></i>Load History
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="userRoleHistoryResult" class="d-none">
+              <div class="card mb-3">
+                <div class="card-header bg-primary text-white">
+                  <h6 class="mb-0" id="roleHistoryUserName">
+                    User Role History
+                  </h6>
+                </div>
+              </div>
+              <div class="timeline" id="roleHistoryTimeline"></div>
             </div>
           </div>
         </div>
@@ -2100,6 +2420,150 @@
                 </tbody>
               </table>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Families Management Page -->
+      <div id="families-page" class="page-content d-none">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2 class="mb-0">Family Management</h2>
+          <div class="d-flex gap-2">
+            <button class="btn btn-primary" id="exportFamiliesBtn">
+              <i class="bi bi-download me-2"></i>Export Report
+            </button>
+          </div>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="row mb-4">
+          <div class="col-xl-3 col-md-6 mb-3">
+            <div class="kpi-card primary">
+              <div class="kpi-value" id="famTotalFamilies">0</div>
+              <div class="kpi-label">Total Families</div>
+              <div class="kpi-icon"><i class="bi bi-house-heart-fill"></i></div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-md-6 mb-3">
+            <div class="kpi-card success">
+              <div class="kpi-value" id="famActiveFamilies">0</div>
+              <div class="kpi-label">Active Families</div>
+              <div class="kpi-icon">
+                <i class="bi bi-check-circle-fill"></i>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-md-6 mb-3">
+            <div class="kpi-card warning">
+              <div class="kpi-value" id="famInactiveFamilies">0</div>
+              <div class="kpi-label">Inactive Families</div>
+              <div class="kpi-icon">
+                <i class="bi bi-pause-circle-fill"></i>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-md-6 mb-3">
+            <div class="kpi-card info">
+              <div class="kpi-value" id="famSuspendedFamilies">0</div>
+              <div class="kpi-label">Suspended Families</div>
+              <div class="kpi-icon"><i class="bi bi-x-circle-fill"></i></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="card mb-3">
+          <div class="card-body py-2">
+            <div class="row align-items-center g-2">
+              <div class="col-md-3">
+                <input
+                  type="text"
+                  class="form-control form-control-sm"
+                  id="famSearchInput"
+                  placeholder="Search by name or number..."
+                />
+              </div>
+              <div class="col-md-2">
+                <select class="form-select form-select-sm" id="famStatusFilter">
+                  <option value="">All Status</option>
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                  <option value="Suspended">Suspended</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <select class="form-select form-select-sm" id="famLgaFilter">
+                  <option value="">All LGAs</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <input
+                  type="text"
+                  class="form-control form-control-sm"
+                  id="famWardFilter"
+                  placeholder="Ward..."
+                />
+              </div>
+              <div class="col-md-2">
+                <select class="form-select form-select-sm" id="famSortSelect">
+                  <option value="created_at:desc">Newest First</option>
+                  <option value="created_at:asc">Oldest First</option>
+                  <option value="familyName:asc">Name A-Z</option>
+                  <option value="familyName:desc">Name Z-A</option>
+                </select>
+              </div>
+              <div class="col-md-1 text-end">
+                <button
+                  class="btn btn-sm btn-primary w-100"
+                  id="famApplyFilters"
+                >
+                  <i class="bi bi-search"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Families Table -->
+        <div class="card">
+          <div
+            class="card-header d-flex justify-content-between align-items-center"
+          >
+            <h5 class="mb-0">All Families</h5>
+            <div class="export-buttons btn-group">
+              <button onclick="exportFamiliesTable('csv')">
+                <i class="bi bi-file-earmark-csv me-1"></i>CSV
+              </button>
+              <button onclick="exportFamiliesTable('pdf')">
+                <i class="bi bi-file-earmark-pdf me-1"></i>PDF
+              </button>
+              <button onclick="window.print()">
+                <i class="bi bi-printer me-1"></i>Print
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <table
+              id="familiesTable"
+              class="table table-striped table-hover dt-responsive w-100"
+            >
+              <thead>
+                <tr>
+                  <th>S/N</th>
+                  <th>ID</th>
+                  <th>Family Name</th>
+                  <th>Number</th>
+                  <th>Head</th>
+                  <th>LGA</th>
+                  <th>Ward</th>
+                  <th>Members</th>
+                  <th>Status</th>
+                  <th>Created</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -2503,7 +2967,7 @@
                 Use your authenticator app (like Google Authenticator, Authy, or
                 Microsoft Authenticator) to scan the QR code below:
               </p>
-              <div class="qr-code">
+              <div class="qr-code text-center">
                 <img
                   src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=otpauth://totp/Example:demo@example.com?secret=JBSWY3DPEHPK3PXP&issuer=Example"
                   alt="QR Code"
@@ -2545,7 +3009,23 @@
                 <code>90123456</code>
                 <code>01234567</code>
               </div>
-              <div class="form-check mt-3">
+              <div class="d-flex gap-2 mt-3 mb-3">
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary btn-sm"
+                  id="copyBackupCodesBtn"
+                >
+                  <i class="bi bi-clipboard me-1"></i>Copy All
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary btn-sm"
+                  id="downloadBackupCodesBtn"
+                >
+                  <i class="bi bi-download me-1"></i>Download
+                </button>
+              </div>
+              <div class="form-check mt-2">
                 <input
                   class="form-check-input"
                   type="checkbox"
@@ -3041,6 +3521,79 @@
       </div>
     </div>
 
+    <!-- Edit Permissions Modal -->
+    <div
+      class="modal fade"
+      id="editPermissionsModal"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              Edit Permissions — <span id="editPermRoleName"></span>
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div id="editPermCheckboxes"></div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button type="button" class="btn btn-primary" id="savePermModalBtn">
+              <i class="bi bi-check-circle me-1"></i>Save Permissions
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Role History Modal -->
+    <div
+      class="modal fade"
+      id="userRoleHistoryModal"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              Role History — <span id="roleHistUserName"></span>
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div id="roleHistoryModalTimeline" class="timeline"></div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- 📝 Edit User Modal -->
     <div class="modal fade" id="editUserModal" tabindex="-1">
       <div class="modal-dialog">
@@ -3174,6 +3727,7 @@
     <div
       id="viewModal"
       class="modal fade"
+      style="z-index: 1060"
       tabindex="-1"
       role="dialog"
       aria-hidden="true"
@@ -3465,6 +4019,170 @@
       </div>
     </div>
 
+    <!-- Family Detail Modal -->
+    <div
+      class="modal fade"
+      id="familyDetailModal"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="familyDetailTitle">Family Details</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <ul class="nav nav-tabs mb-3" id="familyDetailTabs" role="tablist">
+              <li class="nav-item">
+                <button
+                  class="nav-link active"
+                  data-bs-toggle="tab"
+                  data-bs-target="#famDetailInfoTab"
+                  type="button"
+                >
+                  <i class="bi bi-info-circle me-1"></i>Info
+                </button>
+              </li>
+              <li class="nav-item">
+                <button
+                  class="nav-link"
+                  data-bs-toggle="tab"
+                  data-bs-target="#famDetailMembersTab"
+                  type="button"
+                >
+                  <i class="bi bi-people me-1"></i>Members
+                </button>
+              </li>
+              <li class="nav-item">
+                <button
+                  class="nav-link"
+                  data-bs-toggle="tab"
+                  data-bs-target="#famDetailDependentsTab"
+                  type="button"
+                >
+                  <i class="bi bi-person-hearts me-1"></i>Dependents
+                </button>
+              </li>
+              <li class="nav-item">
+                <button
+                  class="nav-link"
+                  data-bs-toggle="tab"
+                  data-bs-target="#famDetailDocsTab"
+                  type="button"
+                >
+                  <i class="bi bi-folder me-1"></i>Documents
+                </button>
+              </li>
+            </ul>
+            <div class="tab-content">
+              <!-- Info Tab -->
+              <div
+                class="tab-pane fade show active"
+                id="famDetailInfoTab"
+                role="tabpanel"
+              >
+                <div class="row" id="famDetailInfoBody">
+                  <div class="col-12 text-center py-4 text-muted">
+                    Loading...
+                  </div>
+                </div>
+              </div>
+              <!-- Members Tab -->
+              <div
+                class="tab-pane fade"
+                id="famDetailMembersTab"
+                role="tabpanel"
+              >
+                <div class="table-responsive">
+                  <table
+                    class="table table-striped table-hover w-100"
+                    id="famDetailMembersTable"
+                  >
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Relationship</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Joined</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+              <!-- Dependents Tab -->
+              <div
+                class="tab-pane fade"
+                id="famDetailDependentsTab"
+                role="tabpanel"
+              >
+                <div class="table-responsive">
+                  <table
+                    class="table table-striped table-hover w-100"
+                    id="famDetailDependentsTable"
+                  >
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>DOB</th>
+                        <th>Gender</th>
+                        <th>Relationship</th>
+                        <th>NIN</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+              <!-- Documents Tab -->
+              <div class="tab-pane fade" id="famDetailDocsTab" role="tabpanel">
+                <div class="table-responsive">
+                  <table
+                    class="table table-striped table-hover w-100"
+                    id="famDetailDocsTable"
+                  >
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Uploaded By</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Footer -->
     <footer class="bg-white text-center text-lg-start mt-auto shadow-sm">
       <div class="text-center p-3">© 2025 BDIC. All rights reserved.</div>
@@ -3504,12 +4222,189 @@
       let growthComparisonChart, processingTimeChart, requestTypeChart;
       let roleDistributionChart;
       let auctioneerTrendChart, auctioneerStatusChart;
+      let roleAssignmentHistoryTable, userRoleHistoryTable;
+
+      // ============================================================
+      // ROLE / PERMISSION CONSTANTS & ENUMS
+      // ============================================================
+      const UserRole = Object.freeze({
+        GLOBAL_ADMIN: "global_admin",
+        ADMIN: "admin",
+        SUPPORT_ADMIN: "support_admin",
+        USER: "user",
+      });
+
+      const Permission = Object.freeze({
+        USER_CREATE: "user:create",
+        USER_READ: "user:read",
+        USER_UPDATE: "user:update",
+        USER_DELETE: "user:delete",
+        ROLE_CREATE: "role:create",
+        ROLE_READ: "role:read",
+        ROLE_UPDATE: "role:update",
+        ROLE_DELETE: "role:delete",
+        ROLE_ASSIGN: "role:assign",
+        KINDRED_CREATE: "kindred:create",
+        KINDRED_READ: "kindred:read",
+        KINDRED_UPDATE: "kindred:update",
+        KINDRED_DELETE: "kindred:delete",
+        SYSTEM_CONFIG: "system:config",
+        SYSTEM_LOGS: "system:logs",
+        REPORTS_VIEW: "reports:view",
+        REPORTS_GENERATE: "reports:generate",
+        SUPPORT_TICKETS: "support:tickets",
+        SUPPORT_RESPONSE: "support:response",
+      });
+
+      // ============================================================
+      // ROLES API SERVICE
+      // ============================================================
+      const rolesApi = {
+        _headers() {
+          return {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          };
+        },
+
+        getAllRoles() {
+          return $.ajax({
+            url: `${BACKEND_URL}/roles`,
+            method: "GET",
+            headers: this._headers(),
+          });
+        },
+
+        getRolePermissions(role) {
+          return $.ajax({
+            url: `${BACKEND_URL}/roles/${encodeURIComponent(role)}/permissions`,
+            method: "GET",
+            headers: this._headers(),
+          });
+        },
+
+        updateRolePermissions(role, permissions) {
+          return $.ajax({
+            url: `${BACKEND_URL}/roles/${encodeURIComponent(role)}/permissions`,
+            method: "PUT",
+            headers: this._headers(),
+            data: JSON.stringify({ permissions }),
+          });
+        },
+
+        getAssignmentHistory(params) {
+          const qs = params ? "?" + $.param(params) : "";
+          return $.ajax({
+            url: `${BACKEND_URL}/roles/assignments${qs}`,
+            method: "GET",
+            headers: this._headers(),
+          });
+        },
+
+        getRoleStats() {
+          return $.ajax({
+            url: `${BACKEND_URL}/users/role-stats`,
+            method: "GET",
+            headers: this._headers(),
+          });
+        },
+
+        getUserRoleHistory(userId) {
+          return $.ajax({
+            url: `${BACKEND_URL}/users/${userId}/role-history`,
+            method: "GET",
+            headers: this._headers(),
+          });
+        },
+
+        changeUserRole(userId, payload) {
+          return $.ajax({
+            url: `${BACKEND_URL}/users/${userId}/role`,
+            method: "PATCH",
+            headers: this._headers(),
+            data: JSON.stringify(payload),
+          });
+        },
+      };
+
+      // ============================================================
+      // PERMISSION UTILITIES
+      // ============================================================
+      let currentUserPermissions = [];
+
+      function hasPermission(perm) {
+        return currentUserPermissions.includes(perm);
+      }
+
+      function hasAnyPermission(perms) {
+        return perms.some((p) => hasPermission(p));
+      }
+
+      async function loadCurrentUserPermissions() {
+        try {
+          const resp = await rolesApi.getRolePermissions(user.role);
+          currentUserPermissions = resp.data || resp.permissions || [];
+        } catch (e) {
+          console.warn("Could not load permissions for current user:", e);
+          currentUserPermissions = [];
+        }
+      }
+
+      function applyPermissionGuards() {
+        $("[data-permission]").each(function () {
+          const required = $(this)
+            .data("permission")
+            .split(",")
+            .map((s) => s.trim());
+          if (!hasAnyPermission(required)) {
+            $(this).addClass("d-none");
+          }
+        });
+        $("[data-permission-disable]").each(function () {
+          const required = $(this)
+            .data("permission-disable")
+            .split(",")
+            .map((s) => s.trim());
+          if (!hasAnyPermission(required)) {
+            $(this).prop("disabled", true).addClass("opacity-50");
+          }
+        });
+      }
+
+      // ============================================================
+      // ROLE-BASED ROUTE GUARD
+      // ============================================================
+      function canAccessPage(pageName) {
+        const pagePermissions = {
+          users: [Permission.USER_READ],
+          roles: [Permission.ROLE_READ],
+          analytics: [Permission.REPORTS_VIEW],
+          lgas: [Permission.KINDRED_READ],
+          "family-dashboard": [Permission.KINDRED_READ],
+          settings: [Permission.SYSTEM_CONFIG],
+        };
+        const required = pagePermissions[pageName];
+        if (!required) return true;
+        return hasAnyPermission(required);
+      }
 
       // Add this to your script to store the current date range
       let currentDashboardFilters = {
         startDate: null,
         endDate: null,
       };
+
+      // Fix Family Management navigation
+      const familyLink = document.querySelector(
+        'a[href="family-dashboard.html"]',
+      );
+      if (familyLink) {
+        familyLink.addEventListener("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          window.location.href = "family-dashboard.html";
+        });
+      }
 
       // Page Navigation
       $(document).ready(function () {
@@ -3672,14 +4567,6 @@
             currentType === "password" ? "text" : "password",
           );
           $(this).find("i").toggleClass("bi-eye bi-eye-slash");
-        });
-
-        // Change role modal
-        $(".change-role-btn").on("click", function () {
-          const userName = $(this).data("user");
-          const userId = $(this).data("id");
-          $("#changeRoleUser").val(userName);
-          $("#changeRoleModal").data("userId", userId);
         });
 
         // Export Transactions Button
@@ -3948,6 +4835,15 @@
       }
 
       function showPage(pageName) {
+        // Route guard: check permissions
+        if (!canAccessPage(pageName)) {
+          showNotification(
+            "You do not have permission to access this page.",
+            "warning",
+          );
+          return;
+        }
+
         // Hide all pages
         $(".page-content").addClass("d-none");
 
@@ -3976,6 +4872,12 @@
             break;
           case "roles":
             initializeRolesPage();
+            loadCurrentUserPermissions().then(function () {
+              applyPermissionGuards();
+              initializePermissionsTab();
+              initializeAssignmentHistoryTab();
+              initializeUserRoleHistoryTab();
+            });
             break;
           case "settings":
             // Settings page doesn't need special initialization
@@ -3983,6 +4885,10 @@
 
           case "auctioneer":
             initializeAuctioneerPage();
+            break;
+
+          case "families":
+            initializeFamiliesPage();
             break;
         }
       }
@@ -4151,8 +5057,8 @@
                     if (
                       [
                         "global_admin",
+                        "admin",
                         "support_admin",
-                        "kindred_head",
                         "user",
                       ].includes(item.role)
                     ) {
@@ -4394,8 +5300,7 @@
                         if (data === "super_admin") badgeClass = "bg-danger";
                         else if (data === "support_admin")
                           badgeClass = "bg-warning";
-                        else if (data === "kindred_head")
-                          badgeClass = "bg-info";
+                        else if (data === "admin") badgeClass = "bg-info";
 
                         return `<span class="badge ${badgeClass}">${data
                           .replace("_", " ")
@@ -4866,19 +5771,14 @@
           data: JSON.stringify(payload),
           success: function () {
             $("#changeRoleModal").modal("hide");
-            // Refresh Roles Page to update charts/table
-            if (typeof initializeRolesPage === "function") {
-              initializeRolesPage();
-            }
-
+            // Refresh all roles-related views
+            initializeRolesPage();
+            loadRoleStats();
+            initializeAssignmentHistoryTab();
             if (typeof initializeUsersPage === "function") {
               initializeUsersPage();
             }
-            showNotification(
-              "Success",
-              "User role updated successfully!",
-              "success",
-            );
+            showNotification("User role updated successfully!", "success");
           },
           error: function (xhr) {
             showNotification(
@@ -5228,7 +6128,6 @@
                   } else if (contentType && contentType.startsWith("image/")) {
                     loadImage(blobUrl, container);
                   } else {
-                    // Handle unknown or missing content type
                     throw new Error(
                       `Unsupported file type: ${contentType || "Unknown"}`,
                     );
@@ -5501,9 +6400,9 @@
       // 1. GLOBAL STATE & UPDATE FUNCTION
       // ========================================================
 
-      let pendingIdCardCount = 0;
-      let pendingCertCount = 0;
-      let pendingAuctioneerCount = 0;
+      var pendingIdCardCount = 0;
+      var pendingCertCount = 0;
+      var pendingAuctioneerCount = 0;
 
       // This function calculates the total and updates the main card
       function updateTotalPendingRequests() {
@@ -5711,6 +6610,7 @@
       }
 
       function handleAuctioneerView(requestId) {
+        console.log("token", user);
         const apiHeaders = {
           Authorization: `Bearer ${token}`,
         };
@@ -6253,7 +7153,6 @@
                   } else if (contentType && contentType.startsWith("image/")) {
                     loadImage(blobUrl, container);
                   } else {
-                    // Handle unknown or missing content type
                     throw new Error(
                       `Unsupported file type: ${contentType || "Unknown"}`,
                     );
@@ -7842,41 +8741,12 @@
       }
 
       document.addEventListener("DOMContentLoaded", function () {
-        // Toggle functionality for Roles page
-        const rolesChartsBtn = document.getElementById("rolesChartsBtn");
-        const rolesTableBtn = document.getElementById("rolesTableBtn");
-        const rolesChartsView = document.getElementById("roles-charts-view");
-        const rolesTableView = document.getElementById("roles-table-view");
-
-        rolesChartsBtn.addEventListener("click", function () {
-          rolesChartsView.classList.remove("d-none");
-          rolesTableView.classList.add("d-none");
-          rolesChartsBtn.classList.add("active");
-          rolesTableBtn.classList.remove("active");
-
-          // Refresh charts when switching to charts view
-          if (typeof initializeRolesPage === "function") {
-            initializeRolesPage();
-          }
-        });
-
-        rolesTableBtn.addEventListener("click", function () {
-          rolesChartsView.classList.add("d-none");
-          rolesTableView.classList.remove("d-none");
-          rolesChartsBtn.classList.remove("active");
-          rolesTableBtn.classList.add("active");
-
-          // Refresh table when switching to table view
-          if (typeof initializeRolesPage === "function") {
-            initializeRolesPage();
-          }
-        });
+        // Roles page now uses Bootstrap tabs - no toggle logic needed
       });
 
       // Modify your initializeRolesPage function to work with the toggle
       async function initializeRolesPage() {
         try {
-          // 🔹 Fetch all users from backend (needed for both views)
           const response = await $.ajax({
             url: `${BACKEND_URL}/users`,
             method: "GET",
@@ -7888,88 +8758,91 @@
 
           const users = Array.isArray(response.data) ? response.data : [];
 
-          // 1️⃣ LOGIC FOR TABLE VIEW
-          if (!$("#roles-table-view").hasClass("d-none")) {
-            if ($.fn.DataTable.isDataTable("#rolesTable")) {
-              $("#rolesTable").DataTable().destroy();
-            }
-
-            rolesTable = $("#rolesTable").DataTable({
-              data: users.map((u) => ({
-                id: u._id,
-                name:
-                  `${u.firstname || ""} ${u.lastname || ""}`.trim() || "N/A",
-                email: u.email || "N/A",
-                role: u.role || "user",
-                lga: u.lga ? `${u.lga?.name}` : "N/A",
-
-                assignedBy: u.assignedBy
-                  ? `${u.assignedBy?.firstname} ${u.assignedBy?.lastname}`
-                  : "N/A",
-                registeredAt: new Date(u.created_at).toLocaleString(),
-              })),
-              columns: [
-                {
-                  title: "S/N",
-                  data: null,
-                  orderable: false,
-                  searchable: false,
-                  render: function (data, type, row, meta) {
-                    return meta.row + meta.settings._iDisplayStart + 1;
-                  },
-                },
-                {
-                  data: "id",
-                  visible: false,
-                  searchable: false,
-                },
-                { data: "name" },
-                { data: "email" },
-                {
-                  data: "role",
-                  render: function (data) {
-                    let badgeClass = "bg-primary";
-                    if (data === "super_admin") badgeClass = "bg-danger";
-                    else if (data === "support_admin")
-                      badgeClass = "bg-warning";
-                    else if (data === "kindred_head") badgeClass = "bg-info";
-                    else badgeClass = "bg-success";
-
-                    return `<span class="badge ${badgeClass}">${data
-                      .replace("_", " ")
-                      .toUpperCase()}</span>`;
-                  },
-                },
-                { data: "lga" },
-                { data: "assignedBy" },
-                { data: "registeredAt" },
-                {
-                  data: null,
-                  render: function (data, type, row) {
-                    return `
-                                    <button class="btn btn-sm btn-outline-primary change-role-btn"
-                                        data-id="${row.id}"
-                                        data-user="${row.name}"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#changeRoleModal">
-                                        <i class="bi bi-person-badge"></i> Change Role
-                                    </button>
-                                `;
-                  },
-                },
-              ],
-              responsive: true,
-              pageLength: 10,
-            });
+          // Initialize Roles DataTable
+          if ($.fn.DataTable.isDataTable("#rolesTable")) {
+            $("#rolesTable").DataTable().destroy();
           }
+
+          rolesTable = $("#rolesTable").DataTable({
+            data: users.map((u) => ({
+              id: u._id,
+              name: `${u.firstname || ""} ${u.lastname || ""}`.trim() || "N/A",
+              email: u.email || "N/A",
+              role: u.role || "user",
+              lga: u.lga ? `${u.lga?.name}` : "N/A",
+
+              assignedBy: u.assignedBy
+                ? `${u.assignedBy?.firstname} ${u.assignedBy?.lastname}`
+                : "N/A",
+              registeredAt: new Date(u.created_at).toLocaleString(),
+            })),
+            columns: [
+              {
+                title: "S/N",
+                data: null,
+                orderable: false,
+                searchable: false,
+                render: function (data, type, row, meta) {
+                  return meta.row + meta.settings._iDisplayStart + 1;
+                },
+              },
+              {
+                data: "id",
+                visible: false,
+                searchable: false,
+              },
+              { data: "name" },
+              { data: "email" },
+              {
+                data: "role",
+                render: function (data) {
+                  let badgeClass = "bg-primary";
+                  if (data === "super_admin" || data === "global_admin")
+                    badgeClass = "bg-danger";
+                  else if (data === "support_admin") badgeClass = "bg-warning";
+                  else if (data === "admin") badgeClass = "bg-info";
+                  else badgeClass = "bg-success";
+
+                  return `<span class="badge ${badgeClass}">${data
+                    .replace("_", " ")
+                    .toUpperCase()}</span>`;
+                },
+              },
+              { data: "lga" },
+              { data: "assignedBy" },
+              { data: "registeredAt" },
+              {
+                data: null,
+                render: function (data, type, row) {
+                  return `
+                  <div class="btn-group">
+                    <button class="btn btn-sm btn-outline-warning change-role-btn"
+                        data-id="${row.id}" data-user="${row.name}"
+                        data-bs-toggle="modal" data-bs-target="#changeRoleModal"
+                        title="Change Role" data-permission="role:update">
+                        <i class="bi bi-person-badge"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-info view-role-history-btn"
+                        data-id="${row.id}" data-user="${row.name}"
+                        title="Role History" data-permission="role:read">
+                        <i class="bi bi-clock-history"></i>
+                    </button>
+                  </div>
+                  `;
+                },
+              },
+            ],
+            responsive: true,
+            pageLength: 10,
+          });
 
           // 2️⃣ LOGIC FOR CHARTS & SUMMARY VIEW
           if (!$("#roles-charts-view").hasClass("d-none")) {
             // 🔹 Prepare role counts for chart and summary table
             const roleCounts = {
               global_admin: 0,
+              admin: 0,
               support_admin: 0,
-              kindred_head: 0,
               user: 0,
             };
 
@@ -7980,35 +8853,35 @@
             });
 
             // 🔹 Populate Role Permissions Summary Table
-            const roleStatsBody = document.getElementById("roleStatsTableBody");
-            const rolePermissions = {
-              "Global Admin": "Full system access",
-              "Support Admin": "Manage requests & users",
-              "Kindred Head": "Manage kindred members",
-              User: "View and request services",
-            };
+            // const roleStatsBody = document.getElementById("roleStatsTableBody");
+            // const rolePermissions = {
+            //   "Global Admin": "Full system access",
+            //   "Support Admin": "Manage requests & users",
+            //   "Kindred Head": "Manage kindred members",
+            //   User: "View and request services",
+            // };
 
-            let tableHTML = "";
-            const roleLabels = {
-              global_admin: "Global Admin",
-              support_admin: "Support Admin",
-              kindred_head: "Kindred Head",
-              user: "User",
-            };
+            // let tableHTML = "";
+            // const roleLabels = {
+            //   global_admin: "Global Admin",
+            //   support_admin: "Support Admin",
+            //   kindred_head: "Kindred Head",
+            //   user: "User",
+            // };
 
-            for (const roleKey in roleCounts) {
-              const count = roleCounts[roleKey];
-              const roleName = roleLabels[roleKey];
-              const permissions = rolePermissions[roleName] || "N/A";
-              tableHTML += `
-                <tr>
-                  <td><strong>${roleName}</strong></td>
-                  <td><span class="badge bg-primary">${count}</span></td>
-                  <td>${permissions}</td>
-                </tr>
-              `;
-            }
-            roleStatsBody.innerHTML = tableHTML;
+            // for (const roleKey in roleCounts) {
+            //   const count = roleCounts[roleKey];
+            //   const roleName = roleLabels[roleKey];
+            //   const permissions = rolePermissions[roleName] || "N/A";
+            //   tableHTML += `
+            //     <tr>
+            //       <td><strong>${roleName}</strong></td>
+            //       <td><span class="badge bg-primary">${count}</span></td>
+            //       <td>${permissions}</td>
+            //     </tr>
+            //   `;
+            // }
+            // roleStatsBody.innerHTML = tableHTML;
 
             // 🔹 Initialize role distribution chart
             destroyChart(roleDistributionChart, "roleDistributionChart");
@@ -8018,26 +8891,21 @@
             roleDistributionChart = new Chart(ctx, {
               type: "pie",
               data: {
-                labels: [
-                  "Support Admin",
-                  "Kindred Head",
-                  "User",
-                  "Global Admin",
-                ],
+                labels: ["Global Admin", "Admin", "Support Admin", "User"],
                 datasets: [
                   {
                     data: [
-                      roleCounts.support_admin,
-                      roleCounts.kindred_head,
-                      roleCounts.user,
                       roleCounts.global_admin,
+                      roleCounts.admin,
+                      roleCounts.support_admin,
+                      roleCounts.user,
                     ],
                     backgroundColor: [
                       // "#ef4444",
-                      "#f59e0b",
-                      "#3b82f6",
-                      "#10b981",
                       "#8b5cf6",
+                      "#3b82f6",
+                      "#f59e0b",
+                      "#10b981",
                     ],
                   },
                 ],
@@ -8051,6 +8919,9 @@
               },
             });
           }
+
+          // Refresh overview stats
+          await loadRoleStats();
         } catch (error) {
           showNotification(
             "Failed to load roles. Please check your network or API.",
@@ -8078,94 +8949,547 @@
         }
       }
 
-      $(document).on("click", ".change-role-btn", function () {
-        const userId = $(this).data("id");
-        const userName = $(this).data("user");
-        $("#changeRoleUserId").val(userId);
-        $("#changeRoleUser").val(userName);
-      });
-      // 🔹 Handle Change Role Form Submission
-      $("#changeRoleForm").on("submit", function (e) {
-        e.preventDefault();
-        const userId = $("#changeRoleUserId").val();
-        const newRole = $("#changeRoleNew").val();
-        if (!userId || !newRole) {
-          alert("Please select a valid role.");
-          return;
-        }
+      // ============================================================
+      // CLEANED UP: Removed duplicate .change-role-btn and #changeRoleForm
+      // handlers. The primary handlers are at ~line 5112 and ~line 5198.
+      // ============================================================
 
-        $.ajax({
-          url: `${BACKEND_URL}/users/${userId}/role`,
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          data: JSON.stringify({ role: newRole }),
-          success: function (response) {
-            $("#changeRoleModal").modal("hide");
-            showNotification("✅ User role updated successfully!", "success");
-            // Refresh roles page to reflect changes
-            initializeRolesPage();
-          },
-          error: function (xhr) {
-            showNotification(xhr.responseJSON.message, "error");
-          },
-        });
-      });
-
+      // ============================================================
+      // ROLE STATS (OVERVIEW TAB)
+      // ============================================================
       function loadRoleStats() {
-        $.ajax({
-          url: `${BACKEND_URL}/users/role-stats`,
-          method: "GET",
-          headers: { Authorization: `Bearer ${token}` },
-          success: function (data) {
+        return rolesApi
+          .getRoleStats()
+          .then(function (data) {
             const tbody = $("#roleStatsTableBody");
             tbody.empty();
 
-            const roles = [
+            const roleDefs = [
               {
                 key: "global_admin",
                 label: "Global Admin",
                 badge: "bg-custom-purple",
+                statId: "statGlobalAdmin",
+                desc: "Full system access",
               },
               {
                 key: "support_admin",
                 label: "Support Admin",
                 badge: "bg-warning",
+                statId: "statSupportAdmin",
+                desc: "Manage requests & users",
               },
-              { key: "kindred_head", label: "Kindred Head", badge: "bg-info" },
-              { key: "user", label: "User", badge: "bg-primary" },
+              {
+                key: "admin",
+                label: "Admin",
+                badge: "bg-info",
+                statId: "statKindredHead",
+                desc: "Manage system operations",
+              },
+              {
+                key: "user",
+                label: "User",
+                badge: "bg-primary",
+                statId: "statUsers",
+                desc: "View and request services",
+              },
             ];
 
-            roles.forEach((role) => {
-              const roleData = data[role.key] || {
-                count: 0,
-                permissions: "N/A",
-              };
+            roleDefs.forEach((r) => {
+              const rd = data[r.key] || { count: 0, permissions: "N/A" };
+              $(`#${r.statId}`).text(rd.count.toLocaleString());
               tbody.append(`
-                          <tr>
-                          <td><span class="badge ${role.badge}">${
-                            role.label
-                          }</span></td>
-                          <td>${roleData.count.toLocaleString()}</td>
-                          <td>${roleData.permissions}</td>
-                          </tr>
-                      `);
+              <tr>
+                <td><span class="badge ${r.badge}">${r.label}</span></td>
+                <td><strong>${rd.count.toLocaleString()}</strong></td>
+                <td>${r.desc}</td>
+              </tr>
+            `);
             });
-          },
-          error: function (xhr) {
-            $("#roleStatsTableBody").html(`
-                      <tr><td colspan="3" class="text-danger">Failed to load data</td></tr>
-                      `);
+          })
+          .catch(function (xhr) {
+            $("#roleStatsTableBody").html(
+              '<tr><td colspan="3" class="text-danger">Failed to load data</td></tr>',
+            );
             console.error("Error fetching role stats:", xhr.responseText);
+          });
+      }
+
+      // ============================================================
+      // PERMISSIONS TAB
+      // ============================================================
+      const permissionGroups = [
+        {
+          label: "Users",
+          icon: "bi-people",
+          perms: [
+            Permission.USER_CREATE,
+            Permission.USER_READ,
+            Permission.USER_UPDATE,
+            Permission.USER_DELETE,
+          ],
+        },
+        {
+          label: "Roles",
+          icon: "bi-shield-lock",
+          perms: [
+            Permission.ROLE_CREATE,
+            Permission.ROLE_READ,
+            Permission.ROLE_UPDATE,
+            Permission.ROLE_DELETE,
+            Permission.ROLE_ASSIGN,
+          ],
+        },
+        {
+          label: "Kindred",
+          icon: "bi-people-fill",
+          perms: [
+            Permission.KINDRED_CREATE,
+            Permission.KINDRED_READ,
+            Permission.KINDRED_UPDATE,
+            Permission.KINDRED_DELETE,
+          ],
+        },
+        {
+          label: "System",
+          icon: "bi-gear",
+          perms: [Permission.SYSTEM_CONFIG, Permission.SYSTEM_LOGS],
+        },
+        {
+          label: "Reports",
+          icon: "bi-graph-up",
+          perms: [Permission.REPORTS_VIEW, Permission.REPORTS_GENERATE],
+        },
+        {
+          label: "Support",
+          icon: "bi-headset",
+          perms: [Permission.SUPPORT_TICKETS, Permission.SUPPORT_RESPONSE],
+        },
+      ];
+
+      function buildPermissionCheckboxes(containerId, checkedPerms) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = "";
+        permissionGroups.forEach((group) => {
+          const col = document.createElement("div");
+          col.className = "col-md-4 mb-3";
+          let html = `<div class="perm-group-title"><i class="bi ${group.icon}"></i>${group.label}</div>`;
+          group.perms.forEach((p) => {
+            const checked = checkedPerms.includes(p) ? "checked" : "";
+            html += `
+              <div class="form-check perm-checkbox">
+                <input class="form-check-input perm-cb" type="checkbox" id="${containerId}_${p}" value="${p}" ${checked}>
+                <label class="form-check-label" for="${containerId}_${p}">${p}</label>
+              </div>`;
+          });
+          col.innerHTML = html;
+          container.appendChild(col);
+        });
+      }
+
+      function getCheckedPermissions(containerId) {
+        return Array.from(
+          document.querySelectorAll(`#${containerId} .perm-cb:checked`),
+        ).map((cb) => cb.value);
+      }
+
+      function extractRoleName(r) {
+        if (typeof r === "string") return r;
+        if (r && typeof r === "object") {
+          const val = r.name || r.role || r.value || r.key || r.slug || "";
+          if (typeof val === "string" && val) return val;
+          if (r._id) return String(r._id);
+        }
+        return String(r);
+      }
+
+      function initializePermissionsTab() {
+        const $sel = $("#permRoleSelect");
+        $sel.find("option:not(:first)").remove();
+        $sel.append(
+          '<option value="" disabled selected>Loading roles...</option>',
+        );
+
+        rolesApi
+          .getAllRoles()
+          .then(function (resp) {
+            const roles = resp.data || resp || [];
+            $sel.find("option:not(:first)").remove();
+            $sel.append(
+              '<option value="" disabled selected>Choose a role...</option>',
+            );
+            if (Array.isArray(roles)) {
+              roles.forEach((r) => {
+                const roleName = extractRoleName(r);
+                const label =
+                  typeof r === "object" && r
+                    ? r.label || r.name || r.role || roleName
+                    : roleName;
+                $sel.append(`<option value="${roleName}">${label}</option>`);
+              });
+            }
+            if (roles.length === 0) {
+              $sel.append('<option value="" disabled>No roles found</option>');
+            }
+          })
+          .catch(function (xhr) {
+            $sel.find("option:not(:first)").remove();
+            const msg =
+              xhr.responseJSON?.message ||
+              xhr.statusText ||
+              "Failed to load roles";
+            $sel.append(`<option value="" disabled>${msg}</option>`);
+            console.error("Failed to load roles:", xhr.responseText || xhr);
+          });
+
+        // Also populate the user history dropdown
+        $.ajax({
+          url: `${BACKEND_URL}/users`,
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          success: function (resp) {
+            const users = Array.isArray(resp.data) ? resp.data : [];
+            const $sel = $("#roleHistoryUserSelect");
+            $sel.find("option:not(:first)").remove();
+            users.forEach((u) => {
+              $sel.append(
+                `<option value="${u._id}">${u.firstname} ${u.lastname} (${u.email})</option>`,
+              );
+            });
           },
         });
       }
 
+      $(document).on("change", "#permRoleSelect", function () {
+        const role = $(this).val();
+        if (!role) return;
+        $("#permissionsEditor").addClass("d-none");
+        rolesApi
+          .getRolePermissions(role)
+          .then(function (resp) {
+            const perms = resp.data || resp.permissions || [];
+            buildPermissionCheckboxes("permissionsCheckboxes", perms);
+            $("#permissionsEditor").removeClass("d-none");
+          })
+          .catch(function () {
+            showNotification(
+              "Failed to load permissions for this role.",
+              "error",
+            );
+          });
+      });
+
+      $(document).on("click", "#savePermissionsBtn", function () {
+        const role = $("#permRoleSelect").val();
+        if (!role) return;
+        const perms = getCheckedPermissions("permissionsCheckboxes");
+        rolesApi
+          .updateRolePermissions(role, perms)
+          .then(function () {
+            showNotification(
+              "Permissions updated successfully for " + role,
+              "success",
+            );
+          })
+          .catch(function (xhr) {
+            showNotification(
+              xhr.responseJSON?.message || "Failed to update permissions.",
+              "error",
+            );
+          });
+      });
+
+      $(document).on("click", "#selectAllPermsBtn", function () {
+        $("#permissionsCheckboxes .perm-cb").prop("checked", true);
+      });
+      $(document).on("click", "#deselectAllPermsBtn", function () {
+        $("#permissionsCheckboxes .perm-cb").prop("checked", false);
+      });
+
+      $(document).on("click", "#refreshPermissionsBtn", function () {
+        initializePermissionsTab();
+        $("#permRoleSelect").val("").trigger("change");
+      });
+
+      // ============================================================
+      // ASSIGNMENT HISTORY TAB
+      // ============================================================
+      function initializeAssignmentHistoryTab() {
+        if ($.fn.DataTable.isDataTable("#roleAssignmentHistoryTable")) {
+          $("#roleAssignmentHistoryTable").DataTable().destroy();
+        }
+        rolesApi
+          .getAssignmentHistory()
+          .then(function (resp) {
+            const assignments = resp.data || resp.assignments || resp || [];
+            roleAssignmentHistoryTable = $(
+              "#roleAssignmentHistoryTable",
+            ).DataTable({
+              data: assignments,
+              columns: [
+                {
+                  title: "S/N",
+                  data: null,
+                  orderable: false,
+                  searchable: false,
+                  render: function (d, t, r, m) {
+                    return m.row + 1;
+                  },
+                },
+                {
+                  data: null,
+                  defaultContent: "-",
+                  render: function (d) {
+                    if (d.userId)
+                      return (
+                        (d.userId.firstname || "") +
+                        " " +
+                        (d.userId.lastname || "")
+                      );
+                    return d.userName || d.userId || "-";
+                  },
+                },
+                {
+                  data: "previousRole",
+                  defaultContent: "-",
+                  render: function (d) {
+                    return d
+                      ? `<span class="badge bg-secondary">${d}</span>`
+                      : '<span class="badge bg-light text-dark">Initial</span>';
+                  },
+                },
+                {
+                  data: "newRole",
+                  defaultContent: "-",
+                  render: function (d) {
+                    let badge = "bg-primary";
+                    if (d === "global_admin" || d === "super_admin")
+                      badge = "bg-danger";
+                    else if (d === "support_admin") badge = "bg-warning";
+                    else if (d === "admin") badge = "bg-info";
+                    return d ? `<span class="badge ${badge}">${d}</span>` : "-";
+                  },
+                },
+                {
+                  data: null,
+                  defaultContent: "-",
+                  render: function (d) {
+                    if (d.changedBy)
+                      return (
+                        (d.changedBy.firstname || "") +
+                        " " +
+                        (d.changedBy.lastname || "")
+                      );
+                    if (d.performedBy)
+                      return typeof d.performedBy === "string"
+                        ? d.performedBy
+                        : (d.performedBy.firstname || "") +
+                            " " +
+                            (d.performedBy.lastname || "");
+                    return "-";
+                  },
+                },
+                { data: "reason", defaultContent: "-" },
+                {
+                  data: "created_at",
+                  defaultContent: "-",
+                  render: function (d) {
+                    return d ? new Date(d).toLocaleString() : "-";
+                  },
+                },
+              ],
+              responsive: true,
+              pageLength: 10,
+              order: [[6, "desc"]],
+            });
+          })
+          .catch(function (xhr) {
+            console.error("Failed to load assignment history:", xhr);
+            showNotification("Failed to load assignment history.", "error");
+          });
+      }
+
+      $(document).on("click", "#refreshAssignmentsBtn", function () {
+        initializeAssignmentHistoryTab();
+      });
+
+      // ============================================================
+      // USER ROLE HISTORY TAB
+      // ============================================================
+      function renderRoleHistoryTimeline(containerId, history) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = "";
+        if (!history || history.length === 0) {
+          container.innerHTML =
+            '<p class="text-muted">No role change history found.</p>';
+          return;
+        }
+        history.forEach((entry, idx) => {
+          const isLatest = idx === 0;
+          const changedBy = entry.changedBy
+            ? typeof entry.changedBy === "string"
+              ? entry.changedBy
+              : (entry.changedBy.firstname || "") +
+                " " +
+                (entry.changedBy.lastname || "")
+            : entry.performedBy || "System";
+          const prevRole = entry.previousRole || entry.oldRole || null;
+          const newRole =
+            entry.newRole || entry.role || entry.currentRole || "-";
+
+          let roleBadge = "bg-primary";
+          if (newRole === "global_admin" || newRole === "super_admin")
+            roleBadge = "bg-danger";
+          else if (newRole === "support_admin") roleBadge = "bg-warning";
+          else if (newRole === "admin") roleBadge = "bg-info";
+
+          let prevBadgeHtml = "";
+          if (prevRole) {
+            prevBadgeHtml = `<span class="badge bg-secondary">${prevRole}</span> <i class="bi bi-arrow-right mx-1"></i>`;
+          }
+
+          const item = document.createElement("div");
+          item.className = "timeline-item" + (isLatest ? "" : " old");
+          item.innerHTML = `
+            <div class="timeline-date">${new Date(entry.created_at || entry.date || entry.timestamp).toLocaleString()}</div>
+            <div class="timeline-body">
+              ${prevBadgeHtml}<span class="badge ${roleBadge}">${newRole}</span>
+              <div class="mt-1 small text-muted">
+                Changed by: <strong>${changedBy}</strong>
+                ${entry.reason ? `<br>Reason: ${entry.reason}` : ""}
+              </div>
+            </div>`;
+          container.appendChild(item);
+        });
+      }
+
+      function initializeUserRoleHistoryTab() {
+        // Dropdown is populated in initializePermissionsTab
+      }
+
+      function loadUserRoleHistory(userId, userName) {
+        if (!userId) return;
+        rolesApi
+          .getUserRoleHistory(userId)
+          .then(function (resp) {
+            const history = resp.data || resp.history || resp || [];
+            $("#roleHistoryUserName").text(
+              "Role History — " + (userName || "User"),
+            );
+            renderRoleHistoryTimeline("roleHistoryTimeline", history);
+            $("#userRoleHistoryResult").removeClass("d-none");
+          })
+          .catch(function (xhr) {
+            console.error("Failed to load role history:", xhr);
+            showNotification("Failed to load role history.", "error");
+          });
+      }
+
+      $(document).on("click", "#loadRoleHistoryBtn", function () {
+        const userId = $("#roleHistoryUserSelect").val();
+        const searchText = $("#roleHistorySearchInput").val().trim();
+
+        if (!userId && !searchText) {
+          showNotification(
+            "Please select a user or enter a search term.",
+            "warning",
+          );
+          return;
+        }
+
+        if (userId) {
+          const selectedText = $(
+            "#roleHistoryUserSelect option:selected",
+          ).text();
+          loadUserRoleHistory(userId, selectedText);
+        } else {
+          // Search by name/email
+          $.ajax({
+            url: `${BACKEND_URL}/users?search=${encodeURIComponent(searchText)}`,
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            success: function (resp) {
+              const users = Array.isArray(resp.data) ? resp.data : [];
+              if (users.length === 0) {
+                showNotification(
+                  "No users found matching that search.",
+                  "warning",
+                );
+                return;
+              }
+              if (users.length === 1) {
+                loadUserRoleHistory(
+                  users[0]._id,
+                  users[0].firstname + " " + users[0].lastname,
+                );
+              } else {
+                // Show results in the select and let user pick
+                const $sel = $("#roleHistoryUserSelect");
+                $sel.find("option:not(:first)").remove();
+                users.forEach((u) => {
+                  $sel.append(
+                    `<option value="${u._id}">${u.firstname} ${u.lastname} (${u.email})</option>`,
+                  );
+                });
+                showNotification(
+                  `Found ${users.length} users. Please select one from the dropdown.`,
+                  "info",
+                );
+              }
+            },
+            error: function () {
+              showNotification("Search failed.", "error");
+            },
+          });
+        }
+      });
+
+      // ============================================================
+      // USER ROLE HISTORY FROM MODAL (triggered from users table)
+      // ============================================================
+      $(document).on("click", ".view-role-history-btn", function () {
+        const userId = $(this).data("id");
+        const userName = $(this).data("user");
+        if (!userId) return;
+        rolesApi
+          .getUserRoleHistory(userId)
+          .then(function (resp) {
+            const history = resp.data || resp.history || resp || [];
+            $("#roleHistUserName").text(userName || "User");
+            renderRoleHistoryTimeline("roleHistoryModalTimeline", history);
+            $("#userRoleHistoryModal").modal("show");
+          })
+          .catch(function () {
+            showNotification("Failed to load role history.", "error");
+          });
+      });
+
+      // ============================================================
+      // REFRESH BUTTONS
+      // ============================================================
+      $(document).on("click", "#refreshRoleCharts", function () {
+        loadRoleStats().then(function () {
+          initializeRolesPage();
+        });
+      });
+      $(document).on("click", "#refreshRolesTable", function () {
+        initializeRolesPage();
+      });
+
+      // ============================================================
+      // INITIALIZATION ON DOCUMENT READY
+      // ============================================================
       $(document).ready(function () {
         loadRoleStats();
-        $("#refreshRoleStats").click(loadRoleStats);
+        loadCurrentUserPermissions().then(function () {
+          applyPermissionGuards();
+        });
       });
 
       function showNotification(message, type = "info") {
@@ -10478,19 +11802,38 @@
               "Content-Type": "application/json",
             },
             data: JSON.stringify({ code: verificationCode }),
-            success: function (response) {
-              $("#2faSetupStep2").hide();
-              $("#2faSetupStep3").show();
-              $("#2faVerifyBtn").hide();
-              $("#2faFinishBtn").show();
+            success: function () {
+              // Code verified — now enable 2FA to get backup codes
+              $.ajax({
+                url: `${BACKEND_URL}/auth/2fa/enable`,
+                method: "POST",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  "Content-Type": "application/json",
+                },
+                success: function (enableResponse) {
+                  $("#2faSetupStep2").hide();
+                  $("#2faSetupStep3").show();
+                  $("#2faVerifyBtn").hide();
+                  $("#2faFinishBtn").show();
 
-              // Store backup codes if provided
-              if (response.backupCodes && response.backupCodes.length > 0) {
-                const backupCodesHtml = response.backupCodes
-                  .map((code) => `<code>${code}</code>`)
-                  .join("");
-                $(".backup-codes").html(backupCodesHtml);
-              }
+                  if (
+                    enableResponse.backupCodes &&
+                    enableResponse.backupCodes.length > 0
+                  ) {
+                    const backupCodesHtml = enableResponse.backupCodes
+                      .map((code) => `<code>${code}</code>`)
+                      .join("");
+                    $(".backup-codes").html(backupCodesHtml);
+                  }
+                },
+                error: function (xhr) {
+                  const errorMessage = xhr.responseJSON
+                    ? xhr.responseJSON.message
+                    : "Failed to enable two-factor authentication";
+                  showNotification(errorMessage, "error");
+                },
+              });
             },
             error: function (xhr) {
               const errorMessage = xhr.responseJSON
@@ -10514,46 +11857,71 @@
             return;
           }
 
-          // Disable button to prevent multiple submissions
-          $(this).prop("disabled", true).text("Enabling...");
+          showNotification(
+            "Two-factor authentication enabled successfully",
+            "success",
+          );
+          enable2FAModal.hide();
+          $("#enable2FABtn").html(
+            '<i class="bi bi-shield-check me-2"></i>Disable Two-Factor Authentication',
+          );
+          $("#enable2FABtn")
+            .removeClass("btn-outline-primary")
+            .addClass("btn-outline-danger");
+          $("#enable2FABtn")
+            .off("click")
+            .click(function () {
+              disable2FA();
+            });
+        });
 
-          // API call to enable 2FA
-          $.ajax({
-            url: `${BACKEND_URL}/auth/2fa/enable`,
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-            success: function (response) {
-              showNotification(
-                "Two-factor authentication enabled successfully",
-                "success",
-              );
-              enable2FAModal.hide();
-              $("#enable2FABtn").html(
-                '<i class="bi bi-shield-check me-2"></i>Disable Two-Factor Authentication',
-              );
-              $("#enable2FABtn")
-                .removeClass("btn-outline-primary")
-                .addClass("btn-outline-danger");
-              $("#enable2FABtn")
-                .off("click")
-                .click(function () {
-                  disable2FA();
-                });
-            },
-            error: function (xhr) {
-              const errorMessage = xhr.responseJSON
-                ? xhr.responseJSON.message
-                : "Failed to enable two-factor authentication";
-              showNotification(errorMessage, "error");
-            },
-            complete: function () {
-              // Re-enable the button
-              $("#2faFinishBtn").prop("disabled", false).text("Finish Setup");
-            },
+        // Copy backup codes to clipboard
+        $("#copyBackupCodesBtn").on("click", function () {
+          const codes = [];
+          $(".backup-codes code").each(function () {
+            codes.push($(this).text().trim());
           });
+          if (codes.length === 0) {
+            showNotification("No backup codes to copy", "warning");
+            return;
+          }
+          navigator.clipboard
+            .writeText(codes.join("\n"))
+            .then(function () {
+              showNotification("Backup codes copied to clipboard", "success");
+            })
+            .catch(function () {
+              showNotification("Failed to copy codes", "error");
+            });
+        });
+
+        // Download backup codes as text file
+        $("#downloadBackupCodesBtn").on("click", function () {
+          const codes = [];
+          $(".backup-codes code").each(function () {
+            codes.push($(this).text().trim());
+          });
+          if (codes.length === 0) {
+            showNotification("No backup codes to download", "warning");
+            return;
+          }
+          const content =
+            "BENUE STATE CITIZENSHIP - 2FA BACKUP CODES\n" +
+            "==========================================\n\n" +
+            "Keep these codes safe. Each code can only be used once.\n\n" +
+            codes.join("\n") +
+            "\n\nGenerated: " +
+            new Date().toLocaleString();
+          const blob = new Blob([content], { type: "text/plain" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "benue-2fa-backup-codes.txt";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+          showNotification("Backup codes downloaded", "success");
         });
 
         // Function to setup 2FA
@@ -10755,13 +12123,8 @@
           });
         }
 
-        // Check 2FA status when the profile page is loaded
-        if (
-          window.location.hash === "#profile" ||
-          document.getElementById("profile-page").classList.contains("active")
-        ) {
-          check2FAStatus();
-        }
+        // Check 2FA status on page load
+        check2FAStatus();
       });
 
       $(document).on("click", '[data-page="profile"]', function (e) {
@@ -11214,6 +12577,852 @@
       $(document).ready(function () {
         populateLgaDropdown();
       });
+
+      // ============================================================
+      // FAMILIES MANAGEMENT (Admin)
+      // ============================================================
+      let familiesTable = null;
+      let famDetailMembersTable = null;
+      let famDetailDependentsTable = null;
+      let famDetailDocsTable = null;
+      let currentDetailFamilyId = null;
+
+      const familiesApi = {
+        _headers() {
+          return {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          };
+        },
+        getAll(query) {
+          const params = new URLSearchParams();
+          if (query) {
+            Object.entries(query).forEach(([k, v]) => {
+              if (v !== undefined && v !== null && v !== "") params.set(k, v);
+            });
+          }
+          return $.ajax({
+            url: `${BACKEND_URL}/families?${params.toString()}`,
+            method: "GET",
+            headers: this._headers(),
+          });
+        },
+        getOne(id) {
+          return $.ajax({
+            url: `${BACKEND_URL}/families/${id}`,
+            method: "GET",
+            headers: this._headers(),
+          });
+        },
+        getDashboard(id) {
+          return $.ajax({
+            url: `${BACKEND_URL}/families/${id}/dashboard`,
+            method: "GET",
+            headers: this._headers(),
+          });
+        },
+        suspend(id) {
+          return $.ajax({
+            url: `${BACKEND_URL}/families/${id}/suspend`,
+            method: "PATCH",
+            headers: this._headers(),
+          });
+        },
+        activate(id) {
+          return $.ajax({
+            url: `${BACKEND_URL}/families/${id}/activate`,
+            method: "PATCH",
+            headers: this._headers(),
+          });
+        },
+        verifyDocument(familyId, documentId, isVerified) {
+          return $.ajax({
+            url: `${BACKEND_URL}/families/${familyId}/documents/${documentId}/verify`,
+            method: "PATCH",
+            headers: this._headers(),
+            data: JSON.stringify({ isVerified }),
+          });
+        },
+        getDocuments(familyId, page, limit) {
+          return $.ajax({
+            url: `${BACKEND_URL}/families/${familyId}/documents?page=${page || 1}&limit=${limit || 50}`,
+            method: "GET",
+            headers: this._headers(),
+          });
+        },
+      };
+
+      function initializeFamiliesPage() {
+        loadFamiliesData();
+        populateFamiliesLgaFilter();
+      }
+
+      function populateFamiliesLgaFilter() {
+        const sel = $("#famLgaFilter");
+        if (sel.find("option").length > 1) return;
+        const lgas = [
+          "Ado",
+          "Agatu",
+          "Apa",
+          "Buruku",
+          "Gboko",
+          "Guma",
+          "Gwer East",
+          "Gwer West",
+          "Katsina-Ala",
+          "Konshisha",
+          "Kwande",
+          "Logo",
+          "Makurdi",
+          "Obi",
+          "Ogbadibo",
+          "Ohimini",
+          "Oju",
+          "Okpokwu",
+          "Otukpo",
+          "Tarka",
+          "Ukum",
+          "Ushongo",
+          "Vandeikya",
+        ];
+        lgas.forEach(function (l) {
+          sel.append(`<option value="${l}">${l}</option>`);
+        });
+      }
+
+      function loadFamiliesData() {
+        const search = ($("#famSearchInput").val() || "").trim();
+        const status = $("#famStatusFilter").val() || "";
+        const lga = $("#famLgaFilter").val() || "";
+        const ward = ($("#famWardFilter").val() || "").trim();
+        const sortVal = ($("#famSortSelect").val() || "created_at:desc").split(
+          ":",
+        );
+        const sortBy = sortVal[0];
+        const sortOrder = sortVal[1];
+
+        familiesApi
+          .getAll({
+            page: 1,
+            limit: 100,
+            search,
+            status,
+            lga,
+            ward,
+            sortBy,
+            sortOrder,
+          })
+          .then(function (resp) {
+            const data = resp.data || resp.families || resp || [];
+            const pagination = resp.pagination || {};
+            renderFamiliesTable(Array.isArray(data) ? data : []);
+            updateFamiliesKPIs(data, pagination);
+          })
+          .catch(function (err) {
+            console.error("Failed to load families:", err);
+            showNotification("Failed to load families", "error");
+          });
+      }
+
+      function updateFamiliesKPIs(data) {
+        const total = data.length;
+        let active = 0,
+          inactive = 0,
+          suspended = 0;
+        data.forEach(function (f) {
+          const s = (f.status || "").toLowerCase();
+          if (s === "active") active++;
+          else if (s === "inactive") inactive++;
+          else if (s === "suspended") suspended++;
+        });
+        $("#famTotalFamilies").text(total);
+        $("#famActiveFamilies").text(active);
+        $("#famInactiveFamilies").text(inactive);
+        $("#famSuspendedFamilies").text(suspended);
+        $("#familiesCountBadge").text(total);
+      }
+
+      function renderFamiliesTable(data) {
+        if (familiesTable) {
+          familiesTable.clear().rows.add(data).draw();
+          return;
+        }
+        familiesTable = $("#familiesTable").DataTable({
+          data: data,
+          columns: [
+            {
+              data: null,
+              render: function (d, t, r, meta) {
+                return meta.row + 1;
+              },
+            },
+            {
+              data: "_id",
+              visible: false,
+            },
+            {
+              data: "familyName",
+              defaultContent: "-",
+            },
+            {
+              data: "familyNumber",
+              defaultContent: "-",
+              render: function (d) {
+                return d ? `<code>${d}</code>` : "-";
+              },
+            },
+            {
+              data: null,
+              defaultContent: "-",
+              render: function (d) {
+                if (d.headId) {
+                  return (
+                    (d.headId.firstname || "") + " " + (d.headId.lastname || "")
+                  );
+                }
+                return d.headName || "-";
+              },
+            },
+            { data: "lga", defaultContent: "-" },
+            { data: "ward", defaultContent: "-" },
+            {
+              data: "members",
+              defaultContent: "0",
+              render: function (d, t, r) {
+                const count =
+                  r.memberCount || (Array.isArray(d) ? d.length : 0);
+                return `<span class="badge bg-primary">${count}</span>`;
+              },
+            },
+            {
+              data: "status",
+              defaultContent: "Active",
+              render: function (d) {
+                const cls =
+                  {
+                    Active: "success",
+                    Inactive: "secondary",
+                    Suspended: "danger",
+                    Merged: "info",
+                  }[d] || "secondary";
+                return `<span class="badge bg-${cls}">${d || "-"}</span>`;
+              },
+            },
+            {
+              data: "createdAt",
+              defaultContent: "-",
+              render: function (d) {
+                return formatDateAdmin(d);
+              },
+            },
+            {
+              data: null,
+              render: function (d) {
+                const id = d._id || d.id;
+                const isActive = (d.status || "").toLowerCase() === "active";
+                const isSuspended =
+                  (d.status || "").toLowerCase() === "suspended";
+                let btns = `<div class="btn-group btn-group-sm">`;
+                btns += `<button class="btn btn-outline-info view-family-btn" data-id="${id}" title="View Details"><i class="bi bi-eye"></i></button>`;
+                if (isSuspended) {
+                  btns += `<button class="btn btn-outline-success activate-family-btn" data-id="${id}" data-name="${d.familyName || ""}" title="Activate"><i class="bi bi-play-fill"></i></button>`;
+                } else if (isActive) {
+                  btns += `<button class="btn btn-outline-warning suspend-family-btn" data-id="${id}" data-name="${d.familyName || ""}" title="Suspend"><i class="bi bi-pause-fill"></i></button>`;
+                }
+                btns += `</div>`;
+                return btns;
+              },
+            },
+          ],
+          responsive: true,
+          pageLength: 10,
+          order: [[0, "asc"]],
+          language: { emptyTable: "No families found" },
+        });
+      }
+
+      function formatDateAdmin(d) {
+        if (!d) return "-";
+        return new Date(d).toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        });
+      }
+
+      // Filter handlers
+      $("#famApplyFilters").on("click", function () {
+        loadFamiliesData();
+      });
+      $("#famSearchInput").on("keypress", function (e) {
+        if (e.which === 13) loadFamiliesData();
+      });
+      $("#famStatusFilter, #famLgaFilter, #famSortSelect").on(
+        "change",
+        function () {
+          loadFamiliesData();
+        },
+      );
+
+      // Suspend family
+      $(document).on("click", ".suspend-family-btn", function () {
+        const id = $(this).data("id");
+        const name = $(this).data("name");
+        Swal.fire({
+          title: `Suspend "${name}"?`,
+          text: "This family will be suspended and lose access to certain features.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#dc3545",
+          confirmButtonText: "Suspend",
+        }).then(function (result) {
+          if (result.isConfirmed) {
+            familiesApi
+              .suspend(id)
+              .then(function () {
+                Swal.fire("Suspended", "Family has been suspended", "success");
+                loadFamiliesData();
+              })
+              .catch(function (err) {
+                Swal.fire(
+                  "Error",
+                  err.responseJSON?.message || "Failed to suspend family",
+                  "error",
+                );
+              });
+          }
+        });
+      });
+
+      // Activate family
+      $(document).on("click", ".activate-family-btn", function () {
+        const id = $(this).data("id");
+        const name = $(this).data("name");
+        Swal.fire({
+          title: `Activate "${name}"?`,
+          text: "This family will be re-activated.",
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonColor: "#198754",
+          confirmButtonText: "Activate",
+        }).then(function (result) {
+          if (result.isConfirmed) {
+            familiesApi
+              .activate(id)
+              .then(function () {
+                Swal.fire("Activated", "Family has been activated", "success");
+                loadFamiliesData();
+              })
+              .catch(function (err) {
+                Swal.fire(
+                  "Error",
+                  err.responseJSON?.message || "Failed to activate family",
+                  "error",
+                );
+              });
+          }
+        });
+      });
+
+      // View family detail
+      $(document).on("click", ".view-family-btn", function () {
+        const id = $(this).data("id");
+        currentDetailFamilyId = id;
+        $("#familyDetailTitle").text("Family Details");
+        $("#famDetailInfoBody").html(
+          '<div class="col-12 text-center py-4"><div class="spinner-border text-primary" role="status"></div></div>',
+        );
+        $("#familyDetailModal").modal("show");
+
+        // Reset to first tab
+        const firstTab = document.querySelector(
+          "#familyDetailTabs button:first-child",
+        );
+        if (firstTab) {
+          const bsTab = new bootstrap.Tab(firstTab);
+          bsTab.show();
+        }
+
+        // Destroy old detail tables
+        if (famDetailMembersTable) {
+          famDetailMembersTable.clear().draw();
+        }
+        if (famDetailDependentsTable) {
+          famDetailDependentsTable.clear().draw();
+        }
+        if (famDetailDocsTable) {
+          famDetailDocsTable.clear().draw();
+        }
+
+        // Load family info
+        familiesApi
+          .getOne(id)
+          .then(function (resp) {
+            const fam = resp.family || resp.data || resp;
+            renderFamilyInfo(fam);
+          })
+          .catch(function (err) {
+            $("#famDetailInfoBody").html(
+              '<div class="col-12 text-danger">Failed to load family details</div>',
+            );
+          });
+
+        // Load dashboard (members + dependents)
+        familiesApi
+          .getDashboard(id)
+          .then(function (resp) {
+            const d = resp.data || resp;
+            const members = d.members || d.familyMembers || [];
+            const dependents =
+              d.dependents && d.dependents.length
+                ? d.dependents
+                : members.filter(function (m) {
+                    return m.dependentId || m.memberType === "dependent";
+                  });
+            renderDetailMembers(members);
+            renderDetailDependents(dependents);
+          })
+          .catch(function (err) {
+            console.error("Failed to load family dashboard:", err);
+          });
+
+        // Load documents
+        familiesApi
+          .getDocuments(id, 1, 50)
+          .then(function (resp) {
+            const docs = resp.data || resp.documents || resp || [];
+            renderDetailDocuments(Array.isArray(docs) ? docs : []);
+          })
+          .catch(function (err) {
+            console.error("Failed to load family documents:", err);
+          });
+      });
+
+      function renderFamilyInfo(fam) {
+        const headName = fam.headId
+          ? (fam.headId.firstname || "") + " " + (fam.headId.lastname || "")
+          : fam.headName || "-";
+        const statusCls =
+          {
+            Active: "success",
+            Inactive: "secondary",
+            Suspended: "danger",
+            Merged: "info",
+          }[fam.status] || "secondary";
+
+        const html = `
+          <div class="col-md-6">
+            <table class="table table-borderless">
+              <tr><td class="fw-bold" style="width:160px">Family Name</td><td>${fam.familyName || "-"}</td></tr>
+              <tr><td class="fw-bold">Family Number</td><td><code>${fam.familyNumber || "-"}</code></td></tr>
+              <tr><td class="fw-bold">Head</td><td>${headName}</td></tr>
+              <tr><td class="fw-bold">Status</td><td><span class="badge bg-${statusCls}">${fam.status || "-"}</span></td></tr>
+              <tr><td class="fw-bold">Created</td><td>${formatDateAdmin(fam.createdAt)}</td></tr>
+            </table>
+          </div>
+          <div class="col-md-6">
+            <table class="table table-borderless">
+              <tr><td class="fw-bold" style="width:120px">Address</td><td>${fam.address || "-"}</td></tr>
+              <tr><td class="fw-bold">State</td><td>${fam.state || "-"}</td></tr>
+              <tr><td class="fw-bold">LGA</td><td>${fam.lga || "-"}</td></tr>
+              <tr><td class="fw-bold">Ward</td><td>${fam.ward || "-"}</td></tr>
+              <tr><td class="fw-bold">Village</td><td>${fam.village || "-"}</td></tr>
+            </table>
+          </div>
+        `;
+        $("#famDetailInfoBody").html(html);
+      }
+
+      function renderDetailMembers(members) {
+        if (famDetailMembersTable) {
+          famDetailMembersTable.clear().rows.add(members).draw();
+          return;
+        }
+        famDetailMembersTable = $("#famDetailMembersTable").DataTable({
+          data: members,
+          columns: [
+            {
+              data: null,
+              render: function (d, t, r, meta) {
+                return meta.row + 1;
+              },
+            },
+            {
+              data: null,
+              render: function (d) {
+                if (d.userId)
+                  return (
+                    (d.userId.firstname || "") + " " + (d.userId.lastname || "")
+                  );
+                return (d.firstname || "") + " " + (d.lastname || "");
+              },
+              defaultContent: "-",
+            },
+            {
+              data: null,
+              render: function (d) {
+                return d.userId?.email || d.email || "-";
+              },
+              defaultContent: "-",
+            },
+            {
+              data: null,
+              render: function (d) {
+                return d.userId?.phone || d.phone || "-";
+              },
+              defaultContent: "-",
+            },
+            { data: "relationship", defaultContent: "-" },
+            {
+              data: "memberType",
+              defaultContent: "-",
+              render: function (d) {
+                if (!d) return "-";
+                const cls =
+                  { head: "dark", adult: "info", dependent: "warning" }[
+                    d.toLowerCase()
+                  ] || "secondary";
+                return `<span class="badge bg-${cls}">${d}</span>`;
+              },
+            },
+            {
+              data: "status",
+              defaultContent: "Active",
+              render: function (d) {
+                return `<span class="badge bg-${d === "Active" ? "success" : "secondary"}">${d}</span>`;
+              },
+            },
+            {
+              data: "joinedAt",
+              render: function (d) {
+                return formatDateAdmin(d);
+              },
+              defaultContent: "-",
+            },
+          ],
+          responsive: true,
+          pageLength: 10,
+          language: { emptyTable: "No members" },
+        });
+      }
+
+      function renderDetailDependents(dependents) {
+        if (famDetailDependentsTable) {
+          famDetailDependentsTable.clear().rows.add(dependents).draw();
+          return;
+        }
+        famDetailDependentsTable = $("#famDetailDependentsTable").DataTable({
+          data: dependents,
+          columns: [
+            {
+              data: null,
+              render: function (d, t, r, meta) {
+                return meta.row + 1;
+              },
+            },
+            {
+              data: null,
+              render: function (d) {
+                const dep = d.dependentId || d;
+                return (
+                  (dep.firstName || dep.firstname || "") +
+                  " " +
+                  (dep.lastName || dep.lastname || "")
+                );
+              },
+              defaultContent: "-",
+            },
+            {
+              data: null,
+              render: function (d) {
+                const dep = d.dependentId || d;
+                return formatDateAdmin(dep.dob);
+              },
+              defaultContent: "-",
+            },
+            {
+              data: null,
+              render: function (d) {
+                const dep = d.dependentId || d;
+                return dep.gender || "-";
+              },
+            },
+            {
+              data: null,
+              defaultContent: "-",
+              render: function (d) {
+                const dep = d.dependentId || d;
+                return d.relationship || dep.relationship || "-";
+              },
+            },
+            {
+              data: null,
+              defaultContent: "-",
+              render: function (d) {
+                const dep = d.dependentId || d;
+                return d.nin || dep.nin || "-";
+              },
+            },
+            {
+              data: "status",
+              defaultContent: "Active",
+              render: function (d) {
+                return `<span class="badge bg-${d === "Active" ? "success" : "secondary"}">${d}</span>`;
+              },
+            },
+          ],
+          responsive: true,
+          pageLength: 10,
+          language: { emptyTable: "No dependents" },
+        });
+      }
+
+      function renderDetailDocuments(docs) {
+        if (famDetailDocsTable) {
+          famDetailDocsTable.clear().rows.add(docs).draw();
+          return;
+        }
+        famDetailDocsTable = $("#famDetailDocsTable").DataTable({
+          data: docs,
+          columns: [
+            {
+              data: null,
+              render: function (d, t, r, meta) {
+                return meta.row + 1;
+              },
+            },
+            {
+              data: "documentType",
+              defaultContent: "-",
+              render: function (d) {
+                if (!d) return "-";
+                return d.replace(/_/g, " ").replace(/\b\w/g, function (c) {
+                  return c.toUpperCase();
+                });
+              },
+            },
+            {
+              data: "description",
+              defaultContent: "-",
+              render: function (d) {
+                return d || "-";
+              },
+            },
+            {
+              data: null,
+              render: function (d) {
+                return (
+                  (d.uploadedBy?.firstname || "") +
+                  " " +
+                  (d.uploadedBy?.lastname || "")
+                );
+              },
+              defaultContent: "-",
+            },
+            {
+              data: null,
+              defaultContent: "",
+              render: function (d) {
+                const v = d.isVerified;
+                let badge, icon, label;
+                if (v === true || v === "true" || v === 1) {
+                  badge = "success";
+                  icon = "bi-check-circle-fill";
+                  label = "Verified";
+                } else if (
+                  (v === false || v === "false" || v === 0) &&
+                  d.verifiedBy
+                ) {
+                  badge = "danger";
+                  icon = "bi-x-circle-fill";
+                  label = "Rejected";
+                } else {
+                  badge = "warning";
+                  icon = "bi-clock-fill";
+                  label = "Pending";
+                }
+                return `<span class="badge bg-${badge}"><i class="bi ${icon} me-1"></i>${label}</span>`;
+              },
+            },
+            {
+              data: "created_at",
+              defaultContent: "",
+              render: function (d) {
+                return formatDateAdmin(d);
+              },
+            },
+            {
+              data: null,
+              render: function (d) {
+                const docId = d._id || d.id;
+                const v = d.isVerified;
+                const isVerified = v === true || v === "true" || v === 1;
+                const isRejected =
+                  (v === false || v === "false" || v === 0) && d.verifiedBy;
+                let btns = "";
+                if (!isVerified && !isRejected) {
+                  btns += `<button class="btn btn-sm btn-outline-success admin-verify-doc-btn" data-family="${currentDetailFamilyId}" data-doc="${docId}" data-action="true" title="Verify"><i class="bi bi-check-lg"></i></button> `;
+                  btns += `<button class="btn btn-sm btn-outline-danger admin-verify-doc-btn" data-family="${currentDetailFamilyId}" data-doc="${docId}" data-action="false" title="Reject"><i class="bi bi-x-lg"></i></button> `;
+                } else if (isRejected) {
+                  btns += `<button class="btn btn-sm btn-outline-success admin-verify-doc-btn" data-family="${currentDetailFamilyId}" data-doc="${docId}" data-action="true" title="Re-verify"><i class="bi bi-check-lg"></i></button> `;
+                }
+                if (d.fileUrl) {
+                  btns += `<button class="btn btn-sm btn-outline-primary admin-view-doc-btn" data-url="${d.fileUrl}" data-filename="${d.fileName || "Document"}" data-mime="${d.mimeType || ""}" title="View"><i class="bi bi-eye"></i></button>`;
+                }
+                return btns || "-";
+              },
+            },
+          ],
+          responsive: true,
+          pageLength: 10,
+          language: { emptyTable: "No documents" },
+        });
+      }
+
+      // Admin verify/reject document from family detail
+      $(document).on("click", ".admin-verify-doc-btn", function () {
+        const familyId = $(this).data("family");
+        const docId = $(this).data("doc");
+        const isVerified =
+          $(this).data("action") === true || $(this).data("action") === "true";
+        const label = isVerified ? "Verify" : "Reject";
+
+        Swal.fire({
+          title: label + " Document?",
+          icon: isVerified ? "question" : "warning",
+          showCancelButton: true,
+          confirmButtonColor: isVerified ? "#198754" : "#dc3545",
+          confirmButtonText: label,
+        }).then(function (result) {
+          if (result.isConfirmed) {
+            familiesApi
+              .verifyDocument(familyId, docId, isVerified)
+              .then(function () {
+                Swal.fire(
+                  "Done",
+                  "Document " + label.toLowerCase() + "d",
+                  "success",
+                );
+                // Reload documents tab
+                familiesApi.getDocuments(familyId, 1, 50).then(function (resp) {
+                  const docs = resp.data || resp.documents || resp || [];
+                  if (famDetailDocsTable) {
+                    famDetailDocsTable
+                      .clear()
+                      .rows.add(Array.isArray(docs) ? docs : [])
+                      .draw();
+                  }
+                });
+              })
+              .catch(function (err) {
+                Swal.fire(
+                  "Error",
+                  err.responseJSON?.message ||
+                    "Failed to " + label.toLowerCase() + " document",
+                  "error",
+                );
+              });
+          }
+        });
+      });
+
+      // Admin view document from family detail
+      $(document).on("click", ".admin-view-doc-btn", function () {
+        var fileUrl = $(this).data("url");
+        var fileName = $(this).data("filename") || "Document";
+        var declaredMime = $(this).data("mime") || "";
+        if (!fileUrl) return;
+
+        // Reuse the existing view modal if available
+        const viewModal = document.getElementById("viewModal");
+        if (viewModal) {
+          $(viewModal).find(".modal-title").text(fileName);
+          $(viewModal).find("#viewModalOpenTab").attr("href", fileUrl);
+          var container = viewModal.querySelector(".modal-body");
+          container.innerHTML =
+            '<div class="d-flex justify-content-center align-items-center" style="height:400px;"><div class="spinner-border text-primary" role="status"></div></div>';
+          const bsModal = new bootstrap.Modal(viewModal);
+          bsModal.show();
+
+          fetch(fileUrl, { headers: { Authorization: `Bearer ${token}` } })
+            .then(function (res) {
+              if (!res.ok) throw new Error("Failed to fetch document");
+              var contentType = res.headers.get("Content-Type");
+              return res.blob().then(function (blob) {
+                return { blob, contentType };
+              });
+            })
+            .then(function (result) {
+              var blobUrl = URL.createObjectURL(result.blob);
+              var effectiveType = result.contentType;
+              if (
+                !effectiveType ||
+                effectiveType === "application/octet-stream"
+              ) {
+                effectiveType = declaredMime;
+              }
+              if (effectiveType === "application/pdf") {
+                if (typeof loadPDFJ === "function")
+                  loadPDFJ(blobUrl, container);
+              } else if (effectiveType && effectiveType.startsWith("image/")) {
+                if (typeof loadImage === "function")
+                  loadImage(blobUrl, container);
+              } else {
+                container.innerHTML =
+                  '<div class="text-center py-4">' +
+                  '<i class="bi bi-file-earmark" style="font-size:3rem;"></i>' +
+                  '<p class="mt-2 mb-3">Preview is not available for this file type' +
+                  (effectiveType ? " (" + effectiveType + ")" : "") +
+                  "</p>" +
+                  '<a href="' +
+                  fileUrl +
+                  '" target="_blank" class="btn btn-primary me-2"><i class="bi bi-box-arrow-up-right me-1"></i>Open in New Tab</a>' +
+                  '<a href="' +
+                  fileUrl +
+                  '" download="' +
+                  fileName +
+                  '" class="btn btn-outline-primary"><i class="bi bi-download me-1"></i>Download</a>' +
+                  "</div>";
+              }
+            })
+            .catch(function (err) {
+              container.innerHTML =
+                '<div class="alert alert-danger">Failed to load document: ' +
+                err.message +
+                "</div>";
+            });
+        } else {
+          window.open(fileUrl, "_blank");
+        }
+      });
+
+      // Export families table
+      function exportFamiliesTable(format) {
+        if (!familiesTable) return;
+        if (format === "csv") {
+          const data = familiesTable.data().toArray();
+          if (!data.length) {
+            showNotification("No data to export", "warning");
+            return;
+          }
+          let csv = "S/N,Family Name,Number,Head,LGA,Ward,Status,Created\n";
+          data.forEach(function (row, i) {
+            const head = row.headId
+              ? (row.headId.firstname || "") + " " + (row.headId.lastname || "")
+              : row.headName || "";
+            csv += `${i + 1},"${(row.familyName || "").replace(/"/g, '""')}","${row.familyNumber || ""}","${head.replace(/"/g, '""')}","${row.lga || ""}","${row.ward || ""}","${row.status || ""}","${formatDateAdmin(row.createdAt)}"\n`;
+          });
+          const blob = new Blob([csv], { type: "text/csv" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "families_export.csv";
+          a.click();
+          URL.revokeObjectURL(url);
+        } else if (format === "pdf") {
+          showNotification("PDF export coming soon", "info");
+        }
+      }
     </script>
   </body>
 </html>
